@@ -6,7 +6,8 @@ import {  MatInputModule,
   MatToolbarModule,
   MatExpansionModule,
   MatSidenavModule,
-  MatIconModule } from '@angular/material';
+  MatIconModule,
+  MatSlideToggleModule } from '@angular/material';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
@@ -26,7 +27,8 @@ import { MatListModule } from '@angular/material/list';
     MatRadioModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatSlideToggleModule
   ]
 })
 export class SharedModule { }

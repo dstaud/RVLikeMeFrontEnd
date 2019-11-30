@@ -11,6 +11,10 @@
     </mat-radio-group>
   </div>
 
+  <div>
+    <mat-slide-toggle [checked]="isDarkTheme | async" (change)="toggleDarkTheme($event.checked)">Dark Theme</mat-slide-toggle>
+  </div>
+
   <div class="submit-btn">
     <button mat-raised-button color="accent" type="submit" [disabled]="!form.valid">{{ "general.submit" | translate}}</button>
   </div>
