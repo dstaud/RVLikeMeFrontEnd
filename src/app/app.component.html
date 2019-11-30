@@ -1,25 +1,14 @@
-<mat-toolbar color="primary">
-
-  <button mat-button aria-label="home" routerLink="/">
-  <mat-icon>home</mat-icon>
-      {{title}}</button>
-
-      <span class="fill-remaining-space"></span>
-  <div id="toolbar-menu-label" fxLayout="row" fxShow="false" fxShow.gt-sm>
-      <button mat-button aria-labelledby="toolbar-menu-label" routerLink="/connections">{{ "menu.connections" | translate}}</button>
-      <button mat-button aria-labelledby="toolbar-menu-label" routerLink="/forums">{{ "menu.forums" | translate}}</button>
-      <button mat-button aria-labelledby="toolbar-menu-label" routerLink="/messages">{{ "menu.messages" | translate}}</button>
-      <button mat-button aria-labelledby="toolbar-menu-label" routerLink="/profile">{{ "menu.profile" | translate}}</button>
-  </div>
-  <button mat-button aria-label="menu" [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
-   <mat-icon>menu</mat-icon>
-  </button>
-
-</mat-toolbar>
-<mat-menu id="menu-label" x-position="before" #menu="matMenu">
-  <button mat-button aria-labelledby="menu-label" routerLink="/connections">{{ "menu.connections" | translate}}</button>
-  <button mat-button aria-labelledby="menu-label" routerLink="/forums">{{ "menu.forums" | translate}}</button>
-  <button mat-button aria-labelledby="menu-label" routerLink="/messages">{{ "menu.messages" | translate}}</button>
-  <button mat-button aria-labelledby="menu-label" routerLink="/profile">{{ "menu.profile" | translate}}</button>
-</mat-menu>
 <router-outlet></router-outlet>
+<app-layout>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav role="navigation">
+      <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+      <main>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</app-layout>

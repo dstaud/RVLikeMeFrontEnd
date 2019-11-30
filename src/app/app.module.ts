@@ -12,11 +12,17 @@ import { WindowService } from './services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './features/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
+import { HeaderComponent } from './navigation/header/header.component';
+import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
+import { LayoutComponent } from './layout/layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    LayoutComponent,
+    HeaderComponent,
+    SidenavListComponent
     ],
   imports: [
     BrowserModule,

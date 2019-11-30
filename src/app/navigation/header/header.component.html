@@ -5,16 +5,22 @@
       </button>
   </div>
   <div>
-      <a routerLink="/home">Owner-Account</a>
+      <a routerLink="/">RV Like Me</a>
   </div>
   <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
       <ul fxLayout fxLayoutGap="15px" class="navigation-items">
           <li>
-              <a routerLink="/owner">Owner Actions</a>
+              <a routerLink="/connections">{{ "menu.connections" | translate}}</a>
           </li>
           <li>
-              <a routerLink="/account">Account Actions</a>
+              <a routerLink="/forums">{{ "menu.forums" | translate}}</a>
           </li>
+          <li>
+            <a routerLink="/messages">{{ "menu.messages" | translate}}</a>
+        </li>
+        <li>
+          <a routerLink="/profile">{{ "menu.profile" | translate}}</a>
+      </li>
       </ul>
   </div>
 </mat-toolbar>
