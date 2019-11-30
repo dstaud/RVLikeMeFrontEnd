@@ -1,0 +1,17 @@
+{
+  "general": {
+    "submit": "Submit"
+  },
+  "menu": {
+    "connections": "Connections",
+    "forums": "Forums",
+    "messages": "Messages",
+    "profile": "Profile"
+  },
+  "profile.component": {
+    "header": "Profile",
+    "preferredLang": "Language",
+    "english": "English",
+    "spanish": "Spanish"
+  }
+}

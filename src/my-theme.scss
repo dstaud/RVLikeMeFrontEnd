@@ -1,0 +1,15 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$rvlikeme-light-primary: mat-palette($mat-blue-grey);
+$rvlikeme-light-accent:  mat-palette($mat-blue-grey, A200);
+$rvlikeme-light-warn:    mat-palette($mat-red);
+$rvlikeme-light-theme: mat-light-theme($rvlikeme-light-primary, $rvlikeme-light-accent, $rvlikeme-light-warn);
+@include angular-material-theme($rvlikeme-light-theme);
+
+$rvlikeme-dark-primary: mat-palette($mat-blue-grey);
+$rvlikeme-dark-accent:  mat-palette($mat-blue-grey, A200);
+$rvlikeme-dark-warn:    mat-palette($mat-deep-orange);
+$rvlikeme-dark-theme:   mat-dark-theme($rvlikeme-dark-primary, $rvlikeme-dark-accent, $rvlikeme-dark-warn);
+@include angular-material-theme($rvlikeme-dark-theme);
