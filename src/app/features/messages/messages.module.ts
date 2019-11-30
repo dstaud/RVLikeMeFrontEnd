@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MessagesRoutingModule } from './messages-routing.module';
 import { MessagesComponent } from './messages.component';
-import { SharedModule } from '../translate/translate.module';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [MessagesComponent],

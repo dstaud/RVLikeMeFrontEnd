@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import {  MatInputModule,
   MatCardModule,
   MatButtonModule,
@@ -11,13 +11,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 
-
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
+  declarations:
+  [
   ],
   exports: [
+    TranslateModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
@@ -30,4 +29,4 @@ import { MatListModule } from '@angular/material/list';
     MatListModule
   ]
 })
-export class MaterialModule { }
+export class SharedModule { }

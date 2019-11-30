@@ -1,26 +1,26 @@
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './features/home/home.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: 'connections',
     loadChildren: () =>
-    import('./connections/connections.module')
+    import('./features/connections/connections.module')
     .then(m => m.ConnectionsModule)
   },
   { path: 'forums',
     loadChildren: () =>
-    import('./forums/forums.module')
+    import('./features/forums/forums.module')
     .then(m => m.ForumsModule)
   },
   { path: 'messages',
     loadChildren: () =>
-    import('./messages/messages.module')
+    import('./features/messages/messages.module')
     .then(m => m.MessagesModule)
   },
   { path: 'profile',
     loadChildren: () =>
-    import('./profile/profile.module')
+    import('./features/profile/profile.module')
     .then(m => m.ProfileModule)
   },
   {

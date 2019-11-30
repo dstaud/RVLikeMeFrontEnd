@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ForumsRoutingModule } from './forums-routing.module';
 import { ForumsComponent } from './forums.component';
-import { SharedModule } from '../translate/translate.module';
+import { SharedModule } from '../../shared/shared.module';
 
 
 @NgModule({

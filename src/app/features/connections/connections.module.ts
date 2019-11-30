@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ConnectionsRoutingModule } from './connections-routing.module';
 import { ConnectionsComponent } from './connections.component';
-import { SharedModule } from '../translate/translate.module';
+import { SharedModule } from '../../shared/shared.module';
 
 
 @NgModule({

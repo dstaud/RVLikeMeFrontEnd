@@ -5,12 +5,12 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { MaterialModule } from './material/material.module';
+import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { WindowService } from './services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './features/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -29,7 +29,7 @@ import { AppRoutingModule } from './app-routing.module';
       }
     }),
     AppRoutingModule,
-    MaterialModule,
+    SharedModule,
     FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
