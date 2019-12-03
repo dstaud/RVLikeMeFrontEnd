@@ -18,10 +18,10 @@ const routes: Routes = [
     import('./features/messages/messages.module')
     .then(m => m.MessagesModule)
   },
-  { path: 'profile',
+  { path: 'settings',
     loadChildren: () =>
-    import('./features/profile/profile.module')
-    .then(m => m.ProfileModule)
+    import('./features/settings/settings.module')
+    .then(m => m.SettingsModule)
   },
   {
     path: '',

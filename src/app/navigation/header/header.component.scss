@@ -1,24 +1,33 @@
+.toolbar {
+  display: flex;
+  height: 50px;
+  padding-top: 20px;
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.active-menu-item {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
+
 a {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 
 a:hover, a:active{
-    color: lightgray;
-}
-
-.navigation-items{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-mat-toolbar{
-    border-radius: 3px;
-}
-
-@media(max-width: 959px){
-    mat-toolbar{
-        border-radius: 0px;
-    }
+  color: lightgray;
 }

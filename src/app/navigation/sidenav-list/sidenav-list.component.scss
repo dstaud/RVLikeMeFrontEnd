@@ -7,7 +7,12 @@ a:hover, a:active{
     color: lightgray;
 }
 
+.active-menu-item {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .nav-caption{
-    display: inline-block;
+    // display: inline-block;
     padding-left: 6px;
 }

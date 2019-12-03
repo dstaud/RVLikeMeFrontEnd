@@ -7,7 +7,9 @@ import {  MatInputModule,
   MatExpansionModule,
   MatSidenavModule,
   MatIconModule,
-  MatSlideToggleModule } from '@angular/material';
+  MatSlideToggleModule,
+  MatSelectModule,
+  MatOptionModule } from '@angular/material';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
@@ -28,7 +30,9 @@ import { MatListModule } from '@angular/material/list';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatOptionModule
   ]
 })
 export class SharedModule { }

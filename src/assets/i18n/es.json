@@ -1,17 +1,31 @@
 {
   "general": {
-    "submit": "Enviar"
+    "submit": "Enviar",
+    "rvlikeme": "RV como yo"
   },
   "menu": {
     "connections": "Conexiones",
     "forums": "Foros",
     "messages": "Mensajes",
-    "profile": "Perfil"
+    "settings": "Configuraciones",
+    "home": "Casa"
   },
-  "profile.component": {
-    "header": "Perfil",
-    "preferredLang": "Idioa",
+  "settings.component": {
+    "header": "Configuraciones",
+    "preferred-language": "Idioma preferido",
     "english": "Inglés",
     "spanish": "Español"
+  },
+  "messages.component": {
+    "header": "Mensajes"
+  },
+  "connections.component": {
+    "header": "Conexiones"
+  },
+  "forums.component": {
+    "header": "Foros"
+  },
+  "home.component": {
+    "header": "Casa"
   }
 }

@@ -1,17 +1,14 @@
-<div [ngClass]="{'dark-theme': isDarkTheme | async}">
-  <div class="mat-app-background">
-    <app-layout>
-      <mat-sidenav-container>
-        <mat-sidenav #sidenav role="navigation" mode="push">
-          <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
-        </mat-sidenav>
-        <mat-sidenav-content>
-          <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
-          <main>
-            <router-outlet></router-outlet>
-          </main>
-        </mat-sidenav-content>
-      </mat-sidenav-container>
-    </app-layout>
-  </div>
-</div>
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #sidenav role="navigation" mode="push">
+    <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
+  </mat-sidenav>
+  <mat-sidenav-content fxLayout="column">
+    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+    <footer fxFlexOffset="auto">
+        <p>Test footer</p>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

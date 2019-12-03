@@ -1,26 +1,25 @@
-<mat-toolbar color="primary">
-  <div fxHide.gt-xs>
+<mat-toolbar color="primary" class="toolbar" role="toolbar">
+  <div class="mat-h3" fxHide.gt-xs>
       <button mat-icon-button (click)="onToggleSidenav()">
-          <mat-icon>menu</mat-icon>
+          <mat-icon area-label="menu">menu</mat-icon>
       </button>
+      <span>{{ "general.rvlikeme" | translate}}</span>
   </div>
-  <div>
-      <a routerLink="/">RV Like Me</a>
-  </div>
-  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
-      <ul fxLayout fxLayoutGap="15px" class="navigation-items">
-          <li>
-              <a routerLink="/connections">{{ "menu.connections" | translate}}</a>
-          </li>
-          <li>
-              <a routerLink="/forums">{{ "menu.forums" | translate}}</a>
-          </li>
-          <li>
-            <a routerLink="/messages">{{ "menu.messages" | translate}}</a>
-        </li>
-        <li>
-          <a routerLink="/profile">{{ "menu.profile" | translate}}</a>
-      </li>
-      </ul>
+
+  <div class="mat-h3" fxFlex fxLayout fxLayoutAlign="end" fxHide.xs fxLayoutGap="15px">
+      <a routerLink="/">
+        <span>{{ "general.rvlikeme" | translate}}</span>
+      </a>
+      <span class="fill-space"></span>
+      <a routerLink="/connections" routerLinkActive="active-menu-item">{{ "menu.connections" | translate}}</a>
+      <span>|</span>
+      <a routerLink="/forums" routerLinkActive="active-menu-item">{{ "menu.forums" | translate}}</a>
+      <span>|</span>
+      <a routerLink="/messages" routerLinkActive="active-menu-item">{{ "menu.messages" | translate}}</a>
+      <div class="icon-button">
+        <a routerLink="/settings" routerLinkActive="active-menu-item">
+          <mat-icon>settings</mat-icon>
+        </a>
+      </div>
   </div>
 </mat-toolbar>
