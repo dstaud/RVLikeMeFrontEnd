@@ -1,11 +1,11 @@
 .toolbar {
   display: flex;
   height: 50px;
+  position: fixed;
+  padding-left: 20px;
+  padding-right: 20px;
   padding-top: 20px;
-  position: sticky;
-  position: -webkit-sticky; /* For macOS/iOS Safari */
-  top: 0; /* Sets the sticky toolbar to be on top */
-  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+  top: 0;
 }
 
 .icon-button {

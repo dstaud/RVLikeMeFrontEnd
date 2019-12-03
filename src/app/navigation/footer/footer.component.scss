@@ -1,0 +1,47 @@
+footer {
+  position: fixed;
+  bottom: 0px;
+  overflow: hide;
+  width: 100%;
+  height: 50px;
+}
+
+.toolbar {
+  display: flex;
+}
+
+/* .div.menu-item {
+  text-align: center;
+} */
+.menu-icon {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.menu-icon-text {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-size: 70%;
+}
+
+.active-menu-item {
+  font-weight: bold;
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:hover, a:active{
+  color: lightgray;
+}
+

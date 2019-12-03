@@ -3,12 +3,11 @@
     <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
   <mat-sidenav-content fxLayout="column">
-    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
-    <main>
+    <app-header fxHide fxShow.gt-sm></app-header>
+    <span class="spacer" fxHide fxShow.gt-sm></span>
+    <main class="content">
       <router-outlet></router-outlet>
     </main>
-    <footer fxFlexOffset="auto">
-        <p>Test footer</p>
-    </footer>
+    <app-footer fxHide fxShow.lt-md></app-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { FooterComponent } from './navigation/footer/footer.component';
 
 @Component({
   selector: 'app-root',
