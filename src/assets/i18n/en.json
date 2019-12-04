@@ -8,7 +8,8 @@
     "forums": "Forums",
     "messages": "Messages",
     "settings": "Settings",
-    "home": "Home"
+    "home": "Home",
+    "about": "About"
   },
   "settings.component": {
     "header": "Settings",
@@ -27,5 +28,8 @@
   },
   "home.component": {
     "header": "Home"
+  },
+  "about.component": {
+    "header": "About"
   }
 }

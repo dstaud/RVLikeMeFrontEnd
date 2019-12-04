@@ -1,4 +1,4 @@
-<mat-sidenav-container fullscreen>
+<mat-sidenav-container class="bg" fullscreen>
   <mat-sidenav #sidenav role="navigation" mode="push">
     <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
@@ -8,6 +8,6 @@
     <main class="content">
       <router-outlet></router-outlet>
     </main>
-    <app-footer fxHide fxShow.lt-sm></app-footer>
+    <app-footer (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

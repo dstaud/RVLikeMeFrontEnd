@@ -16,6 +16,7 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { LayoutComponent } from './layout/layout.component';
 import { FooterComponent } from './navigation/footer/footer.component';
+import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FooterComponent } from './navigation/footer/footer.component';
     LayoutComponent,
     HeaderComponent,
     SidenavListComponent,
-    FooterComponent
+    FooterComponent,
+    PageNotFoundComponent
     ],
   imports: [
     BrowserModule,

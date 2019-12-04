@@ -1,4 +1,5 @@
 import { HomeComponent } from './features/home/home.component';
+import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -23,10 +24,20 @@ const routes: Routes = [
     import('./features/settings/settings.module')
     .then(m => m.SettingsModule)
   },
+  { path: 'about',
+  loadChildren: () =>
+  import('./features/about/about.module')
+  .then(m => m.AboutModule)
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
   {
     path: '',
-    component: HomeComponent
-  }
+    redirectTo: '/home' , pathMatch: 'full'
+  },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

@@ -2,8 +2,19 @@ mat-sidenav-container, mat-sidenav-content, mat-sidenav {
   height: 100vh;
 }
 
+.bg {
+  /* The image used */
+  background-image: URL("../assets/images/temp-background.jpg");
+  /* Full height */
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 mat-sidenav {
-  width: 250px;
+  width: 175px;
 }
 
 body {

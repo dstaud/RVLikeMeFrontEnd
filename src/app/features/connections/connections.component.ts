@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ConnectionsComponent implements OnInit {
 
-  constructor(public translate: TranslateService) {console.log('launched connections component');}
+  constructor(public translate: TranslateService) {console.log('launched connections component'); }
 
   ngOnInit() {
   }

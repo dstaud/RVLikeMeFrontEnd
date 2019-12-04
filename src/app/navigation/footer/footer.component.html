@@ -3,9 +3,9 @@
     <!-- <div class="mat-h3" fxFlex fxLayout="row" fxLayoutAlign="center" fxLayoutGap="25px"> -->
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
       <!-- <div class="menu-item"> -->
-        <a routerLink="/" routerLinkActive="active-menu-item">
+        <a routerLink="/home" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>home</mat-icon>
+            <mat-icon>home_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>home</span>
@@ -15,7 +15,7 @@
       <!-- <div class="menu-item"> -->
         <a routerLink="/connections" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>people</mat-icon>
+            <mat-icon>people_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>like me</span>
@@ -25,7 +25,7 @@
       <!-- <div class="menu-item"> -->
         <a routerLink="/forums" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>forums</mat-icon>
+            <mat-icon>forums_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>forums</span>
@@ -35,7 +35,7 @@
       <!-- <div class="menu-item"> -->
         <a routerLink="/messages" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>messages</mat-icon>
+            <mat-icon>messages_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>messages</span>
@@ -43,14 +43,14 @@
         </a>
       <!-- </div> -->
       <!-- <div class="menu-item"> -->
-        <a routerLink="/settings" routerLinkActive="active-menu-item">
+        <button mat-icon-button (click)="onToggleSidenav()">
           <div class="menu-icon">
-            <mat-icon>settings</mat-icon>
+            <mat-icon>more_horiz</mat-icon>
           </div>
           <div class="menu-icon-text">
-            <span>settings</span>
+            <span>more</span>
           </div>
-        </a>
+        </button>
       <!-- </div> -->
     </div>
   </mat-toolbar>
