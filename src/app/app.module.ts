@@ -14,7 +14,6 @@ import { HomeComponent } from './features/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
-import { LayoutComponent } from './layout/layout.component';
 import { FooterComponent } from './navigation/footer/footer.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 
@@ -22,7 +21,6 @@ import { PageNotFoundComponent } from './navigation/page-not-found/page-not-foun
   declarations: [
     AppComponent,
     HomeComponent,
-    LayoutComponent,
     HeaderComponent,
     SidenavListComponent,
     FooterComponent,

@@ -4,12 +4,13 @@
     "rvlikeme": "RV como yo"
   },
   "menu": {
-    "connections": "Conexiones",
-    "forums": "Foros",
-    "messages": "Mensajes",
-    "settings": "Configuraciones",
-    "home": "Casa",
-    "about": "Acerca de"
+    "connections": "como yo",
+    "forums": "foros",
+    "messages": "mensajes",
+    "settings": "configuraciones",
+    "home": "casa",
+    "about": "acerca de",
+    "more": "más"
   },
   "settings.component": {
     "header": "Configuraciones",

@@ -30,6 +30,7 @@ footer {
 
 .active-menu-item {
   color: black;
+  font-weight: bold;
 }
 
 .fill-space {
@@ -40,8 +41,3 @@ a {
   text-decoration: none;
   color: white;
 }
-
-a:hover, a:active{
-  color: lightgray;
-}
-

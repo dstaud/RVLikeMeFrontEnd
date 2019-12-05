@@ -4,12 +4,13 @@
     "rvlikeme": "RV Like Me"
   },
   "menu": {
-    "connections": "Connections",
-    "forums": "Forums",
-    "messages": "Messages",
-    "settings": "Settings",
-    "home": "Home",
-    "about": "About"
+    "connections": "like me",
+    "forums": "forums",
+    "messages": "messages",
+    "settings": "settings",
+    "home": "home",
+    "about": "about",
+    "more": "more"
   },
   "settings.component": {
     "header": "Settings",

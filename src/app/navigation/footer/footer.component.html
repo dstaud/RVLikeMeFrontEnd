@@ -1,57 +1,46 @@
 <footer class="footer" fxFlexOffset="auto">
   <mat-toolbar color="primary" class="toolbar" role="toolbar">
-    <!-- <div class="mat-h3" fxFlex fxLayout="row" fxLayoutAlign="center" fxLayoutGap="25px"> -->
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-      <!-- <div class="menu-item"> -->
         <a routerLink="/home" routerLinkActive="active-menu-item">
           <div class="menu-icon">
             <mat-icon>home_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
-            <span>home</span>
+            <span>{{ "menu.home" | translate }}</span>
           </div>
         </a>
-      <!-- </div> -->
-      <!-- <div class="menu-item"> -->
         <a routerLink="/connections" routerLinkActive="active-menu-item">
           <div class="menu-icon">
             <mat-icon>people_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
-            <span>like me</span>
+            <span>{{ "menu.connections" | translate }}</span>
           </div>
         </a>
-      <!-- </div> -->
-      <!-- <div class="menu-item"> -->
         <a routerLink="/forums" routerLinkActive="active-menu-item">
           <div class="menu-icon">
             <mat-icon>forums_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
-            <span>forums</span>
+            <span>{{ "menu.forums" | translate }}</span>
           </div>
         </a>
-      <!-- </div> -->
-      <!-- <div class="menu-item"> -->
         <a routerLink="/messages" routerLinkActive="active-menu-item">
           <div class="menu-icon">
             <mat-icon>messages_outline</mat-icon>
           </div>
           <div class="menu-icon-text">
-            <span>messages</span>
+            <span>{{ "menu.messages" | translate }}</span>
           </div>
         </a>
-      <!-- </div> -->
-      <!-- <div class="menu-item"> -->
-        <button mat-icon-button (click)="onToggleSidenav()">
+        <a (click)="onToggleSidenav()">
           <div class="menu-icon">
             <mat-icon>more_horiz</mat-icon>
           </div>
           <div class="menu-icon-text">
-            <span>more</span>
+            <span>{{ "menu.more" | translate }}</span>
           </div>
-        </button>
-      <!-- </div> -->
+        </a>
     </div>
   </mat-toolbar>
 </footer>
