@@ -14,6 +14,7 @@ html, body {
 @import './themes/light-theme.scss';
 @import './themes/dark-theme.scss';
 
+// Default to dark theme
 @include angular-material-theme($dark-theme);
 
 .light-theme {
@@ -22,9 +23,8 @@ html, body {
 
 @import './themes/default-typography.scss';
 
-//  .global-fonts {
-   @include angular-material-typography($custom-global-typography);
-  // }
+// Default to global font set
+@include angular-material-typography($custom-global-typography);
 
 .iphone-fonts {
   @include angular-material-typography($custom-iPhone-typography);
@@ -33,7 +33,3 @@ html, body {
 .android-fonts {
   @include angular-material-typography($custom-android-typography);
 }
-
-/* .light-theme {
-  @include angular-material-theme($light-theme);
-} */

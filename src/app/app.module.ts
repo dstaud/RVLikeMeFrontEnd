@@ -17,6 +17,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 import { FooterComponent } from './navigation/footer/footer.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
+import { ThemeService } from './core/services/theme.service';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
   ],
   providers: [
     WindowService,
-    HttpClient],
+    HttpClient,
+    ThemeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

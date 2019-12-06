@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ThemeService } from '../../core/services/theme.service';
 import { Observable } from 'rxjs';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-messages',
@@ -21,23 +22,26 @@ export class MessagesComponent implements OnInit {
   os: string;
   osVersion: string;
   userAgent: string;
-  bodyClass = document.querySelector('body');
-  isLightTheme: Observable<boolean>;
-  isGlobalFontsTheme: Observable<boolean>;
+   form: FormGroup;
+  fontTheme = new FormControl('', Validators.required);
+  theme = new FormControl('', Validators.required);
 
   constructor(public translate: TranslateService,
               private themeService: ThemeService,
-              private deviceService: DeviceDetectorService) {
+              private deviceService: DeviceDetectorService,
+              fb: FormBuilder) {
               this.getDeviceInfo();
-              console.log('launched messages component'); }
+              console.log('launched messages component');
+              this.form = fb.group({
+                fontTheme: ['global-font', Validators.required],
+                theme: ['dark-theme', Validators.required]
+              });
+            }
 
   ngOnInit() {
-    this.isLightTheme = this.themeService.isLightTheme;
-    this.isGlobalFontsTheme = this.themeService.isGlobalFontsTheme;
   }
 
   getDeviceInfo() {
-    console.log('hello `Home` component');
     this.deviceInfo = this.deviceService.getDeviceInfo();
     this.isMobile = this.deviceService.isMobile();
     this.isTablet = this.deviceService.isTablet();
@@ -50,19 +54,10 @@ export class MessagesComponent implements OnInit {
     this.userAgent = this.deviceInfo.userAgent;
   }
 
-  changeFontFamily() {
-    console.log('Global fonts found?', this.bodyClass.classList.contains('global-fonts'));
-    this.bodyClass.classList.remove('global-fonts');
-    console.log('Removed Font Set:', this.bodyClass.classList);
-    this.bodyClass.classList.add('android-fonts');
-    console.log('Added Font Set:', this.bodyClass.classList);
+  setThemeColorScheme(colorSceheme: string) {
+    this.themeService.setGlobalTheme(colorSceheme);
   }
-
-  toggleLightTheme(checked: boolean) {
-    this.themeService.setLightTheme(checked);
-  }
-
-  toggleAndroidFontsTheme(checked: boolean) {
-    this.themeService.setAndroidFontsTheme(checked);
+  setThemeFont(font: string) {
+    this.themeService.setGlobalFont(font);
   }
 }

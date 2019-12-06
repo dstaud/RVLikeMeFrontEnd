@@ -5,18 +5,18 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class ThemeService {
-  private lightTheme = new Subject<boolean>();
-  isLightTheme = this.lightTheme.asObservable();
+  private defaultFont = new Subject<string>();
+  defaultGlobalFont = this.defaultFont.asObservable();
 
-  private globalFontsTheme = new Subject<boolean>();
-  isGlobalFontsTheme = this.globalFontsTheme.asObservable();
+  private defaultTheme = new Subject<string>();
+  defaultGlobalTheme = this.defaultTheme.asObservable();
 
-  setLightTheme(isLightTheme: boolean): void {
-    this.lightTheme.next(isLightTheme);
+  setGlobalTheme(colorScheme: string): void {
+    this.defaultTheme.next(colorScheme);
   }
 
-  setAndroidFontsTheme(isGlobalFontsTheme: boolean): void {
-    this.globalFontsTheme.next(isGlobalFontsTheme);
+  setGlobalFont(font: string): void {
+    this.defaultFont.next(font);
   }
 
   constructor() { }
