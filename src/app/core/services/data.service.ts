@@ -1,9 +1,9 @@
-import { Iuser } from './../interfaces/user';
+import { Iuser } from '../../interfaces/user';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { WindowService } from './window.service';
 
 @Injectable({

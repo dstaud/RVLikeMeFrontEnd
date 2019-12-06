@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { WindowService } from './services/window.service';
+import { WindowService } from './core/services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './features/home/home.component';
 import { AppRoutingModule } from './app-routing.module';
