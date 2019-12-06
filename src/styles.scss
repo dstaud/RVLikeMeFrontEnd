@@ -4,15 +4,11 @@ html, body {
   height: 100%;
 }
 
-/* You can add global styles to this file, and also import other style files */
-// @import '@angular/material/prebuilt-themes/indigo-pink.css';
-
 @import '~@angular/material/theming';
 
 @include mat-core();
 
-@import './themes/light-theme.scss';
-@import './themes/dark-theme.scss';
+@import './themes/theme-color-schemes.scss';
 
 // Default to dark theme
 @include angular-material-theme($dark-theme);
@@ -21,7 +17,7 @@ html, body {
   @include angular-material-theme($light-theme);
 }
 
-@import './themes/default-typography.scss';
+@import './themes/theme-typography.scss';
 
 // Default to global font set
 @include angular-material-typography($custom-global-typography);

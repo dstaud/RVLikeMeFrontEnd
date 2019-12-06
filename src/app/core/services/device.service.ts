@@ -20,7 +20,7 @@ export class DeviceService {
   constructor(private deviceService: DeviceDetectorService,
               private themeService: ThemeService) {
               this.getDeviceInfo();
-               }
+              }
 
   getDeviceInfo() {
     this.deviceInfo = this.deviceService.getDeviceInfo();
@@ -35,27 +35,28 @@ export class DeviceService {
     this.userAgent = this.deviceInfo.userAgent;
   }
 
-  determineGlobalFont() {
+  determineGlobalFontTheme() {
+    // Based on type of device, determine the appropriate custom typography class to use (see styles.scss)
     if (this.deviceInfo.isDesktop || this.deviceInfo.isTablet) {
       console.log('Desktop or Tablet device.  Using default fonts');
-      this.themeService.setGlobalFont('global-font');
+      this.themeService.setGlobalFontTheme('global-font');
     } else {
       if (this.deviceInfo.isMobile) {
         if (this.device === 'iPhone') {
           console.log('iPhone device.  Resetting fonts');
-          this.themeService.setGlobalFont('iPhone-font');
+          this.themeService.setGlobalFontTheme('iPhone-font');
         } else {
           if (this.device === 'Android') {
             console.log('Android device.  Resetting fonts');
-            this.themeService.setGlobalFont('android-font');
+            this.themeService.setGlobalFontTheme('android-font');
           } else {
             console.log('Other mobile device.  Using default fonts');
-            this.themeService.setGlobalFont('global-font');
+            this.themeService.setGlobalFontTheme('global-font');
           }
         }
       } else {
         console.log('Unknown device.  Using default fonts');
-        this.themeService.setGlobalFont('global-font');
+        this.themeService.setGlobalFontTheme('global-font');
       }
     }
   }

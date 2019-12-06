@@ -14,17 +14,17 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit {
   title = 'RV Like Me';
   globalFontTheme: Observable<string>;
-  globalTheme: Observable<string>;
+  globalColorTheme: Observable<string>;
 
   constructor(public translate: TranslateService,
               private deviceService: DeviceService,
               private themeService: ThemeService) {
-    translate.setDefaultLang('en');
-    this.deviceService.determineGlobalFont();
+    translate.setDefaultLang('en'); // Default to US English
+    this.deviceService.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience
   }
 
   ngOnInit() {
-    this.globalFontTheme = this.themeService.defaultGlobalFont;
-    this.globalTheme = this.themeService.defaultGlobalTheme;
+    this.globalFontTheme = this.themeService.defaultGlobalFontTheme;
+    this.globalColorTheme = this.themeService.defaultGlobalColorTheme;
   }
 }

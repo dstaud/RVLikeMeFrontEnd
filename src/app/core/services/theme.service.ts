@@ -6,16 +6,16 @@ import { Subject } from 'rxjs';
 })
 export class ThemeService {
   private defaultFont = new Subject<string>();
-  defaultGlobalFont = this.defaultFont.asObservable();
+  defaultGlobalFontTheme = this.defaultFont.asObservable();
 
   private defaultTheme = new Subject<string>();
-  defaultGlobalTheme = this.defaultTheme.asObservable();
+  defaultGlobalColorTheme = this.defaultTheme.asObservable();
 
-  setGlobalTheme(colorScheme: string): void {
+  setGlobalColorTheme(colorScheme: string): void {
     this.defaultTheme.next(colorScheme);
   }
 
-  setGlobalFont(font: string): void {
+  setGlobalFontTheme(font: string): void {
     this.defaultFont.next(font);
   }
 
