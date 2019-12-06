@@ -1,36 +1,38 @@
-<h2 class="mat-h2">{{ "settings.component.header" | translate}} </h2>
-<form [formGroup]="form">
-  <mat-form-field>
-    <mat-select formControlName="language"
-                placeholder="{{ 'settings.component.preferred-language' | translate }}"
-                (selectionChange)="setLanguage($event.source.value)"
-                aria-label="select language">
-      <mat-option value='en'>{{ "settings.component.english" | translate }}</mat-option>
-      <mat-option value='es'>{{ "settings.component.spanish" | translate }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-  <p>stuff</p>
-</form>
+<div class="mat-app-background">
+  <h2 class="mat-h2">{{ "settings.component.header" | translate}} </h2>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-select formControlName="language"
+                  placeholder="{{ 'settings.component.preferred-language' | translate }}"
+                  (selectionChange)="setLanguage($event.source.value)"
+                  aria-label="select language">
+        <mat-option value='en'>{{ "settings.component.english" | translate }}</mat-option>
+        <mat-option value='es'>{{ "settings.component.spanish" | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+    <p>stuff</p>
+  </form>
+</div>

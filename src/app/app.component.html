@@ -1,11 +1,11 @@
-<mat-sidenav-container class="bg" fullscreen>
+<mat-sidenav-container fullscreen [ngClass]="{'light-theme': isLightTheme | async, 'android-fonts': isGlobalFontsTheme | async}"> <!-- include class="bg" for background attributes -->
   <mat-sidenav #sidenav role="navigation" mode="push">
     <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
   <mat-sidenav-content fxLayout="column">
     <app-header fxHide fxShow.gt-sm></app-header>
     <span class="spacer" fxHide fxShow.gt-sm></span>
-    <main class="content">
+    <main class="mat-app-background">
       <router-outlet></router-outlet>
     </main>
     <app-footer (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>

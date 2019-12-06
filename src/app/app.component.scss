@@ -2,12 +2,10 @@ mat-sidenav-container, mat-sidenav-content, mat-sidenav {
   height: 100vh;
 }
 
+// Set Background attributes
 .bg {
-  /* The image used */
   background-image: URL("../assets/images/temp-background.jpg");
-  /* Full height */
   height: 100%;
-  /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -23,7 +21,7 @@ body {
 
 main {
   padding-left: 30px;
-  // margin-top: 50px;
+  height: 100%;
 }
 
 .spacer {

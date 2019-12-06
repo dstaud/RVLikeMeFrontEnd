@@ -29,6 +29,11 @@ const routes: Routes = [
   import('./features/about/about.module')
   .then(m => m.AboutModule)
   },
+  { path: 'profile',
+  loadChildren: () =>
+  import('./features/profile/profile.module')
+  .then(m => m.ProfileModule)
+  },
   {
     path: 'home',
     component: HomeComponent

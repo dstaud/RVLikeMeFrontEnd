@@ -1,6 +1,17 @@
-<h2 class="mat-h2">{{ "messages.component.header" | translate}} </h2>
-<p>space</p>
-<p>space</p>
-<p>space</p>
-<p>space</p>
+<div class="mat-app-background">
+  <h2 class="mat-h2">{{ "messages.component.header" | translate}} </h2>
+  <button mat-raised-button (click)="changeFontFamily()">Update font</button>
+  <mat-slide-toggle [checked]="isLightTheme | async" (change)="toggleLightTheme($event.checked)">Light theme</mat-slide-toggle>
+  <mat-slide-toggle [checked]="isGlobalFontsTheme | async" (change)="toggleAndroidFontsTheme($event.checked)">Android theme</mat-slide-toggle>
+  <p class="mat-subheading-2">The quick brown fox jumps over the lazy dog</p>
+  <p class="mat-subheading-2">Is a mobile device: {{ isMobile }}</p>
+  <p class="mat-subheading-2">Is a tablet device: {{ isTablet }}</p>
+  <p class="mat-subheading-2">Is a desktop device: {{ isDesktop }}</p>
+  <p class="mat-subheading-2">Browser: {{ browser }}</p>
+  <p class="mat-subheading-2">Browser version: {{ browserVersion }}</p>
+  <p class="mat-subheading-2">Device: {{ device }}</p>
+  <p class="mat-subheading-2">Operating system: {{ os }}</p>
+  <p class="mat-subheading-2">OS version: {{ osVersion }}</p>
+  <p class="mat-subheading-2">User agent: {{ userAgent }}</p>
+</div>
 

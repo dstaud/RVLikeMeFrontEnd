@@ -32,5 +32,8 @@
   },
   "about.component": {
     "header": "About"
+  },
+  "profile.component": {
+    "header": "Profile"
   }
 }

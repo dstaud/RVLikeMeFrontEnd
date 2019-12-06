@@ -11,13 +11,29 @@ html, body {
 
 @include mat-core();
 
+@import './themes/light-theme.scss';
 @import './themes/dark-theme.scss';
-@import './themes/default-theme.scss';
+
 @include angular-material-theme($dark-theme);
 
-@import './themes/default-typography.scss';
-@include mat-base-typography($custom-typography);
+.light-theme {
+  @include angular-material-theme($light-theme);
+}
 
-/* .dark-theme {
-  @include angular-material-theme($dark-theme);
+@import './themes/default-typography.scss';
+
+//  .global-fonts {
+   @include angular-material-typography($custom-global-typography);
+  // }
+
+.iphone-fonts {
+  @include angular-material-typography($custom-iPhone-typography);
+ }
+
+.android-fonts {
+  @include angular-material-typography($custom-android-typography);
+}
+
+/* .light-theme {
+  @include angular-material-theme($light-theme);
 } */

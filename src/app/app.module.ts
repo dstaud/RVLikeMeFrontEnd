@@ -16,6 +16,7 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { FooterComponent } from './navigation/footer/footer.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { PageNotFoundComponent } from './navigation/page-not-found/page-not-foun
   imports: [
     BrowserModule,
     HttpClientModule,
+    DeviceDetectorModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,
