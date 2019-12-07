@@ -11,4 +11,10 @@
   <mat-icon>rv_hookup</mat-icon>
   <span class="nav-caption">{{ "menu.about" | translate}}</span>
   </a>
+  <a mat-list-item routerLink="/profile"
+  (click)="onSidenavClose()"
+  routerLinkActive="active-menu-item">
+  <mat-icon>person</mat-icon>
+  <span class="nav-caption">{{ "menu.profile" | translate}}</span>
+  </a>
 </mat-nav-list>

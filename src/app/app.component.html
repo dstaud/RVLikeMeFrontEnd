@@ -5,7 +5,7 @@
       <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
-      <app-header fxHide fxShow.gt-sm></app-header>
+      <app-header (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-header>
       <span class="spacer" fxHide fxShow.gt-sm></span>
       <main class="mat-app-background">
         <router-outlet></router-outlet>

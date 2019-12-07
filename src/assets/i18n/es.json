@@ -10,7 +10,8 @@
     "settings": "configuraciones",
     "home": "casa",
     "about": "acerca de",
-    "more": "más"
+    "more": "más",
+    "profile": "Perfil"
   },
   "settings.component": {
     "header": "Configuraciones",

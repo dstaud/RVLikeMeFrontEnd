@@ -9,10 +9,8 @@
       <a routerLink="/forums" routerLinkActive="active-menu-item">{{ "menu.forums" | translate}}</a>
       <span>|</span>
       <a routerLink="/messages" routerLinkActive="active-menu-item">{{ "menu.messages" | translate}}</a>
-      <div class="icon-button">
-        <a routerLink="/settings" routerLinkActive="active-menu-item">
-          <mat-icon>settings</mat-icon>
-        </a>
-      </div>
+      <button mat-button class="icon-button" (click)="onToggleSidenav()">
+          <mat-icon>menu</mat-icon>
+      </button>
   </div>
 </mat-toolbar>
