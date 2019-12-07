@@ -40,8 +40,14 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/home' , pathMatch: 'full'
+    component: HomeComponent
   },
+/*
+  Redirect causing Lighthouse Audit to fail so avoiding that for now.
+  {
+    path: '',
+    redirectTo: '/home' , pathMatch: 'full'
+  }, */
   { path: '**', component: PageNotFoundComponent }
 ];
 

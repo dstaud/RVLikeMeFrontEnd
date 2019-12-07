@@ -6,6 +6,9 @@ html, body {
 
 @import '~@angular/material/theming';
 
+// Make sure material icons are available offline
+@import '~material-design-icons/iconfont/material-icons.css';
+
 @include mat-core();
 
 @import './themes/theme-color-schemes.scss';
