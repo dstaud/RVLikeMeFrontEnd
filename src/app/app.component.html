@@ -1,13 +1,11 @@
-<!-- include class="bg" for background attributes -->
-<mat-sidenav-container fullscreen [ngClass]="globalFontTheme | async">
+<mat-sidenav-container fullscreen [ngClass]="globalFontTheme | async" >
 <!-- <mat-sidenav-container fullscreen [ngClass]="globalColorTheme | async"> -->
     <mat-sidenav #sidenav role="navigation" mode="push">
       <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
-      <app-header (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-header>
-      <span class="spacer" fxHide fxShow.gt-sm></span>
-      <main class="mat-app-background">
+      <app-header class="header" (sidenavToggle)="sidenav.toggle()"></app-header>
+      <main class="background">
         <router-outlet></router-outlet>
       </main>
       <app-footer (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>

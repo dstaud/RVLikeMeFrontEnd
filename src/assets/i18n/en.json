@@ -23,7 +23,7 @@
     "header": "Messages"
   },
   "connections.component": {
-    "header": "Connections"
+    "header": "Like Me"
   },
   "forums.component": {
     "header": "Forums"
@@ -36,5 +36,8 @@
   },
   "profile.component": {
     "header": "Profile"
+  },
+  "landing-page.component": {
+    "header": "RV Like Me"
   }
 }

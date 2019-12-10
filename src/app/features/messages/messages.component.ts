@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemeService } from '../../core/services/theme.service';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { PageTitleService } from './../../core/services/page-title.service';
 
 @Component({
   selector: 'app-messages',
@@ -25,6 +26,7 @@ export class MessagesComponent implements OnInit {
 
   constructor(public translate: TranslateService,
               private themeService: ThemeService,
+              private pageTitle: PageTitleService,
               fb: FormBuilder) {
               console.log('launched messages component');
               this.form = fb.group({
@@ -34,6 +36,7 @@ export class MessagesComponent implements OnInit {
             }
 
   ngOnInit() {
+    this.pageTitle.setPageTitle('Messages');
   }
 
   setThemeColorScheme(colorSceheme: string) {

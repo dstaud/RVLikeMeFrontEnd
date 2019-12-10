@@ -10,7 +10,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { WindowService } from './core/services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HomeComponent } from './features/home/home.component';
+import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
@@ -22,14 +22,14 @@ import { ThemeService } from './core/services/theme.service';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    LandingPageComponent,
     HeaderComponent,
     SidenavListComponent,
     FooterComponent,
     PageNotFoundComponent
     ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,
     DeviceDetectorModule.forRoot(),
     TranslateModule.forRoot({

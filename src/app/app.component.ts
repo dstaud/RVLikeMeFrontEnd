@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 
 export class AppComponent implements OnInit {
-  title = 'RV Like Me';
+  pageTitle: Observable<string>;
   globalFontTheme: Observable<string>;
   globalColorTheme: Observable<string>;
 

@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:server": "nodemon server.js"
+    "start:server": "nodemon server.js",
+    "prerender": "./node_modules/.bin/ts-node ./prerender.ts"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +23,7 @@
     "@angular/material": "^8.2.3",
     "@angular/platform-browser": "~8.2.13",
     "@angular/platform-browser-dynamic": "~8.2.13",
+    "@angular/platform-server": "~8.2.13",
     "@angular/pwa": "^0.803.15",
     "@angular/router": "~8.2.13",
     "@angular/service-worker": "~8.2.13",
@@ -39,7 +41,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.16",
-    "@angular/cli": "~8.3.16",
+    "@angular/cli": "^8.3.20",
     "@angular/compiler-cli": "~8.2.13",
     "@angular/language-service": "~8.2.13",
     "@types/jasmine": "~3.3.8",

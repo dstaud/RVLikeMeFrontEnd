@@ -1,6 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { SharedModule } from '../../shared/shared.module';
-import { TranslateService } from '@ngx-translate/core';
 
 import { HomeComponent } from './home.component';
 

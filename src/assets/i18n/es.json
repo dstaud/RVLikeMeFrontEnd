@@ -23,7 +23,7 @@
     "header": "Mensajes"
   },
   "connections.component": {
-    "header": "Conexiones"
+    "header": "Como yo"
   },
   "forums.component": {
     "header": "Foros"
@@ -36,5 +36,8 @@
   },
   "profile.component": {
     "header": "Perfil"
+  },
+  "landing-page.component": {
+    "header": "RV como yo"
   }
 }

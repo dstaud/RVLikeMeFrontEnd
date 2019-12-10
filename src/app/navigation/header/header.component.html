@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" class="toolbar" role="toolbar">
-  <div class="mat-h3" fxFlex fxLayout fxLayoutAlign="end" fxHide.xs fxLayoutGap="15px">
+  <div class="mat-h3" fxFlex fxLayout fxLayoutAlign="end" fxHide.lt-sm fxLayoutGap="15px">
       <a routerLink="/">
         <span>{{ "general.rvlikeme" | translate}}</span>
       </a>
@@ -12,5 +12,8 @@
       <button mat-button class="icon-button" (click)="onToggleSidenav()">
           <mat-icon>menu</mat-icon>
       </button>
+  </div>
+  <div class="mat-h3" fxFlex fxLayoutAlign="center" fxHide.gt-sm>
+    <span class="page-title">{{ pageTitle | async }}</span>
   </div>
 </mat-toolbar>

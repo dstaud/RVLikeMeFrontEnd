@@ -3,12 +3,14 @@ mat-sidenav-container, mat-sidenav-content, mat-sidenav {
 }
 
 // Set Background attributes
-.bg {
-  background-image: URL("../assets/images/temp-background.jpg");
+.background {
   height: 100%;
+  background-image: URL("../assets/images/RVNight.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
+  overflow: auto;
 }
 
 mat-sidenav {
@@ -19,20 +21,14 @@ body {
   margin: 0;
 }
 
+.header {
+  margin-bottom: 50px;
+}
 main {
-  padding-left: 30px;
-  height: 100%;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 
 .spacer {
   margin-top: 50px;
 }
-
-/* content {
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 100px;
-  margin-top: 20px;
-  // overflow: auto;
-  width: 80%;
-} */
