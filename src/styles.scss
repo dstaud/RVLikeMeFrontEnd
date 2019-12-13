@@ -14,10 +14,18 @@ html, body {
 @import './themes/theme-color-schemes.scss';
 
 // Default to dark theme
-@include angular-material-theme($dark-theme);
+@include angular-material-theme($bg-theme);
 
 .light-theme {
   @include angular-material-theme($light-theme);
+}
+
+.orange-theme {
+  @include angular-material-theme($orange-theme);
+}
+
+.dark-theme {
+  @include angular-material-theme($dark-theme);
 }
 
 @import './themes/theme-typography.scss';

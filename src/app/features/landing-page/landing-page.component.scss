@@ -1,5 +1,24 @@
 .background {
   height: 100%;
-  opacity: 0.9;
+  // opacity: 0.9;
   overflow: auto;
+  margin-top: 50px;
+}
+
+.hook {
+  margin-top: 20px;
+  line-height: 1.4;
+}
+
+.marketing-message {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.sub-text {
+  text-indent: 10px;
+}
+
+.button {
+  text-align: center;
 }

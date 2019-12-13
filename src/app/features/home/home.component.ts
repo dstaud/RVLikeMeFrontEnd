@@ -1,7 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ThemeService } from '../../core/services/theme.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PageTitleService } from './../../core/services/page-title.service';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +8,10 @@ import { PageTitleService } from './../../core/services/page-title.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public translate: TranslateService,
-              private themeService: ThemeService,
-              private pageTitle: PageTitleService) { }
+  constructor(public translate: TranslateService) { }
 
   ngOnInit() {
-    this.pageTitle.setPageTitle(this.translate.instant('home.component.header'));
+    console.log('in home component on init');
   }
 
 }

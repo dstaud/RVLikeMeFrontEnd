@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
+import { HomeComponent } from './features/home/home.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 
 const routes: Routes = [
@@ -34,10 +35,14 @@ const routes: Routes = [
   import('./features/profile/profile.module')
   .then(m => m.ProfileModule)
   },
-  { path: 'home',
+/*   { path: 'home',
   loadChildren: () =>
   import('./features/home/home.module')
   .then(m => m.HomeModule)
+  }, */
+  {
+    path: 'home',
+    component: HomeComponent
   },
   {
     path: '',

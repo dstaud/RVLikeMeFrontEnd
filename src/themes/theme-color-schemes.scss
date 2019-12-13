@@ -8,6 +8,16 @@ $light-theme: mat-light-theme(
   $light-warn
 );
 
+$orange-primary: mat-palette($mat-deep-orange, 700, 300, 900);
+$orange-accent: mat-palette($mat-blue-grey, 400);
+$orange-warn: mat-palette($mat-red, 500);
+
+$orange-theme: mat-light-theme(
+  $orange-primary,
+  $orange-accent,
+  $orange-warn
+);
+
 $dark-primary: mat-palette($mat-grey, 700, 300, 900);
 $dark-accent: mat-palette($mat-blue-grey, 400);
 $dark-warn: mat-palette($mat-red, 500);
@@ -16,4 +26,14 @@ $dark-theme: mat-dark-theme(
   $dark-primary,
   $dark-accent,
   $dark-warn
+);
+
+$bg-primary: mat-palette($mat-blue-grey, 700, 300, 900);
+$bg-accent: mat-palette($mat-grey, 400);
+$bg-warn: mat-palette($mat-red, 500);
+
+$bg-theme: mat-dark-theme(
+  $bg-primary,
+  $bg-accent,
+  $bg-warn
 );

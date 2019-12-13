@@ -18,6 +18,8 @@ import { FooterComponent } from './navigation/footer/footer.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { ThemeService } from './core/services/theme.service';
+import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
+import { HomeComponent } from './features/home/home.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ThemeService } from './core/services/theme.service';
     HeaderComponent,
     SidenavListComponent,
     FooterComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    HeaderMobileComponent,
+    HomeComponent
     ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

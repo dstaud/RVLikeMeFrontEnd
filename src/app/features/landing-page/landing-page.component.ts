@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ShowFooterService } from './../../core/services/show-footer.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -8,9 +8,19 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LandingPageComponent implements OnInit {
 
-  constructor(public translate: TranslateService) {console.log('launched landing component');}
+  constructor(private showFooter: ShowFooterService) {
+                console.log('launched landing component');
+              }
 
   ngOnInit() {
+    this.showFooter.activateFooter(false);
   }
 
+  signUp() {
+    console.log('sign up');
+  }
+
+  learnMore() {
+    console.log('learn more');
+  }
 }

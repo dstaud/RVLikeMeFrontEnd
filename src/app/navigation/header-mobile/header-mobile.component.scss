@@ -1,0 +1,14 @@
+.toolbar {
+  display: flex;
+  height: 50px;
+  position: fixed;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  top: 0;
+  z-index: 1; // To make sure content flows under toolbar for desktop
+}
+
+.fill-space {
+  flex: 1 1 auto;
+}
