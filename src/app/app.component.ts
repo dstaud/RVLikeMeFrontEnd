@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
   userAuthorized$: Observable<boolean>;
   theme: string;
   font: string;
-  userAuthorized: boolean;
+  // userAuthorized: boolean;
+  userAuthorized = false;
 
 
   constructor(public translate: TranslateService,

@@ -3,7 +3,8 @@
     <img src="../../../assets/images/trailer.png"
           alt="travel trailer logo"
           style="width:60px;height:37.2px;">
-    <span class="page-title">RV Like Me - {{ pageTitle }}</span>
+    <span *ngIf="userAuthorized" class="page-title">RV Like Me - {{ pageTitle }}</span>
+    <span *ngIf="!userAuthorized" class="page-title">RV Like Me</span>
     <span class="fill-space"></span>
     <button *ngIf="!userAuthorized" mat-button (click)="signIn()">Sign in</button>
   </div>

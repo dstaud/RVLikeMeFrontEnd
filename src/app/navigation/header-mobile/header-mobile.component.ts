@@ -11,7 +11,8 @@ import { UserAuthService } from './../../core/services/user-auth.service';
 })
 export class HeaderMobileComponent implements OnInit {
   pageTitle: string;
-  userAuthorized: boolean;
+  // userAuthorized: boolean;
+  userAuthorized = false;
 
   constructor(private userAuth: UserAuthService,
               public translate$: TranslateService,

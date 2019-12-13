@@ -1,6 +1,6 @@
 <!-- <mat-sidenav-container fullscreen [ngClass]="globalFontTheme | async" > -->
 <!-- <mat-sidenav-container fullscreen [ngClass]="globalColorTheme | async"> -->
-<mat-sidenav-container *ngIf="userAuthorized" fullscreen [ngClass]="theme">
+<mat-sidenav-container fullscreen [ngClass]="theme">
     <mat-sidenav #sidenav role="navigation" mode="push">
       <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
     </mat-sidenav>
@@ -10,18 +10,12 @@
       <main class="background">
         <router-outlet></router-outlet>
       </main>
-      <app-footer (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>
+      <app-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>
     </mat-sidenav-content>
 </mat-sidenav-container>
-<mat-sidenav-container *ngIf="!userAuthorized" fullscreen [ngClass]="theme">
-    <mat-sidenav #sidenav role="navigation" mode="push">
-      <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
-    </mat-sidenav>
+<!-- <mat-sidenav-container *ngIf="!userAuthorized" fullscreen [ngClass]="theme">
     <mat-sidenav-content fxLayout="column">
       <app-header-mobile class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-header-mobile>
-      <main class="background">
-        <router-outlet></router-outlet>
-      </main>
-      <!-- <app-footer (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer> -->
+      <router-outlet></router-outlet>
     </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container> -->
