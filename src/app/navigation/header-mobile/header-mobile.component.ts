@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserAuthService } from './../../core/services/user-auth.service';
+import { SigninDialogComponent } from './../../features/signin-dialog/signin-dialog.component';
+
 
 @Component({
   selector: 'app-header-mobile',
@@ -16,7 +19,8 @@ export class HeaderMobileComponent implements OnInit {
 
   constructor(private userAuth: UserAuthService,
               public translate$: TranslateService,
-              private router: Router) {
+              private router: Router,
+              private signInDialog: MatDialog) {
     router.events
       .subscribe({
         next: (event) => {
@@ -66,10 +70,35 @@ export class HeaderMobileComponent implements OnInit {
     }
   }
 
-  signIn() {
+/*   signIn() {
     console.log('sign in');
     this.userAuth.userAuthorized(true);
     this.userAuthorized = true;
     this.router.navigateByUrl('/home');
-  }
+  } */
+  signIn() {
+
+    const signinConfig = new MatDialogConfig();
+
+    signinConfig.autoFocus = true;
+    signinConfig.hasBackdrop = false;
+    signinConfig.position = {
+      top: '60px'
+    };
+    signinConfig.ariaLabel = 'Sign In Dialog';
+
+    const dialogRef = this.signInDialog.open(SigninDialogComponent, signinConfig);
+
+    dialogRef.afterClosed()
+      .subscribe({
+        next: (val) => {
+          console.log('dialog closed', val);
+          if (val) {
+            this.userAuth.userAuthorized(true);
+            this.userAuthorized = true;
+            this.router.navigateByUrl('/home');
+          }
+        }
+      });
+    }
 }

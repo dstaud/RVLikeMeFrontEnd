@@ -19,7 +19,7 @@ export class MessagesComponent implements OnInit {
   os: string;
   osVersion: string;
   userAgent: string;
-   form: FormGroup;
+  form: FormGroup;
   fontTheme = new FormControl('', Validators.required);
   colorTheme = new FormControl('', Validators.required);
 

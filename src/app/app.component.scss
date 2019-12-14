@@ -8,7 +8,7 @@ mat-sidenav {
 
 // Set Background attributes for content area
 .background {
-  height: 100%;
+  height: 100vh;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -16,7 +16,7 @@ mat-sidenav {
   margin-top: 50px;
 }
 
-.landing {
+.bottom-bar-spacing {
   margin-bottom: 50px;
 }
 

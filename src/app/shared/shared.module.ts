@@ -9,7 +9,8 @@ import {  MatInputModule,
   MatIconModule,
   MatSlideToggleModule,
   MatSelectModule,
-  MatOptionModule } from '@angular/material';
+  MatOptionModule,
+  MatDialogModule } from '@angular/material';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
@@ -32,7 +33,8 @@ import { MatListModule } from '@angular/material/list';
     MatListModule,
     MatSlideToggleModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatDialogModule
   ]
 })
 export class SharedModule { }

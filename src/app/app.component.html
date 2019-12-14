@@ -7,7 +7,7 @@
     <mat-sidenav-content fxLayout="column">
       <app-header class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-header>
       <app-header-mobile class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-header-mobile>
-      <main class="background" [ngClass]="{'landing': userAuthorized}">
+      <main class="background" [ngClass]="{'bottom-bar-spacing': userAuthorized}">
         <router-outlet></router-outlet>
       </main>
       <app-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>

@@ -18,8 +18,8 @@ $orange-theme: mat-light-theme(
   $orange-warn
 );
 
-$dark-primary: mat-palette($mat-grey, 700, 300, 900);
-$dark-accent: mat-palette($mat-blue-grey, 400);
+$dark-primary: mat-palette($mat-blue-grey, 700, 300, 900);
+$dark-accent: mat-palette($mat-grey, 400);
 $dark-warn: mat-palette($mat-red, 500);
 
 $dark-theme: mat-dark-theme(
@@ -28,7 +28,7 @@ $dark-theme: mat-dark-theme(
   $dark-warn
 );
 
-$bg-primary: mat-palette($mat-blue-grey, 700, 300, 900);
+$bg-primary: mat-palette($mat-deep-orange, 700, 300, 900);
 $bg-accent: mat-palette($mat-grey, 400);
 $bg-warn: mat-palette($mat-red, 500);
 

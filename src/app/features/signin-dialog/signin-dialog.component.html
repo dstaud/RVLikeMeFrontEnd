@@ -1,0 +1,32 @@
+<div class="mat-app-background dialogWindow">
+  <h2 mat-dialog-title>Sign in</h2>
+  <mat-dialog-content [formGroup]="form">
+
+    <mat-form-field>
+        <input matInput
+              type="text"
+              placeholder="User ID"
+              formControlName="userID">
+        <mat-error *ngIf="errorHandling('userID', 'required')">
+          You must enter a <strong>User ID</strong>
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Password"
+            formControlName="password">
+      <mat-error *ngIf="errorHandling('password', 'required')">
+        You must enter a <strong>Password</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="submit()">Save</button>
+    <button class="mat-raised-button" (click)="close()">Close</button>
+  </mat-dialog-actions>
+</div>

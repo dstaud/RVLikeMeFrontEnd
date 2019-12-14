@@ -20,6 +20,8 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
 import { ThemeService } from './core/services/theme.service';
 import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
 import { HomeComponent } from './features/home/home.component';
+import { SigninDialogComponent } from './features/signin-dialog/signin-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { HomeComponent } from './features/home/home.component';
     FooterComponent,
     PageNotFoundComponent,
     HeaderMobileComponent,
-    HomeComponent
+    HomeComponent,
+    SigninDialogComponent
     ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -45,9 +48,13 @@ import { HomeComponent } from './features/home/home.component';
     }),
     AppRoutingModule,
     SharedModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
+  ],
+  entryComponents: [
+    SigninDialogComponent
   ],
   providers: [
     WindowService,
