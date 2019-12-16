@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserAuthService } from './../../core/services/user-auth.service';
