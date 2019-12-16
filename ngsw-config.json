@@ -12,7 +12,8 @@
           "/*.scss",
           "/*.css",
           "/*.js",
-          "/assets/i18n/en.json"
+          "/assets/i18n/en.json",
+          "/manifest.webmanifest"
         ]
       }
     }, {
