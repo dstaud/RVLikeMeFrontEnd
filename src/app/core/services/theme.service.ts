@@ -11,11 +11,11 @@ export class ThemeService {
   private defaultTheme = new Subject<string>();
   defaultGlobalColorTheme = this.defaultTheme.asObservable();
 
-  setGlobalColorTheme(colorScheme: string): void {
+  public setGlobalColorTheme(colorScheme: string): void {
     this.defaultTheme.next(colorScheme);
   }
 
-  setGlobalFontTheme(font: string): void {
+  public setGlobalFontTheme(font: string): void {
     this.defaultFont.next(font);
   }
 

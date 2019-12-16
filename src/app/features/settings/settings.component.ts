@@ -14,8 +14,8 @@ export class SettingsComponent implements OnInit {
 
   language = new FormControl('', Validators.required);
 
-  constructor(fb: FormBuilder,
-              public translate: TranslateService) {
+  constructor(private translate: TranslateService,
+              fb: FormBuilder) {
           this.form = fb.group({
           language: ['en', Validators.required]
       });

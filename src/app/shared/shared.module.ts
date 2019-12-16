@@ -16,9 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 
 @NgModule({
-  declarations:
-  [
-  ],
+  declarations: [],
   exports: [
     TranslateModule,
     MatInputModule,

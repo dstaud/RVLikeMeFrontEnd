@@ -10,7 +10,7 @@ export class UserAuthService {
 
   constructor() { }
 
-   userAuthorized(auth: boolean): void {
+  public userAuthorized(auth: boolean): void {
     this.userAuth.next(auth);
   }
 }

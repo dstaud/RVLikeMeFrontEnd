@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceService } from './core/services/device.service';
 import { ThemeService } from './core/services/theme.service';
-import { ShowFooterService } from './core/services/show-footer.service';
 import { UserAuthService } from './core/services/user-auth.service';
 
 @Component({
@@ -16,20 +15,17 @@ import { UserAuthService } from './core/services/user-auth.service';
 export class AppComponent implements OnInit {
   globalFontTheme: Observable<string>;
   globalColorTheme: Observable<string>;
-  showFooter$: Observable<boolean>;
   userAuthorized$: Observable<boolean>;
   theme: string;
   font: string;
-  // userAuthorized: boolean;
   userAuthorized = false;
 
 
-  constructor(public translate: TranslateService,
+  constructor(public translateService: TranslateService,
               private deviceService: DeviceService,
               private themeService: ThemeService,
-              private showFooter: ShowFooterService,
               private userAuthService: UserAuthService) {
-    translate.setDefaultLang('en'); // Default to US English
+    translateService.setDefaultLang('en'); // Default to US English
     this.deviceService.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience
   }
 
@@ -50,6 +46,5 @@ export class AppComponent implements OnInit {
       .subscribe(authData => {
         this.userAuthorized = authData.valueOf();
       });
-    this.showFooter$ = this.showFooter.showFooter$;
   }
 }

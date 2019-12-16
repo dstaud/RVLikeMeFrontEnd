@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserAuthService } from './../../core/services/user-auth.service';
 import { SigninDialogComponent } from './../../features/signin-dialog/signin-dialog.component';
 
-
 @Component({
   selector: 'app-header-mobile',
   templateUrl: './header-mobile.component.html',
@@ -14,52 +13,54 @@ import { SigninDialogComponent } from './../../features/signin-dialog/signin-dia
 })
 export class HeaderMobileComponent implements OnInit {
   pageTitle: string;
-  // userAuthorized: boolean;
+  userAuthorized$: Observable<boolean>;
   userAuthorized = false;
 
-  constructor(private userAuth: UserAuthService,
-              public translate$: TranslateService,
+  constructor(private userAuthService: UserAuthService,
+              private translateService: TranslateService,
               private router: Router,
               private signInDialog: MatDialog) {
-    router.events
-      .subscribe({
-        next: (event) => {
-          if (event instanceof NavigationEnd) {
-            this.setTitleOnRouteChange();
-          }
-        }
-    });
-    // router.events.subscribe( (event) => {
-      // ( event instanceof NavigationEnd ) && this.setTitleOnRouteChange());
   }
 
   ngOnInit() {
+    this.router.events
+    .subscribe({
+      next: (event) => {
+        if (event instanceof NavigationEnd) {
+          this.setTitleOnRouteChange();
+        }
+      }
+    });
+    this.userAuthService.userAuth$
+      .subscribe(authData => {
+        this.userAuthorized = authData.valueOf();
+      });
   }
 
-  setTitleOnRouteChange = () => {
+  setTitleOnRouteChange(): void {
     if (this.router.url.includes('home')) {
-     this.pageTitle = this.translate$.instant('home.component.header');
+     this.pageTitle = this.translateService.instant('home.component.header');
     } else {
       if (this.router.url.includes('forums')) {
-        this.pageTitle = this.translate$.instant('forums.component.header');
+        this.pageTitle = this.translateService.instant('forums.component.header');
       } else {
         if (this.router.url.includes('messages')) {
-          this.pageTitle = this.translate$.instant('messages.component.header');
+          this.pageTitle = this.translateService.instant('messages.component.header');
         } else {
           if (this.router.url.includes('connections')) {
-            this.pageTitle = this.translate$.instant('connections.component.header');
+            this.pageTitle = this.translateService.instant('connections.component.header');
           } else {
             if (this.router.url.includes('settings')) {
-              this.pageTitle = this.translate$.instant('settings.component.header');
+              this.pageTitle = this.translateService.instant('settings.component.header');
             } else {
               if (this.router.url.includes('about')) {
-                this.pageTitle = this.translate$.instant('about.component.header');
+                this.pageTitle = this.translateService.instant('about.component.header');
               } else {
                 if (this.router.url.includes('profile')) {
-                  this.pageTitle = this.translate$.instant('profile.component.header');
+                  this.pageTitle = this.translateService.instant('profile.component.header');
                 } else {
                   if (this.router.url.includes('')) {
-                    this.pageTitle = this.translate$.instant('Home');
+                    this.pageTitle = this.translateService.instant('Home');
                   }
                 }
               }
@@ -70,12 +71,6 @@ export class HeaderMobileComponent implements OnInit {
     }
   }
 
-/*   signIn() {
-    console.log('sign in');
-    this.userAuth.userAuthorized(true);
-    this.userAuthorized = true;
-    this.router.navigateByUrl('/home');
-  } */
   signIn() {
 
     const signinConfig = new MatDialogConfig();
@@ -93,9 +88,10 @@ export class HeaderMobileComponent implements OnInit {
       .subscribe({
         next: (val) => {
           console.log('dialog closed', val);
+          console.log('user=', val.userID);
+          console.log('password=', val.password);
           if (val) {
-            this.userAuth.userAuthorized(true);
-            this.userAuthorized = true;
+            this.userAuthService.userAuthorized(true);
             this.router.navigateByUrl('/home');
           }
         }
