@@ -5,6 +5,8 @@ import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserAuthService } from './../../core/services/user-auth.service';
 import { SigninDialogComponent } from './../../features/register-signin/signin-dialog/signin-dialog.component';
+import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
+import { RegisterTriggeredService } from './../../core/services/register-triggered.service';
 
 @Component({
   selector: 'app-header-mobile',
@@ -15,11 +17,14 @@ export class HeaderMobileComponent implements OnInit {
   pageTitle: string;
   userAuthorized$: Observable<boolean>;
   userAuthorized = false;
+  signinVisible = true;
 
   constructor(private userAuthService: UserAuthService,
               private translateService: TranslateService,
               private router: Router,
-              private signInDialog: MatDialog) {
+              private signInDialog: MatDialog,
+              private signinVisibilityService: SigninVisibilityService,
+              private registerTriggeredService: RegisterTriggeredService) {
   }
 
   ngOnInit() {
@@ -35,6 +40,11 @@ export class HeaderMobileComponent implements OnInit {
       .subscribe(authData => {
         this.userAuthorized = authData.valueOf();
       });
+    this.signinVisibilityService.signinVisible$
+      .subscribe(data => {
+        console.log('toggle signin', data.valueOf());
+        this.signinVisible = data.valueOf();
+    });
   }
 
   setTitleOnRouteChange(): void {
@@ -98,5 +108,10 @@ export class HeaderMobileComponent implements OnInit {
           }
         }
       });
+    }
+
+    register() {
+      console.log('register');
+      this.registerTriggeredService.showRegisterDialog(true);
     }
 }

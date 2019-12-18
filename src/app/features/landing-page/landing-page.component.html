@@ -25,8 +25,13 @@
   <div class="button">
     <button mat-button (click)="learnMore()">Learn more</button>
   </div>
+  <div class="button">
+    <button mat-button (click)="gotoTop()">top</button>
+  </div>
 </div>
 <div *ngIf="!showLanding" class="mat-app-background background">
-  <app-learn-more [state]="showLanding" (toggle)="showLanding=$event"></app-learn-more>
+  <app-learn-more [state]="showLanding"
+    (toggle)="toggleLanding($event)">
+  </app-learn-more>
 </div>
 

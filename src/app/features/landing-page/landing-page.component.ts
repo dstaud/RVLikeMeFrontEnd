@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RegisterDialogComponent } from './../../features/register-signin/register-dialog/register-dialog.component';
+import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
+import { RegisterTriggeredService } from './../../core/services/register-triggered.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -10,11 +12,17 @@ import { RegisterDialogComponent } from './../../features/register-signin/regist
 export class LandingPageComponent implements OnInit {
   showLanding = true;
 
-  constructor(private registerDialog: MatDialog) {
+  constructor(private registerDialog: MatDialog,
+              private signinVisiblityService: SigninVisibilityService,
+              private registerTriggeredService: RegisterTriggeredService) {
     console.log( 'launched landing component');
   }
 
   ngOnInit() {
+    this.registerTriggeredService.registerTriggered$
+      .subscribe(data => {
+        this.signUp();
+      })
   }
 
   signUp() {
@@ -45,5 +53,24 @@ export class LandingPageComponent implements OnInit {
 
   learnMore() {
     this.showLanding = false;  // activate learn more page
+    this.signinVisiblityService.toggleSignin(false);
+  }
+
+  toggleLanding(show: boolean) {
+    this.showLanding = show;
+    this.signinVisiblityService.toggleSignin(true);
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  gotoTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 }
