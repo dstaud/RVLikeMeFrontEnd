@@ -22,8 +22,9 @@ export class SigninDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
+  submit() {
+    console.log('submit credentials');
+    this.dialogRef.close(this.form.value);
   }
 
   close() {
@@ -31,8 +32,8 @@ export class SigninDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  submit() {
-    console.log('submit credentials');
-    this.dialogRef.close(this.form.value);
+  public errorHandling = (control: string, error: string) => {
+    return this.form.controls[control].hasError(error);
   }
+
 }

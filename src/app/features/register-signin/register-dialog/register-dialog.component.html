@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Register</h2>
+<mat-dialog-content [formGroup]="form">
+  <div>
+    <mat-form-field>
+      <input matInput
+            type="text"
+            placeholder="First name"
+            formControlName="firstName">
+      <mat-error *ngIf="errorHandling('firstName', 'required')">
+        Please enter your <strong>First Name</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+        <input matInput
+              type="email"
+              placeholder="Email address"
+              formControlName="email"
+              autocomplete="email">
+        <mat-error *ngIf="errorHandling('email', 'required')">
+          Please enter your <strong>email</strong> address
+        </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <input matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Password"
+            formControlName="password"
+            autocomplete="new-password">
+      <mat-error *ngIf="errorHandling('password', 'required')">
+        You must enter a <strong>Password</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="button">
+    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="submit()">Submit</button>
+  </div>
+  <button class="mat-raised-button" (click)="close()">Close</button>
+</mat-dialog-actions>

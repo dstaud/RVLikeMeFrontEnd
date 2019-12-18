@@ -35,11 +35,6 @@ const routes: Routes = [
   import('./features/profile/profile.module')
   .then(m => m.ProfileModule)
   },
-/*   { path: 'home',
-  loadChildren: () =>
-  import('./features/home/home.module')
-  .then(m => m.HomeModule)
-  }, */
   {
     path: 'home',
     component: HomeComponent
@@ -48,12 +43,6 @@ const routes: Routes = [
     path: '',
     component: LandingPageComponent
   },
-/*
-  Redirect causing Lighthouse Audit to fail so avoiding that for now.
-  {
-    path: '',
-    redirectTo: '/home' , pathMatch: 'full'
-  }, */
   { path: '**', component: PageNotFoundComponent }
 ];
 

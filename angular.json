@@ -147,6 +147,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "RVLikeMe"
+    }
+  },
+  "defaultProject": "RVLikeMe",
+  "cli": {
+    "analytics": false
+  }
 }

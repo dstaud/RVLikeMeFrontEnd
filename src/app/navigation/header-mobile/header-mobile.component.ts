@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserAuthService } from './../../core/services/user-auth.service';
-import { SigninDialogComponent } from './../../features/signin-dialog/signin-dialog.component';
+import { SigninDialogComponent } from './../../features/register-signin/signin-dialog/signin-dialog.component';
 
 @Component({
   selector: 'app-header-mobile',
@@ -76,11 +76,13 @@ export class HeaderMobileComponent implements OnInit {
     const signinConfig = new MatDialogConfig();
 
     signinConfig.autoFocus = true;
-    signinConfig.hasBackdrop = false;
     signinConfig.position = {
-      top: '60px'
+      top: '20px'
     };
     signinConfig.ariaLabel = 'Sign In Dialog';
+    signinConfig.hasBackdrop = false;
+    // signinConfig.backdropClass = 'backdropBackground';
+    signinConfig.disableClose = true;
 
     const dialogRef = this.signInDialog.open(SigninDialogComponent, signinConfig);
 

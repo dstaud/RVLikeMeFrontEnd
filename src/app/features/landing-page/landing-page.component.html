@@ -1,4 +1,4 @@
-<div class="mat-app-background background">
+<div *ngIf="showLanding" class="mat-app-background background">
   <p class="mat-display-2 hook marketing-message">
     Connect with people who RV like you do
   </p>
@@ -26,3 +26,7 @@
     <button mat-button (click)="learnMore()">Learn more</button>
   </div>
 </div>
+<div *ngIf="!showLanding" class="mat-app-background background">
+  <app-learn-more [state]="showLanding" (toggle)="showLanding=$event"></app-learn-more>
+</div>
+

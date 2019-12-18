@@ -1,7 +1,7 @@
-<div class="mat-app-background dialogWindow">
-  <h2 mat-dialog-title>Sign in</h2>
-  <mat-dialog-content [formGroup]="form">
+<h2 mat-dialog-title>Sign in</h2>
+<mat-dialog-content [formGroup]="form">
 
+  <div>
     <mat-form-field>
         <input matInput
               type="text"
@@ -11,7 +11,8 @@
           You must enter a <strong>User ID</strong>
         </mat-error>
     </mat-form-field>
-
+  </div>
+  <div>
     <mat-form-field>
       <input matInput
             [type]="hidePassword ? 'password' : 'text'"
@@ -22,11 +23,12 @@
       </mat-error>
     </mat-form-field>
     <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+  </div>
+</mat-dialog-content>
 
-  </mat-dialog-content>
-
-  <mat-dialog-actions>
-    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="submit()">Save</button>
-    <button class="mat-raised-button" (click)="close()">Close</button>
-  </mat-dialog-actions>
-</div>
+<mat-dialog-actions>
+  <div class="button">
+    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="submit()">Submit</button>
+  </div>
+  <button class="mat-raised-button" (click)="close()">Close</button>
+</mat-dialog-actions>
