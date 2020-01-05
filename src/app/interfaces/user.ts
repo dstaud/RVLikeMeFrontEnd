@@ -1,9 +1,10 @@
 export interface Iuser {
-  id?: string;
+  _id: string;
   displayName: string;
   firstName: string;
   lastName: string;
   email: string;
-  cell: string;
-  dateOfBirth: string;
+  cell: number;
+  yearOfBirth: number;
+  homeState: string;
 }

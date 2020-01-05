@@ -100,7 +100,7 @@ export class HeaderMobileComponent implements OnInit {
       .subscribe({
         next: (val) => {
           console.log('dialog closed', val);
-          console.log('user=', val.userID);
+          console.log('user=', val.email);
           console.log('password=', val.password);
           if (val) {
             this.userAuthService.userAuthorized(true);

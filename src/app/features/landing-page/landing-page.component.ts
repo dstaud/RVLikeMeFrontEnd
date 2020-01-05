@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RegisterDialogComponent } from './../../features/register-signin/register-dialog/register-dialog.component';
 import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
 import { RegisterTriggeredService } from './../../core/services/register-triggered.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing-page',
@@ -14,7 +15,8 @@ export class LandingPageComponent implements OnInit {
 
   constructor(private registerDialog: MatDialog,
               private signinVisiblityService: SigninVisibilityService,
-              private registerTriggeredService: RegisterTriggeredService) {
+              private registerTriggeredService: RegisterTriggeredService,
+              private router: Router) {
     console.log( 'launched landing component');
   }
 

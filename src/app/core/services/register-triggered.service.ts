@@ -11,7 +11,6 @@ export class RegisterTriggeredService {
   constructor() { }
 
   public showRegisterDialog(show: boolean): void {
-    console.log('in register visibility');
     this.registerTriggered.next(show);
   }
 }
