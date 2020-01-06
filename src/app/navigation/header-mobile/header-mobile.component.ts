@@ -42,7 +42,6 @@ export class HeaderMobileComponent implements OnInit {
       });
     this.signinVisibilityService.signinVisible$
       .subscribe(data => {
-        console.log('toggle signin', data.valueOf());
         this.signinVisible = data.valueOf();
     });
   }
@@ -70,7 +69,7 @@ export class HeaderMobileComponent implements OnInit {
                   this.pageTitle = this.translateService.instant('profile.component.header');
                 } else {
                   if (this.router.url.includes('')) {
-                    this.pageTitle = this.translateService.instant('Home');
+                    this.pageTitle = this.translateService.instant('landing-page.component.header');
                   }
                 }
               }
@@ -99,9 +98,6 @@ export class HeaderMobileComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe({
         next: (val) => {
-          console.log('dialog closed', val);
-          console.log('user=', val.email);
-          console.log('password=', val.password);
           if (val) {
             this.userAuthService.userAuthorized(true);
             this.router.navigateByUrl('/home');
@@ -111,7 +107,6 @@ export class HeaderMobileComponent implements OnInit {
     }
 
     register() {
-      console.log('register');
       this.registerTriggeredService.showRegisterDialog(true);
     }
 }

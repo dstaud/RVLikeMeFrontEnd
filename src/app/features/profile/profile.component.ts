@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataService } from './../../core/services/data.service';
 import { Iuser } from './../../interfaces/user';
@@ -10,19 +11,26 @@ import { Iuser } from './../../interfaces/user';
 })
 export class ProfileComponent implements OnInit {
   user: Iuser;
+  firstName: string;
+  email: string;
 
   constructor(private dataSvc: DataService,
-              public translate: TranslateService) {
-              console.log('launched profile component');
+              public translate: TranslateService,
+              private router: Router) {
               }
 
   ngOnInit() {
-    this.dataSvc.getUserProfile().subscribe(user => {
-      this.user = user;
-      console.log(this.user);
-    }, (err) => {
-      console.error(err);
-    });
+    if (this.dataSvc.isLoggedIn()) {
+      this.dataSvc.getUserProfile().subscribe(user => {
+        this.user = user;
+        this.firstName = this.user.firstName;
+        this.email = this.user.email;
+      }, (err) => {
+        console.error(err);
+      });
+    } else {
+      this.router.navigateByUrl('/');
+    }
   }
 
 }

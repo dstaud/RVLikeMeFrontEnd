@@ -34,13 +34,13 @@ export class AppComponent implements OnInit {
     this.themeService.defaultGlobalFontTheme
       .subscribe(fontData => {
         this.font = fontData.valueOf();
-        console.log(this.font);
+        console.log('Font=', this.font);
       });
     // this.globalColorTheme = this.themeService.defaultGlobalColorTheme;
     this.themeService.defaultGlobalColorTheme
       .subscribe(themeData => {
         this.theme = themeData.valueOf();
-        console.log(this.theme);
+        console.log('Theme=', this.theme);
       });
     this.userAuthService.userAuth$
       .subscribe(authData => {

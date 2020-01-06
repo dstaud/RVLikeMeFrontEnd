@@ -11,7 +11,6 @@ export class SigninVisibilityService {
   constructor() { }
 
   public toggleSignin(show: boolean): void {
-    console.log('in signin visibility');
     this.signinVisible.next(show);
   }
 }

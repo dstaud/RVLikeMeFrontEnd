@@ -17,4 +17,10 @@
   <mat-icon>person</mat-icon>
   <span class="nav-caption">{{ "menu.profile" | translate}}</span>
   </a>
+  <a mat-list-item routerLink="/"
+  (click)="logout()"
+  routerLinkActive="active-menu-item">
+  <mat-icon>eject</mat-icon>
+  <span class="nav-caption">{{ "menu.logout" | translate}}</span>
+  </a>
 </mat-nav-list>

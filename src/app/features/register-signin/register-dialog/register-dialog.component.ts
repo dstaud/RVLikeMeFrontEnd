@@ -42,21 +42,19 @@ export class RegisterDialogComponent implements OnInit {
 
     this.DataSvc.registerUser(this.credentials)
     .pipe(
-      catchError (this.handleError)
+      catchError (this.DataSvc.handleBackendError)
     )
     .subscribe((responseData) => {
-      console.log('got data=', responseData);
-      this.close();
+      if (responseData.status === 201) {
+        alert('Email "' + this.form.controls.email.value + '" already exists');
+      } else {
+        alert('credentials saved');
+        this.close();
+      }
     });
   }
 
-  private handleError(err: object) {
-    console.log('error=', err);
-    return throwError(err);
-  }
-
   close() {
-    console.log('close dialog');
     this.dialogRef.close();
   }
 

@@ -11,7 +11,8 @@
     "home": "home",
     "about": "about",
     "more": "more",
-    "profile": "profile"
+    "profile": "profile",
+    "logout": "logout"
   },
   "settings.component": {
     "header": "Settings",

@@ -17,8 +17,7 @@ export class LandingPageComponent implements OnInit {
               private signinVisiblityService: SigninVisibilityService,
               private registerTriggeredService: RegisterTriggeredService,
               private router: Router) {
-    console.log( 'launched landing component');
-  }
+    }
 
   ngOnInit() {
     this.registerTriggeredService.registerTriggered$
@@ -46,7 +45,6 @@ export class LandingPageComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe({
         next: (val) => {
-          console.log('dialog closed', val);
           if (val) {
           }
         }

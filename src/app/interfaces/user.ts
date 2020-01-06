@@ -7,4 +7,5 @@ export interface Iuser {
   cell: number;
   yearOfBirth: number;
   homeState: string;
+  tokenExpire: number;
 }

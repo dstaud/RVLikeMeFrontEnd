@@ -15,7 +15,8 @@ export class DataService {
   body: Iuser;
   private token: string;
 
-  constructor(private http: HttpClient, private WindowRef: WindowService) { }
+  constructor(private http: HttpClient,
+              private WindowRef: WindowService) { }
 
   getLocation() {
     // Get back-end URL
@@ -23,15 +24,12 @@ export class DataService {
     // let dataSvcURL = environment.dataServiceURL + 'api/posts';
     let dataSvcURL = environment.dataServiceURL + 'api';
 
-    console.log('Host location ', hostLocation);
-
     if (environment.production && hostLocation.includes('localhost')) {
       // Override back-end URL with localhost if testing Service Worker with production /dist files
       // dataSvcURL = 'http://localhost:3000/' + 'api/posts';
       dataSvcURL = 'http://localhost:3000/' + 'api';
     }
 
-    console.log('Back-end location ', dataSvcURL);
     return dataSvcURL;
   }
 
@@ -55,12 +53,32 @@ export class DataService {
       }));
   }
 
+  public getUserDetails(): Iuser {
+    const token = this.getToken();
+    let payload;
+    if (token) {
+      payload = token.split('.')[1];
+      payload = window.atob(payload);
+      return JSON.parse(payload);
+    } else {
+      return null;
+    }
+  }
+
+  public isLoggedIn(): boolean {
+    const user = this.getUserDetails();
+    if (user) {
+      return user.tokenExpire > Date.now() / 1000;
+    } else {
+      return false;
+    }
+  }
+
   private request(method: 'post'|'get',
                   type: 'login'|'register'|'profile',
                   user?: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.getLocation();
-    console.log('Get TOKEN=', this.getToken());
     if (method === 'post') {
       base = this.http.post(`${dataSvcURL}/${type}`, user);
     } else {
@@ -71,7 +89,6 @@ export class DataService {
     const request = base.pipe(
       map((data: ItokenResponse) => {
         if (data.token) {
-          console.log('received token=', data.token);
           this.saveToken(data.token);
         }
         return data;
@@ -93,18 +110,10 @@ export class DataService {
     return this.request('get', 'profile');
   }
 
-/*   registerUser(firstName: string, email: string, password: string) {
-    const dataSvcURL = this.getLocation() + '/register';
-    console.log('URL', dataSvcURL);
-    let body: any;
-    body = {
-      firstName: firstName,
-      email: email,
-      password: password
-    };
-    console.log('registering user');
-    return this.http.post<{message: string}>(dataSvcURL, body);
-  } */
+  public logout(): void {
+    this.token = '';
+    window.localStorage.removeItem('rvlikeme-token');
+  }
 
   private saveToken(token: string): void {
     localStorage.setItem('rvlikeme-token', token);
@@ -125,23 +134,21 @@ export class DataService {
       email: email,
       password: password
     };
-    console.log('signing in user');
     return this.http.post<{message: string}>(dataSvcURL, body);
   }
 
-/*   registerUser(displayName, firstName, lastName, email, cell, dateOfBirth) {
-    const dataSvcURL = this.getLocation();
-    this.body = {
-      displayName: displayName,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      cell: cell,
-      dateOfBirth: dateOfBirth
-    };
-    console.log('registering user');
-    return this.http.post<{message: string}>(dataSvcURL, this.body);
-  } */
+  public handleBackendError(error) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    window.alert(errorMessage);
+    return throwError(errorMessage);
+  }
 
   deleteUser(userId: string) {
     const dataSvcURL = this.getLocation();

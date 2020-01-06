@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { DataService } from './../../core/services/data.service';
 import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
@@ -24,9 +26,10 @@ export class MessagesComponent implements OnInit {
   colorTheme = new FormControl('', Validators.required);
 
   constructor(public translate: TranslateService,
+              private dataSvc: DataService,
+              private router: Router,
               private themeService: ThemeService,
               fb: FormBuilder) {
-              console.log('launched messages component');
               this.form = fb.group({
                 fontTheme: ['global-font', Validators.required],
                 colorTheme: ['dark-theme', Validators.required]
@@ -34,6 +37,9 @@ export class MessagesComponent implements OnInit {
             }
 
   ngOnInit() {
+    if (!this.dataSvc.isLoggedIn()) {
+      this.router.navigateByUrl('/');
+    }
   }
 
   setThemeColorScheme(colorSceheme: string) {

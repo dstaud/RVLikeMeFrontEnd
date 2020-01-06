@@ -40,7 +40,7 @@ export class SigninDialogComponent implements OnInit {
       catchError (this.handleError)
     )
     .subscribe((responseData) => {
-      console.log('login back=', responseData);
+      console.log('logged in');
     });
     this.dialogRef.close(this.form.value);
   }
@@ -51,7 +51,6 @@ export class SigninDialogComponent implements OnInit {
   }
 
   close() {
-    console.log('close dialog');
     this.dialogRef.close();
   }
 

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { DataService } from './../../core/services/data.service';
 
 @Component({
   selector: 'app-settings',
@@ -15,6 +17,8 @@ export class SettingsComponent implements OnInit {
   language = new FormControl('', Validators.required);
 
   constructor(private translate: TranslateService,
+              private dataSvc: DataService,
+              private router: Router,
               fb: FormBuilder) {
           this.form = fb.group({
           language: ['en', Validators.required]
@@ -22,10 +26,12 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (!this.dataSvc.isLoggedIn()) {
+      this.router.navigateByUrl('/');
+    }
   }
 
   setLanguage(entry: string) {
-    console.log('Language=', entry);
     this.translate.setDefaultLang(entry);
   }
 }

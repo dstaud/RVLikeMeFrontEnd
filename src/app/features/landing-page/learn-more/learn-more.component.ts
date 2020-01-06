@@ -16,7 +16,6 @@ export class LearnMoreComponent implements OnInit {
   }
 
   close() {
-    console.log('close button');
     this.toggle.emit(!this.state);
   }
 }
