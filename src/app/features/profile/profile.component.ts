@@ -1,7 +1,8 @@
+import { DataService } from './../../core/services/data-services/data.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { DataService } from './../../core/services/data.service';
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { Iuser } from './../../interfaces/user';
 
 @Component({
@@ -14,13 +15,14 @@ export class ProfileComponent implements OnInit {
   firstName: string;
   email: string;
 
-  constructor(private dataSvc: DataService,
+  constructor(private auth: AuthenticationService,
+              private dataSvc: DataService,
               public translate: TranslateService,
               private router: Router) {
               }
 
   ngOnInit() {
-    if (this.dataSvc.isLoggedIn()) {
+    if (this.auth.isLoggedIn()) {
       this.dataSvc.getUserProfile().subscribe(user => {
         this.user = user;
         this.firstName = this.user.firstName;

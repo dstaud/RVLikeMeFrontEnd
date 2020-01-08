@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
+// Publish current state of whether to show signin on toolbar
 @Injectable({
   providedIn: 'root'
 })

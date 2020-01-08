@@ -1,9 +1,9 @@
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { UserAuthService } from './../../core/services/user-auth.service';
 import { SigninDialogComponent } from './../../features/register-signin/signin-dialog/signin-dialog.component';
 import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
 import { RegisterTriggeredService } from './../../core/services/register-triggered.service';
@@ -19,12 +19,12 @@ export class HeaderMobileComponent implements OnInit {
   userAuthorized = false;
   signinVisible = true;
 
-  constructor(private userAuthService: UserAuthService,
-              private translateService: TranslateService,
+  constructor(private translateService: TranslateService,
               private router: Router,
               private signInDialog: MatDialog,
               private signinVisibilityService: SigninVisibilityService,
-              private registerTriggeredService: RegisterTriggeredService) {
+              private registerTriggeredService: RegisterTriggeredService,
+              private auth: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -36,19 +36,31 @@ export class HeaderMobileComponent implements OnInit {
         }
       }
     });
-    this.userAuthService.userAuth$
+
+    // Listen for changes in user authorization state
+    this.auth.userAuth$
       .subscribe(authData => {
         this.userAuthorized = authData.valueOf();
       });
+
+    // Listen for changes that determine whether to display 'Signin' or 'Sign up for free' which depend on context of what user is viewing
     this.signinVisibilityService.signinVisible$
       .subscribe(data => {
         this.signinVisible = data.valueOf();
     });
+
+    // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
+    if (this.auth.isLoggedIn()) {
+      this.auth.setUserToAuthorized(true);
+      this.signinVisibilityService.toggleSignin(false);
+    }
   }
 
   setTitleOnRouteChange(): void {
+    console.log('in title route change');
     if (this.router.url.includes('home')) {
      this.pageTitle = this.translateService.instant('home.component.header');
+     console.log('page title=', this.pageTitle);
     } else {
       if (this.router.url.includes('forums')) {
         this.pageTitle = this.translateService.instant('forums.component.header');
@@ -95,16 +107,15 @@ export class HeaderMobileComponent implements OnInit {
 
     const dialogRef = this.signInDialog.open(SigninDialogComponent, signinConfig);
 
-    dialogRef.afterClosed()
-      .subscribe({
-        next: (val) => {
-          if (val) {
-            this.userAuthService.userAuthorized(true);
-            this.router.navigateByUrl('/home');
-          }
-        }
-      });
-    }
+
+    // After dialog is closed, if valid token exists, user is logged in so navigate to home page.
+    dialogRef.afterClosed().subscribe(result => {
+      if (this.auth.isLoggedIn()) {
+        this.auth.setUserToAuthorized(true);
+        this.router.navigateByUrl('/home');
+      }
+    });
+  }
 
     register() {
       this.registerTriggeredService.showRegisterDialog(true);

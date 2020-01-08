@@ -3,14 +3,14 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog';
 import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DataService } from '../../../core/services/data.service';
+import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 
 @Component({
   selector: 'app-register-dialog',
   templateUrl: './register-dialog.component.html',
   styleUrls: ['./register-dialog.component.scss'],
-  providers: [DataService]
+  providers: [AuthenticationService]
 })
 export class RegisterDialogComponent implements OnInit {
   form: FormGroup;
@@ -21,7 +21,7 @@ export class RegisterDialogComponent implements OnInit {
     password: ''
   };
 
-  constructor(private DataSvc: DataService,
+  constructor(private auth: AuthenticationService,
               private dialogRef: MatDialogRef<RegisterDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -40,9 +40,9 @@ export class RegisterDialogComponent implements OnInit {
     this.credentials.password = this.form.controls.password.value;
     this.credentials.firstName = this.form.controls.firstName.value;
 
-    this.DataSvc.registerUser(this.credentials)
+    this.auth.registerUser(this.credentials)
     .pipe(
-      catchError (this.DataSvc.handleBackendError)
+      catchError (this.auth.handleBackendError)
     )
     .subscribe((responseData) => {
       if (responseData.status === 201) {

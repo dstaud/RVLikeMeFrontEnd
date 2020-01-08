@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
+// Publish current state of whether to show register dialog, which can be triggered from multiple locations
 @Injectable({
   providedIn: 'root'
 })

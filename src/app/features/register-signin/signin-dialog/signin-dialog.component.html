@@ -8,7 +8,7 @@
               placeholder="Email"
               formControlName="email">
         <mat-error *ngIf="errorHandling('email', 'required')">
-          You must enter a <strong>User ID</strong>
+          Please enter your <strong>Email</strong>
         </mat-error>
     </mat-form-field>
   </div>
@@ -19,7 +19,7 @@
             placeholder="Password"
             formControlName="password">
       <mat-error *ngIf="errorHandling('password', 'required')">
-        You must enter a <strong>Password</strong>
+        Please enter your <strong>Password</strong>
       </mat-error>
     </mat-form-field>
     <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>

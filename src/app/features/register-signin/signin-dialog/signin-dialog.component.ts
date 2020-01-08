@@ -3,7 +3,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog';
 import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DataService } from '../../../core/services/data.service';
+import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 
 @Component({
@@ -19,7 +19,7 @@ export class SigninDialogComponent implements OnInit {
     password: ''
   };
 
-  constructor(private DataSvc: DataService,
+  constructor(private auth: AuthenticationService,
               private dialogRef: MatDialogRef<SigninDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -35,14 +35,14 @@ export class SigninDialogComponent implements OnInit {
     this.credentials.email = this.form.controls.email.value;
     this.credentials.password = this.form.controls.password.value;
 
-    this.DataSvc.login(this.credentials)
+    this.auth.login(this.credentials)
     .pipe(
       catchError (this.handleError)
     )
-    .subscribe((responseData) => {
+    .subscribe ((responseData) => {
       console.log('logged in');
+      this.dialogRef.close(this.form.value);
     });
-    this.dialogRef.close(this.form.value);
   }
 
   private handleError(err: string) {

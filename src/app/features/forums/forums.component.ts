@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { DataService } from './../../core/services/data.service';
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 
 @Component({
   selector: 'app-forums',
@@ -11,12 +11,12 @@ import { DataService } from './../../core/services/data.service';
 export class ForumsComponent implements OnInit {
 
   constructor(public translate: TranslateService,
-              private dataSvc: DataService,
+              private auth: AuthenticationService,
               private router: Router) {
               }
 
   ngOnInit() {
-    if (!this.dataSvc.isLoggedIn()) {
+    if (!this.auth.isLoggedIn()) {
       this.router.navigateByUrl('/');
     }
   }

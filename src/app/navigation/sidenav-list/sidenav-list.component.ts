@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { DataService } from './../../core/services/data.service';
-import { UserAuthService } from './../../core/services/user-auth.service';
+import { Router} from '@angular/router';
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
+import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -8,21 +9,24 @@ import { UserAuthService } from './../../core/services/user-auth.service';
   styleUrls: ['./sidenav-list.component.scss']
 })
 export class SidenavListComponent implements OnInit {
-  @Output() sidenavClose = new EventEmitter();
+  @Output() sideNavClosed = new EventEmitter();
 
-  constructor(private dataSvc: DataService,
-              private userAuthService: UserAuthService) { }
+  constructor(private auth: AuthenticationService,
+              private signinVisibilityService: SigninVisibilityService,
+              private router: Router) { }
 
   ngOnInit() {
   }
 
-  public onSidenavClose = () => {
-    this.sidenavClose.emit();
+  public closeSideNav = () => {
+    this.sideNavClosed.emit();
   }
 
   public logout() {
-    this.userAuthService.userAuthorized(false);
-    this.sidenavClose.emit();
-    this.dataSvc.logout();
+    this.auth.logout();
+    this.auth.setUserToAuthorized(false);
+    this.signinVisibilityService.toggleSignin(true);
+    this.router.navigateByUrl('/');
+    this.sideNavClosed.emit();
   }
 }

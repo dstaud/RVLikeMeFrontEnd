@@ -35,6 +35,7 @@ export class DeviceService {
     this.userAgent = this.deviceInfo.userAgent;
   }
 
+  // Determine appropriate font theme for user device
   determineGlobalFontTheme() {
     // Based on type of device, determine the appropriate custom typography class to use (see styles.scss)
     if (this.deviceInfo.isDesktop || this.deviceInfo.isTablet) {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { DataService } from './../../core/services/data.service';
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 
 @Component({
   selector: 'app-settings',
@@ -17,7 +17,7 @@ export class SettingsComponent implements OnInit {
   language = new FormControl('', Validators.required);
 
   constructor(private translate: TranslateService,
-              private dataSvc: DataService,
+              private auth: AuthenticationService,
               private router: Router,
               fb: FormBuilder) {
           this.form = fb.group({
@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.dataSvc.isLoggedIn()) {
+    if (!this.auth.isLoggedIn()) {
       this.router.navigateByUrl('/');
     }
   }
