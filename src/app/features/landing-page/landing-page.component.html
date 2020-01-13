@@ -19,7 +19,7 @@
   </p>
   <br>
   <div class="button">
-    <button mat-flat-button color="primary" (click)="signUp()">Sign up for free</button>
+    <button mat-flat-button color="primary" (click)="registerUser()">Sign up for free</button>
   </div>
   <br>
   <div class="button">
@@ -30,8 +30,8 @@
   </div>
 </div>
 <div *ngIf="!showLanding" class="mat-app-background background">
-  <app-learn-more [state]="showLanding"
+  <app-rvlm-learn-more [state]="showLanding"
     (toggle)="toggleLanding($event)">
-  </app-learn-more>
+  </app-rvlm-learn-more>
 </div>
 

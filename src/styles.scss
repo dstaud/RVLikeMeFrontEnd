@@ -18,8 +18,8 @@ html, body {
 
 @import './themes/theme-color-schemes.scss';
 
-// Default to dark theme
-@include angular-material-theme($bg-theme);
+// Default to orange dark theme
+@include angular-material-theme($orange-dark-theme);
 
 .light-theme {
   @include angular-material-theme($light-theme);

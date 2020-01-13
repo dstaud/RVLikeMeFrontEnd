@@ -5,8 +5,7 @@
       <input matInput
             type="text"
             placeholder="First name"
-            formControlName="firstName"
-            autocomplete="name">
+            formControlName="firstName">
       <mat-error *ngIf="!form.controls.firstName.pristine &&
                         form.controls.firstName.hasError('required')">
         Please enter your <strong>First Name</strong>
@@ -16,7 +15,7 @@
   <div>
     <mat-form-field>
         <input matInput
-              type="email"
+              type="text"
               placeholder="Email address"
               formControlName="email"
               autocomplete="email">
@@ -63,7 +62,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <div class="button">
-    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="submit()">Submit</button>
+    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
   </div>
-  <button class="mat-raised-button" (click)="close()">Close</button>
+  <button class="mat-raised-button mat-accent" (click)="onClose()">Close</button>
 </mat-dialog-actions>

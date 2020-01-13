@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RegisterTriggeredService } from './register-triggered.service';
+import { RegisterTriggeredService } from './register-dialog-triggered.service';
 
 describe('RegisterTriggeredService', () => {
   let service: RegisterTriggeredService;

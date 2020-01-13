@@ -2,15 +2,15 @@
 <!-- <mat-sidenav-container fullscreen [ngClass]="globalColorTheme | async"> -->
 <mat-sidenav-container fullscreen [ngClass]="theme">
     <mat-sidenav #sidenav role="navigation" mode="push">
-      <app-sidenav-list (sideNavClosed)="sidenav.close()"></app-sidenav-list>
+      <app-rvlm-sidenav-list (sideNavClosed)="sidenav.close()"></app-rvlm-sidenav-list>
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
-      <app-header class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-header>
-      <app-header-mobile class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-header-mobile>
+      <app-rvlm-header class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-rvlm-header>
+      <app-rvlm-header-mobile class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
       <main class="background" [ngClass]="{'bottom-bar-spacing': userAuthorized}">
         <router-outlet></router-outlet>
       </main>
-      <app-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-footer>
+      <app-rvlm-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-footer>
     </mat-sidenav-content>
 </mat-sidenav-container>
 <!-- <mat-sidenav-container *ngIf="!userAuthorized" fullscreen [ngClass]="theme">

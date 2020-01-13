@@ -23,41 +23,6 @@ export class AuthenticationService {
               private WindowRef: WindowService,
               private commonData: CommonDataService) { }
 
-  public registerUser(user: ItokenPayload): Observable<any> {
-    return this.dataRequest('post', 'register', user);
-  }
-
-  public login(user: ItokenPayload): Observable<any> {
-    console.log('in login');
-    return this.dataRequest('post', 'login', user);
-  }
-
-  public isLoggedIn(): boolean {
-    const user = this.getUserDetails();
-    if (user) {
-      return user.tokenExpire > Date.now() / 1000;
-    } else {
-      return false;
-    }
-  }
-
-  private getToken(): string {
-    if (!this.token) {
-      this.token = localStorage.getItem('rvlikeme-token');
-    }
-    return this.token;
-  }
-
-  private saveToken(token: string): void {
-    localStorage.setItem('rvlikeme-token', token);
-    this.token = token;
-  }
-
-  public logout(): void {
-    this.token = '';
-    window.localStorage.removeItem('rvlikeme-token');
-  }
-
   public handleBackendError(error) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
@@ -69,6 +34,29 @@ export class AuthenticationService {
     }
     window.alert(errorMessage);
     return throwError(errorMessage);
+  }
+
+   public isLoggedIn(): boolean {
+    const user = this.getUserDetails();
+    if (user) {
+      return user.tokenExpire > Date.now() / 1000;
+    } else {
+      return false;
+    }
+  }
+
+  public login(user: ItokenPayload): Observable<any> {
+    console.log('in login');
+    return this.dataRequest('post', 'login', user);
+  }
+
+  public logout(): void {
+    this.token = '';
+    window.localStorage.removeItem('rvlikeme-token');
+  }
+
+  public registerUser(user: ItokenPayload): Observable<any> {
+  return this.dataRequest('post', 'register', user);
   }
 
   public setUserToAuthorized(auth: boolean): void {
@@ -95,8 +83,11 @@ export class AuthenticationService {
     return request;
   }
 
-  public postUser(user: any) {
-    return this.http.post('http://localhost:3000/api/user', user);
+  private getToken(): string {
+    if (!this.token) {
+      this.token = localStorage.getItem('rvlikeme-token');
+    }
+    return this.token;
   }
 
   private getUserDetails(): Iuser {
@@ -109,5 +100,10 @@ export class AuthenticationService {
     } else {
       return null;
     }
+  }
+
+  private saveToken(token: string): void {
+    localStorage.setItem('rvlikeme-token', token);
+    this.token = token;
   }
 }

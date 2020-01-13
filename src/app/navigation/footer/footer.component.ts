@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-footer',
+  selector: 'app-rvlm-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })

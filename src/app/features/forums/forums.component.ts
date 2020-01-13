@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 
 @Component({
-  selector: 'app-forums',
+  selector: 'app-rvlm-forums',
   templateUrl: './forums.component.html',
   styleUrls: ['./forums.component.scss']
 })

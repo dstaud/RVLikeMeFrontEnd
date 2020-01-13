@@ -1,14 +1,14 @@
-import { SigninVisibilityService } from './core/services/signin-visibility.service';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd} from '@angular/router';
+import { Event as NavigationEvent } from '@angular/router';
+import { NavigationStart } from '@angular/router';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { DeviceService } from './core/services/device.service';
 import { ThemeService } from './core/services/theme.service';
 import { AuthenticationService } from './core/services/data-services/authentication.service';
-import { Event as NavigationEvent } from '@angular/router';
-import { NavigationStart } from '@angular/router';
+import { SigninButtonVisibleService } from './core/services/signin-btn-visibility.service';
 
 @Component({
   selector: 'app-root',
@@ -26,14 +26,14 @@ export class AppComponent implements OnInit {
   userAuthorized = false;
 
 
-  constructor(public translateService: TranslateService,
-              private deviceService: DeviceService,
-              private themeService: ThemeService,
-              private auth: AuthenticationService,
-              private signInVisible: SigninVisibilityService,
+  constructor(public translateSvc: TranslateService,
+              private deviceSvc: DeviceService,
+              private themeSvc: ThemeService,
+              private authSvc: AuthenticationService,
+              private signinBtnVisibleSvc: SigninButtonVisibleService,
               private router: Router) {
-    translateService.setDefaultLang('en'); // Default to US English
-    this.deviceService.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
+    translateSvc.setDefaultLang('en'); // Default to US English
+    this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
     .pipe(
       filter(
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
         // If user returns to the app through root URL, but their auth token is still valid, then send them to the home page.
         // No need to login again.  However, if auth but coming to the root page, route to home.
         // This messing up logout which routes to '/' and causes a race condition where still logged in when get here so routes to home.
-        if (event.url === '/' && this.auth.isLoggedIn()) {
+        if (event.url === '/' && this.authSvc.isLoggedIn()) {
           console.log('in app component, routing to home');
           this.router.navigateByUrl('/home');
         }
@@ -86,29 +86,29 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Listen for changes in font theme;
-    this.themeService.defaultGlobalFontTheme
+    this.themeSvc.defaultGlobalFontTheme
       .subscribe(fontData => {
         this.font = fontData.valueOf();
         console.log('Font=', this.font);
       });
 
     // Listen for changes in color theme;
-    this.themeService.defaultGlobalColorTheme
+    this.themeSvc.defaultGlobalColorTheme
       .subscribe(themeData => {
         this.theme = themeData.valueOf();
         console.log('Theme=', this.theme);
       });
 
     // Listen for changes in user authorization state
-    this.auth.userAuth$
+    this.authSvc.userAuth$
       .subscribe(authData => {
         this.userAuthorized = authData.valueOf();
       });
 
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
-    if (this.auth.isLoggedIn()) {
-      this.auth.setUserToAuthorized(true);
-      this.signInVisible.toggleSignin(false);
+    if (this.authSvc.isLoggedIn()) {
+      this.authSvc.setUserToAuthorized(true);
+      this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
   }
 }

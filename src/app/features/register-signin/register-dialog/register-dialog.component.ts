@@ -7,7 +7,7 @@ import { AuthenticationService } from './../../../core/services/data-services/au
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 
 @Component({
-  selector: 'app-register-dialog',
+  selector: 'app-rvlm-register-dialog',
   templateUrl: './register-dialog.component.html',
   styleUrls: ['./register-dialog.component.scss'],
   providers: [AuthenticationService]
@@ -21,7 +21,7 @@ export class RegisterDialogComponent implements OnInit {
     password: ''
   };
 
-  constructor(private auth: AuthenticationService,
+  constructor(private authSvc: AuthenticationService,
               private dialogRef: MatDialogRef<RegisterDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -35,26 +35,27 @@ export class RegisterDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  submit() {
+  onSubmit() {
     this.credentials.email = this.form.controls.email.value;
+    this.credentials.email = this.credentials.email.toLowerCase();
     this.credentials.password = this.form.controls.password.value;
     this.credentials.firstName = this.form.controls.firstName.value;
 
-    this.auth.registerUser(this.credentials)
+    this.authSvc.registerUser(this.credentials)
     .pipe(
-      catchError (this.auth.handleBackendError)
+      catchError (this.authSvc.handleBackendError)
     )
     .subscribe((responseData) => {
       if (responseData.status === 201) {
         alert('Email "' + this.form.controls.email.value + '" already exists');
       } else {
         alert('credentials saved');
-        this.close();
+        this.onClose();
       }
     });
   }
 
-  close() {
+  onClose() {
     this.dialogRef.close();
   }
 

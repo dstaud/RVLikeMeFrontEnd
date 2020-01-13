@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SigninVisibilityService } from './signin-visibility.service';
+import { SigninButtonVisibleService } from './signin-btn-visibility.service';
 
 describe('SigninVisibilityService', () => {
-  let service: SigninVisibilityService;
+  let service: SigninButtonVisibleService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SigninVisibilityService);
+    service = TestBed.inject(SigninButtonVisibleService);
   });
 
   it('should be created', () => {

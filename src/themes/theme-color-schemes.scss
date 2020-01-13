@@ -28,12 +28,12 @@ $dark-theme: mat-dark-theme(
   $dark-warn
 );
 
-$bg-primary: mat-palette($mat-deep-orange, 700, 300, 900);
-$bg-accent: mat-palette($mat-grey, 400);
-$bg-warn: mat-palette($mat-red, 500);
+$orange-dark-primary: mat-palette($mat-deep-orange, 700, 300, 900);
+$orange-dark-accent: mat-palette($mat-blue, 700);
+$orange-dark-warn: mat-palette($mat-red, 500);
 
-$bg-theme: mat-dark-theme(
-  $bg-primary,
-  $bg-accent,
-  $bg-warn
+$orange-dark-theme: mat-dark-theme(
+  $orange-dark-primary,
+  $orange-dark-accent,
+  $orange-dark-warn
 );

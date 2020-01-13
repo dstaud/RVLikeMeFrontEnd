@@ -5,11 +5,11 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SigninDialogComponent } from './../../features/register-signin/signin-dialog/signin-dialog.component';
-import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
-import { RegisterTriggeredService } from './../../core/services/register-triggered.service';
+import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
+import { RegisterTriggeredService } from './../../core/services/register-dialog-triggered.service';
 
 @Component({
-  selector: 'app-header-mobile',
+  selector: 'app-rvlm-header-mobile',
   templateUrl: './header-mobile.component.html',
   styleUrls: ['./header-mobile.component.scss']
 })
@@ -19,12 +19,12 @@ export class HeaderMobileComponent implements OnInit {
   userAuthorized = false;
   signinVisible = true;
 
-  constructor(private translateService: TranslateService,
+  constructor(private translateSvc: TranslateService,
               private router: Router,
               private signInDialog: MatDialog,
-              private signinVisibilityService: SigninVisibilityService,
-              private registerTriggeredService: RegisterTriggeredService,
-              private auth: AuthenticationService) {
+              private signinBtnVisibleSvc: SigninButtonVisibleService,
+              private registerTriggeredSvc: RegisterTriggeredService,
+              private authSvc: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -38,50 +38,50 @@ export class HeaderMobileComponent implements OnInit {
     });
 
     // Listen for changes in user authorization state
-    this.auth.userAuth$
+    this.authSvc.userAuth$
       .subscribe(authData => {
         this.userAuthorized = authData.valueOf();
       });
 
     // Listen for changes that determine whether to display 'Signin' or 'Sign up for free' which depend on context of what user is viewing
-    this.signinVisibilityService.signinVisible$
+    this.signinBtnVisibleSvc.signinButtonVisible$
       .subscribe(data => {
         this.signinVisible = data.valueOf();
     });
 
     // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
-    if (this.auth.isLoggedIn()) {
-      this.auth.setUserToAuthorized(true);
-      this.signinVisibilityService.toggleSignin(false);
+    if (this.authSvc.isLoggedIn()) {
+      this.authSvc.setUserToAuthorized(true);
+      this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
   }
 
   setTitleOnRouteChange(): void {
     console.log('in title route change');
     if (this.router.url.includes('home')) {
-     this.pageTitle = this.translateService.instant('home.component.header');
+     this.pageTitle = this.translateSvc.instant('home.component.header');
      console.log('page title=', this.pageTitle);
     } else {
       if (this.router.url.includes('forums')) {
-        this.pageTitle = this.translateService.instant('forums.component.header');
+        this.pageTitle = this.translateSvc.instant('forums.component.header');
       } else {
         if (this.router.url.includes('messages')) {
-          this.pageTitle = this.translateService.instant('messages.component.header');
+          this.pageTitle = this.translateSvc.instant('messages.component.header');
         } else {
           if (this.router.url.includes('connections')) {
-            this.pageTitle = this.translateService.instant('connections.component.header');
+            this.pageTitle = this.translateSvc.instant('connections.component.header');
           } else {
             if (this.router.url.includes('settings')) {
-              this.pageTitle = this.translateService.instant('settings.component.header');
+              this.pageTitle = this.translateSvc.instant('settings.component.header');
             } else {
               if (this.router.url.includes('about')) {
-                this.pageTitle = this.translateService.instant('about.component.header');
+                this.pageTitle = this.translateSvc.instant('about.component.header');
               } else {
                 if (this.router.url.includes('profile')) {
-                  this.pageTitle = this.translateService.instant('profile.component.header');
+                  this.pageTitle = this.translateSvc.instant('profile.component.header');
                 } else {
                   if (this.router.url.includes('')) {
-                    this.pageTitle = this.translateService.instant('landing-page.component.header');
+                    this.pageTitle = this.translateSvc.instant('landing-page.component.header');
                   }
                 }
               }
@@ -110,14 +110,14 @@ export class HeaderMobileComponent implements OnInit {
 
     // After dialog is closed, if valid token exists, user is logged in so navigate to home page.
     dialogRef.afterClosed().subscribe(result => {
-      if (this.auth.isLoggedIn()) {
-        this.auth.setUserToAuthorized(true);
+      if (this.authSvc.isLoggedIn()) {
+        this.authSvc.setUserToAuthorized(true);
         this.router.navigateByUrl('/home');
       }
     });
   }
 
     register() {
-      this.registerTriggeredService.showRegisterDialog(true);
+      this.registerTriggeredSvc.showRegisterDialog(true);
     }
 }

@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 
 @Component({
-  selector: 'app-about',
+  selector: 'app-rvlm-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss']
 })

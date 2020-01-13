@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-rvlm-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
@@ -16,9 +16,5 @@ export class HeaderComponent implements OnInit {
 
   public onToggleSidenav = () => {
     this.sidenavToggle.emit();
-  }
-
-  private search() {
-    alert('searching');
   }
 }

@@ -6,7 +6,7 @@ import { AuthenticationService } from './../../core/services/data-services/authe
 import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
-  selector: 'app-messages',
+  selector: 'app-rvlm-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })

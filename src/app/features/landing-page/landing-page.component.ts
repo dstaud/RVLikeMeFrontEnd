@@ -1,53 +1,46 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RegisterDialogComponent } from './../../features/register-signin/register-dialog/register-dialog.component';
-import { SigninVisibilityService } from './../../core/services/signin-visibility.service';
-import { RegisterTriggeredService } from './../../core/services/register-triggered.service';
-import { Router } from '@angular/router';
-import { AuthenticationService} from './../../core/services/data-services/authentication.service';
+import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
+import { RegisterTriggeredService } from './../../core/services/register-dialog-triggered.service';
 
 @Component({
-  selector: 'app-landing-page',
+  selector: 'app-rvlm-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
   showLanding = true;
 
-  constructor(private registerDialog: MatDialog,
-              private signinVisiblityService: SigninVisibilityService,
-              private registerTriggeredService: RegisterTriggeredService,
-              private router: Router,
-              private auth: AuthenticationService) {
+  constructor(private registerUserDialog: MatDialog,
+              private signinBtnVisibleSvc: SigninButtonVisibleService,
+              private registerTriggeredSvc: RegisterTriggeredService) {
     }
 
   ngOnInit() {
-    this.registerTriggeredService.registerTriggered$
+    this.registerTriggeredSvc.registerTriggered$
       .subscribe(data => {
-        this.signUp();
-      })
+        this.registerUser();
+      });
   }
 
-  signUp() {
-
+  registerUser() {
     const registerConfig = new MatDialogConfig();
 
     registerConfig.autoFocus = true;
-    registerConfig.position = {
-      top: '20px'
-    };
+    registerConfig.position = {top: '20px'};
     registerConfig.ariaLabel = 'Register Dialog';
     registerConfig.hasBackdrop = false;
     // registerConfig.backdropClass = 'backdropBackground';
     registerConfig.disableClose = true;
 
-
-    const dialogRef = this.registerDialog.open(RegisterDialogComponent, registerConfig);
+    const dialogRef = this.registerUserDialog.open(RegisterDialogComponent, registerConfig);
 
     dialogRef.afterClosed()
       .subscribe({
         next: (val) => {
           if (val) {
+            // trigger signin dialog?
           }
         }
       });
@@ -55,12 +48,12 @@ export class LandingPageComponent implements OnInit {
 
   learnMore() {
     this.showLanding = false;  // activate learn more page
-    this.signinVisiblityService.toggleSignin(false);
+    this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
   }
 
   toggleLanding(show: boolean) {
     this.showLanding = show;
-    this.signinVisiblityService.toggleSignin(true);
+    this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
     window.scroll({
       top: 0,
       left: 0,

@@ -7,7 +7,7 @@ import { AuthenticationService } from './../../../core/services/data-services/au
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 
 @Component({
-  selector: 'app-signin-dialog',
+  selector: 'app-rvlm-signin-dialog',
   templateUrl: './signin-dialog.component.html',
   styleUrls: ['./signin-dialog.component.scss']
 })
@@ -19,7 +19,7 @@ export class SigninDialogComponent implements OnInit {
     password: ''
   };
 
-  constructor(private auth: AuthenticationService,
+  constructor(private authSvc: AuthenticationService,
               private dialogRef: MatDialogRef<SigninDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -33,10 +33,11 @@ export class SigninDialogComponent implements OnInit {
 
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
+    this.credentials.email = this.credentials.email.toLowerCase();
     this.credentials.password = this.form.controls.password.value;
 
     console.log('about to call login', this.credentials);
-    this.auth.login(this.credentials)
+    this.authSvc.login(this.credentials)
     .pipe(
       catchError (this.handleError)
     )
@@ -58,7 +59,7 @@ export class SigninDialogComponent implements OnInit {
     return throwError(errorMessage);
   }
 
-  close() {
+  onClose() {
     this.dialogRef.close();
   }
 

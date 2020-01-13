@@ -5,7 +5,7 @@ import { AuthenticationService } from './../../core/services/data-services/authe
 
 
 @Component({
-  selector: 'app-connections',
+  selector: 'app-rvlm-connections',
   templateUrl: './connections.component.html',
   styleUrls: ['./connections.component.scss']
 })

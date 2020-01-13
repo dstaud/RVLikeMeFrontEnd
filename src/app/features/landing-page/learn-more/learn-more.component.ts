@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-learn-more',
+  selector: 'app-rvlm-learn-more',
   templateUrl: './learn-more.component.html',
   styleUrls: ['./learn-more.component.scss']
 })
