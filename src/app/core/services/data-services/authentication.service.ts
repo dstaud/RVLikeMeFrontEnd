@@ -28,6 +28,7 @@ export class AuthenticationService {
   }
 
   public login(user: ItokenPayload): Observable<any> {
+    console.log('in login');
     return this.dataRequest('post', 'login', user);
   }
 
@@ -79,6 +80,7 @@ export class AuthenticationService {
                       user?: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.commonData.getLocation();
+    console.log('getting data service', dataSvcURL, type, user);
     base = this.http.post(`${dataSvcURL}/${type}`, user);
 
     const request = base.pipe(
@@ -91,6 +93,10 @@ export class AuthenticationService {
     );
 
     return request;
+  }
+
+  public postUser(user: any) {
+    return this.http.post('http://localhost:3000/api/user', user);
   }
 
   private getUserDetails(): Iuser {

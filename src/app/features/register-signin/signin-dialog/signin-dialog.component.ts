@@ -23,7 +23,7 @@ export class SigninDialogComponent implements OnInit {
               private dialogRef: MatDialogRef<SigninDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
-                email: new FormControl('', [Validators.required, Validators.email]),
+                username: new FormControl('', [Validators.required, Validators.email]),
                 password: new FormControl('', Validators.required)
               });
   }
@@ -31,10 +31,11 @@ export class SigninDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  submit() {
-    this.credentials.email = this.form.controls.email.value;
+  onSubmit() {
+    this.credentials.email = this.form.controls.username.value;
     this.credentials.password = this.form.controls.password.value;
 
+    console.log('about to call login', this.credentials);
     this.auth.login(this.credentials)
     .pipe(
       catchError (this.handleError)
@@ -45,9 +46,16 @@ export class SigninDialogComponent implements OnInit {
     });
   }
 
-  private handleError(err: string) {
-    console.log('Error adding user: ' + err);
-    return throwError(err);
+  private handleError(error) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+        // client-side error
+        errorMessage = `Error: ${error.error.message}`;
+    } else {
+        // server-side error
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(errorMessage);
   }
 
   close() {

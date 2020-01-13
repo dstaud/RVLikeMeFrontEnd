@@ -5,7 +5,8 @@
       <input matInput
             type="text"
             placeholder="First name"
-            formControlName="firstName">
+            formControlName="firstName"
+            autocomplete="name">
       <mat-error *ngIf="!form.controls.firstName.pristine &&
                         form.controls.firstName.hasError('required')">
         Please enter your <strong>First Name</strong>

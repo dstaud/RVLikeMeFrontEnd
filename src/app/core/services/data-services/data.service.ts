@@ -22,25 +22,15 @@ export class DataService {
   private dataRequest(method: 'post'|'get',
                       type: 'profile',
                       user?: ItokenPayload): Observable<any> {
-    let base;
+
     const dataSvcURL = this.commonData.getLocation();
+
     if (method === 'post') {
-      base = this.http.post(`${dataSvcURL}/${type}`, user);
+      return this.http.post(`${dataSvcURL}/${type}`, user);
     } else {
-      base = this.http.get(`${dataSvcURL}/${type}`,
-      { headers: { Authorization: `Bearer ${this.getToken()}` }});
+      return this.http.get(`${dataSvcURL}/${type}`,
+            { headers: { Authorization: `Bearer ${this.getToken()}` }});
     }
-
-    const request = base.pipe(
-      map((data: ItokenResponse) => {
-      if (data.token) {
-        this.saveToken(data.token);
-      }
-      return data;
-      })
-    );
-
-    return request;
   }
 
   private getToken(): string {
