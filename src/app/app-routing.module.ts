@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LandingPageComponent } from './features/landing-page/landing-page.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HomeComponent } from './features/home/home.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 

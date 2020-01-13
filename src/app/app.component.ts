@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Router, NavigationEnd} from '@angular/router';
+import { Router} from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -18,8 +18,6 @@ import { SigninButtonVisibleService } from './core/services/signin-btn-visibilit
 })
 
 export class AppComponent implements OnInit {
-  globalFontTheme: Observable<string>;
-  globalColorTheme: Observable<string>;
   userAuthorized$: Observable<boolean>;
   theme: string;
   font: string;

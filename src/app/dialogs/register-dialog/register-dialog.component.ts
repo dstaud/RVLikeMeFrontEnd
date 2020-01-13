@@ -3,8 +3,8 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog';
 import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
-import { ItokenPayload } from './../../../interfaces/tokenPayload';
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
+import { ItokenPayload } from './../../interfaces/tokenPayload';
 
 @Component({
   selector: 'app-rvlm-register-dialog',

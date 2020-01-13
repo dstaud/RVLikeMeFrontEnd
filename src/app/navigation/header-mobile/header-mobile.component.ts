@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SigninDialogComponent } from './../../features/register-signin/signin-dialog/signin-dialog.component';
+import { SigninDialogComponent } from './../../dialogs/signin-dialog/signin-dialog.component';
 import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 import { RegisterTriggeredService } from './../../core/services/register-dialog-triggered.service';
 

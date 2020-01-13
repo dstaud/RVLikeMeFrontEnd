@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { RegisterDialogComponent } from './../../features/register-signin/register-dialog/register-dialog.component';
-import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
-import { RegisterTriggeredService } from './../../core/services/register-dialog-triggered.service';
+import { RegisterDialogComponent } from './../dialogs/register-dialog/register-dialog.component';
+import { SigninButtonVisibleService } from './../core/services/signin-btn-visibility.service';
+import { RegisterTriggeredService } from './../core/services/register-dialog-triggered.service';
 
 @Component({
   selector: 'app-rvlm-landing-page',

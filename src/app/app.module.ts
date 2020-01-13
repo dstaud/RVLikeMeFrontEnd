@@ -10,7 +10,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { WindowService } from './core/services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LandingPageComponent } from './features/landing-page/landing-page.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
@@ -20,10 +20,10 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
 import { ThemeService } from './core/services/theme.service';
 import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
 import { HomeComponent } from './features/home/home.component';
-import { RegisterDialogComponent } from './features/register-signin/register-dialog/register-dialog.component';
+import { RegisterDialogComponent } from './dialogs/register-dialog/register-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SigninDialogComponent } from './features/register-signin/signin-dialog/signin-dialog.component';
-import { LearnMoreComponent } from './features/landing-page/learn-more/learn-more.component';
+import { SigninDialogComponent } from './dialogs/signin-dialog/signin-dialog.component';
+import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 
 @NgModule({
   declarations: [
