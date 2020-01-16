@@ -23,14 +23,13 @@ export class AppComponent implements OnInit {
   font: string;
   userAuthorized = false;
 
-
-  constructor(public translateSvc: TranslateService,
+  constructor(public translate: TranslateService,
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
               private authSvc: AuthenticationService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               private router: Router) {
-    translateSvc.setDefaultLang('en'); // Default to US English
+    translate.setDefaultLang('en'); // Default to US English
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
     .pipe(

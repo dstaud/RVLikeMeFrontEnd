@@ -1,0 +1,17 @@
+$custom-global-typography: mat-typography-config(
+  $font-family: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif',
+  $headline: mat-typography-level(24px, 48px, 400),
+  $body-1: mat-typography-level(16px, 24px, 400)
+);
+
+$custom-android-typography: mat-typography-config(
+  $font-family: 'Roboto, "Droid Sans", sans-serif',
+  $headline: mat-typography-level(24px, 48px, 400),
+  $body-1: mat-typography-level(16px, 24px, 400)
+);
+
+$custom-iPhone-typography: mat-typography-config(
+  $font-family: '-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif',
+  $headline: mat-typography-level(24px, 48px, 400),
+  $body-1: mat-typography-level(16px, 24px, 400)
+);

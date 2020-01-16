@@ -1,11 +1,14 @@
 <h2 mat-dialog-title>Register</h2>
 <mat-dialog-content [formGroup]="form">
   <div>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
+      <mat-label>First name</mat-label>
       <input matInput
             type="text"
             placeholder="First name"
-            formControlName="firstName">
+            formControlName="firstName"
+            required>
       <mat-error *ngIf="!form.controls.firstName.pristine &&
                         form.controls.firstName.hasError('required')">
         Please enter your <strong>First Name</strong>
@@ -13,29 +16,35 @@
     </mat-form-field>
   </div>
   <div>
-    <mat-form-field>
-        <input matInput
-              type="text"
-              placeholder="Email address"
-              formControlName="email"
-              autocomplete="email">
-        <mat-error *ngIf="!form.controls.email.pristine &&
-                          form.controls.email.hasError('required')">
-          Please enter your <strong>email</strong>
-        </mat-error>
-        <mat-error *ngIf="!form.controls.email.pristine &&
-                          form.controls.email.hasError('email')">
-          Invalid <strong>email</strong> address
-        </mat-error>
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+      <mat-label>Email</mat-label>
+      <input matInput
+            type="text"
+            placeholder="Email address"
+            formControlName="email"
+            autocomplete="email"
+            required>
+      <mat-error *ngIf="!form.controls.email.pristine &&
+                        form.controls.email.hasError('required')">
+        Please enter your <strong>email</strong>
+      </mat-error>
+      <mat-error *ngIf="!form.controls.email.pristine &&
+                        form.controls.email.hasError('email')">
+        Invalid <strong>email</strong> address
+      </mat-error>
     </mat-form-field>
   </div>
   <div>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+      <mat-label>Password</mat-label>
       <input matInput
             [type]="hidePassword ? 'password' : 'text'"
             placeholder="Password"
             formControlName="password"
-            autocomplete="new-password">
+            autocomplete="new-password"
+            required>
       <mat-error *ngIf="!form.controls.password.pristine &&
                         form.controls.password.hasError('required')">
         Please enter a <strong>Password</strong>
@@ -47,12 +56,15 @@
     </mat-icon>
   </div>
   <div>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+      <mat-label>Confirm password</mat-label>
       <input matInput
             [type]="hidePassword ? 'password' : 'text'"
             placeholder="Confirm Password"
             formControlName="passwordConfirm"
-            autocomplete="new-password">
+            autocomplete="new-password"
+            required>
       <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&
                         form.controls.passwordConfirm.hasError('required')">
         Please re-enter your <strong>Password</strong>
@@ -62,7 +74,8 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <div class="button">
-    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+    <button [disabled]="!form.valid" class="mat-raised-button mat-accent" (click)="onSubmit()">Submit</button>
   </div>
-  <button class="mat-raised-button mat-accent" (click)="onClose()">Close</button>
+  <button class="mat-raised-button mat-primary" (click)="onClose()">Close</button>
 </mat-dialog-actions>
+<mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

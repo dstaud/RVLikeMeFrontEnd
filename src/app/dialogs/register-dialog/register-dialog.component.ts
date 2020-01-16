@@ -5,6 +5,7 @@ import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
+import { SharedComponent } from './../../shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-register-dialog',
@@ -15,6 +16,7 @@ import { ItokenPayload } from './../../interfaces/tokenPayload';
 export class RegisterDialogComponent implements OnInit {
   form: FormGroup;
   hidePassword = true;
+  showSpinner = false;
   credentials: ItokenPayload = {
     email: '',
     firstName: '',
@@ -23,6 +25,7 @@ export class RegisterDialogComponent implements OnInit {
 
   constructor(private authSvc: AuthenticationService,
               private dialogRef: MatDialogRef<RegisterDialogComponent>,
+              private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
@@ -41,15 +44,17 @@ export class RegisterDialogComponent implements OnInit {
     this.credentials.password = this.form.controls.password.value;
     this.credentials.firstName = this.form.controls.firstName.value;
 
+    this.showSpinner = true;
     this.authSvc.registerUser(this.credentials)
     .pipe(
       catchError (this.authSvc.handleBackendError)
     )
     .subscribe((responseData) => {
+      this.showSpinner = false;
       if (responseData.status === 201) {
-        alert('Email "' + this.form.controls.email.value + '" already exists');
+        this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
       } else {
-        alert('credentials saved');
+        this.shared.openSnackBar('Credentials saved successfully', 'message');
         this.onClose();
       }
     });

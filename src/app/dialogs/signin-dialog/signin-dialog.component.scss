@@ -1,7 +1,24 @@
-.dialogWindow {
+/* .dialogWindow {
   padding: 10px;
-}
+} */
+
 
 .button {
   padding-right: 10px;
+}
+
+.spinner {
+  margin: auto;
+}
+
+.dim-wrapper {
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: black;
+  opacity: 0.5;
+}
+
+mat-icon {
+  margin-right: 5px;
 }

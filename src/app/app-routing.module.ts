@@ -35,9 +35,10 @@ const routes: Routes = [
   import('./features/profile/profile.module')
   .then(m => m.ProfileModule)
   },
-  {
-    path: 'home',
-    component: HomeComponent
+  { path: 'home',
+  loadChildren: () =>
+  import('./features/home/home.module')
+  .then(m => m.HomeModule)
   },
   {
     path: '',

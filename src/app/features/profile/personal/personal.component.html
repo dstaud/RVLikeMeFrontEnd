@@ -1,0 +1,105 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>person</mat-icon>
+      Personal
+    </mat-panel-title>
+    <mat-panel-description>
+      Find people like you
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <form [formGroup]="form">
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>person</mat-icon> -->
+        <mat-label>First name</mat-label>
+        <input matInput
+              type="text"
+              placeholder="First name"
+              formControlName="firstName"
+              autocomplete="name"
+              required
+              (change)="changeFirstName($event)">
+        <mat-error *ngIf="errorHandling('firstName', 'required')">
+          Please enter your <strong>first name</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>person</mat-icon> -->
+        <mat-label>Last name</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Last name"
+              formControlName="lastName"
+              autocomplete="name">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>person</mat-icon> -->
+        <mat-label>Display name</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Display name"
+              formControlName="displayName"
+              required>
+        <mat-error *ngIf="errorHandling('displayName', 'required')">
+          Please enter a <strong>display name</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>email</mat-icon> -->
+        <mat-label>Email</mat-label>
+        <input matInput
+              type="email"
+              placeholder="Email"
+              formControlName="email"
+              autocomplete="email"
+              required>
+        <mat-error *ngIf="errorHandling('email', 'required')">
+          Please enter your <strong>Email</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>date_range</mat-icon> -->
+        <mat-label>Year of birth</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Year of birth"
+              formControlName="yearOfBirth">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>home</mat-icon> -->
+        <mat-label>Home Country</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Home country"
+              formControlName="homeCountry">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>home</mat-icon> -->
+        <mat-label>Home State</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Home state/province"
+              formControlName="homeState">
+      </mat-form-field>
+    </div>
+<!--     <mat-dialog-actions>
+    <div class="button">
+      <button type="submit" class="mat-raised-button mat-primary" [disabled]="!form.valid || showSpinner">Submit</button>
+    </div>
+    <button type="button" class="mat-raised-button mat-accent" (click)="onClose()" [disabled]="showSpinner">Close</button>
+  </mat-dialog-actions> -->
+  </form>
+</mat-expansion-panel>

@@ -5,6 +5,7 @@ import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
+// import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-rvlm-signin-dialog',
@@ -18,13 +19,14 @@ export class SigninDialogComponent implements OnInit {
     email: '',
     password: ''
   };
+  showSpinner = false;
 
   constructor(private authSvc: AuthenticationService,
               private dialogRef: MatDialogRef<SigninDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
-                username: new FormControl('', [Validators.required, Validators.email]),
-                password: new FormControl('', Validators.required)
+                username: new FormControl({value: '', disabled: this.showSpinner}, [Validators.required, Validators.email]),
+                password: new FormControl({value: '', disabled: this.showSpinner}, Validators.required)
               });
   }
 
@@ -37,18 +39,24 @@ export class SigninDialogComponent implements OnInit {
     this.credentials.password = this.form.controls.password.value;
 
     console.log('about to call login', this.credentials);
+    this.showSpinner = true;
+/*     const source = timer(5000);
+    const subscribe = source.subscribe(val => { */
     this.authSvc.login(this.credentials)
     .pipe(
       catchError (this.handleError)
     )
     .subscribe ((responseData) => {
       console.log('logged in');
+      this.showSpinner = false;
       this.dialogRef.close(this.form.value);
     });
+    // });
   }
 
   private handleError(error) {
     let errorMessage = '';
+    this.showSpinner = false;
     if (error.error instanceof ErrorEvent) {
         // client-side error
         errorMessage = `Error: ${error.error.message}`;

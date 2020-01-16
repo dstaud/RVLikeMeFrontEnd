@@ -18,8 +18,9 @@ export class HeaderMobileComponent implements OnInit {
   userAuthorized$: Observable<boolean>;
   userAuthorized = false;
   signinVisible = true;
+  showSpinner = false;
 
-  constructor(private translateSvc: TranslateService,
+  constructor(private translate: TranslateService,
               private router: Router,
               private signInDialog: MatDialog,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
@@ -57,31 +58,29 @@ export class HeaderMobileComponent implements OnInit {
   }
 
   setTitleOnRouteChange(): void {
-    console.log('in title route change');
     if (this.router.url.includes('home')) {
-     this.pageTitle = this.translateSvc.instant('home.component.header');
-     console.log('page title=', this.pageTitle);
+     this.pageTitle = this.translate.instant('home.component.header');
     } else {
       if (this.router.url.includes('forums')) {
-        this.pageTitle = this.translateSvc.instant('forums.component.header');
+        this.pageTitle = this.translate.instant('forums.component.header');
       } else {
         if (this.router.url.includes('messages')) {
-          this.pageTitle = this.translateSvc.instant('messages.component.header');
+          this.pageTitle = this.translate.instant('messages.component.header');
         } else {
           if (this.router.url.includes('connections')) {
-            this.pageTitle = this.translateSvc.instant('connections.component.header');
+            this.pageTitle = this.translate.instant('connections.component.header');
           } else {
             if (this.router.url.includes('settings')) {
-              this.pageTitle = this.translateSvc.instant('settings.component.header');
+              this.pageTitle = this.translate.instant('settings.component.header');
             } else {
               if (this.router.url.includes('about')) {
-                this.pageTitle = this.translateSvc.instant('about.component.header');
+                this.pageTitle = this.translate.instant('about.component.header');
               } else {
                 if (this.router.url.includes('profile')) {
-                  this.pageTitle = this.translateSvc.instant('profile.component.header');
+                  this.pageTitle = this.translate.instant('profile.component.header');
                 } else {
                   if (this.router.url.includes('')) {
-                    this.pageTitle = this.translateSvc.instant('landing-page.component.header');
+                    this.pageTitle = this.translate.instant('landing-page.component.header');
                   }
                 }
               }
@@ -112,6 +111,7 @@ export class HeaderMobileComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (this.authSvc.isLoggedIn()) {
         this.authSvc.setUserToAuthorized(true);
+        this.showSpinner = true;
         this.router.navigateByUrl('/home');
       }
     });

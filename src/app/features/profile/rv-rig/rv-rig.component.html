@@ -1,0 +1,24 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>rv_hookup</mat-icon>
+      RV
+    </mat-panel-title>
+    <mat-panel-description>
+      Find people set up like you
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <form [formGroup]="form">
+    <div>
+      <mat-form-field appearance="outline">
+        <!-- <mat-icon matPrefix>person</mat-icon> -->
+        <mat-label>RV type</mat-label>
+        <mat-select (change)="changeType($event)">
+          <mat-option *ngFor="let RVType of RVTypes" [value]="RVType.value">
+            {{ RVType.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-expansion-panel>

@@ -1,38 +1,47 @@
-<h2 mat-dialog-title>Sign in</h2>
-<!-- <mat-dialog-content [formGroup]="form"> -->
-<form [formGroup]="form" (ngSubmit)="onSubmit()" >
-  <div>
-    <mat-form-field>
+<!-- <div class="dim-wrapper"> -->
+  <h2 mat-dialog-title>Sign in</h2>
+  <!-- <mat-dialog-content [formGroup]="form"> -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+        <mat-label>Email</mat-label>
         <input matInput
               type="text"
               placeholder="Email"
               formControlName="username"
-              autocomplete="username email">
+              autocomplete="username email"
+              required>
         <mat-error *ngIf="errorHandling('username', 'required')">
           Please enter your <strong>Email</strong>
         </mat-error>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <input matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            placeholder="Password"
-            formControlName="password"
-            autocomplete="new-password">
-      <mat-error *ngIf="errorHandling('password', 'required')">
-        Please enter your <strong>Password</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-  </div>
-  <mat-dialog-actions>
-    <div class="button">
-      <button type="submit" class="mat-raised-button mat-primary" [disabled]="!form.valid">Submit</button>
+      </mat-form-field>
     </div>
-    <button type="button" class="mat-raised-button mat-accent" (click)="onClose()">Close</button>
-  </mat-dialog-actions>
-</form>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        <mat-label >Password</mat-label>
+        <input matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Password"
+              formControlName="password"
+              autocomplete="new-password"
+              required>
+        <mat-error *ngIf="errorHandling('password', 'required')">
+          Please enter your <strong>Password</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </div>
+    <mat-dialog-actions>
+      <div class="button">
+        <button type="submit" class="mat-raised-button mat-accent" [disabled]="!form.valid || showSpinner">Submit</button>
+      </div>
+      <button type="button" class="mat-raised-button mat-primary" (click)="onClose()" [disabled]="showSpinner">Close</button>
+    </mat-dialog-actions>
+  </form>
+<!-- </div> -->
+<mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 
 <!-- </mat-dialog-content> -->
 
