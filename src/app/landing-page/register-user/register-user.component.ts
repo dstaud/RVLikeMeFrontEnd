@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+// import { MatDialogRef } from '@angular/material/dialog';
 import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
@@ -8,12 +8,12 @@ import { ItokenPayload } from './../../interfaces/tokenPayload';
 import { SharedComponent } from './../../shared/shared.component';
 
 @Component({
-  selector: 'app-rvlm-register-dialog',
-  templateUrl: './register-dialog.component.html',
-  styleUrls: ['./register-dialog.component.scss'],
+  selector: 'app-rvlm-register-user',
+  templateUrl: './register-user.component.html',
+  styleUrls: ['./register-user.component.scss'],
   providers: [AuthenticationService]
 })
-export class RegisterDialogComponent implements OnInit {
+export class RegisterUserComponent implements OnInit {
   form: FormGroup;
   hidePassword = true;
   showSpinner = false;
@@ -24,7 +24,7 @@ export class RegisterDialogComponent implements OnInit {
   };
 
   constructor(private authSvc: AuthenticationService,
-              private dialogRef: MatDialogRef<RegisterDialogComponent>,
+              // private dialogRef: MatDialogRef<RegisterDialogComponent>,
               private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -34,6 +34,9 @@ export class RegisterDialogComponent implements OnInit {
                 passwordConfirm: new FormControl('', Validators.required)
               });
 }
+
+  @Input() state: boolean;
+  @Output() toggle = new EventEmitter<boolean>();
 
   ngOnInit() {
   }
@@ -61,7 +64,8 @@ export class RegisterDialogComponent implements OnInit {
   }
 
   onClose() {
-    this.dialogRef.close();
+    // this.dialogRef.close();
+    this.toggle.emit(!this.state);
   }
 
   public errorHandling = (control: string, error: string) => {

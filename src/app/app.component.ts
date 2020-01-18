@@ -13,8 +13,7 @@ import { SigninButtonVisibleService } from './core/services/signin-btn-visibilit
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  providers: [DeviceService]
+  styleUrls: ['./app.component.scss']
 })
 
 export class AppComponent implements OnInit {

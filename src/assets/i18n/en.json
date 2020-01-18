@@ -40,5 +40,11 @@
   },
   "landing-page.component": {
     "header": "RV Like Me"
+  },
+  "signin.component": {
+    "header": "Sign in"
+  },
+  "register-user.component": {
+    "header": "Register"
   }
 }

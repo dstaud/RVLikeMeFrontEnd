@@ -1,13 +1,28 @@
 /* for sidenav to take whole page */
-html, body {
+body {
+  margin: 0;
+  height: 100%;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
   margin: 0;
   height: 100%;
 }
 
-// iPhone scrolling
+// iPhone
 * {
   -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-overflow-scrolling: auto;
 }
+*::-webkit-scrollbar {
+  width: 0px;
+ }
 
 @import '~@angular/material/theming';
 

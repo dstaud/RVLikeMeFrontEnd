@@ -1,7 +1,7 @@
-<div *ngIf="showLanding" class="mat-app-background background">
-  <p class="mat-display-2 hook marketing-message">
+<div *ngIf="showLanding" class="mat-app-background container">
+  <span class="mat-display-2 hook marketing-message">
     Connect with people who RV like you do
-  </p>
+  </span>
   <p class="mat-body marketing-message">
     Whether you are
   </p>
@@ -26,9 +26,19 @@
     <button mat-button color = "accent" (click)="learnMore()">Learn more</button>
   </div>
 </div>
-<div *ngIf="!showLanding" class="mat-app-background background">
+<div *ngIf="showLearnMore" class="mat-app-background background">
   <app-rvlm-learn-more [state]="showLanding"
     (toggle)="toggleLanding($event)">
   </app-rvlm-learn-more>
+</div>
+<div *ngIf="showSignin" class="mat-app-background background">
+  <app-rvlm-signin [state]="showSignin"
+    (toggle)="toggleSignin($event)">
+  </app-rvlm-signin>
+</div>
+<div *ngIf="showRegisterUser" class="mat-app-background background">
+  <app-rvlm-register-user [state]="showRegisterUser"
+    (toggle)="toggleRegisterUser($event)">
+  </app-rvlm-register-user>
 </div>
 

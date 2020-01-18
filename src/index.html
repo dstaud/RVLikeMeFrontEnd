@@ -36,36 +36,407 @@ rel="stylesheet" />
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="RVLikeMe">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-57x57.png" sizes="57x57">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-60x60.png" sizes="60x60">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-72x72.png" sizes="72x72">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-76x76.png" sizes="76x76">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-114x114.png" sizes="114x114">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-120x120.png" sizes="120x120">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-144x144.png" sizes="144x144">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-152x152.png" sizes="152x152">
-  <link rel="apple-touch-icon" href="/src/images/icons/apple-icon-180x180.png" sizes="180x180">
-  <link href="splashscreens/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/iphoneplus_splash.png" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/iphonex_splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/iphonexr_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/iphonexsmax_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/ipad_splash.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/ipadpro1_splash.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/ipadpro3_splash.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <link href="splashscreens/ipadpro2_splash.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-  <meta name="msapplication-TileImage" content="/src/images/icons/app-icon-144x144.png">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="RV Like Me">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-57x57.png" sizes="57x57">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-60x60.png" sizes="60x60">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-72x72.png" sizes="72x72">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-76x76.png" sizes="76x76">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-114x114.png" sizes="114x114">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-120x120.png" sizes="120x120">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-144x144.png" sizes="144x144">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-152x152.png" sizes="152x152">
+  <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png" sizes="180x180">
+  <meta name="msapplication-TileImage" content="/src/assets/icons/app-icon-144x144.png">
+  <link href="assets/images/splashscreens/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/iphoneplus_splash.png" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/iphonex_splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/iphonexr_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/iphonexsmax_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/ipad_splash.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/ipadpro1_splash.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/ipadpro3_splash.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+  <link href="assets/images/splashscreens/ipadpro2_splash.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
   <meta name="msapplication-TileColor" content="#fff">
   <meta name="theme-color" content="#3f51b5">
+  <app-root>
+<!--   <style type="text/css">
+    .windows8 {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin: auto;
+      margin-top: 80px;
+    }
+   
+    .windows8 .wBall {
+      position: absolute;
+      width: 124px;
+      height: 124px;
+      opacity: 0;
+      transform: rotate(225deg);
+      -o-transform: rotate(225deg);
+      -ms-transform: rotate(225deg);
+      -webkit-transform: rotate(225deg);
+      -moz-transform: rotate(225deg);
+      animation: orbit 4.8425s infinite;
+      -o-animation: orbit 4.8425s infinite;
+      -ms-animation: orbit 4.8425s infinite;
+      -webkit-animation: orbit 4.8425s infinite;
+      -moz-animation: orbit 4.8425s infinite;
+    }
+   
+    .windows8 .wBall .wInnerBall {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: rgb(0, 0, 0);
+      left: 0px;
+      top: 0px;
+      border-radius: 16px;
+    }
+   
+    .windows8 #wBall_1 {
+      animation-delay: 1.056s;
+      -o-animation-delay: 1.056s;
+      -ms-animation-delay: 1.056s;
+      -webkit-animation-delay: 1.056s;
+      -moz-animation-delay: 1.056s;
+    }
+   
+    .windows8 #wBall_2 {
+      animation-delay: 0.203s;
+      -o-animation-delay: 0.203s;
+      -ms-animation-delay: 0.203s;
+      -webkit-animation-delay: 0.203s;
+      -moz-animation-delay: 0.203s;
+    }
+   
+    .windows8 #wBall_3 {
+      animation-delay: 0.4265s;
+      -o-animation-delay: 0.4265s;
+      -ms-animation-delay: 0.4265s;
+      -webkit-animation-delay: 0.4265s;
+      -moz-animation-delay: 0.4265s;
+    }
+   
+    .windows8 #wBall_4 {
+      animation-delay: 0.6295s;
+      -o-animation-delay: 0.6295s;
+      -ms-animation-delay: 0.6295s;
+      -webkit-animation-delay: 0.6295s;
+      -moz-animation-delay: 0.6295s;
+    }
+   
+    .windows8 #wBall_5 {
+      animation-delay: 0.843s;
+      -o-animation-delay: 0.843s;
+      -ms-animation-delay: 0.843s;
+      -webkit-animation-delay: 0.843s;
+      -moz-animation-delay: 0.843s;
+    }
+   
+   
+   
+    @keyframes orbit {
+      0% {
+        opacity: 1;
+        z-index: 99;
+        transform: rotate(180deg);
+        animation-timing-function: ease-out;
+      }
+   
+      7% {
+        opacity: 1;
+        transform: rotate(300deg);
+        animation-timing-function: linear;
+        origin: 0%;
+      }
+   
+      30% {
+        opacity: 1;
+        transform: rotate(410deg);
+        animation-timing-function: ease-in-out;
+        origin: 7%;
+      }
+   
+      39% {
+        opacity: 1;
+        transform: rotate(645deg);
+        animation-timing-function: linear;
+        origin: 30%;
+      }
+   
+      70% {
+        opacity: 1;
+        transform: rotate(770deg);
+        animation-timing-function: ease-out;
+        origin: 39%;
+      }
+   
+      75% {
+        opacity: 1;
+        transform: rotate(900deg);
+        animation-timing-function: ease-out;
+        origin: 70%;
+      }
+   
+      76% {
+        opacity: 0;
+        transform: rotate(900deg);
+      }
+   
+      100% {
+        opacity: 0;
+        transform: rotate(900deg);
+      }
+    }
+   
+    @-o-keyframes orbit {
+      0% {
+        opacity: 1;
+        z-index: 99;
+        -o-transform: rotate(180deg);
+        -o-animation-timing-function: ease-out;
+      }
+   
+      7% {
+        opacity: 1;
+        -o-transform: rotate(300deg);
+        -o-animation-timing-function: linear;
+        -o-origin: 0%;
+      }
+   
+      30% {
+        opacity: 1;
+        -o-transform: rotate(410deg);
+        -o-animation-timing-function: ease-in-out;
+        -o-origin: 7%;
+      }
+   
+      39% {
+        opacity: 1;
+        -o-transform: rotate(645deg);
+        -o-animation-timing-function: linear;
+        -o-origin: 30%;
+      }
+   
+      70% {
+        opacity: 1;
+        -o-transform: rotate(770deg);
+        -o-animation-timing-function: ease-out;
+        -o-origin: 39%;
+      }
+   
+      75% {
+        opacity: 1;
+        -o-transform: rotate(900deg);
+        -o-animation-timing-function: ease-out;
+        -o-origin: 70%;
+      }
+   
+      76% {
+        opacity: 0;
+        -o-transform: rotate(900deg);
+      }
+   
+      100% {
+        opacity: 0;
+        -o-transform: rotate(900deg);
+      }
+    }
+   
+    @-ms-keyframes orbit {
+      0% {
+        opacity: 1;
+        z-index: 99;
+        -ms-transform: rotate(180deg);
+        -ms-animation-timing-function: ease-out;
+      }
+   
+      7% {
+        opacity: 1;
+        -ms-transform: rotate(300deg);
+        -ms-animation-timing-function: linear;
+        -ms-origin: 0%;
+      }
+   
+      30% {
+        opacity: 1;
+        -ms-transform: rotate(410deg);
+        -ms-animation-timing-function: ease-in-out;
+        -ms-origin: 7%;
+      }
+   
+      39% {
+        opacity: 1;
+        -ms-transform: rotate(645deg);
+        -ms-animation-timing-function: linear;
+        -ms-origin: 30%;
+      }
+   
+      70% {
+        opacity: 1;
+        -ms-transform: rotate(770deg);
+        -ms-animation-timing-function: ease-out;
+        -ms-origin: 39%;
+      }
+   
+      75% {
+        opacity: 1;
+        -ms-transform: rotate(900deg);
+        -ms-animation-timing-function: ease-out;
+        -ms-origin: 70%;
+      }
+   
+      76% {
+        opacity: 0;
+        -ms-transform: rotate(900deg);
+      }
+   
+      100% {
+        opacity: 0;
+        -ms-transform: rotate(900deg);
+      }
+    }
+   
+    @-webkit-keyframes orbit {
+      0% {
+        opacity: 1;
+        z-index: 99;
+        -webkit-transform: rotate(180deg);
+        -webkit-animation-timing-function: ease-out;
+      }
+   
+      7% {
+        opacity: 1;
+        -webkit-transform: rotate(300deg);
+        -webkit-animation-timing-function: linear;
+        -webkit-origin: 0%;
+      }
+   
+      30% {
+        opacity: 1;
+        -webkit-transform: rotate(410deg);
+        -webkit-animation-timing-function: ease-in-out;
+        -webkit-origin: 7%;
+      }
+   
+      39% {
+        opacity: 1;
+        -webkit-transform: rotate(645deg);
+        -webkit-animation-timing-function: linear;
+        -webkit-origin: 30%;
+      }
+   
+      70% {
+        opacity: 1;
+        -webkit-transform: rotate(770deg);
+        -webkit-animation-timing-function: ease-out;
+        -webkit-origin: 39%;
+      }
+   
+      75% {
+        opacity: 1;
+        -webkit-transform: rotate(900deg);
+        -webkit-animation-timing-function: ease-out;
+        -webkit-origin: 70%;
+      }
+   
+      76% {
+        opacity: 0;
+        -webkit-transform: rotate(900deg);
+      }
+   
+      100% {
+        opacity: 0;
+        -webkit-transform: rotate(900deg);
+      }
+    }
+   
+    @-moz-keyframes orbit {
+      0% {
+        opacity: 1;
+        z-index: 99;
+        -moz-transform: rotate(180deg);
+        -moz-animation-timing-function: ease-out;
+      }
+   
+      7% {
+        opacity: 1;
+        -moz-transform: rotate(300deg);
+        -moz-animation-timing-function: linear;
+        -moz-origin: 0%;
+      }
+   
+      30% {
+        opacity: 1;
+        -moz-transform: rotate(410deg);
+        -moz-animation-timing-function: ease-in-out;
+        -moz-origin: 7%;
+      }
+   
+      39% {
+        opacity: 1;
+        -moz-transform: rotate(645deg);
+        -moz-animation-timing-function: linear;
+        -moz-origin: 30%;
+      }
+   
+      70% {
+        opacity: 1;
+        -moz-transform: rotate(770deg);
+        -moz-animation-timing-function: ease-out;
+        -moz-origin: 39%;
+      }
+   
+      75% {
+        opacity: 1;
+        -moz-transform: rotate(900deg);
+        -moz-animation-timing-function: ease-out;
+        -moz-origin: 70%;
+      }
+   
+      76% {
+        opacity: 0;
+        -moz-transform: rotate(900deg);
+      }
+   
+      100% {
+        opacity: 0;
+        -moz-transform: rotate(900deg);
+      }
+    }
+   
+    </style>
 </head>
 <body class="mat-app-background mat-body global-fonts">
-  <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W49D4DT"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  <app-root>Loading....</app-root>
+
+  <app-root>
+    <div class="windows8">
+      <div class="wBall" id="wBall_1">
+        <div class="wInnerBall"></div>
+      </div>
+      <div class="wBall" id="wBall_2">
+        <div class="wInnerBall"></div>
+      </div>
+      <div class="wBall" id="wBall_3">
+        <div class="wInnerBall"></div>
+      </div>
+      <div class="wBall" id="wBall_4">
+        <div class="wInnerBall"></div>
+      </div>
+      <div class="wBall" id="wBall_5">
+        <div class="wInnerBall"></div>
+      </div>
+    </div>
+    <center style="margin-top:5rem;">
+    <img src="assets/images/trailer.png" style="width:220px;">
+  </center> -->
+  Loading...
+  </app-root>
 </body>
 </html>
