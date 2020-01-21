@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { WindowService } from './core/services/window.service';
+// import { WindowService } from './core/services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +17,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 import { FooterComponent } from './navigation/footer/footer.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
-import { ThemeService } from './core/services/theme.service';
+// import { ThemeService } from './core/services/theme.service';
 import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
 import { HomeComponent } from './features/home/home.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
@@ -57,13 +57,10 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
   ],
-/*   entryComponents: [
-    SigninDialogComponent
-  ], */
   providers: [
-    WindowService,
-    HttpClient,
-    ThemeService],
+    // WindowService,
+    HttpClient ],
+    // ThemeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

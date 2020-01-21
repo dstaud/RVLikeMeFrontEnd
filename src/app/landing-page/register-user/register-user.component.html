@@ -71,7 +71,7 @@
     </mat-form-field>
   </div>
   <div class="button">
-    <button [disabled]="!form.valid" class="mat-raised-button mat-accent" (click)="onSubmit()">Submit</button>
+    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
   </div>
 </form>
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

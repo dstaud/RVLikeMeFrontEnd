@@ -15,10 +15,6 @@ html {
 // iPhone
 * {
   -webkit-overflow-scrolling: touch;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-  -webkit-overflow-scrolling: auto;
 }
 *::-webkit-scrollbar {
   width: 0px;
@@ -37,8 +33,9 @@ html {
 // @include angular-material-theme($orange-theme);
 // @include angular-material-theme($cyan-theme);
 // @include angular-material-theme($deep-purple-theme);
-
-@include angular-material-theme($gray-theme);
+// @include angular-material-theme($indigo-theme);
+// @include angular-material-theme($gray-theme);
+@include angular-material-theme($orange-dark-theme);
 
 .orange-dark {
   @include angular-material-theme($orange-dark-theme);
@@ -69,9 +66,9 @@ html {
 @import './stylings/variables';
 
 // Because primary color is almost white, want focused form input label to be accent color
-.mat-form-field.mat-focused .mat-form-field-label {
+/* .mat-form-field.mat-focused .mat-form-field-label {
   color: $accent-color;
-}
+} */
 
 .snackBarPanelError {
   background-color: white;
