@@ -1,31 +1,14 @@
-@import './../../../stylings/_variables.scss';
-
 .toolbar {
   display: flex;
   height: 50px;
   position: fixed;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
   padding-top: 20px;
-  border-bottom-style: solid;
-  border-bottom-width: 0.5px;
-  border-bottom-color: $seperator-color;
   top: 0;
-  z-index: 1; // To make sure content flows under toolbar
+  z-index: 1; // To make sure content flows under toolbar for desktop
 }
-
-/* .toolbar-item {
-  line-height: 50px;
-} */
 
 .fill-space {
   flex: 1 1 auto;
-}
-
-.back-arrow {
-  padding-right: 10px;
-}
-
-.page-title {
-  font-size: 120%;
 }

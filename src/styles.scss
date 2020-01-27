@@ -1,24 +1,13 @@
 /* for sidenav to take whole page */
-body {
-  margin: 0;
-  height: 100%;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-html {
+html, body {
   margin: 0;
   height: 100%;
 }
 
-// iPhone
+// iPhone scrolling
 * {
   -webkit-overflow-scrolling: touch;
 }
-*::-webkit-scrollbar {
-  width: 0px;
- }
 
 @import '~@angular/material/theming';
 
@@ -27,29 +16,24 @@ html {
 
 @include mat-core();
 
-@import './stylings/theme-color-schemes.scss';
+@import './themes/theme-color-schemes.scss';
 
-// Default theme
-// @include angular-material-theme($orange-theme);
-// @include angular-material-theme($cyan-theme);
-// @include angular-material-theme($deep-purple-theme);
-// @include angular-material-theme($indigo-theme);
-// @include angular-material-theme($gray-theme);
+// Default to orange dark theme
 @include angular-material-theme($orange-dark-theme);
-
-.orange-dark {
-  @include angular-material-theme($orange-dark-theme);
-}
 
 .light-theme {
   @include angular-material-theme($light-theme);
+}
+
+.orange-theme {
+  @include angular-material-theme($orange-theme);
 }
 
 .dark-theme {
   @include angular-material-theme($dark-theme);
 }
 
-@import './stylings/theme-typography.scss';
+@import './themes/theme-typography.scss';
 
 // Default to global font set
 @include angular-material-typography($custom-global-typography);
@@ -60,26 +44,4 @@ html {
 
 .android-fonts {
   @include angular-material-typography($custom-android-typography);
-}
-
-// Import common variables
-@import './stylings/variables';
-
-// Because primary color is almost white, want focused form input label to be accent color
-/* .mat-form-field.mat-focused .mat-form-field-label {
-  color: $accent-color;
-} */
-
-.snackBarPanelError {
-  background-color: white;
-  color: red;
-  width: 500px;
-  justify-content: center;
-}
-
-.snackBarPanelMessage {
-  background-color: white;
-  color: black;
-  width: 500px;
-  justify-content: center;
 }

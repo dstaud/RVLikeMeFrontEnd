@@ -10,7 +10,7 @@ import { AuthenticationService } from './../../core/services/data-services/authe
 })
 export class AboutComponent implements OnInit {
 
-  constructor(public translate: TranslateService,
+  constructor(public translate$: TranslateService,
               private auth: AuthenticationService,
               private router: Router) {
               }

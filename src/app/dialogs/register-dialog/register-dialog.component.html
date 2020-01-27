@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Register</h2>
+<mat-dialog-content [formGroup]="form">
+  <div>
+    <mat-form-field>
+      <input matInput
+            type="text"
+            placeholder="First name"
+            formControlName="firstName">
+      <mat-error *ngIf="!form.controls.firstName.pristine &&
+                        form.controls.firstName.hasError('required')">
+        Please enter your <strong>First Name</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+        <input matInput
+              type="text"
+              placeholder="Email address"
+              formControlName="email"
+              autocomplete="email">
+        <mat-error *ngIf="!form.controls.email.pristine &&
+                          form.controls.email.hasError('required')">
+          Please enter your <strong>email</strong>
+        </mat-error>
+        <mat-error *ngIf="!form.controls.email.pristine &&
+                          form.controls.email.hasError('email')">
+          Invalid <strong>email</strong> address
+        </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <input matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Password"
+            formControlName="password"
+            autocomplete="new-password">
+      <mat-error *ngIf="!form.controls.password.pristine &&
+                        form.controls.password.hasError('required')">
+        Please enter a <strong>Password</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-icon matSuffix
+      (click)="hidePassword = !hidePassword">
+      {{hidePassword ? 'visibility_off' : 'visibility'}}
+    </mat-icon>
+  </div>
+  <div>
+    <mat-form-field>
+      <input matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Confirm Password"
+            formControlName="passwordConfirm"
+            autocomplete="new-password">
+      <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&
+                        form.controls.passwordConfirm.hasError('required')">
+        Please re-enter your <strong>Password</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="button">
+    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+  </div>
+  <button class="mat-raised-button mat-accent" (click)="onClose()">Close</button>
+</mat-dialog-actions>

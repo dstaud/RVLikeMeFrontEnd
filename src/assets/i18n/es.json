@@ -40,11 +40,5 @@
   },
   "landing-page.component": {
     "header": "RV como yo"
-  },
-  "signin.component": {
-    "header": "Iniciar sesión"
-  },
-  "register-user.component": {
-    "header": "Registrarse"
   }
 }

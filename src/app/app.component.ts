@@ -13,7 +13,8 @@ import { SigninButtonVisibleService } from './core/services/signin-btn-visibilit
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [DeviceService]
 })
 
 export class AppComponent implements OnInit {
@@ -22,13 +23,14 @@ export class AppComponent implements OnInit {
   font: string;
   userAuthorized = false;
 
-  constructor(public translate: TranslateService,
+
+  constructor(public translateSvc: TranslateService,
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
               private authSvc: AuthenticationService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               private router: Router) {
-    translate.setDefaultLang('en'); // Default to US English
+    translateSvc.setDefaultLang('en'); // Default to US English
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
     .pipe(
