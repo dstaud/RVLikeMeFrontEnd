@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-import { HomeComponent } from './features/home/home.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
+import { SigninComponent } from './landing-page/signin/signin.component';
+import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
+import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -35,9 +37,22 @@ const routes: Routes = [
   import('./features/profile/profile.module')
   .then(m => m.ProfileModule)
   },
+  { path: 'home',
+  loadChildren: () =>
+  import('./features/home/home.module')
+  .then(m => m.HomeModule)
+  },
   {
-    path: 'home',
-    component: HomeComponent
+    path: 'signin',
+    component: SigninComponent
+  },
+  {
+    path: 'register',
+    component: RegisterUserComponent
+  },
+  {
+    path: 'learn-more',
+    component: LearnMoreComponent
   },
   {
     path: '',

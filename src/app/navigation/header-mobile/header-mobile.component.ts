@@ -1,12 +1,12 @@
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router, NavigationEnd} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SigninDialogComponent } from './../../dialogs/signin-dialog/signin-dialog.component';
+import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
-import { RegisterTriggeredService } from './../../core/services/register-dialog-triggered.service';
+import { RegisterBtnVisibleService } from './../../core/services/register-btn-visiblity.service';
+import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+import { DeviceService } from './../../core/services/device.service';
 
 @Component({
   selector: 'app-rvlm-header-mobile',
@@ -14,18 +14,23 @@ import { RegisterTriggeredService } from './../../core/services/register-dialog-
   styleUrls: ['./header-mobile.component.scss']
 })
 export class HeaderMobileComponent implements OnInit {
-  pageTitle: string;
+  pageTitle = 'RV Like Me';
   userAuthorized$: Observable<boolean>;
   userAuthorized = false;
   signinVisible = true;
+  registerVisible = false;
+  showSpinner = false;
+  showBackArrow = false;
+  arrowIcon = 'arrow_back';
+  returnRoute = '';
 
-  constructor(private translateSvc: TranslateService,
+  constructor(private translate: TranslateService,
               private router: Router,
-              private signInDialog: MatDialog,
+              private deviceSvc: DeviceService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private registerTriggeredSvc: RegisterTriggeredService,
-              private authSvc: AuthenticationService) {
-  }
+              private regsiterBtnVisibleSvc: RegisterBtnVisibleService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private authSvc: AuthenticationService) { }
 
   ngOnInit() {
     this.router.events
@@ -36,6 +41,12 @@ export class HeaderMobileComponent implements OnInit {
         }
       }
     });
+
+    alert('Device=' + this.deviceSvc.device);
+    if (this.deviceSvc.device === 'iPhone') {
+      // This icon not coming up at all regardless of this if
+      this.arrowIcon = 'arrow_back_ios';
+    }
 
     // Listen for changes in user authorization state
     this.authSvc.userAuth$
@@ -49,39 +60,68 @@ export class HeaderMobileComponent implements OnInit {
         this.signinVisible = data.valueOf();
     });
 
+    this.regsiterBtnVisibleSvc.registerButtonVisible$
+    .subscribe(data => {
+      this.registerVisible = data.valueOf();
+    });
+
     // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
+
+    this.activateBackArrowSvc.route$
+      .subscribe(data => {
+        this.returnRoute = data.valueOf();
+        if (this.returnRoute) {
+          this.showBackArrow = true;
+        } else {
+          this.showBackArrow = false;
+        }
+      });
   }
 
   setTitleOnRouteChange(): void {
-    console.log('in title route change');
     if (this.router.url.includes('home')) {
-     this.pageTitle = this.translateSvc.instant('home.component.header');
-     console.log('page title=', this.pageTitle);
+     this.pageTitle = this.translate.instant('home.component.header');
     } else {
       if (this.router.url.includes('forums')) {
-        this.pageTitle = this.translateSvc.instant('forums.component.header');
+        this.pageTitle = this.translate.instant('forums.component.header');
       } else {
         if (this.router.url.includes('messages')) {
-          this.pageTitle = this.translateSvc.instant('messages.component.header');
+          this.pageTitle = this.translate.instant('messages.component.header');
         } else {
           if (this.router.url.includes('connections')) {
-            this.pageTitle = this.translateSvc.instant('connections.component.header');
+            this.pageTitle = this.translate.instant('connections.component.header');
           } else {
             if (this.router.url.includes('settings')) {
-              this.pageTitle = this.translateSvc.instant('settings.component.header');
+              this.pageTitle = this.translate.instant('settings.component.header');
             } else {
               if (this.router.url.includes('about')) {
-                this.pageTitle = this.translateSvc.instant('about.component.header');
+                this.pageTitle = this.translate.instant('about.component.header');
               } else {
                 if (this.router.url.includes('profile')) {
-                  this.pageTitle = this.translateSvc.instant('profile.component.header');
+                  this.pageTitle = this.translate.instant('profile.component.header');
                 } else {
-                  if (this.router.url.includes('')) {
-                    this.pageTitle = this.translateSvc.instant('landing-page.component.header');
+                  if (this.router.url.includes('signin')) {
+                    this.pageTitle = 'Sign In';
+                    // this.activateBackArrowSvc.setBackRoute('signin');
+                  } else {
+                    if (this.router.url.includes('register')) {
+                      this.pageTitle = 'Register';
+                      // this.activateBackArrowSvc.setBackRoute('register');
+                    } else {
+                      if (this.router.url.includes('learn-more')) {
+                        console.log('title should be Learn More');
+                        this.pageTitle = 'Learn More';
+                        // this.activateBackArrowSvc.setBackRoute('learn-more');
+                      } else {
+                        if (this.router.url.includes('')) {
+                          this.pageTitle = 'RV Like Me';
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -93,31 +133,22 @@ export class HeaderMobileComponent implements OnInit {
   }
 
   signIn() {
-
-    const signinConfig = new MatDialogConfig();
-
-    signinConfig.autoFocus = true;
-    signinConfig.position = {
-      top: '20px'
-    };
-    signinConfig.ariaLabel = 'Sign In Dialog';
-    signinConfig.hasBackdrop = false;
-    // signinConfig.backdropClass = 'backdropBackground';
-    signinConfig.disableClose = true;
-
-    const dialogRef = this.signInDialog.open(SigninDialogComponent, signinConfig);
-
-
-    // After dialog is closed, if valid token exists, user is logged in so navigate to home page.
-    dialogRef.afterClosed().subscribe(result => {
-      if (this.authSvc.isLoggedIn()) {
-        this.authSvc.setUserToAuthorized(true);
-        this.router.navigateByUrl('/home');
-      }
-    });
+    this.router.navigateByUrl('/signin');
+    this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
-    register() {
-      this.registerTriggeredSvc.showRegisterDialog(true);
+  returnToBackRoute() {
+    this.activateBackArrowSvc.setBackRoute('');
+    console.log('Back Route=', this.returnRoute);
+    if (this.returnRoute === '') {
+      this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
+      this.regsiterBtnVisibleSvc.toggleRegisterButtonVisible(false);
     }
+    this.router.navigateByUrl('/' + this.returnRoute);
+  }
+
+  register() {
+    this.router.navigateByUrl('/register');
+    this.activateBackArrowSvc.setBackRoute('landing-page');
+  }
 }

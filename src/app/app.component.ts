@@ -100,6 +100,7 @@ export class AppComponent implements OnInit {
     // Listen for changes in user authorization state
     this.authSvc.userAuth$
       .subscribe(authData => {
+        console.log('user authorized=', authData.valueOf());
         this.userAuthorized = authData.valueOf();
       });
 

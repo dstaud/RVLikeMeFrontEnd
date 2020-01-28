@@ -1,46 +1,47 @@
 <footer class="footer" fxFlexOffset="auto">
   <mat-toolbar color="primary" class="toolbar" role="toolbar">
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-        <a routerLink="/home" routerLinkActive="active-menu-item">
+        <button mat-button routerLink="/home" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>home</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">home</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>{{ "menu.home" | translate }}</span>
           </div>
-        </a>
-        <a routerLink="/connections" routerLinkActive="active-menu-item">
+        </button>
+        <button mat-button routerLink="/connections" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>people</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">people</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>{{ "menu.connections" | translate }}</span>
           </div>
-        </a>
-        <a routerLink="/forums" routerLinkActive="active-menu-item">
+        </button>
+        <button mat-button routerLink="/forums" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>forums</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>{{ "menu.forums" | translate }}</span>
           </div>
-        </a>
-        <a routerLink="/messages" routerLinkActive="active-menu-item">
+        </button>
+        <button mat-button routerLink="/messages" routerLinkActive="active-menu-item">
           <div class="menu-icon">
-            <mat-icon>messages</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">messages</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>{{ "menu.messages" | translate }}</span>
           </div>
-        </a>
-        <a (click)="onToggleSidenav()">
+        </button>
+        <button mat-button (click)="onToggleSidenav()">
           <div class="menu-icon">
-            <mat-icon>more_horiz</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">more_horiz</mat-icon>
           </div>
           <div class="menu-icon-text">
             <span>{{ "menu.more" | translate }}</span>
           </div>
-        </a>
+        </button>
     </div>
   </mat-toolbar>
 </footer>
+

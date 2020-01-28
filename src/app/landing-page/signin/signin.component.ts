@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
-// import { MatDialogRef } from '@angular/material/dialog';
 import { throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
@@ -26,7 +25,6 @@ export class SigninComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private router: Router,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
-              // private dialogRef: MatDialogRef<SigninDialogComponent>,
               fb: FormBuilder) {
               this.form = fb.group({
                 username: new FormControl({value: '', disabled: this.showSpinner}, [Validators.required, Validators.email]),
@@ -57,6 +55,7 @@ export class SigninComponent implements OnInit {
     .subscribe ((responseData) => {
       console.log('logged in');
       this.showSpinner = false;
+      this.authSvc.setUserToAuthorized(true);
       this.router.navigateByUrl('/home');
     });
     // });
@@ -76,7 +75,6 @@ export class SigninComponent implements OnInit {
   }
 
   onClose() {
-    // this.dialogRef.close();
     this.toggle.emit(!this.state);
   }
 

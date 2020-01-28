@@ -19,10 +19,9 @@ import { PageNotFoundComponent } from './navigation/page-not-found/page-not-foun
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { ThemeService } from './core/services/theme.service';
 import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
-import { HomeComponent } from './features/home/home.component';
-import { RegisterDialogComponent } from './dialogs/register-dialog/register-dialog.component';
+import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SigninDialogComponent } from './dialogs/signin-dialog/signin-dialog.component';
+import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 
 @NgModule({
@@ -34,9 +33,8 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
     FooterComponent,
     PageNotFoundComponent,
     HeaderMobileComponent,
-    HomeComponent,
-    SigninDialogComponent,
-    RegisterDialogComponent,
+    SigninComponent,
+    RegisterUserComponent,
     LearnMoreComponent
     ],
   imports: [
@@ -56,9 +54,6 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
     FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
-  ],
-  entryComponents: [
-    SigninDialogComponent
   ],
   providers: [
     WindowService,

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { RegisterDialogComponent } from './../dialogs/register-dialog/register-dialog.component';
+import { Router } from '@angular/router';
 import { SigninButtonVisibleService } from './../core/services/signin-btn-visibility.service';
-import { RegisterTriggeredService } from './../core/services/register-dialog-triggered.service';
+import { RegisterBtnVisibleService } from './../core/services/register-btn-visiblity.service';
+import { ActivateBackArrowService } from './../core/services/activate-back-arrow.service';
+// import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-rvlm-landing-page',
@@ -11,48 +12,56 @@ import { RegisterTriggeredService } from './../core/services/register-dialog-tri
 })
 export class LandingPageComponent implements OnInit {
   showLanding = true;
+  showSignin = false;
+  showLearnMore = false;
+  showRegisterUser = false;
 
-  constructor(private registerUserDialog: MatDialog,
-              private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private registerTriggeredSvc: RegisterTriggeredService) {
-    }
+  constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
+              private registerBtnVisibleSvc: RegisterBtnVisibleService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private router: Router) {
+}
 
   ngOnInit() {
-    this.registerTriggeredSvc.registerTriggered$
-      .subscribe(data => {
-        this.registerUser();
-      });
   }
 
   registerUser() {
-    const registerConfig = new MatDialogConfig();
-
-    registerConfig.autoFocus = true;
-    registerConfig.position = {top: '20px'};
-    registerConfig.ariaLabel = 'Register Dialog';
-    registerConfig.hasBackdrop = false;
-    // registerConfig.backdropClass = 'backdropBackground';
-    registerConfig.disableClose = true;
-
-    const dialogRef = this.registerUserDialog.open(RegisterDialogComponent, registerConfig);
-
-    dialogRef.afterClosed()
-      .subscribe({
-        next: (val) => {
-          if (val) {
-            // trigger signin dialog?
-          }
-        }
-      });
+    this.router.navigateByUrl('/register');
+    this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
+    this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
   learnMore() {
-    this.showLanding = false;  // activate learn more page
+    this.router.navigateByUrl('/learn-more');
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
+    this.registerBtnVisibleSvc.toggleRegisterButtonVisible(true);
+    this.activateBackArrowSvc.setBackRoute('landing-page');
+  }
+
+  toggleRegisterUser(show: boolean) {
+    this.showRegisterUser = show;
+    this.showLanding = true;
+    this.showLearnMore = false;
+    this.showSignin = false;
+  }
+
+  toggleSignin(show: boolean) {
+    this.showSignin = show;
+    this.showLanding = true;
+    this.showLearnMore = false;
+    this.showRegisterUser = false;
+  }
+
+  toggleLearnMore(show: boolean) {
+    this.showLearnMore = show;
+    this.showLanding = true;
+    this.showSignin = false;
+    this.showRegisterUser = true;
   }
 
   toggleLanding(show: boolean) {
     this.showLanding = show;
+    this.showLearnMore = false;
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
     window.scroll({
       top: 0,

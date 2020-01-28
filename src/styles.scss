@@ -16,7 +16,7 @@ html, body {
 
 @include mat-core();
 
-@import './themes/theme-color-schemes.scss';
+@import './styles/theme-color-schemes.scss';
 
 // Default to orange dark theme
 @include angular-material-theme($orange-dark-theme);
@@ -33,7 +33,7 @@ html, body {
   @include angular-material-theme($dark-theme);
 }
 
-@import './themes/theme-typography.scss';
+@import './styles/theme-typography.scss';
 
 // Default to global font set
 @include angular-material-typography($custom-global-typography);

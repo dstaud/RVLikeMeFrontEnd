@@ -8,6 +8,36 @@ $light-theme: mat-light-theme(
   $light-warn
 );
 
+$indigo-primary: mat-palette($mat-indigo, 700, 300, 900);
+$indigo-accent: mat-palette($mat-indigo, A200);
+$indigo-warn: mat-palette($mat-red, 500);
+
+$indigo-theme: mat-light-theme(
+  $indigo-primary,
+  $indigo-accent,
+  $indigo-warn
+);
+
+$deep-purple-primary: mat-palette($mat-deep-purple, 500, 300, 900);
+$deep-purple-accent: mat-palette($mat-deep-purple, A200);
+$deep-purple-warn: mat-palette($mat-red, 500);
+
+$deep-purple-theme: mat-light-theme(
+  $deep-purple-primary,
+  $deep-purple-accent,
+  $deep-purple-warn
+);
+
+$cyan-primary: mat-palette($mat-cyan, 400, 300, 900);
+$cyan-accent: mat-palette($mat-cyan, 200);
+$cyan-warn: mat-palette($mat-red, 500);
+
+$cyan-theme: mat-light-theme(
+  $cyan-primary,
+  $cyan-accent,
+  $cyan-warn
+);
+
 $orange-primary: mat-palette($mat-deep-orange, 700, 300, 900);
 $orange-accent: mat-palette($mat-blue-grey, 400);
 $orange-warn: mat-palette($mat-red, 500);

@@ -7,13 +7,15 @@ mat-sidenav {
 }
 
 // Set Background attributes for content area
-.background {
+.container {
   height: 100vh;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   overflow: auto;
   margin-top: 50px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .bottom-bar-spacing {

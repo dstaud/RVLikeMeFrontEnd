@@ -32,8 +32,9 @@
     <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
   </div>
   <div class="button">
-    <button type="submit" class="mat-raised-button mat-primary"
+    <button type="submit" class="mat-raised-button mat-accent"
             [disabled]="!form.valid || showSpinner">Submit</button>
   </div>
 </form>
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+

@@ -1,23 +1,30 @@
+@import './../../../stylings/_variables';
+
 footer {
   position: fixed;
   bottom: 0px;
   overflow: hide;
   width: 100%;
   height: 50px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: $seperator-color;
 }
 
 .toolbar {
   display: flex;
 }
 
-/* .div.menu-item {
-  vertical-align: center;
-} */
 .menu-icon {
   text-align: center;
   margin: 0;
   padding: 0;
   line-height: 0;
+}
+
+.active-menu-item {
+  color: $accent-color;
+  font-weight: bold;
 }
 
 .menu-icon-text {
@@ -28,11 +35,6 @@ footer {
   font-size: 70%;
 }
 
-.active-menu-item {
-  color: black;
-  font-weight: bold;
-}
-
 .fill-space {
   flex: 1 1 auto;
 }
@@ -41,3 +43,4 @@ a {
   text-decoration: none;
   color: white;
 }
+
