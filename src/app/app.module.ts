@@ -1,9 +1,9 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -23,7 +23,8 @@ import { RegisterUserComponent } from './landing-page/register-user/register-use
 import { ReactiveFormsModule } from '@angular/forms';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
-
+import { ErrorHandlerService } from './core/services/error-handler.service';
+import { HttpInterceptorService } from './core/services/data-services/http-interceptor.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +59,13 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
   providers: [
     WindowService,
     HttpClient,
-    ThemeService],
+    ThemeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

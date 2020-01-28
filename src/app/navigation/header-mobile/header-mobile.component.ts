@@ -42,7 +42,6 @@ export class HeaderMobileComponent implements OnInit {
       }
     });
 
-    alert('Device=' + this.deviceSvc.device);
     if (this.deviceSvc.device === 'iPhone') {
       // This icon not coming up at all regardless of this if
       this.arrowIcon = 'arrow_back_ios';

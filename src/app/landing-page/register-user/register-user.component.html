@@ -1,4 +1,7 @@
 <h2 class="mat-h2">RV Like Me</h2>
+<div *ngIf="httpError">
+  <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
+</div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div>
     <mat-form-field appearance="outline">

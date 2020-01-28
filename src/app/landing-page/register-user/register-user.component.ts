@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
 import { SharedComponent } from './../../shared/shared.component';
+import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 
 @Component({
   selector: 'app-rvlm-register-user',
@@ -22,8 +23,11 @@ export class RegisterUserComponent implements OnInit {
     firstName: '',
     password: ''
   };
+  httpError = false;
+  httpErrorText = 'No Error';
 
-  constructor(private authSvc: AuthenticationService,
+  constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
+              private authSvc: AuthenticationService,
               // private dialogRef: MatDialogRef<RegisterDialogComponent>,
               private shared: SharedComponent,
               fb: FormBuilder) {
@@ -49,9 +53,9 @@ export class RegisterUserComponent implements OnInit {
 
     this.showSpinner = true;
     this.authSvc.registerUser(this.credentials)
-    .pipe(
+/*     .pipe(
       catchError (this.authSvc.handleBackendError)
-    )
+    ) */
     .subscribe((responseData) => {
       this.showSpinner = false;
       if (responseData.status === 201) {
@@ -59,6 +63,20 @@ export class RegisterUserComponent implements OnInit {
       } else {
         this.shared.openSnackBar('Credentials saved successfully', 'message');
         this.onClose();
+      }
+    }, error => {
+      this.showSpinner = false;
+      console.log('in error!', error);
+      this.httpError = true;
+      if (error.status === 401) {
+        this.httpErrorText = 'Invalid email address or password';
+      } else {
+        if (error.status === 403) {
+          this.httpErrorText = 'Email address already registered';
+          this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
+        } else {
+          this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        }
       }
     });
   }

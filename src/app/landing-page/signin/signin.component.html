@@ -1,4 +1,7 @@
 <h2 class="mat-h2">RV Like Me</h2>
+<div *ngIf="httpError">
+  <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
+</div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div>
     <mat-form-field appearance="outline">
@@ -29,7 +32,7 @@
         Please enter your <strong>Password</strong>
       </mat-error>
     </mat-form-field>
-    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    <mat-icon matSuffix class="eyePassword" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
   </div>
   <div class="button">
     <button type="submit" class="mat-raised-button mat-accent"

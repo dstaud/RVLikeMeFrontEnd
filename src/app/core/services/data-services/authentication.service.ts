@@ -32,8 +32,13 @@ export class AuthenticationService {
       // server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    window.alert(errorMessage);
-    return throwError(errorMessage);
+    console.log('throwing error', error.status);
+    if (error.status === 401) {
+      console.log('401');
+      return;
+    } else {
+      // return throwError(errorMessage);
+    }
   }
 
    public isLoggedIn(): boolean {
