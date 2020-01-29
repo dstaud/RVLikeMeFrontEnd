@@ -110,21 +110,32 @@ export class HeaderMobileComponent implements OnInit {
               if (this.router.url.includes('about')) {
                 this.pageTitle = this.translate.instant('about.component.header');
               } else {
-                if (this.router.url.includes('profile')) {
-                  this.pageTitle = this.translate.instant('profile.component.header');
+                if (this.router.url.includes('profile-personal')) {
+                  this.pageTitle = 'Profile - Personal';
                 } else {
-                  if (this.router.url.includes('signin')) {
-                    this.pageTitle = 'Sign In';
+                  if (this.router.url.includes('profile-lifestyle')) {
+                    this.pageTitle = 'Profil - Lifestyle';
                   } else {
-                    if (this.router.url.includes('register')) {
-                      this.pageTitle = 'Register';
+                    if (this.router.url.includes('profile-rig')) {
+                      this.pageTitle = 'Profile - Rig';
                     } else {
-                      if (this.router.url.includes('learn-more')) {
-                        console.log('title should be Learn More');
-                        this.pageTitle = 'Learn More';
+                      if (this.router.url.includes('signin')) {
+                        this.pageTitle = 'Sign In';
                       } else {
-                        if (this.router.url.includes('')) {
-                          this.pageTitle = 'RV Like Me';
+                        if (this.router.url.includes('register')) {
+                          this.pageTitle = 'Register';
+                        } else {
+                          if (this.router.url.includes('learn-more')) {
+                            this.pageTitle = 'Learn More';
+                          } else {
+                            if (this.router.url.includes('profile')) {
+                              this.pageTitle = this.translate.instant('profile.component.header');
+                            } else {
+                              if (this.router.url.includes('')) {
+                                this.pageTitle = 'RV Like Me';
+                              }
+                            }
+                          }
                         }
                       }
                     }

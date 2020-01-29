@@ -1,17 +1,9 @@
-<mat-expansion-panel>
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      <mat-icon>person</mat-icon>
-      Personal
-    </mat-panel-title>
-    <mat-panel-description>
-      Find people like you
-    </mat-panel-description>
-  </mat-expansion-panel-header>
+<div class="mat-app-background container">
+  <p class="mat-body">This information will be used to find information that is relavant to the way you RV.
+                      The more complete, the better your results!</p>
   <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>person</mat-icon> -->
         <mat-label>First name</mat-label>
         <input matInput
               type="text"
@@ -27,7 +19,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>person</mat-icon> -->
         <mat-label>Last name</mat-label>
         <input matInput
               type="text"
@@ -38,7 +29,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>person</mat-icon> -->
         <mat-label>Display name</mat-label>
         <input matInput
               type="text"
@@ -52,7 +42,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>email</mat-icon> -->
         <mat-label>Email</mat-label>
         <input matInput
               type="email"
@@ -67,7 +56,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>date_range</mat-icon> -->
         <mat-label>Year of birth</mat-label>
         <input matInput
               type="text"
@@ -77,7 +65,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>home</mat-icon> -->
         <mat-label>Home Country</mat-label>
         <input matInput
               type="text"
@@ -87,7 +74,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>home</mat-icon> -->
         <mat-label>Home State</mat-label>
         <input matInput
               type="text"
@@ -95,11 +81,5 @@
               formControlName="homeState">
       </mat-form-field>
     </div>
-<!--     <mat-dialog-actions>
-    <div class="button">
-      <button type="submit" class="mat-raised-button mat-primary" [disabled]="!form.valid || showSpinner">Submit</button>
-    </div>
-    <button type="button" class="mat-raised-button mat-accent" (click)="onClose()" [disabled]="showSpinner">Close</button>
-  </mat-dialog-actions> -->
   </form>
-</mat-expansion-panel>
+</div>

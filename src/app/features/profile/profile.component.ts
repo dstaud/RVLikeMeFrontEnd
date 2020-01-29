@@ -43,6 +43,21 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  onPersonal() {
+    this.activateBackArrowSvc.setBackRoute('profile');
+    this.router.navigateByUrl('/profile-personal');
+  }
+
+  onLifestyle() {
+    this.activateBackArrowSvc.setBackRoute('profile');
+    this.router.navigateByUrl('/profile-lifestyle');
+  }
+
+  onRig() {
+    this.activateBackArrowSvc.setBackRoute('profile');
+    this.router.navigateByUrl('/profile-rig');
+  }
+
   private getInitialData(): void {
     this.dataSvc.getUserProfile().subscribe(user => {
       this.user = user;

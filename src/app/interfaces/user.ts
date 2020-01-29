@@ -6,6 +6,7 @@ export interface Iuser {
   email: string;
   cell: number;
   yearOfBirth: number;
+  homeCountry: string;
   homeState: string;
   tokenExpire: number;
 }

@@ -5,6 +5,9 @@ import { PageNotFoundComponent } from './navigation/page-not-found/page-not-foun
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
+import { PersonalComponent } from './features/profile/personal/personal.component';
+import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
+import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -53,6 +56,18 @@ const routes: Routes = [
   {
     path: 'learn-more',
     component: LearnMoreComponent
+  },
+  {
+    path: 'profile-personal',
+    component: PersonalComponent
+  },
+  {
+    path: 'profile-lifestyle',
+    component: LifestyleComponent
+  },
+  {
+    path: 'profile-rig',
+    component: RvRigComponent
   },
   {
     path: '',

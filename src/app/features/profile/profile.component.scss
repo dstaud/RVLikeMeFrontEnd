@@ -1,5 +1,27 @@
-.background {
+.container {
   height: 100%;
-  opacity: 0.9;
   overflow: auto;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.row {
+  display: flex;
+}
+
+.divider {
+  margin-left: 40px;
+  margin-right: 10px;
+}
+.icon {
+  position: relative;
+  top: 12px;
+  left: 5px;
+}
+
+.navigation {
+  font-size: 200%;
+  position: relative;
+  top: 8px;
+  right: 10px;
 }
