@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ErrorHandlerService } from './error-handler.service';
+import { SentryMonitorService } from './sentry-monitor.service';
 
-describe('ErrorHandlerService', () => {
-  let service: ErrorHandlerService;
+describe('SentryMonitorService', () => {
+  let service: SentryMonitorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ErrorHandlerService);
+    service = TestBed.inject(SentryMonitorService);
   });
 
   it('should be created', () => {

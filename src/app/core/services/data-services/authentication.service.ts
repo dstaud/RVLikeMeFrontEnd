@@ -8,6 +8,7 @@ import { ItokenPayload } from '../../../interfaces/tokenPayload';
 import { ItokenResponse } from '../../../interfaces/tokenResponse';
 import { DataService } from './data.service';
 import { CommonDataService } from './common-data.service';
+import { SentryMonitorService } from './../sentry-monitor.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class AuthenticationService {
   constructor(private http: HttpClient,
               private dataSvc: DataService,
               private WindowRef: WindowService,
+              private sentryMonitorSvc: SentryMonitorService,
               private commonData: CommonDataService) { }
 
   public handleBackendError(error) {
@@ -81,6 +83,7 @@ export class AuthenticationService {
         if (data.token) {
           this.saveToken(data.token);
         }
+        this.sentryMonitorSvc.monitorUser(user);
         return data;
       })
     );
@@ -101,6 +104,8 @@ export class AuthenticationService {
     if (token) {
       payload = token.split('.')[1];
       payload = window.atob(payload);
+      console.log('in getUserDetails ', JSON.parse(payload).email);
+      this.sentryMonitorSvc.monitorUser(JSON.parse(payload));
       return JSON.parse(payload);
     } else {
       return null;
