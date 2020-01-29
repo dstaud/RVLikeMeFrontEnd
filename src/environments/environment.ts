@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  dataServiceURL: 'http://localhost:3000/'
+  dataServiceURL: 'http://localhost:3000/',
+  name: 'Development'
 };
 
 /*

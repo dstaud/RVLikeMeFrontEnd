@@ -1,81 +1,88 @@
+<div class="container">
+  <img src="../../../assets/images/trailer.png"
+  alt="travel trailer logo"
+  class="logo"
+  style="width:60px;height:37.2px;">
 <h2 class="mat-h2">RV Like Me</h2>
-<div *ngIf="httpError">
-  <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
+  <div *ngIf="httpError">
+    <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
+        <mat-label>First name</mat-label>
+        <input matInput
+              type="text"
+              placeholder="First name"
+              formControlName="firstName"
+              required>
+        <mat-error *ngIf="!form.controls.firstName.pristine &&
+                          form.controls.firstName.hasError('required')">
+          Please enter your <strong>First Name</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+        <mat-label>Email</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Email address"
+              formControlName="email"
+              autocomplete="email"
+              required>
+        <mat-error *ngIf="!form.controls.email.pristine &&
+                          form.controls.email.hasError('required')">
+          Please enter your <strong>email</strong>
+        </mat-error>
+        <mat-error *ngIf="!form.controls.email.pristine &&
+                          form.controls.email.hasError('email')">
+          Invalid <strong>email</strong> address
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        <mat-label>Password</mat-label>
+        <input matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Password"
+              formControlName="password"
+              autocomplete="new-password"
+              required>
+        <mat-error *ngIf="!form.controls.password.pristine &&
+                          form.controls.password.hasError('required')">
+          Please enter a <strong>Password</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-icon matSuffix
+        class="eyePassword"
+        (click)="hidePassword = !hidePassword">
+        {{hidePassword ? 'visibility_off' : 'visibility'}}
+      </mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        <mat-label>Confirm password</mat-label>
+        <input matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Confirm Password"
+              formControlName="passwordConfirm"
+              autocomplete="new-password"
+              required>
+        <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&
+                          form.controls.passwordConfirm.hasError('required')">
+          Please re-enter your <strong>Password</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="button">
+      <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+    </div>
+  </form>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div>
-    <mat-form-field appearance="outline">
-      <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
-      <mat-label>First name</mat-label>
-      <input matInput
-            type="text"
-            placeholder="First name"
-            formControlName="firstName"
-            required>
-      <mat-error *ngIf="!form.controls.firstName.pristine &&
-                        form.controls.firstName.hasError('required')">
-        Please enter your <strong>First Name</strong>
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field appearance="outline">
-      <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
-      <mat-label>Email</mat-label>
-      <input matInput
-            type="text"
-            placeholder="Email address"
-            formControlName="email"
-            autocomplete="email"
-            required>
-      <mat-error *ngIf="!form.controls.email.pristine &&
-                        form.controls.email.hasError('required')">
-        Please enter your <strong>email</strong>
-      </mat-error>
-      <mat-error *ngIf="!form.controls.email.pristine &&
-                        form.controls.email.hasError('email')">
-        Invalid <strong>email</strong> address
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field appearance="outline">
-      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
-      <mat-label>Password</mat-label>
-      <input matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            placeholder="Password"
-            formControlName="password"
-            autocomplete="new-password"
-            required>
-      <mat-error *ngIf="!form.controls.password.pristine &&
-                        form.controls.password.hasError('required')">
-        Please enter a <strong>Password</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-icon matSuffix
-      (click)="hidePassword = !hidePassword">
-      {{hidePassword ? 'visibility_off' : 'visibility'}}
-    </mat-icon>
-  </div>
-  <div>
-    <mat-form-field appearance="outline">
-      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
-      <mat-label>Confirm password</mat-label>
-      <input matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            placeholder="Confirm Password"
-            formControlName="passwordConfirm"
-            autocomplete="new-password"
-            required>
-      <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&
-                        form.controls.passwordConfirm.hasError('required')">
-        Please re-enter your <strong>Password</strong>
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div class="button">
-    <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
-  </div>
-</form>
-<mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

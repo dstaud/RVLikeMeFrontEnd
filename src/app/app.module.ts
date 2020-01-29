@@ -1,10 +1,11 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, Injectable } from '@angular/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import * as Sentry from '@sentry/browser';
 import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
@@ -23,8 +24,29 @@ import { RegisterUserComponent } from './landing-page/register-user/register-use
 import { ReactiveFormsModule } from '@angular/forms';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
-import { ErrorHandlerService } from './core/services/error-handler.service';
 import { HttpInterceptorService } from './core/services/data-services/http-interceptor.service';
+
+Sentry.init({
+  dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
+  environment: environment.name
+});
+
+@Injectable()
+export class SentryErrorHandler implements ErrorHandler {
+  constructor() {}
+  handleError(error) {
+    const eventId = Sentry.captureException(error.originalError || error);
+    Sentry.showReportDialog({ eventId });
+  }
+}
+
+export function getErrorHandler(): ErrorHandler {
+  if (environment.production) {
+    return new SentryErrorHandler();
+  }
+  return new ErrorHandler();
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,6 +82,9 @@ import { HttpInterceptorService } from './core/services/data-services/http-inter
     WindowService,
     HttpClient,
     ThemeService,
+    {
+      provide: ErrorHandler,
+      useFactory: getErrorHandler },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,

@@ -24,6 +24,7 @@ export class SigninComponent implements OnInit {
   showSpinner = false;
   httpError = false;
   httpErrorText = 'No Error';
+  returnRoute = '';
 
   constructor(private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -41,6 +42,17 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
+    console.log('in Signin Init');
+    this.activateBackArrowSvc.route$
+    .subscribe(data => {
+      this.returnRoute = data.valueOf();
+      if (this.returnRoute) {
+        if (this.returnRoute.substring(0, 1) === '*') {
+            this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
+            console.log('auto route=', this.returnRoute);
+        }
+      }
+    });
   }
 
   onSubmit() {
@@ -54,15 +66,20 @@ export class SigninComponent implements OnInit {
 /*     const source = timer(5000);
     const subscribe = source.subscribe(val => { */
     this.authSvc.login(this.credentials)
-/*     .pipe(
-      catchError (this.authSvc.handleBackendError)
-    ) */
     .subscribe ((responseData) => {
       console.log('logged in');
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(true);
-      this.activateBackArrowSvc.setBackRoute('');
-      this.router.navigateByUrl('/home');
+      console.log('is there an auto route ', this.returnRoute);
+      if (this.returnRoute && this.returnRoute !== 'landing-page') {
+        // User booked-marked a specific page which can route too after authorization
+        this.router.navigateByUrl(this.returnRoute);
+        this.activateBackArrowSvc.setBackRoute('');
+      } else {
+        // After user authorizied to to home page
+        this.router.navigateByUrl('/home');
+        this.activateBackArrowSvc.setBackRoute('');
+      }
     }, error => {
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(false);

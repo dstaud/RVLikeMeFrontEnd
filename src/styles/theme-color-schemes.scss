@@ -28,8 +28,8 @@ $deep-purple-theme: mat-light-theme(
   $deep-purple-warn
 );
 
-$cyan-primary: mat-palette($mat-cyan, 400, 300, 900);
-$cyan-accent: mat-palette($mat-cyan, 200);
+$cyan-primary: mat-palette($mat-cyan, 700, 300, 900);
+$cyan-accent: mat-palette($mat-green, A200);
 $cyan-warn: mat-palette($mat-red, 500);
 
 $cyan-theme: mat-light-theme(

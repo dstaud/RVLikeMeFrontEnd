@@ -23,12 +23,13 @@ export class HeaderMobileComponent implements OnInit {
   showBackArrow = false;
   arrowIcon = 'arrow_back';
   returnRoute = '';
+  autoRoute = false;
 
   constructor(private translate: TranslateService,
               private router: Router,
               private deviceSvc: DeviceService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private regsiterBtnVisibleSvc: RegisterBtnVisibleService,
+              private registerBtnVisibleSvc: RegisterBtnVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService) { }
 
@@ -59,7 +60,7 @@ export class HeaderMobileComponent implements OnInit {
         this.signinVisible = data.valueOf();
     });
 
-    this.regsiterBtnVisibleSvc.registerButtonVisible$
+    this.registerBtnVisibleSvc.registerButtonVisible$
     .subscribe(data => {
       this.registerVisible = data.valueOf();
     });
@@ -74,10 +75,19 @@ export class HeaderMobileComponent implements OnInit {
       .subscribe(data => {
         this.returnRoute = data.valueOf();
         if (this.returnRoute) {
-          this.showBackArrow = true;
-        } else {
-          this.showBackArrow = false;
-        }
+          if (this.returnRoute.substring(0, 1) === '*') {
+              this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
+              console.log('auto route=', this.returnRoute);
+              this.autoRoute = true;
+              this.showBackArrow = false;
+            } else {
+              console.log('Return Route Changed to ', this.returnRoute);
+              this.showBackArrow = true;
+            }
+          } else {
+              this.showBackArrow = false;
+              this.autoRoute = false;
+          }
       });
   }
 
@@ -105,16 +115,13 @@ export class HeaderMobileComponent implements OnInit {
                 } else {
                   if (this.router.url.includes('signin')) {
                     this.pageTitle = 'Sign In';
-                    // this.activateBackArrowSvc.setBackRoute('signin');
                   } else {
                     if (this.router.url.includes('register')) {
                       this.pageTitle = 'Register';
-                      // this.activateBackArrowSvc.setBackRoute('register');
                     } else {
                       if (this.router.url.includes('learn-more')) {
                         console.log('title should be Learn More');
                         this.pageTitle = 'Learn More';
-                        // this.activateBackArrowSvc.setBackRoute('learn-more');
                       } else {
                         if (this.router.url.includes('')) {
                           this.pageTitle = 'RV Like Me';
@@ -137,17 +144,25 @@ export class HeaderMobileComponent implements OnInit {
   }
 
   returnToBackRoute() {
-    this.activateBackArrowSvc.setBackRoute('');
-    console.log('Back Route=', this.returnRoute);
+    console.log('Back To Route=', this.returnRoute);
     if (this.returnRoute === '') {
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
-      this.regsiterBtnVisibleSvc.toggleRegisterButtonVisible(false);
+      this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
     }
-    this.router.navigateByUrl('/' + this.returnRoute);
+    console.log('navigating to ', this.returnRoute);
+    if (this.returnRoute === 'landing-page') {
+      this.router.navigateByUrl('/');
+      this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
+      this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
+    } else {
+      this.router.navigateByUrl('/' + this.returnRoute);
+    }
+    this.activateBackArrowSvc.setBackRoute('');
   }
 
   register() {
     this.router.navigateByUrl('/register');
     this.activateBackArrowSvc.setBackRoute('landing-page');
+    this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
   }
 }

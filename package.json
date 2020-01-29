@@ -28,6 +28,7 @@
     "@angular/service-worker": "~9.0.0-rc.6",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@sentry/browser": "^5.11.2",
     "body-parser": "^1.19.0",
     "libphonenumber-js": "^1.7.24",
     "material-design-icons": "^3.0.1",

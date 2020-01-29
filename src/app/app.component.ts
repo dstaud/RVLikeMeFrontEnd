@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { DeviceService } from './core/services/device.service';
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
               private themeSvc: ThemeService,
               private authSvc: AuthenticationService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
+              private location: Location,
               private router: Router) {
     translateSvc.setDefaultLang('en'); // Default to US English
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -83,7 +85,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Listen for changes in font theme;
+     // Listen for changes in font theme;
     this.themeSvc.defaultGlobalFontTheme
       .subscribe(fontData => {
         this.font = fontData.valueOf();

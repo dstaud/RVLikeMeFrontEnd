@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-footer',
@@ -9,7 +10,7 @@ export class FooterComponent implements OnInit {
 
   @Output() public sidenavToggle = new EventEmitter();
 
-  constructor() { }
+  constructor(private activateBackArrowSvc: ActivateBackArrowService) { }
 
   ngOnInit() {
 
