@@ -32,14 +32,10 @@ export class ProfileComponent implements OnInit {
               }
 
   ngOnInit() {
-    if (this.authSvc.isLoggedIn()) {
-      this.getInitialData();
-    } else {
-      if (!this.authSvc.isLoggedIn()) {
-        this.backPath = this.location.path().substring(1, this.location.path().length);
-        this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
-        this.router.navigateByUrl('/signin');
-      }
+    if (!this.authSvc.isLoggedIn()) {
+      this.backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.router.navigateByUrl('/signin');
     }
   }
 
@@ -58,7 +54,7 @@ export class ProfileComponent implements OnInit {
     this.router.navigateByUrl('/profile-rig');
   }
 
-  private getInitialData(): void {
+/*   private getInitialData(): void {
     this.dataSvc.getUserProfile().subscribe(user => {
       this.user = user;
       this.displayName = this.user.displayName;
@@ -71,5 +67,5 @@ export class ProfileComponent implements OnInit {
     }, (error) => {
       throw new Error(error);
     });
-  }
+  } */
 }

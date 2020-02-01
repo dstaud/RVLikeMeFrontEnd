@@ -45,6 +45,11 @@ const routes: Routes = [
   import('./features/home/home.module')
   .then(m => m.HomeModule)
   },
+  { path: 'credentials',
+  loadChildren: () =>
+  import('./features/credentials/credentials.module')
+  .then(m => m.CredentialsModule)
+  },
   {
     path: 'signin',
     component: SigninComponent

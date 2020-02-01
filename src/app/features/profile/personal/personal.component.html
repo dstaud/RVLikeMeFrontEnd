@@ -1,6 +1,7 @@
 <div class="mat-app-background container">
   <p class="mat-body">This information will be used to find information that is relavant to the way you RV.
                       The more complete, the better your results!</p>
+  <p class="mat-body">Click on any help icon for information on how the data point will be used for you.</p>
   <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
@@ -16,6 +17,7 @@
           Please enter your <strong>first name</strong>
         </mat-error>
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
@@ -26,6 +28,7 @@
               formControlName="lastName"
               autocomplete="name">
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
@@ -39,6 +42,7 @@
           Please enter a <strong>display name</strong>
         </mat-error>
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="displayNameHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
@@ -53,33 +57,44 @@
           Please enter your <strong>Email</strong>
         </mat-error>
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="emailHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Year of birth</mat-label>
+        <mat-label>Year of birth (YYYY)</mat-label>
         <input matInput
               type="text"
               placeholder="Year of birth"
               formControlName="yearOfBirth">
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="yearOfBirthHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Home Country</mat-label>
-        <input matInput
-              type="text"
-              placeholder="Home country"
-              formControlName="homeCountry">
+        <mat-label>Choose home country</mat-label>
+        <mat-select matNativeControl>
+          <mat-option
+            aria-placeholder="country"
+            *ngFor="let Country of countries" [value]="Country.value">
+            {{ Country.viewValue }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeCountryHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Home State</mat-label>
-        <input matInput
-              type="text"
-              placeholder="Home state/province"
-              formControlName="homeState">
+        <mat-label>Choose home state</mat-label>
+        <mat-select matNativeControl>
+          <mat-option
+            aria-placeholder="state"
+            *ngFor="let State of states" [value]="State.value">
+            {{ State.viewValue }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeStateHelp()">help</mat-icon>
     </div>
   </form>
 </div>
+<mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

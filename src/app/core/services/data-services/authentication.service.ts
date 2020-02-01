@@ -63,7 +63,8 @@ export class AuthenticationService {
   }
 
   public registerUser(user: ItokenPayload): Observable<any> {
-  return this.dataRequest('post', 'register', user);
+    console.log('calling register on backend');
+    return this.dataRequest('post', 'register', user);
   }
 
   public setUserToAuthorized(auth: boolean): void {

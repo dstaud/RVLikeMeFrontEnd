@@ -7,7 +7,7 @@
   <div *ngIf="httpError">
     <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
   </div>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
         <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>

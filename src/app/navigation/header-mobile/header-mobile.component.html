@@ -9,7 +9,6 @@
           alt="travel trailer logo"
           style="width:60px;height:37.2px;">
     <span class="page-title toolbar-item">{{ pageTitle }}</span>
-    <!-- <span *ngIf="!userAuthorized" class="page-title">RV Like Me</span> -->
     <span class="fill-space"></span>
     <button *ngIf="!userAuthorized && signinVisible"
             mat-button
@@ -20,6 +19,11 @@
             mat-button
             class="toolbar-item"
             (click)="register()">Sign up for free
+    </button>
+    <button *ngIf="userAuthorized"
+            mat-button
+            class="toolbar-item"
+            (click)="manageCredentials()">creds
     </button>
   </div>
 </mat-toolbar>

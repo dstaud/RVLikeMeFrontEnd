@@ -32,8 +32,10 @@ export class SigninComponent implements OnInit {
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               fb: FormBuilder) {
               this.form = fb.group({
-                username: new FormControl({value: '', disabled: this.showSpinner}, [Validators.required, Validators.email]),
-                password: new FormControl({value: '', disabled: this.showSpinner}, Validators.required)
+                username: new FormControl({value: '', disabled: this.showSpinner},
+                                          [Validators.required, Validators.email]),
+                password: new FormControl({value: '', disabled: this.showSpinner},
+                                           Validators.required)
               });
   }
 

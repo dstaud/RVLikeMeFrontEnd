@@ -1,8 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-// import { MatDialogRef } from '@angular/material/dialog';
-import { throwError} from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
 import { SharedComponent } from './../../shared/shared.component';
@@ -11,8 +8,7 @@ import { SigninButtonVisibleService } from './../../core/services/signin-btn-vis
 @Component({
   selector: 'app-rvlm-register-user',
   templateUrl: './register-user.component.html',
-  styleUrls: ['./register-user.component.scss'],
-  providers: [AuthenticationService]
+  styleUrls: ['./register-user.component.scss']
 })
 export class RegisterUserComponent implements OnInit {
   form: FormGroup;
@@ -24,18 +20,17 @@ export class RegisterUserComponent implements OnInit {
     password: ''
   };
   httpError = false;
-  httpErrorText = 'No Error';
+  httpErrorText = '';
 
   constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
               private authSvc: AuthenticationService,
-              // private dialogRef: MatDialogRef<RegisterDialogComponent>,
               private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
-                firstName: new FormControl('', Validators.required),
-                email: new FormControl('', [Validators.required, Validators.email]),
-                password: new FormControl('', Validators.required),
-                passwordConfirm: new FormControl('', Validators.required)
+                firstName: new FormControl({value: ''}, Validators.required),
+                email: new FormControl({value: ''}, [Validators.required, Validators.email]),
+                password: new FormControl({value: ''}, Validators.required),
+                passwordConfirm: new FormControl({value: ''}, Validators.required)
               });
 }
 
@@ -53,9 +48,6 @@ export class RegisterUserComponent implements OnInit {
 
     this.showSpinner = true;
     this.authSvc.registerUser(this.credentials)
-/*     .pipe(
-      catchError (this.authSvc.handleBackendError)
-    ) */
     .subscribe((responseData) => {
       this.showSpinner = false;
       if (responseData.status === 201) {
