@@ -25,7 +25,12 @@ export class AuthenticationService {
               private sentryMonitorSvc: SentryMonitorService,
               private commonData: CommonDataService) { }
 
-  public handleBackendError(error) {
+
+    public getCredentials(): Observable<any> {
+      return this.dataRequest('get', 'credentials');
+    }
+
+    public handleBackendError(error) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
       // client-side error
@@ -63,7 +68,7 @@ export class AuthenticationService {
   }
 
   public registerUser(user: ItokenPayload): Observable<any> {
-    console.log('calling register on backend');
+    console.log('calling register on')
     return this.dataRequest('post', 'register', user);
   }
 
@@ -71,14 +76,19 @@ export class AuthenticationService {
     this.userAuth.next(auth);
   }
 
-  private dataRequest(method: 'post',
-                      type: 'login'|'register',
+  private dataRequest(method: 'post'|'get',
+                      type: 'login'|'register'|'credentials',
                       user?: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.commonData.getLocation();
     console.log('getting data service', dataSvcURL, type, user);
-    base = this.http.post(`${dataSvcURL}/${type}`, user);
 
+    if (type === 'credentials') {
+      return this.http.get(`${dataSvcURL}/${type}`,
+      { headers: { Authorization: `Bearer ${this.getToken()}` }});
+    }
+
+    base = this.http.post(`${dataSvcURL}/${type}`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
         if (data.token) {
@@ -95,6 +105,7 @@ export class AuthenticationService {
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');
+      console.log('token=', this.token);
     }
     return this.token;
   }

@@ -53,19 +53,4 @@ export class ProfileComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute('profile');
     this.router.navigateByUrl('/profile-rig');
   }
-
-/*   private getInitialData(): void {
-    this.dataSvc.getUserProfile().subscribe(user => {
-      this.user = user;
-      this.displayName = this.user.displayName;
-      this.firstName = this.user.firstName;
-      this.lastName = this.user.lastName;
-      this.cellPhoneNbr = this.user.cell;
-      this.email = this.user.email;
-      this.yearOfBirth = this.user.yearOfBirth;
-      this.homeState = this.user.homeState;
-    }, (error) => {
-      throw new Error(error);
-    });
-  } */
 }

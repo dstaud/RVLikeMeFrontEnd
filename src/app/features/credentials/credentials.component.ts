@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { DataService } from './../../core/services/data-services/data.service';
-import { Iuser } from './../../interfaces/user';
+import { ItokenPayload } from './../../interfaces/tokenPayload';
 import { SharedComponent } from './../../shared/shared.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { SharedComponent } from './../../shared/shared.component';
   styleUrls: ['./credentials.component.scss']
 })
 export class CredentialsComponent implements OnInit {
-  user: Iuser;
+  credentials: ItokenPayload;
   form: FormGroup;
   showSpinner = false;
 
@@ -37,10 +37,10 @@ export class CredentialsComponent implements OnInit {
     } */
     this.form.disable();
     this.showSpinner = true;
-    this.dataSvc.getUserProfile().subscribe(user => {
-      this.user = user;
+    this.authSvc.getCredentials().subscribe(credentials => {
+      this.credentials = credentials;
       this.form.patchValue({
-        email: this.user.email
+        email: this.credentials.email
       });
       this.showSpinner = false;
       this.form.enable();

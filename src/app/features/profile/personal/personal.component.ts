@@ -4,7 +4,9 @@ import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from
 import { TranslateService } from '@ngx-translate/core';
 
 import { DataService } from './../../../core/services/data-services/data.service';
+import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
 import { Iuser } from './../../../interfaces/user';
+import { ItokenPayload } from './../../../interfaces/tokenPayload';
 import { SharedComponent } from './../../../shared/shared.component';
 
 export interface Country {
@@ -24,6 +26,7 @@ export interface State {
 })
 export class PersonalComponent implements OnInit {
   user: Iuser;
+  credentials: ItokenPayload;
   form: FormGroup;
   showSpinner = false;
   countries: Country[] = [
@@ -87,20 +90,21 @@ export class PersonalComponent implements OnInit {
     ];
 
   constructor(private dataSvc: DataService,
+              private authSvc: AuthenticationService,
               private translate: TranslateService,
               private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
-                firstName: new FormControl({value: ''}, Validators.required),
-                email: new FormControl({value: ''}, [Validators.required, Validators.email]),
-                lastName: new FormControl({value: ''}),
-                displayName: new FormControl({value: ''}, Validators.required),
-                yearOfBirth: new FormControl({value: ''},
+                firstName: new FormControl('', Validators.required),
+                email: new FormControl('', [Validators.required, Validators.email]),
+                lastName: new FormControl(''),
+                displayName: new FormControl('', Validators.required),
+                yearOfBirth: new FormControl('',
                                               [Validators.minLength(4),
                                                Validators.maxLength(4),
                                                this.yearOfBirthValidator]),
-                homeCountry: new FormControl({value: ''}),
-                homeState: new FormControl({value: ''})
+                homeCountry: new FormControl(''),
+                homeState: new FormControl('')
               },
                 { updateOn: 'blur' }
               );
@@ -110,6 +114,7 @@ export class PersonalComponent implements OnInit {
     this.form.disable();
     this.showSpinner = true;
     this.dataSvc.getUserProfile().subscribe(user => {
+      console.log('back from server');
       this.user = user;
       if (!this.user.displayName) { this.user.displayName = this.user.firstName; }
       this.form.patchValue({
@@ -123,9 +128,25 @@ export class PersonalComponent implements OnInit {
       });
       this.showSpinner = false;
       this.form.enable();
-    }, (err) => {
-      this.showSpinner = false;
-      console.error(err);
+    }, (error) => {
+      if (error.status === 404) {
+        this.authSvc.getCredentials().subscribe(credentials => {
+          this.credentials = credentials;
+          this.form.patchValue({
+            firstName: this.credentials.firstName,
+            displayName: this.credentials.firstName
+          });
+          this.showSpinner = false;
+          this.form.enable();
+        }, (err) => {
+          console.log('got error?');
+          this.showSpinner = false;
+          console.error(err);
+        });
+      } else {
+        this.showSpinner = false;
+        console.error(error);
+      }
     });
   }
 

@@ -27,10 +27,10 @@ export class RegisterUserComponent implements OnInit {
               private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
-                firstName: new FormControl({value: ''}, Validators.required),
-                email: new FormControl({value: ''}, [Validators.required, Validators.email]),
-                password: new FormControl({value: ''}, Validators.required),
-                passwordConfirm: new FormControl({value: ''}, Validators.required)
+                firstName: new FormControl('', Validators.required),
+                email: new FormControl('', [Validators.required, Validators.email]),
+                password: new FormControl('', Validators.required),
+                passwordConfirm: new FormControl('', Validators.required)
               });
 }
 
