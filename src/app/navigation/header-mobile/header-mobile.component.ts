@@ -154,9 +154,16 @@ export class HeaderMobileComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
-  manageCredentials() {
+  changeUsername() {
     this.router.navigateByUrl('/credentials');
     this.activateBackArrowSvc.setBackRoute('/home');
+  }
+
+  public logout() {
+    this.authSvc.logout();
+    this.authSvc.setUserToAuthorized(false);
+    this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
+    this.router.navigateByUrl('/');
   }
 
   returnToBackRoute() {

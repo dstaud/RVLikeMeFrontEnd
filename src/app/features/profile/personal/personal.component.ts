@@ -130,7 +130,7 @@ export class PersonalComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       if (error.status === 404) {
-        this.authSvc.getCredentials().subscribe(credentials => {
+        this.authSvc.getUsername().subscribe(credentials => {
           this.credentials = credentials;
           this.form.patchValue({
             firstName: this.credentials.firstName,

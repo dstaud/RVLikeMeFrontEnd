@@ -17,6 +17,8 @@ export class CredentialsComponent implements OnInit {
   credentials: ItokenPayload;
   form: FormGroup;
   showSpinner = false;
+  httpError = false;
+  httpErrorText = '';
 
   constructor(private authSvc: AuthenticationService,
               private dataSvc: DataService,
@@ -25,7 +27,7 @@ export class CredentialsComponent implements OnInit {
               private router: Router,
               fb: FormBuilder) {
               this.form = fb.group({
-                email: new FormControl({value: ''}, [Validators.required, Validators.email])
+                username: new FormControl({value: ''}, [Validators.required, Validators.email])
               },
                 { updateOn: 'blur' }
               );
@@ -37,10 +39,10 @@ export class CredentialsComponent implements OnInit {
     } */
     this.form.disable();
     this.showSpinner = true;
-    this.authSvc.getCredentials().subscribe(credentials => {
+    this.authSvc.getUsername().subscribe(credentials => {
       this.credentials = credentials;
       this.form.patchValue({
-        email: this.credentials.email
+        username: this.credentials.email
       });
       this.showSpinner = false;
       this.form.enable();
@@ -48,6 +50,33 @@ export class CredentialsComponent implements OnInit {
       this.showSpinner = false;
       console.error(err);
     });
+  }
+
+  onSubmit() {
+    console.log('credentials before', this.credentials);
+    this.credentials.email = this.form.controls.username.value;
+    this.credentials.email = this.credentials.email.toLowerCase();
+    this.httpError = false;
+    this.httpErrorText = '';
+    console.log('credentials after', this.credentials);
+/*     const source = timer(5000);
+    const subscribe = source.subscribe(val => { */
+    this.authSvc.updateUsername(this.credentials)
+    .subscribe ((responseData) => {
+      this.showSpinner = false;
+      console.log(responseData);
+      this.shared.openSnackBar('Username updated successfully', 'message');
+    }, error => {
+      this.showSpinner = false;
+      console.log('in error!', error);
+      this.httpError = true;
+      if (error.status === 401) {
+        this.httpErrorText = 'Invalid email address or password';
+      } else {
+        this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      }
+    });
+    // });
   }
 
   errorHandling = (control: string, error: string) => {

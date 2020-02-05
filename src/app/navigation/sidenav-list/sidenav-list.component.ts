@@ -30,12 +30,4 @@ export class SidenavListComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute(this.backPath);
     this.sideNavClosed.emit();
   }
-
-  public logout() {
-    this.authSvc.logout();
-    this.authSvc.setUserToAuthorized(false);
-    this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
-    this.router.navigateByUrl('/');
-    this.sideNavClosed.emit();
-  }
 }

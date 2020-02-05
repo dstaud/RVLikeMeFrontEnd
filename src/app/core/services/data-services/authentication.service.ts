@@ -26,8 +26,8 @@ export class AuthenticationService {
               private commonData: CommonDataService) { }
 
 
-    public getCredentials(): Observable<any> {
-      return this.dataRequest('get', 'credentials');
+    public getUsername(): Observable<any> {
+      return this.dataRequest('get', 'username');
     }
 
     public handleBackendError(error) {
@@ -76,16 +76,27 @@ export class AuthenticationService {
     this.userAuth.next(auth);
   }
 
-  private dataRequest(method: 'post'|'get',
-                      type: 'login'|'register'|'credentials',
+  public updateUsername(user: ItokenPayload): Observable<any> {
+    console.log('in update username', user);
+    return this.dataRequest('post', 'username', user);
+  }
+
+  private dataRequest(method: 'post'|'get'|'patch',
+                      type: 'login'|'register'|'username',
                       user?: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.commonData.getLocation();
     console.log('getting data service', dataSvcURL, type, user);
 
-    if (type === 'credentials') {
-      return this.http.get(`${dataSvcURL}/${type}`,
-      { headers: { Authorization: `Bearer ${this.getToken()}` }});
+    if (type === 'username') {
+      if (method === 'get') {
+        return this.http.get(`${dataSvcURL}/${type}`,
+        { headers: { Authorization: `Bearer ${this.getToken()}` }});
+      } else {
+        console.log('patching with token ', dataSvcURL, type);
+        return this.http.patch(`${dataSvcURL}/${type}`, user,
+        { headers: { Authorization: `Bearer ${this.getToken()}` }});
+      }
     }
 
     base = this.http.post(`${dataSvcURL}/${type}`, user);
@@ -105,8 +116,8 @@ export class AuthenticationService {
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');
-      console.log('token=', this.token);
     }
+    console.log('token=', this.token);
     return this.token;
   }
 

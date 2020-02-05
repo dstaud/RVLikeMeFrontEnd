@@ -23,8 +23,23 @@
     <button *ngIf="userAuthorized"
             mat-button
             class="toolbar-item"
-            (click)="manageCredentials()">creds
+            [matMenuTriggerFor]="beforeMenu">
+            <mat-icon matPrefix >account_circle</mat-icon>
     </button>
+    <mat-menu #beforeMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="changeUsername()">
+        <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+        Change username
+      </button>
+      <button mat-menu-item>
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        Change password
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
   </div>
 </mat-toolbar>
 
