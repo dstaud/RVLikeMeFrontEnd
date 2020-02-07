@@ -63,18 +63,10 @@ export class LandingPageComponent implements OnInit {
     this.showLanding = show;
     this.showLearnMore = false;
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
-    window.scroll({
+/*     window.scroll({
       top: 0,
       left: 0,
       behavior: 'smooth'
-    });
-  }
-
-  gotoTop() {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
+    }); */
   }
 }

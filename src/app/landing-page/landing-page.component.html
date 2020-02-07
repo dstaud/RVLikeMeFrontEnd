@@ -1,6 +1,6 @@
 <div *ngIf="showLanding" class="mat-app-background container">
   <span class="mat-display-2 hook marketing-message">
-    0Connect with people who RV like you do
+    1Connect with people who RV like you do
   </span>
   <p class="mat-body marketing-message">
     Whether you are
@@ -27,17 +27,17 @@
   </div>
 </div>
 <div *ngIf="showLearnMore" class="mat-app-background background">
-  <app-rvlm-learn-more [state]="showLearnMore"
+  <app-rvlm-learn-more
     (toggle)="toggleLearnMore($event)">
   </app-rvlm-learn-more>
 </div>
 <div *ngIf="showSignin" class="mat-app-background background">
-  <app-rvlm-signin [state]="showSignin"
+  <app-rvlm-signin
     (toggle)="toggleSignin($event)">
   </app-rvlm-signin>
 </div>
 <div *ngIf="showRegisterUser" class="mat-app-background background">
-  <app-rvlm-register-user [state]="showRegisterUser"
+  <app-rvlm-register-user
     (toggle)="toggleRegisterUser($event)">
   </app-rvlm-register-user>
 </div>

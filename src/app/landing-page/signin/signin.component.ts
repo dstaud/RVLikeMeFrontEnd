@@ -41,9 +41,6 @@ export class SigninComponent implements OnInit {
               });
   }
 
-  @Input() state: boolean;
-  @Output() toggle = new EventEmitter<boolean>();
-
   ngOnInit() {
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     console.log('in Signin Init');
@@ -96,10 +93,6 @@ export class SigninComponent implements OnInit {
       }
     });
     // });
-  }
-
-  onClose() {
-    this.toggle.emit(!this.state);
   }
 
   public errorHandling = (control: string, error: string) => {

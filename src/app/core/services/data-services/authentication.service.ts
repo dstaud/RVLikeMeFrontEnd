@@ -69,7 +69,7 @@ export class AuthenticationService {
   }
 
   public registerUser(user: ItokenPayload): Observable<any> {
-    console.log('calling register on')
+    console.log('calling register on');
     return this.dataRequest('post', 'register', user);
   }
 
@@ -103,14 +103,13 @@ export class AuthenticationService {
     base = this.http.post(`${dataSvcURL}/${type}`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
-        if (data.token) {
+        if (data.token && type === 'login') {
           this.saveToken(data.token);
         }
         this.sentryMonitorSvc.monitorUser(user);
         return data;
       })
     );
-
     return request;
   }
 
