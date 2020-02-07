@@ -15,9 +15,11 @@ export class RegisterUserComponent implements OnInit {
   hidePassword = true;
   showSpinner = false;
   credentials: ItokenPayload = {
+    _id: '',
     email: '',
     firstName: '',
-    password: ''
+    password: '',
+    tokenExpire: 0
   };
   httpError = false;
   httpErrorText = '';

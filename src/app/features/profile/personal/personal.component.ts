@@ -25,16 +25,30 @@ export interface State {
   styleUrls: ['./personal.component.scss']
 })
 export class PersonalComponent implements OnInit {
-  user: Iuser;
+  user: Iuser = {
+    userID: '',
+    firstName: '',
+    lastName: '',
+    displayName: '',
+    yearOfBirth: 0,
+    homeCountry: '',
+    homeState: ''
+  };
+
   credentials: ItokenPayload;
   form: FormGroup;
+  userID: string;
   showSpinner = false;
+  httpError = false;
+  httpErrorText = '';
+
   countries: Country[] = [
     {value: '', viewValue: ''},
     {value: 'USA', viewValue: 'United States'},
     {value: 'CAN', viewValue: 'Canada'},
     {value: 'MEX', viewValue: 'Mexico'}
   ];
+
   states: State[] = [
     {value: '', viewValue: ''},
     {value: 'AL', viewValue: 'Alabama'},
@@ -96,7 +110,6 @@ export class PersonalComponent implements OnInit {
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
-                email: new FormControl('', [Validators.required, Validators.email]),
                 lastName: new FormControl(''),
                 displayName: new FormControl('', Validators.required),
                 yearOfBirth: new FormControl('',
@@ -119,7 +132,6 @@ export class PersonalComponent implements OnInit {
       if (!this.user.displayName) { this.user.displayName = this.user.firstName; }
       this.form.patchValue({
         firstName: this.user.firstName,
-        email: this.user.email,
         lastName: this.user.lastName,
         displayName: this.user.displayName,
         yearOfBirth: this.user.yearOfBirth,
@@ -130,8 +142,11 @@ export class PersonalComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       if (error.status === 404) {
+        console.log('got 404 so first time here');
         this.authSvc.getUsername().subscribe(credentials => {
+          console.log('got credentials', credentials);
           this.credentials = credentials;
+          this.userID = credentials._id;
           this.form.patchValue({
             firstName: this.credentials.firstName,
             displayName: this.credentials.firstName
@@ -150,8 +165,44 @@ export class PersonalComponent implements OnInit {
     });
   }
 
-  changeFirstName(val) {
-    console.log('value=', val);
+  changeHomeCountry(event) {
+    this.form.controls.homeCountry.setValue(event.target.value, {
+      onlySelf: true
+    });
+  }
+
+  changeHomeState(event) {
+    this.form.controls.homeState.setValue(event.target.value, {
+      onlySelf: true
+    });
+  }
+
+  onSubmit() {
+    console.log('user before', this.user);
+    this.user.userID = this.userID;
+    this.user.firstName = this.form.controls.firstName.value;
+    this.user.lastName = this.form.controls.lastName.value;
+    this.user.displayName = this.form.controls.displayName.value;
+    this.user.yearOfBirth = this.form.controls.yearOfBirth.value;
+    this.user.homeCountry = this.form.controls.homeCountry.value;
+    this.user.homeState = this.form.controls.homeState.value;
+    this.httpError = false;
+    this.httpErrorText = '';
+    console.log('user after', this.user);
+/*     const source = timer(5000);
+    const subscribe = source.subscribe(val => { */
+    this.dataSvc.updateProfilePersonal(this.user)
+    .subscribe ((responseData) => {
+      this.showSpinner = false;
+      console.log('Updated ', responseData);
+      this.shared.openSnackBar('Personal profile updated successfully', 'message');
+    }, error => {
+      this.showSpinner = false;
+      console.log('in error!', error);
+      this.httpError = true;
+      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+    });
+    // });
   }
 
   yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {

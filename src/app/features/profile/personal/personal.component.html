@@ -2,7 +2,7 @@
   <p class="mat-body">This information will be used to find information that is relavant to the way you RV.
                       The more complete, the better your results!</p>
   <p class="mat-body">Click on any help icon for information on how the data point will be used for you.</p>
-  <form [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div>
       <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
@@ -11,8 +11,7 @@
               placeholder="First name"
               formControlName="firstName"
               autocomplete="name"
-              required
-              (change)="changeFirstName($event)">
+              required>
         <mat-error *ngIf="errorHandling('firstName', 'required')">
           Please enter your <strong>first name</strong>
         </mat-error>
@@ -57,7 +56,7 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Choose home country</mat-label>
-        <mat-select matNativeControl>
+        <mat-select matNativeControl (change)="changeHomeCountry($event)" formControlName="homeCountry">
           <mat-option
             aria-placeholder="country"
             *ngFor="let Country of countries" [value]="Country.value">
@@ -70,7 +69,7 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Choose home state</mat-label>
-        <mat-select matNativeControl>
+        <mat-select matNativeControl (change)="changeHomeState($event)" formControlName="homeState">
           <mat-option
             aria-placeholder="state"
             *ngFor="let State of states" [value]="State.value">
@@ -79,6 +78,10 @@
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeStateHelp()">help</mat-icon>
+    </div>
+    <div class="button">
+      <button type="submit" class="mat-raised-button mat-primary"
+              [disabled]="!form.valid || showSpinner">Submit</button>
     </div>
   </form>
 </div>

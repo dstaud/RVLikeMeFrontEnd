@@ -49,9 +49,10 @@ export class AuthenticationService {
   }
 
    public isLoggedIn(): boolean {
-    const user = this.getUserDetails();
-    if (user) {
-      return user.tokenExpire > Date.now() / 1000;
+    const token = this.getLocalToken();
+    if (token) {
+      console.log('Token Expire ', token.tokenExpire)
+      return token.tokenExpire > Date.now() / 1000;
     } else {
       return false;
     }
@@ -93,7 +94,7 @@ export class AuthenticationService {
         return this.http.get(`${dataSvcURL}/${type}`,
         { headers: { Authorization: `Bearer ${this.getToken()}` }});
       } else {
-        console.log('patching with token ', dataSvcURL, type);
+        console.log('patching with token ', dataSvcURL, type, user);
         return this.http.patch(`${dataSvcURL}/${type}`, user,
         { headers: { Authorization: `Bearer ${this.getToken()}` }});
       }
@@ -121,13 +122,13 @@ export class AuthenticationService {
     return this.token;
   }
 
-  private getUserDetails(): Iuser {
+  private getLocalToken(): ItokenPayload {
     const token = this.getToken();
     let payload;
     if (token) {
       payload = token.split('.')[1];
       payload = window.atob(payload);
-      console.log('in getUserDetails ', JSON.parse(payload).email);
+      console.log('in getUserDetails ', JSON.parse(payload));
       this.sentryMonitorSvc.monitorUser(JSON.parse(payload));
       return JSON.parse(payload);
     } else {

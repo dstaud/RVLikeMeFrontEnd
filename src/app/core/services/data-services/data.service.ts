@@ -1,3 +1,4 @@
+import { Iuser } from './../../../interfaces/user';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -17,6 +18,12 @@ export class DataService {
 
   public getUserProfile(): Observable<any> {
     return this.dataRequest('get', 'profile');
+  }
+
+  public updateProfilePersonal(user: Iuser): Observable<any> {
+    const dataSvcURL = this.commonData.getLocation();
+    return this.http.put(`${dataSvcURL}/profile-personal`, user,
+    { headers: { Authorization: `Bearer ${this.getToken()}` }});
   }
 
   private dataRequest(method: 'post'|'get',
