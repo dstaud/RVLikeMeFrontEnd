@@ -16,8 +16,16 @@ export class DataService {
   constructor(private commonData: CommonDataService,
               private http: HttpClient) { }
 
-  public getUserProfile(): Observable<any> {
-    return this.dataRequest('get', 'profile');
+  public getProfilePersonal(): Observable<any> {
+    const dataSvcURL = this.commonData.getLocation();
+    return this.http.get(`${dataSvcURL}/profile-personal`,
+    { headers: { Authorization: `Bearer ${this.getToken()}` }});
+  }
+
+  public addProfilePersonal(user: Iuser): Observable<any> {
+    const dataSvcURL = this.commonData.getLocation();
+    return this.http.post(`${dataSvcURL}/profile-personal`, user,
+    { headers: { Authorization: `Bearer ${this.getToken()}` }});
   }
 
   public updateProfilePersonal(user: Iuser): Observable<any> {
@@ -44,6 +52,7 @@ export class DataService {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');
     }
+    console.log('get token=', this.token);
     return this.token;
   }
 

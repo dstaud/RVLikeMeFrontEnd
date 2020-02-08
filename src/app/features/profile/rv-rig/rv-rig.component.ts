@@ -46,7 +46,7 @@ export class RvRigComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.dataSvc.getUserProfile().subscribe(rig => {
+    this.dataSvc.getProfilePersonal().subscribe(rig => {
       this.rig = rig;
       this.form.patchValue({
         type: this.rig.type,

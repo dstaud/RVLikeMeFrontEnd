@@ -29,7 +29,7 @@ export class LifestyleComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.dataSvc.getUserProfile().subscribe(user => {
+    this.dataSvc.getProfilePersonal().subscribe(user => {
       this.lifestyle = user;
       this.form.patchValue({
         use: this.lifestyle.use,

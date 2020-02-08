@@ -3,7 +3,7 @@
   "short_name": "RVLikeMe",
   "description": "Connect with other people that RV the way you do!",
   "theme_color": "#000C3F",
-  "background_color": "#000C3F",
+  "background_color": "#FFFFFF",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",

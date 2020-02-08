@@ -2,7 +2,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
+import { DataService } from './../../core/services/data-services/data.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
+import { Iuser } from './../../interfaces/user';
 import { SharedComponent } from './../../shared/shared.component';
 import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
@@ -19,15 +21,24 @@ export class RegisterUserComponent implements OnInit {
   credentials: ItokenPayload = {
     _id: '',
     email: '',
-    firstName: '',
     password: '',
     tokenExpire: 0
   };
+  profile: Iuser = {
+    userID: '',
+    firstName: '',
+    lastName: '',
+    displayName: '',
+    yearOfBirth: 0,
+    homeCountry: '',
+    homeState: ''
+  }
   httpError = false;
   httpErrorText = '';
 
   constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
               private authSvc: AuthenticationService,
+              private dataSvc: DataService,
               private shared: SharedComponent,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -54,17 +65,23 @@ export class RegisterUserComponent implements OnInit {
       this.credentials.email = this.form.controls.email.value;
       this.credentials.email = this.credentials.email.toLowerCase();
       this.credentials.password = this.form.controls.password.value;
-      this.credentials.firstName = this.form.controls.firstName.value;
       this.showSpinner = true;
       this.authSvc.registerUser(this.credentials)
       .subscribe((responseData) => {
-        this.showSpinner = false;
         if (responseData.status === 201) {
           this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
         } else {
-          this.shared.openSnackBar('Credentials saved.  Please sign in', 'message');
-          this.activateBackArrowSvc.setBackRoute('landing-page');
-          this.router.navigateByUrl('/signin');
+          console.log('response data=', responseData);
+          this.profile.userID = responseData._id;
+          this.profile.firstName = this.form.controls.firstName.value;
+          console.log('profile=', this.profile);
+          this.dataSvc.addProfilePersonal(this.profile)
+          .subscribe((data) => {
+            this.showSpinner = false;
+            this.shared.openSnackBar('Credentials saved.  Please sign in', 'message');
+            this.activateBackArrowSvc.setBackRoute('landing-page');
+            this.router.navigateByUrl('/signin');
+          });
         }
       }, error => {
         this.showSpinner = false;

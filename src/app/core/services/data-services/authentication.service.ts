@@ -103,7 +103,8 @@ export class AuthenticationService {
     base = this.http.post(`${dataSvcURL}/${type}`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
-        if (data.token && type === 'login') {
+        console.log('response=', data);
+        if (data.token) {
           this.saveToken(data.token);
         }
         this.sentryMonitorSvc.monitorUser(user);
@@ -136,6 +137,7 @@ export class AuthenticationService {
   }
 
   private saveToken(token: string): void {
+    console.log('save token=', token);
     localStorage.setItem('rvlikeme-token', token);
     this.token = token;
   }

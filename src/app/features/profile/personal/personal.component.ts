@@ -126,7 +126,8 @@ export class PersonalComponent implements OnInit {
   ngOnInit() {
     this.form.disable();
     this.showSpinner = true;
-    this.dataSvc.getUserProfile().subscribe(user => {
+    this.dataSvc.getProfilePersonal()
+    .subscribe(user => {
       console.log('back from server');
       this.user = user;
       if (!this.user.displayName) { this.user.displayName = this.user.firstName; }
@@ -141,27 +142,8 @@ export class PersonalComponent implements OnInit {
       this.showSpinner = false;
       this.form.enable();
     }, (error) => {
-      if (error.status === 404) {
-        console.log('got 404 so first time here');
-        this.authSvc.getUsername().subscribe(credentials => {
-          console.log('got credentials', credentials);
-          this.credentials = credentials;
-          this.userID = credentials._id;
-          this.form.patchValue({
-            firstName: this.credentials.firstName,
-            displayName: this.credentials.firstName
-          });
-          this.showSpinner = false;
-          this.form.enable();
-        }, (err) => {
-          console.log('got error?');
-          this.showSpinner = false;
-          console.error(err);
-        });
-      } else {
         this.showSpinner = false;
         console.error(error);
-      }
     });
   }
 
