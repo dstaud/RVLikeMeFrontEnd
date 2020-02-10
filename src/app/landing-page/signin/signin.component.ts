@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
-import { throwError} from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
+import { DataService } from './../../core/services/data-services/data.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
+import { Iuser } from './../../interfaces/user';
 import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
-// import { timer } from 'rxjs';
+import { LanguageService } from './../../core/services/language.service';
 
 @Component({
   selector: 'app-rvlm-signin',
@@ -15,6 +16,7 @@ import { ActivateBackArrowService } from './../../core/services/activate-back-ar
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
+  user: Iuser;
   form: FormGroup;
   hidePassword = true;
   credentials: ItokenPayload = {
@@ -29,8 +31,11 @@ export class SigninComponent implements OnInit {
   returnRoute = '';
 
   constructor(private authSvc: AuthenticationService,
+              private dataSvc: DataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
+              private translate: TranslateService,
+              private language: LanguageService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -64,11 +69,24 @@ export class SigninComponent implements OnInit {
     this.httpErrorText = '';
     console.log('about to call login', this.credentials);
     this.showSpinner = true;
-/*     const source = timer(5000);
-    const subscribe = source.subscribe(val => { */
     this.authSvc.login(this.credentials)
     .subscribe ((responseData) => {
       console.log('logged in');
+      this.dataSvc.getProfilePersonal()
+      .subscribe(user => {
+        console.log('back from server');
+        if (user.language) {
+          this.language.setLanguage(user.language);
+        } else {
+          this.language.setLanguage('en');
+        }
+        this.showSpinner = false;
+      }, (error) => {
+          this.showSpinner = false;
+          console.error(error);
+          this.httpError = true;
+          this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      });
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(true);
       console.log('is there an auto route ', this.returnRoute);
@@ -92,7 +110,6 @@ export class SigninComponent implements OnInit {
         this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
       }
     });
-    // });
   }
 
   public errorHandling = (control: string, error: string) => {

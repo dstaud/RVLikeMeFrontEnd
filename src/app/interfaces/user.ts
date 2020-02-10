@@ -5,4 +5,5 @@ export interface Iuser {
   yearOfBirth: number;
   homeCountry: string;
   homeState: string;
+  language: string;
 }

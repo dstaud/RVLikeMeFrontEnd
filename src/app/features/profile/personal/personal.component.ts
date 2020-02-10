@@ -30,7 +30,8 @@ export class PersonalComponent implements OnInit {
     displayName: '',
     yearOfBirth: 0,
     homeCountry: '',
-    homeState: ''
+    homeState: '',
+    language: ''
   };
 
   credentials: ItokenPayload;
@@ -38,6 +39,7 @@ export class PersonalComponent implements OnInit {
   showSpinner = false;
   httpError = false;
   httpErrorText = '';
+  helpMsg = '';
 
   countries: Country[] = [
     {value: '', viewValue: ''},
@@ -156,13 +158,9 @@ export class PersonalComponent implements OnInit {
   }
 
   onSubmit() {
+    this.showSpinner = true;
     console.log('user before', this.user);
-    this.user.firstName = this.form.controls.firstName.value;
-    this.user.lastName = this.form.controls.lastName.value;
-    this.user.displayName = this.form.controls.displayName.value;
-    this.user.yearOfBirth = this.form.controls.yearOfBirth.value;
-    this.user.homeCountry = this.form.controls.homeCountry.value;
-    this.user.homeState = this.form.controls.homeState.value;
+    this.user.language = this.form.controls.language.value;
     this.httpError = false;
     this.httpErrorText = '';
     console.log('user after', this.user);
@@ -195,27 +193,33 @@ export class PersonalComponent implements OnInit {
   }
 
   nameHelp() {
-    this.shared.openSnackBar('Used for communication between RVLikeMe.com and you', 'message');
+    this.helpMsg = this.translate.instant('profile.component.helpName');
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   displayNameHelp() {
-    this.shared.openSnackBar('Your "name" as shown to other users.  This could be your real name or a "handle".', 'message');
+    this.helpMsg = this.translate.instant('profile.component.helpDisplayName');
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   emailHelp() {
-    this.shared.openSnackBar('Your user name for signing in and for communications from RVLikeMe.com', 'message');
+    this.helpMsg = this.translate.instant('profile.component.helpEmail');
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   yearOfBirthHelp() {
-    this.shared.openSnackBar('Used to enable you to find people near your age group and will not be displayed to other users.', 'message');
+    this.helpMsg = this.translate.instant('profile.component.helpYearOfBirth');
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   homeCountryHelp() {
-    this.shared.openSnackBar('Used to find other users that share your country of origin or domicile', 'message');
+    this.helpMsg = this.translate.instant('profile.component.helpHomeCountry');
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   homeStateHelp() {
-    this.shared.openSnackBar('Used to find other users that share your state of origin or domicile', 'message');
+    this.helpMsg = this.translate.instant('profile.component.helpHomeState');
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   errorHandling = (control: string, error: string) => {

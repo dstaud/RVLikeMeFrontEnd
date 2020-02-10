@@ -7,17 +7,10 @@
     "connections": "como yo",
     "forums": "foros",
     "messages": "mensajes",
-    "settings": "configuraciones",
     "home": "casa",
     "about": "acerca de",
     "more": "más",
     "profile": "Perfil"
-  },
-  "settings.component": {
-    "header": "Configuraciones",
-    "preferred-language": "Idioma preferido",
-    "english": "Inglés",
-    "spanish": "Español"
   },
   "messages.component": {
     "header": "Mensajes"
@@ -37,6 +30,9 @@
   "profile.component": {
     "header": "Perfil",
     "explanation": "Ingrese información sobre usted, su estilo de vida y su equipo para ayudarnos a relacionarlo con otros RVers para obtener más información relevante y respuestas a sus preguntas.",
+    "preferred-language": "Idioma preferido",
+    "english": "Inglés",
+    "spanish": "Español",
     "personal": "Personal",
     "personalex": "gente como tú",
     "personalExplanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
@@ -50,7 +46,13 @@
     "lifestyle": "Estilo de vida",
     "lifestyleex": "vive como tu",
     "rig": "RV",
-    "rigex": "RV como la tuya"
+    "rigex": "RV como la tuya",
+    "helpName": "Utilizado para la comunicación entre RVLikeMe.com y usted",
+    "helpDisplayName": "Su 'nombre' como se muestra a otros usuarios. Este podría ser tu nombre real o un 'identificador'.",
+    "helpEmail": "Su nombre de usuario para iniciar sesión y para comunicaciones de RVLikeMe.com",
+    "helpYearOfBirth": "Se usa para permitirle encontrar personas cercanas a su grupo de edad y no se mostrará a otros usuarios.",
+    "helpHomeCountry": "Se utiliza para encontrar otros usuarios que comparten su país de origen o domicilio.",
+    "helpHomeState": "Se usa para encontrar otros usuarios que comparten su estado de origen o domicilio"
   },
   "landing-page.component": {
     "header": "RV como yo"

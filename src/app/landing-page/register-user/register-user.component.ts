@@ -30,7 +30,8 @@ export class RegisterUserComponent implements OnInit {
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
-    homeState: null
+    homeState: null,
+    language: null
   }
   httpError = false;
   httpErrorText = '';
@@ -72,6 +73,7 @@ export class RegisterUserComponent implements OnInit {
         } else {
           console.log('response data=', responseData);
           this.profile.firstName = this.form.controls.firstName.value;
+          this.profile.language = 'en';
           console.log('profile=', this.profile);
           this.dataSvc.addProfilePersonal(this.profile)
           .subscribe((data) => {

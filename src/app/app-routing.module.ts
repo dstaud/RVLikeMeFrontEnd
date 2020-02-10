@@ -25,11 +25,6 @@ const routes: Routes = [
     import('./features/messages/messages.module')
     .then(m => m.MessagesModule)
   },
-  { path: 'settings',
-    loadChildren: () =>
-    import('./features/settings/settings.module')
-    .then(m => m.SettingsModule)
-  },
   { path: 'about',
   loadChildren: () =>
   import('./features/about/about.module')

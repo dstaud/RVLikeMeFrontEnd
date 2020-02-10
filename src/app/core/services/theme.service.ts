@@ -9,6 +9,8 @@ export class ThemeService {
   private defaultFont = new Subject<string>();
   defaultGlobalFontTheme = this.defaultFont.asObservable();
 
+  constructor() { }
+
   private defaultTheme = new Subject<string>();
   defaultGlobalColorTheme = this.defaultTheme.asObservable();
 
@@ -19,6 +21,4 @@ export class ThemeService {
   public setGlobalFontTheme(font: string): void {
     this.defaultFont.next(font);
   }
-
-  constructor() { }
 }

@@ -7,17 +7,10 @@
     "connections": "like me",
     "forums": "forums",
     "messages": "messages",
-    "settings": "settings",
     "home": "home",
     "about": "about",
     "more": "more",
     "profile": "profile"
-  },
-  "settings.component": {
-    "header": "Settings",
-    "preferred-language": "Preferred language",
-    "english": "English",
-    "spanish": "Spanish"
   },
   "messages.component": {
     "header": "Messages"
@@ -37,6 +30,9 @@
   "profile.component": {
     "header": "Profile",
     "explanation": "Please enter information about you, your lifestyle and your rig to help us match you with other RVers for more relavant information and answers to your questions.",
+    "preferred-language": "Preferred language",
+    "english": "English",
+    "spanish": "Spanish",
     "personal": "Personal",
     "personalex": "people like you",
     "personalExplanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
@@ -50,7 +46,13 @@
     "lifestyle": "Lifestyle",
     "lifestyleex": "lives like you",
     "rig": "Rig",
-    "rigex": "rig like yours"
+    "rigex": "rig like yours",
+    "helpName": "Used for communication between RVLikeMe.com and you",
+    "helpDisplayName": "Your 'name' as shown to other users.  This could be your real name or a 'handle'.",
+    "helpEmail": "Your user name for signing in and for communications from RVLikeMe.com",
+    "helpYearOfBirth": "Used to enable you to find people near your age group and will not be displayed to other users.",
+    "helpHomeCountry": "Used to find other users that share your country of origin or domicile",
+    "helpHomeState": "Used to find other users that share your state of origin or domicile"
   },
   "landing-page.component": {
     "header": "RV Like Me"
@@ -62,6 +64,6 @@
   "account": {
     "changeUsername": "Change username",
     "changePassword": "Change password",
-    "logout": "Cerrar sesión"
+    "logout": "Logout"
   }
 }

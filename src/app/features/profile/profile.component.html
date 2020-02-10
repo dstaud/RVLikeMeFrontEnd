@@ -26,4 +26,16 @@
     </div>
     <mat-divider class="divider"></mat-divider>
   </mat-list>
+  <br>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-select formControlName="language"
+                  placeholder="{{ 'profile.component.preferred-language' | translate }}"
+                  (selectionChange)="setLanguage($event.source.value)"
+                  aria-label="select language">
+        <mat-option value='en'>{{ "profile.component.english" | translate }}</mat-option>
+        <mat-option value='es'>{{ "profile.component.spanish" | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
 </div>

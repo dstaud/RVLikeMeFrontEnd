@@ -34,9 +34,6 @@ export class CredentialsComponent implements OnInit {
 }
 
   ngOnInit() {
-/*     if (!this.authSvc.isLoggedIn()) {
-      this.router.navigateByUrl('/signin');
-    } */
     this.form.disable();
     this.showSpinner = true;
     this.authSvc.getUsername().subscribe(credentials => {
@@ -59,8 +56,6 @@ export class CredentialsComponent implements OnInit {
     this.httpError = false;
     this.httpErrorText = '';
     console.log('credentials after', this.credentials);
-/*     const source = timer(5000);
-    const subscribe = source.subscribe(val => { */
     this.authSvc.updateUsername(this.credentials)
     .subscribe ((responseData) => {
       this.showSpinner = false;
@@ -76,7 +71,6 @@ export class CredentialsComponent implements OnInit {
         this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
       }
     });
-    // });
   }
 
   errorHandling = (control: string, error: string) => {

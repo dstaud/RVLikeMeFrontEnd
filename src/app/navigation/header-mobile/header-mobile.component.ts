@@ -104,38 +104,34 @@ export class HeaderMobileComponent implements OnInit {
           if (this.router.url.includes('connections')) {
             this.pageTitle = this.translate.instant('connections.component.header');
           } else {
-            if (this.router.url.includes('settings')) {
-              this.pageTitle = this.translate.instant('settings.component.header');
+            if (this.router.url.includes('about')) {
+              this.pageTitle = this.translate.instant('about.component.header');
             } else {
-              if (this.router.url.includes('about')) {
-                this.pageTitle = this.translate.instant('about.component.header');
+              if (this.router.url.includes('profile-personal')) {
+                this.pageTitle = this.translate.instant('profile.component.header') +
+                ' - ' +
+                this.translate.instant('profile.component.personal');
               } else {
-                if (this.router.url.includes('profile-personal')) {
-                  this.pageTitle = this.translate.instant('profile.component.header') +
-                  ' - ' +
-                  this.translate.instant('profile.component.personal');
+                if (this.router.url.includes('profile-lifestyle')) {
+                  this.pageTitle = this.translate.instant('profile.component.lifestyle');
                 } else {
-                  if (this.router.url.includes('profile-lifestyle')) {
-                    this.pageTitle = this.translate.instant('profile.component.lifestyle');
+                  if (this.router.url.includes('profile-rig')) {
+                    this.pageTitle = this.translate.instant('profile.component.rig');
                   } else {
-                    if (this.router.url.includes('profile-rig')) {
-                      this.pageTitle = this.translate.instant('profile.component.rig');
+                    if (this.router.url.includes('signin')) {
+                      this.pageTitle = 'Sign In';
                     } else {
-                      if (this.router.url.includes('signin')) {
-                        this.pageTitle = 'Sign In';
+                      if (this.router.url.includes('register')) {
+                        this.pageTitle = 'Register';
                       } else {
-                        if (this.router.url.includes('register')) {
-                          this.pageTitle = 'Register';
+                        if (this.router.url.includes('learn-more')) {
+                          this.pageTitle = 'Learn More';
                         } else {
-                          if (this.router.url.includes('learn-more')) {
-                            this.pageTitle = 'Learn More';
+                          if (this.router.url.includes('profile')) {
+                            this.pageTitle = this.translate.instant('profile.component.header');
                           } else {
-                            if (this.router.url.includes('profile')) {
-                              this.pageTitle = this.translate.instant('profile.component.header');
-                            } else {
-                              if (this.router.url.includes('')) {
-                                this.pageTitle = 'RV Like Me';
-                              }
+                            if (this.router.url.includes('')) {
+                              this.pageTitle = 'RV Like Me';
                             }
                           }
                         }

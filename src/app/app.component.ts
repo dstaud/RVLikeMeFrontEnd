@@ -7,8 +7,10 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { DeviceService } from './core/services/device.service';
+import { LanguageService } from './core/services/language.service';
 import { ThemeService } from './core/services/theme.service';
 import { AuthenticationService } from './core/services/data-services/authentication.service';
+import { DataService } from './core/services/data-services/data.service';
 import { SigninButtonVisibleService } from './core/services/signin-btn-visibility.service';
 
 @Component({
@@ -28,11 +30,12 @@ export class AppComponent implements OnInit {
   constructor(public translateSvc: TranslateService,
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
+              private language: LanguageService,
               private authSvc: AuthenticationService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
+              private dataSvc: DataService,
               private location: Location,
               private router: Router) {
-    translateSvc.setDefaultLang('en'); // Default to US English
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
     .pipe(
@@ -73,12 +76,20 @@ export class AppComponent implements OnInit {
         }
         console.groupEnd();
 
+        console.log('in app component');
         // If user returns to the app through root URL, but their auth token is still valid, then send them to the home page.
         // No need to login again.  However, if auth but coming to the root page, route to home.
         // This messing up logout which routes to '/' and causes a race condition where still logged in when get here so routes to home.
-        if (event.url === '/' && this.authSvc.isLoggedIn()) {
-          console.log('in app component, routing to home');
-          this.router.navigateByUrl('/home');
+        if (this.authSvc.isLoggedIn()) {
+          if (event.url === '/') {
+            console.log('in app component, routing to home');
+            this.router.navigateByUrl('/home');
+            this.getPreferredLanguage();
+          } else {
+            console.log('event = ', event.url);
+            // TODO: Race condition where title of page not set.
+            this.getPreferredLanguage();
+          }
         }
       }
     );
@@ -108,8 +119,35 @@ export class AppComponent implements OnInit {
 
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
+      this.dataSvc.getProfilePersonal()
+      .subscribe(user => {
+        console.log('got language', user.language);
+        if (user.language) {
+          this.language.setLanguage(user.language);
+        } else {
+          this.language.setLanguage('en');
+        }
+      }, (error) => {
+          console.error(error);
+          this.language.setLanguage('en');
+      });
       this.authSvc.setUserToAuthorized(true);
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
+  }
+
+  private getPreferredLanguage() {
+    this.dataSvc.getProfilePersonal()
+    .subscribe(user => {
+      console.log('constructor language=', user.language);
+      if (user.language) {
+        this.language.setLanguage(user.language);
+      } else {
+        this.language.setLanguage('en');
+      }
+    }, (error) => {
+        console.error(error);
+        this.language.setLanguage('en');
+    });
   }
 }
