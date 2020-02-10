@@ -25,13 +25,12 @@ export class RegisterUserComponent implements OnInit {
     tokenExpire: 0
   };
   profile: Iuser = {
-    userID: '',
-    firstName: '',
-    lastName: '',
-    displayName: '',
-    yearOfBirth: 0,
-    homeCountry: '',
-    homeState: ''
+    firstName: null,
+    lastName: null,
+    displayName: null,
+    yearOfBirth: null,
+    homeCountry: null,
+    homeState: null
   }
   httpError = false;
   httpErrorText = '';
@@ -72,7 +71,6 @@ export class RegisterUserComponent implements OnInit {
           this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
         } else {
           console.log('response data=', responseData);
-          this.profile.userID = responseData._id;
           this.profile.firstName = this.form.controls.firstName.value;
           console.log('profile=', this.profile);
           this.dataSvc.addProfilePersonal(this.profile)

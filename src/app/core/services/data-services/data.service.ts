@@ -60,15 +60,4 @@ export class DataService {
     localStorage.setItem('rvlikeme-token', token);
     this.token = token;
   }
-
-  /*   deleteUser(userId: string) {
-    const dataSvcURL = this.getLocation();
-    this.http.delete(dataSvcURL + userId)
-    .subscribe(() => {
-        console.log('deleted');
-      const updatedPosts = this.posts.filter(post => post.id !== postId);
-      this.posts = updatedPosts;
-      this.postsUpdated.next([...this.posts]);
-    });
-  } */
 }

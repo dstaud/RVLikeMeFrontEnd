@@ -1,6 +1,5 @@
 export interface Iuser {
   _id?: string;
-  userID: string;
   displayName: string;
   firstName: string;
   lastName: string;

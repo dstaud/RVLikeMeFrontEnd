@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -18,6 +18,18 @@ export interface State {
   value: string;
   viewValue: string;
 }
+/* @HostListener('window:scroll', [])
+    onWindowScroll()
+    {
+      if (( window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) > this.showScrollHeight)
+      {
+        this.showScroll = true;
+      }
+      else if ( this.showScroll && (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) < this.hideScrollHeight)
+      {
+        this.showScroll = false;
+      }
+    } */
 
 @Component({
   selector: 'app-rvlm-personal',
@@ -26,7 +38,6 @@ export interface State {
 })
 export class PersonalComponent implements OnInit {
   user: Iuser = {
-    userID: '',
     firstName: '',
     lastName: '',
     displayName: '',
@@ -37,7 +48,6 @@ export class PersonalComponent implements OnInit {
 
   credentials: ItokenPayload;
   form: FormGroup;
-  userID: string;
   showSpinner = false;
   httpError = false;
   httpErrorText = '';
@@ -161,7 +171,6 @@ export class PersonalComponent implements OnInit {
 
   onSubmit() {
     console.log('user before', this.user);
-    this.user.userID = this.userID;
     this.user.firstName = this.form.controls.firstName.value;
     this.user.lastName = this.form.controls.lastName.value;
     this.user.displayName = this.form.controls.displayName.value;
@@ -178,6 +187,25 @@ export class PersonalComponent implements OnInit {
       this.showSpinner = false;
       console.log('Updated ', responseData);
       this.shared.openSnackBar('Personal profile updated successfully', 'message');
+      this.form.patchValue({
+        firstName: responseData.firstName,
+        lastName: responseData.lastName,
+        displayName: responseData.displayName,
+        yearOfBirth: responseData.yearOfBirth,
+        homeCountry: responseData.homeCountry,
+        homeState: responseData.homeState
+      });
+      // This prevents the page from scrolling down to where it was previously.
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      // This is needed if the user scrolls down during page load and you want to make sure
+      // the page is scrolled to the top once it's fully loaded.Cross-browser supported.
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     }, error => {
       this.showSpinner = false;
       console.log('in error!', error);
@@ -192,6 +220,13 @@ export class PersonalComponent implements OnInit {
       return { birthYear: true };
     }
     return null;
+  }
+  gotoTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 
   nameHelp() {

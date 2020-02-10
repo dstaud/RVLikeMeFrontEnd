@@ -100,6 +100,7 @@ export class AuthenticationService {
       }
     }
 
+    console.log('registering user=', user);
     base = this.http.post(`${dataSvcURL}/${type}`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
