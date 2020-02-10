@@ -1,8 +1,7 @@
 export interface Iuser {
-  _id?: string;
-  displayName: string;
   firstName: string;
   lastName: string;
+  displayName: string;
   yearOfBirth: number;
   homeCountry: string;
   homeState: string;

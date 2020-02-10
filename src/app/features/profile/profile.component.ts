@@ -22,10 +22,15 @@ export class ProfileComponent implements OnInit {
   yearOfBirth: number;
   homeState: string;
   backPath = '';
+  totalFieldsWithData = 0;
+  totalNbrOfFields = 6;
+  percentPersonal: number;
+  percentLifestyle: number;
+  percentRig: number;
 
   constructor(private authSvc: AuthenticationService,
               private dataSvc: DataService,
-              private translateSvc: TranslateService,
+              private translate: TranslateService,
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) {
@@ -37,7 +42,20 @@ export class ProfileComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-  }
+    this.dataSvc.getProfilePersonal()
+    .subscribe(user => {
+      console.log('count before=', this.totalFieldsWithData);
+      if (user.firstName) { this.totalFieldsWithData++; }
+      if (user.lastName) { this.totalFieldsWithData++; }
+      if (user.displayName) { this.totalFieldsWithData++; }
+      if (user.yearOfBirth) { this.totalFieldsWithData++; }
+      if (user.homeCountry) { this.totalFieldsWithData++; }
+      if (user.homeState) { this.totalFieldsWithData++; }
+      console.log('count after=', this.totalFieldsWithData);
+      this.percentPersonal = (this.totalFieldsWithData / this.totalNbrOfFields) * 100;
+      console.log('% complete=', this.percentPersonal);
+    });
+   }
 
   onPersonal() {
     this.activateBackArrowSvc.setBackRoute('profile');

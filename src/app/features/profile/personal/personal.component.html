@@ -1,11 +1,10 @@
 <div class="mat-app-background container">
-  <p class="mat-body">This information will be used to find information that is relavant to the way you RV.
-                      The more complete, the better your results!</p>
-  <p class="mat-body">Click on any help icon for information on how the data point will be used for you.</p>
+  <p class="mat-body">{{ "profile.component.personalExplanation" | translate }}</p>
+  <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>First name</mat-label>
+        <mat-label>{{ "profile.component.personalFirstName" | translate }}</mat-label>
         <input matInput
               type="text"
               placeholder="First name"
@@ -13,14 +12,14 @@
               autocomplete="name"
               required>
         <mat-error *ngIf="errorHandling('firstName', 'required')">
-          Please enter your <strong>first name</strong>
+          Please enter your <strong>{{ "profile.component.personalFirstName" | translate }}</strong>
         </mat-error>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Last name</mat-label>
+        <mat-label>{{ "profile.component.personalLastName" | translate }}</mat-label>
         <input matInput
               type="text"
               placeholder="Last name"
@@ -31,21 +30,21 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Display name</mat-label>
+        <mat-label>{{ "profile.component.personalDisplayName" | translate }}</mat-label>
         <input matInput
               type="text"
               placeholder="Display name"
               formControlName="displayName"
               required>
         <mat-error *ngIf="errorHandling('displayName', 'required')">
-          Please enter a <strong>display name</strong>
+          Please enter a <strong>{{ "profile.component.personalDisplayName" | translate }}</strong>
         </mat-error>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="displayNameHelp()">help</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Year of birth (YYYY)</mat-label>
+        <mat-label>{{ "profile.component.personalYearOfBirth" | translate }} (YYYY)</mat-label>
         <input matInput
               type="text"
               placeholder="Year of birth"
@@ -55,7 +54,7 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Choose home country</mat-label>
+        <mat-label>{{ "profile.component.personalHomeCountry" | translate }}</mat-label>
         <mat-select matNativeControl (change)="changeHomeCountry($event)" formControlName="homeCountry">
           <mat-option
             aria-placeholder="country"
@@ -68,7 +67,7 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Choose home state</mat-label>
+        <mat-label>{{ "profile.component.personalHomeState" | translate }}</mat-label>
         <mat-select matNativeControl (change)="changeHomeState($event)" formControlName="homeState">
           <mat-option
             aria-placeholder="state"
@@ -85,5 +84,4 @@
     </div>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
-  <button (click)="gotoTop()">top</button>
 </div>

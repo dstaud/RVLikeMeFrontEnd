@@ -111,13 +111,15 @@ export class HeaderMobileComponent implements OnInit {
                 this.pageTitle = this.translate.instant('about.component.header');
               } else {
                 if (this.router.url.includes('profile-personal')) {
-                  this.pageTitle = 'Profile - Personal';
+                  this.pageTitle = this.translate.instant('profile.component.header') +
+                  ' - ' +
+                  this.translate.instant('profile.component.personal');
                 } else {
                   if (this.router.url.includes('profile-lifestyle')) {
-                    this.pageTitle = 'Profil - Lifestyle';
+                    this.pageTitle = this.translate.instant('profile.component.lifestyle');
                   } else {
                     if (this.router.url.includes('profile-rig')) {
-                      this.pageTitle = 'Profile - Rig';
+                      this.pageTitle = this.translate.instant('profile.component.rig');
                     } else {
                       if (this.router.url.includes('signin')) {
                         this.pageTitle = 'Sign In';

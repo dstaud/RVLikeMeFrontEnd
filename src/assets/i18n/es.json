@@ -11,8 +11,7 @@
     "home": "casa",
     "about": "acerca de",
     "more": "más",
-    "profile": "Perfil",
-    "logout": "Cerrar sesión"
+    "profile": "Perfil"
   },
   "settings.component": {
     "header": "Configuraciones",
@@ -36,9 +35,33 @@
     "header": "Acerca de"
   },
   "profile.component": {
-    "header": "Perfil"
+    "header": "Perfil",
+    "explanation": "Ingrese información sobre usted, su estilo de vida y su equipo para ayudarnos a relacionarlo con otros RVers para obtener más información relevante y respuestas a sus preguntas.",
+    "personal": "Personal",
+    "personalex": "gente como tú",
+    "personalExplanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
+    "personalHelp": "Haga clic en cualquier icono de ayuda para obtener información sobre cómo se utilizará el punto de datos.",
+    "personalFirstName": "Nombre de pila",
+    "personalLastName": "Apellido",
+    "personalDisplayName": "Nombre para mostrar",
+    "personalYearOfBirth": "Año de nacimiento",
+    "personalHomeCountry": "Elige tu país de origen",
+    "personalHomeState": "Elige tu estado de origen",
+    "lifestyle": "Estilo de vida",
+    "lifestyleex": "vive como tu",
+    "rig": "RV",
+    "rigex": "RV como la tuya"
   },
   "landing-page.component": {
     "header": "RV como yo"
+  },
+  "credentials.component": {
+    "email": "Email",
+    "emailError": "Introduzca su"
+  },
+  "account": {
+    "changeUsername": "Cambie el nombre de usuario",
+    "changePassword": "Cambia la contraseña",
+    "logout": "Cerrar sesión"
   }
 }

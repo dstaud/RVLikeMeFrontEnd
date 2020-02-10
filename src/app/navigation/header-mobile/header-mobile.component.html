@@ -29,15 +29,15 @@
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item (click)="changeUsername()">
         <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
-        Change username
+        {{ "account.changeUsername" | translate }}
       </button>
       <button mat-menu-item>
         <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
-        Change password
+        {{ "account.changePassword" | translate }}
       </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>
-        Logout
+        {{ "account.logout" | translate }}
       </button>
     </mat-menu>
   </div>

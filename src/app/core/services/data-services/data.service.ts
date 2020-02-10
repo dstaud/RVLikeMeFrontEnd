@@ -34,20 +34,6 @@ export class DataService {
     { headers: { Authorization: `Bearer ${this.getToken()}` }});
   }
 
-  private dataRequest(method: 'post'|'get',
-                      type: 'profile',
-                      user?: ItokenPayload): Observable<any> {
-
-    const dataSvcURL = this.commonData.getLocation();
-
-    if (method === 'post') {
-      return this.http.post(`${dataSvcURL}/${type}`, user);
-    } else {
-      return this.http.get(`${dataSvcURL}/${type}`,
-            { headers: { Authorization: `Bearer ${this.getToken()}` }});
-    }
-  }
-
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');

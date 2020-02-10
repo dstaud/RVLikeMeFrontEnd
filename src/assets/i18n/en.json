@@ -11,8 +11,7 @@
     "home": "home",
     "about": "about",
     "more": "more",
-    "profile": "profile",
-    "logout": "logout"
+    "profile": "profile"
   },
   "settings.component": {
     "header": "Settings",
@@ -36,9 +35,33 @@
     "header": "About"
   },
   "profile.component": {
-    "header": "Profile"
+    "header": "Profile",
+    "explanation": "Please enter information about you, your lifestyle and your rig to help us match you with other RVers for more relavant information and answers to your questions.",
+    "personal": "Personal",
+    "personalex": "people like you",
+    "personalExplanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
+    "personalHelp": "Click on any help icon for information on how the data point will be used for you.",
+    "personalFirstName": "First name",
+    "personalLastName": "Last name",
+    "personalDisplayName": "Display name",
+    "personalYearOfBirth": "Year of birth",
+    "personalHomeCountry": "Choose your home country",
+    "personalHomeState": "choose your home state",
+    "lifestyle": "Lifestyle",
+    "lifestyleex": "lives like you",
+    "rig": "Rig",
+    "rigex": "rig like yours"
   },
   "landing-page.component": {
     "header": "RV Like Me"
+  },
+  "credentials.component": {
+    "email": "Email",
+    "emailError": "Please enter your"
+  },
+  "account": {
+    "changeUsername": "Change username",
+    "changePassword": "Change password",
+    "logout": "Cerrar sesión"
   }
 }

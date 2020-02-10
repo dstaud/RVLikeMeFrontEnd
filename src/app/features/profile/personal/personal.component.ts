@@ -4,7 +4,6 @@ import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from
 import { TranslateService } from '@ngx-translate/core';
 
 import { DataService } from './../../../core/services/data-services/data.service';
-import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
 import { Iuser } from './../../../interfaces/user';
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 import { SharedComponent } from './../../../shared/shared.component';
@@ -18,18 +17,6 @@ export interface State {
   value: string;
   viewValue: string;
 }
-/* @HostListener('window:scroll', [])
-    onWindowScroll()
-    {
-      if (( window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) > this.showScrollHeight)
-      {
-        this.showScroll = true;
-      }
-      else if ( this.showScroll && (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) < this.hideScrollHeight)
-      {
-        this.showScroll = false;
-      }
-    } */
 
 @Component({
   selector: 'app-rvlm-personal',
@@ -114,7 +101,6 @@ export class PersonalComponent implements OnInit {
     ];
 
   constructor(private dataSvc: DataService,
-              private authSvc: AuthenticationService,
               private translate: TranslateService,
               private shared: SharedComponent,
               fb: FormBuilder) {
@@ -180,8 +166,6 @@ export class PersonalComponent implements OnInit {
     this.httpError = false;
     this.httpErrorText = '';
     console.log('user after', this.user);
-/*     const source = timer(5000);
-    const subscribe = source.subscribe(val => { */
     this.dataSvc.updateProfilePersonal(this.user)
     .subscribe ((responseData) => {
       this.showSpinner = false;
@@ -195,24 +179,12 @@ export class PersonalComponent implements OnInit {
         homeCountry: responseData.homeCountry,
         homeState: responseData.homeState
       });
-      // This prevents the page from scrolling down to where it was previously.
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-      // This is needed if the user scrolls down during page load and you want to make sure
-      // the page is scrolled to the top once it's fully loaded.Cross-browser supported.
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
     }, error => {
       this.showSpinner = false;
       console.log('in error!', error);
       this.httpError = true;
       this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
     });
-    // });
   }
 
   yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
@@ -220,13 +192,6 @@ export class PersonalComponent implements OnInit {
       return { birthYear: true };
     }
     return null;
-  }
-  gotoTop() {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
   }
 
   nameHelp() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { throwError, Observable, Subject } from 'rxjs';
+import { HttpClient} from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 import { WindowService } from './../window.service';
 import { map } from 'rxjs/operators';
 import { Iuser } from '../../../interfaces/user';
@@ -27,7 +27,9 @@ export class AuthenticationService {
 
 
     public getUsername(): Observable<any> {
-      return this.dataRequest('get', 'username');
+      const dataSvcURL = this.commonData.getLocation();
+      return this.http.get(`${dataSvcURL}/username`,
+      { headers: { Authorization: `Bearer ${this.getToken()}` }});
     }
 
     public handleBackendError(error) {
@@ -60,48 +62,9 @@ export class AuthenticationService {
 
   public login(user: ItokenPayload): Observable<any> {
     console.log('in login');
-    return this.dataRequest('post', 'login', user);
-  }
-
-  public logout(): void {
-    this.token = '';
-    window.localStorage.removeItem('rvlikeme-token');
-  }
-
-  public registerUser(user: ItokenPayload): Observable<any> {
-    console.log('calling register on');
-    return this.dataRequest('post', 'register', user);
-  }
-
-  public setUserToAuthorized(auth: boolean): void {
-    this.userAuth.next(auth);
-  }
-
-  public updateUsername(user: ItokenPayload): Observable<any> {
-    console.log('in update username', user);
-    return this.dataRequest('post', 'username', user);
-  }
-
-  private dataRequest(method: 'post'|'get'|'patch',
-                      type: 'login'|'register'|'username',
-                      user?: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.commonData.getLocation();
-    console.log('getting data service', dataSvcURL, type, user);
-
-    if (type === 'username') {
-      if (method === 'get') {
-        return this.http.get(`${dataSvcURL}/${type}`,
-        { headers: { Authorization: `Bearer ${this.getToken()}` }});
-      } else {
-        console.log('patching with token ', dataSvcURL, type, user);
-        return this.http.patch(`${dataSvcURL}/${type}`, user,
-        { headers: { Authorization: `Bearer ${this.getToken()}` }});
-      }
-    }
-
-    console.log('registering user=', user);
-    base = this.http.post(`${dataSvcURL}/${type}`, user);
+    base = this.http.post(`${dataSvcURL}/login`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
         console.log('response=', data);
@@ -115,6 +78,40 @@ export class AuthenticationService {
     return request;
   }
 
+  public logout(): void {
+    this.token = '';
+    window.localStorage.removeItem('rvlikeme-token');
+  }
+
+  public registerUser(user: ItokenPayload): Observable<any> {
+    console.log('registering user=', user);
+    let base;
+    const dataSvcURL = this.commonData.getLocation();
+    base = this.http.post(`${dataSvcURL}/register`, user);
+    const request = base.pipe(
+      map((data: ItokenResponse) => {
+        console.log('response=', data);
+        if (data.token) {
+          this.saveToken(data.token);
+        }
+        this.sentryMonitorSvc.monitorUser(user);
+        return data;
+      })
+    );
+    return request;
+  }
+
+  public setUserToAuthorized(auth: boolean): void {
+    this.userAuth.next(auth);
+  }
+
+  public updateUsername(user: ItokenPayload): Observable<any> {
+    const dataSvcURL = this.commonData.getLocation();
+    console.log('patching with token ', dataSvcURL, user);
+    return this.http.patch(`${dataSvcURL}/username`, user,
+    { headers: { Authorization: `Bearer ${this.getToken()}` }});
+  }
+
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');
@@ -125,11 +122,13 @@ export class AuthenticationService {
 
   private getLocalToken(): ItokenPayload {
     const token = this.getToken();
+    console.log('getLocalToken=', token);
     let payload;
     if (token) {
       payload = token.split('.')[1];
+      console.log('payload after split=', payload);
       payload = window.atob(payload);
-      console.log('in getUserDetails ', JSON.parse(payload));
+      console.log('payload after atob=', JSON.parse(payload));
       this.sentryMonitorSvc.monitorUser(JSON.parse(payload));
       return JSON.parse(payload);
     } else {
