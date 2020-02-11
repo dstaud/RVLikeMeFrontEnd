@@ -1,11 +1,8 @@
 import { Iuser } from './../../../interfaces/user';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { HttpClient} from '@angular/common/http';
 import { CommonDataService } from './common-data.service';
-import { ItokenPayload } from '../../../interfaces/tokenPayload';
-import { ItokenResponse } from '../../../interfaces/tokenResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -35,15 +32,9 @@ export class DataService {
   }
 
   private getToken(): string {
-    if (!this.token) {
-      this.token = localStorage.getItem('rvlikeme-token');
-    }
+    // Get from local storage everytime in cae different people register on same machine and this.token is from previous
+    this.token = localStorage.getItem('rvlikeme-token');
     console.log('get token=', this.token);
     return this.token;
-  }
-
-  private saveToken(token: string): void {
-    localStorage.setItem('rvlikeme-token', token);
-    this.token = token;
   }
 }

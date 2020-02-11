@@ -92,6 +92,7 @@ export class AuthenticationService {
       map((data: ItokenResponse) => {
         console.log('response=', data);
         if (data.token) {
+          console.log('saving token ', data.token);
           this.saveToken(data.token);
         }
         this.sentryMonitorSvc.monitorUser(user);

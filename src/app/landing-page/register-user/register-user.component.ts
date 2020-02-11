@@ -32,7 +32,7 @@ export class RegisterUserComponent implements OnInit {
     homeCountry: null,
     homeState: null,
     language: null
-  }
+  };
   httpError = false;
   httpErrorText = '';
 
@@ -75,7 +75,7 @@ export class RegisterUserComponent implements OnInit {
           this.profile.firstName = this.form.controls.firstName.value;
           this.profile.language = 'en';
           console.log('profile=', this.profile);
-          this.dataSvc.addProfilePersonal(this.profile)
+          this.dataSvc.addProfilePersonal(this.profile) // TODO: for some reason when going to get the token for this, it is an old token
           .subscribe((data) => {
             this.showSpinner = false;
             this.shared.openSnackBar('Credentials saved.  Please sign in', 'message');

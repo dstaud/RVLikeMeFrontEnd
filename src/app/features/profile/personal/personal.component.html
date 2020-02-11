@@ -1,6 +1,8 @@
 <div class="mat-app-background container">
-  <p class="mat-body">{{ "profile.component.personalExplanation" | translate }}</p>
-  <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p>
+  <div>
+    <p class="mat-body">{{ "profile.component.personalExplanation" | translate}}</p>
+    <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p>
+  </div>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div>
       <mat-form-field appearance="outline">

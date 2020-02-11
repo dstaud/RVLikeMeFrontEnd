@@ -160,9 +160,14 @@ export class PersonalComponent implements OnInit {
   onSubmit() {
     this.showSpinner = true;
     console.log('user before', this.user);
-    this.user.language = this.form.controls.language.value;
     this.httpError = false;
     this.httpErrorText = '';
+    this.user.firstName = this.form.controls.firstName.value;
+    this.user.lastName = this.form.controls.lastName.value;
+    this.user.displayName = this.form.controls.displayName.value;
+    this.user.yearOfBirth = this.form.controls.yearOfBirth.value;
+    this.user.homeCountry = this.form.controls.homeCountry.value;
+    this.user.homeState = this.form.controls.homeState.value;
     console.log('user after', this.user);
     this.dataSvc.updateProfilePersonal(this.user)
     .subscribe ((responseData) => {
