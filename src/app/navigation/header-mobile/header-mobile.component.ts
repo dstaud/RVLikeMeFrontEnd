@@ -1,12 +1,14 @@
+import { element } from 'protractor';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router, NavigationEnd} from '@angular/router';
+import { Router, NavigationEnd, RouteConfigLoadEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 import { RegisterBtnVisibleService } from './../../core/services/register-btn-visiblity.service';
 import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
 import { DeviceService } from './../../core/services/device.service';
+import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
 
 @Component({
   selector: 'app-rvlm-header-mobile',
@@ -24,6 +26,7 @@ export class HeaderMobileComponent implements OnInit {
   arrowIcon = 'arrow_back';
   returnRoute = '';
   autoRoute = false;
+  device: string;
 
   constructor(private translate: TranslateService,
               private router: Router,
@@ -43,9 +46,12 @@ export class HeaderMobileComponent implements OnInit {
       }
     });
 
-    if (this.deviceSvc.device === 'iPhone') {
-      // This icon not coming up at all regardless of this if
-      this.arrowIcon = 'arrow_back_ios';
+    this.device = this.deviceSvc.device;
+    console.log('Device=', this.device);
+
+    if (this.device === 'iPhone') {
+      // arrow_back_ios icon not coming up at all regardless of this if
+      this.arrowIcon = 'keyboard_arrow_left';
     }
 
     // Listen for changes in user authorization state
@@ -93,6 +99,7 @@ export class HeaderMobileComponent implements OnInit {
 
   setTitleOnRouteChange(): void {
     if (this.router.url.includes('home')) {
+     console.log('set title home');
      this.pageTitle = this.translate.instant('home.component.header');
     } else {
       if (this.router.url.includes('forums')) {

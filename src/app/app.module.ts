@@ -25,6 +25,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 import { HttpInterceptorService } from './core/services/data-services/http-interceptor.service';
+import { DeactivateGuardService } from './core/guards/deactivate-guard.service';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -81,6 +82,7 @@ export function getErrorHandler(): ErrorHandler {
   providers: [
     WindowService,
     HttpClient,
+    DeactivateGuardService,
     ThemeService,
     {
       provide: ErrorHandler,

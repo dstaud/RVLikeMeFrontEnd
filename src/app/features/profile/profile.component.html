@@ -29,6 +29,18 @@
   <br>
   <form [formGroup]="form">
     <mat-form-field>
+      <mat-select formControlName="aboutMe"
+                  placeholder="{{ 'profile.component.aboutMe' | translate }}"
+                  (selectionChange)="updateAboutMe($event.source.value)"
+                  aria-label="my rv experience">
+        <mat-option
+          aria-placeholder="About Me"
+          *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
+          {{ AboutMe.viewValue | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
       <mat-select formControlName="language"
                   placeholder="{{ 'profile.component.preferred-language' | translate }}"
                   (selectionChange)="setLanguage($event.source.value)"

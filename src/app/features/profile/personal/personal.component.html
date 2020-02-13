@@ -1,89 +1,102 @@
 <div class="mat-app-background container">
   <div>
-    <p class="mat-body">{{ "profile.component.personalExplanation" | translate}}</p>
-    <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p>
+    <p class="mat-body">{{ "personal.component.explanation" | translate}}</p>
+    <!-- <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p> -->
   </div>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "profile.component.personalFirstName" | translate }}</mat-label>
+        <mat-label>{{ "personal.component.firstName" | translate }}</mat-label>
         <input matInput
               type="text"
               placeholder="First name"
               formControlName="firstName"
               autocomplete="name"
-              required>
+              required
+              (blur)="updateFirstName()">
         <mat-error *ngIf="errorHandling('firstName', 'required')">
-          Please enter your <strong>{{ "profile.component.personalFirstName" | translate }}</strong>
+          Please enter your <strong>{{ "personal.component.firstName" | translate }}</strong>
         </mat-error>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showFirstNameSpinner">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "profile.component.personalLastName" | translate }}</mat-label>
+        <mat-label>{{ "personal.component.lastName" | translate }}</mat-label>
         <input matInput
               type="text"
               placeholder="Last name"
               formControlName="lastName"
-              autocomplete="name">
+              autocomplete="name"
+              (blur)="updateLastName()">
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showLastNameSpinner">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "profile.component.personalDisplayName" | translate }}</mat-label>
+        <mat-label>{{ "personal.component.displayName" | translate }}</mat-label>
         <input matInput
               type="text"
               placeholder="Display name"
               formControlName="displayName"
-              required>
+              required
+              (blur)="updateDisplayName()">
         <mat-error *ngIf="errorHandling('displayName', 'required')">
-          Please enter a <strong>{{ "profile.component.personalDisplayName" | translate }}</strong>
+          Please enter a <strong>{{ "personal.component.displayName" | translate }}</strong>
         </mat-error>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="displayNameHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showDisplayNameSpinner">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "profile.component.personalYearOfBirth" | translate }} (YYYY)</mat-label>
+        <mat-label>{{ "personal.component.yearOfBirth" | translate }} (YYYY)</mat-label>
         <input matInput
               type="text"
               placeholder="Year of birth"
-              formControlName="yearOfBirth">
+              formControlName="yearOfBirth"
+              (blur)="updateYearOfBirth()">
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="yearOfBirthHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showYearOfBirthSpinner">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "profile.component.personalHomeCountry" | translate }}</mat-label>
-        <mat-select matNativeControl (change)="changeHomeCountry($event)" formControlName="homeCountry">
+        <mat-label>{{ "personal.component.homeCountry" | translate }}</mat-label>
+        <mat-select
+            matNativeControl
+            (selectionChange)="updateHomeCountry($event.source.value)"
+            formControlName="homeCountry">
           <mat-option
             aria-placeholder="country"
             *ngFor="let Country of countries" [value]="Country.value">
-            {{ Country.viewValue }}
+            {{ Country.viewValue | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeCountryHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showHomeCountrySpinner">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "profile.component.personalHomeState" | translate }}</mat-label>
-        <mat-select matNativeControl (change)="changeHomeState($event)" formControlName="homeState">
+        <mat-label>{{ "personal.component.homeState" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="updateHomeState($event.source.value)"
+          formControlName="homeState">
           <mat-option
             aria-placeholder="state"
             *ngFor="let State of states" [value]="State.value">
-            {{ State.viewValue }}
+            {{ State.viewValue | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeStateHelp()">help</mat-icon>
-    </div>
-    <div class="button">
-      <button type="submit" class="mat-raised-button mat-primary"
-              [disabled]="!form.valid || showSpinner">{{ "general.submit" | translate}}</button>
+      <mat-icon class="icon" *ngIf="showHomeStateSpinner">save</mat-icon>
     </div>
   </form>
+  <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

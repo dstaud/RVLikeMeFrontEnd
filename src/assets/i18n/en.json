@@ -35,24 +35,115 @@
     "spanish": "Spanish",
     "personal": "Personal",
     "personalex": "people like you",
-    "personalExplanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
-    "personalHelp": "Click on any help icon for information on how the data point will be used for you.",
-    "personalFirstName": "First name",
-    "personalLastName": "Last name",
-    "personalDisplayName": "Display name",
-    "personalYearOfBirth": "Year of birth",
-    "personalHomeCountry": "Choose your home country",
-    "personalHomeState": "choose your home state",
     "lifestyle": "Lifestyle",
-    "lifestyleex": "lives like you",
+    "lifestyleex": "RVs like you",
     "rig": "Rig",
     "rigex": "rig like yours",
+    "aboutMe": "Describe yourself",
+    "list": {
+      "aboutMe": {
+        "dreamer": "Dreaming of RVing",
+        "newbie": "New to RVing",
+        "experienced": "Experienced RVer"
+      }
+    }
+  },
+  "personal.component": {
+    "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
+    "help": "Click on any help icon for information on how the data point will be used for you.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "displayName": "Display name",
+    "yearOfBirth": "Year of birth",
+    "homeCountry": "Choose your home country",
+    "homeState": "choose your home state",
     "helpName": "Used for communication between RVLikeMe.com and you",
     "helpDisplayName": "Your 'name' as shown to other users.  This could be your real name or a 'handle'.",
     "helpEmail": "Your user name for signing in and for communications from RVLikeMe.com",
     "helpYearOfBirth": "Used to enable you to find people near your age group and will not be displayed to other users.",
     "helpHomeCountry": "Used to find other users that share your country of origin or domicile",
-    "helpHomeState": "Used to find other users that share your state of origin or domicile"
+    "helpHomeState": "Used to find other users that share your state of origin or domicile",
+    "list": {
+      "country": {
+        "usa": "United States",
+        "can": "Canada",
+        "mex": "Mexico"
+      },
+      "state": {
+        "al": "Alabama",
+        "ak": "Alaska",
+        "az": "Arizona",
+        "ar": "Arkansas",
+        "ca": "California",
+        "co": "Colorado",
+        "ct": "Connecticut",
+        "de": "Delaware",
+        "dc": "District of Columbia",
+        "fl": "Forida",
+        "ga": "Georgia",
+        "hi": "Hawaii",
+        "id": "Idaho",
+        "il": "Illinois",
+        "in": "Indiana",
+        "ia": "Iowa",
+        "ks": "Kansas",
+        "ky": "Kentucky",
+        "la": "Louisiana",
+        "me": "Maine",
+        "md": "Maryland",
+        "ma": "Massachusetts",
+        "mi": "Michigan",
+        "mn": "Minnesota",
+        "ms": "Mississippi",
+        "mo": "Missouri",
+        "mt": "Montana",
+        "ne": "Nebraska",
+        "nv": "Nevada",
+        "nh": "New Hampshire",
+        "nj": "New Jersey",
+        "nm": "New Mexico",
+        "ny": "New York",
+        "nc": "North Carolina",
+        "nd": "North Dakota",
+        "oh": "Ohio",
+        "ok": "Oklahoma",
+        "or": "Oregon",
+        "pa": "Pennsylvania",
+        "sc": "South Carolina",
+        "sd": "South Dakota",
+        "tn": "Tennessee",
+        "tx": "Texas",
+        "ut": "Utah",
+        "vt": "Vermont",
+        "va": "Virginia",
+        "wa": "Washington",
+        "wv": "West Virginia",
+        "wi": "Wisconsin",
+        "wy": "Wyoming"
+      }
+    }
+  },
+  "lifestyle.component": {
+    "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
+    "helpRvUse": "Used to make interactions more relavant",
+    "helpWorklife": "Used to make interactions more relavant",
+    "rvuseDesc": "How I RV",
+    "work": "Working?",
+    "list": {
+      "rvuse": {
+        "ft": "Full-time traveling",
+        "fs": "Full-time stationary",
+        "fp": "Full-time with part-time travel",
+        "ps": "Part-time travel with stick/bricks",
+        "ny": "Have not started yet!"
+      },
+      "worklife": {
+        "retired": "Retired",
+        "work-travel": "Work full-time while traveling",
+        "work-full-time": "Work full-time",
+        "work-part-time": "Work part-time"
+      }
+    }
   },
   "landing-page.component": {
     "header": "RV Like Me"

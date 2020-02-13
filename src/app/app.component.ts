@@ -119,6 +119,7 @@ export class AppComponent implements OnInit {
 
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
+      // Get user profile
       this.dataSvc.getProfilePersonal()
       .subscribe(user => {
         console.log('got language', user.language);

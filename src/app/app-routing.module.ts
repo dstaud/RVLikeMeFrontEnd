@@ -8,6 +8,7 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
 import { PersonalComponent } from './features/profile/personal/personal.component';
 import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
 import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
+import { DeactivateGuardService } from './core/guards/deactivate-guard.service';
 
 const routes: Routes = [
   { path: 'connections',
@@ -59,7 +60,7 @@ const routes: Routes = [
   },
   {
     path: 'profile-personal',
-    component: PersonalComponent
+    component: PersonalComponent, canDeactivate: [DeactivateGuardService]
   },
   {
     path: 'profile-lifestyle',

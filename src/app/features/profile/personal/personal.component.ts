@@ -7,6 +7,7 @@ import { DataService } from './../../../core/services/data-services/data.service
 import { Iuser } from './../../../interfaces/user';
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 import { SharedComponent } from './../../../shared/shared.component';
+// import { IDeactivate } from './../../../core/guards/can-deactivate';
 
 export interface Country {
   value: string;
@@ -23,7 +24,13 @@ export interface State {
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.scss']
 })
-export class PersonalComponent implements OnInit {
+
+  // export class PersonalComponent implements OnInit, IDeactivate {
+  // Using IDeactivate works to stop user from leaving form BUT, ALWAYS stops them whether typed anything or not.
+  // markAsPristine() and markAsUntouched() didn't seem to have an impact.
+  // So, had to take that guard off.
+  // export class PersonalComponent implements OnInit, IDeactivate {
+  export class PersonalComponent implements OnInit {
   user: Iuser = {
     firstName: '',
     lastName: '',
@@ -37,70 +44,83 @@ export class PersonalComponent implements OnInit {
   credentials: ItokenPayload;
   form: FormGroup;
   showSpinner = false;
+  showFirstNameSpinner = false;
+  showLastNameSpinner = false;
+  showDisplayNameSpinner = false;
+  showYearOfBirthSpinner = false;
+  showHomeCountrySpinner = false;
+  showHomeStateSpinner = false;
   httpError = false;
   httpErrorText = '';
   helpMsg = '';
 
   countries: Country[] = [
     {value: '', viewValue: ''},
-    {value: 'USA', viewValue: 'United States'},
-    {value: 'CAN', viewValue: 'Canada'},
-    {value: 'MEX', viewValue: 'Mexico'}
+    {value: 'USA', viewValue: 'personal.component.list.country.usa'},
+    {value: 'CAN', viewValue: 'personal.component.list.country.can'},
+    {value: 'MEX', viewValue: 'personal.component.list.country.mex'}
   ];
 
   states: State[] = [
     {value: '', viewValue: ''},
-    {value: 'AL', viewValue: 'Alabama'},
-    {value: 'AK', viewValue: 'Alaska'},
-    {value: 'AZ', viewValue: 'Arizona'},
-    {value: 'AR', viewValue: 'Arkansas'},
-    {value: 'CA', viewValue: 'California'},
-    {value: 'CO', viewValue: 'Colorado'},
-    {value: 'CT', viewValue: 'Connecticut'},
-    {value: 'DE', viewValue: 'Delaware'},
-    {value: 'DC', viewValue: 'District Of Columbia'},
-    {value: 'FL', viewValue: 'Florida'},
-    {value: 'GA', viewValue: 'Georgia'},
-    {value: 'HI', viewValue: 'Hawaii'},
-    {value: 'ID', viewValue: 'Idaho'},
-    {value: 'IL', viewValue: 'Illinois'},
-    {value: 'IN', viewValue: 'Indiana'},
-    {value: 'IA', viewValue: 'Iowa'},
-    {value: 'KS', viewValue: 'Kansas'},
-    {value: 'KY', viewValue: 'Kentucky'},
-    {value: 'LA', viewValue: 'Louisiana'},
-    {value: 'ME', viewValue: 'Maine'},
-    {value: 'MD', viewValue: 'Maryland'},
-    {value: 'MA', viewValue: 'Massachusetts'},
-    {value: 'MI', viewValue: 'Michigan'},
-    {value: 'MN', viewValue: 'Minnesota'},
-    {value: 'MS', viewValue: 'Mississippi'},
-    {value: 'MO', viewValue: 'Missouri'},
-    {value: 'MT', viewValue: 'Montana'},
-    {value: 'NE', viewValue: 'Nebraska'},
-    {value: 'NV', viewValue: 'Nevada'},
-    {value: 'NH', viewValue: 'New Hampshire'},
-    {value: 'NJ', viewValue: 'New Jersey'},
-    {value: 'NM', viewValue: 'New Mexico'},
-    {value: 'NY', viewValue: 'New York'},
-    {value: 'NC', viewValue: 'North Carolina'},
-    {value: 'ND', viewValue: 'North Dakota'},
-    {value: 'OH', viewValue: 'Ohio'},
-    {value: 'OK', viewValue: 'Oklahoma'},
-    {value: 'OR', viewValue: 'Oregon'},
-    {value: 'PA', viewValue: 'Pennsylvania'},
-    {value: 'SC', viewValue: 'South Carolina'},
-    {value: 'SD', viewValue: 'South Dakota'},
-    {value: 'TN', viewValue: 'Tennessee'},
-    {value: 'TX', viewValue: 'Texas'},
-    {value: 'UT', viewValue: 'Utah'},
-    {value: 'VT', viewValue: 'Vermont'},
-    {value: 'VA', viewValue: 'Virginia'},
-    {value: 'WA', viewValue: 'Washington'},
-    {value: 'WV', viewValue: 'West Virginia'},
-    {value: 'WI', viewValue: 'Wisconsin'},
-    {value: 'WY', viewValue: 'Wyoming'}
+    {value: 'AL', viewValue: 'personal.component.list.state.al'},
+    {value: 'AK', viewValue: 'personal.component.list.state.ak'},
+    {value: 'AZ', viewValue: 'personal.component.list.state.az'},
+    {value: 'AR', viewValue: 'personal.component.list.state.ar'},
+    {value: 'CA', viewValue: 'personal.component.list.state.ca'},
+    {value: 'CO', viewValue: 'personal.component.list.state.co'},
+    {value: 'CT', viewValue: 'personal.component.list.state.ct'},
+    {value: 'DE', viewValue: 'personal.component.list.state.de'},
+    {value: 'DC', viewValue: 'personal.component.list.state.dc'},
+    {value: 'FL', viewValue: 'personal.component.list.state.fl'},
+    {value: 'GA', viewValue: 'personal.component.list.state.ga'},
+    {value: 'HI', viewValue: 'personal.component.list.state.hi'},
+    {value: 'ID', viewValue: 'personal.component.list.state.id'},
+    {value: 'IL', viewValue: 'personal.component.list.state.il'},
+    {value: 'IN', viewValue: 'personal.component.list.state.in'},
+    {value: 'IA', viewValue: 'personal.component.list.state.ia'},
+    {value: 'KS', viewValue: 'personal.component.list.state.ks'},
+    {value: 'KY', viewValue: 'personal.component.list.state.ky'},
+    {value: 'LA', viewValue: 'personal.component.list.state.la'},
+    {value: 'ME', viewValue: 'personal.component.list.state.me'},
+    {value: 'MD', viewValue: 'personal.component.list.state.md'},
+    {value: 'MA', viewValue: 'personal.component.list.state.ma'},
+    {value: 'MI', viewValue: 'personal.component.list.state.mi'},
+    {value: 'MN', viewValue: 'personal.component.list.state.mn'},
+    {value: 'MS', viewValue: 'personal.component.list.state.ms'},
+    {value: 'MO', viewValue: 'personal.component.list.state.mo'},
+    {value: 'MT', viewValue: 'personal.component.list.state.mt'},
+    {value: 'NE', viewValue: 'personal.component.list.state.ne'},
+    {value: 'NV', viewValue: 'personal.component.list.state.nv'},
+    {value: 'NH', viewValue: 'personal.component.list.state.nh'},
+    {value: 'NJ', viewValue: 'personal.component.list.state.nj'},
+    {value: 'NM', viewValue: 'personal.component.list.state.nm'},
+    {value: 'NY', viewValue: 'personal.component.list.state.ny'},
+    {value: 'NC', viewValue: 'personal.component.list.state.nc'},
+    {value: 'ND', viewValue: 'personal.component.list.state.nd'},
+    {value: 'OH', viewValue: 'personal.component.list.state.oh'},
+    {value: 'OK', viewValue: 'personal.component.list.state.ok'},
+    {value: 'OR', viewValue: 'personal.component.list.state.or'},
+    {value: 'PA', viewValue: 'personal.component.list.state.pa'},
+    {value: 'SC', viewValue: 'personal.component.list.state.sc'},
+    {value: 'SD', viewValue: 'personal.component.list.state.sd'},
+    {value: 'TN', viewValue: 'personal.component.list.state.tn'},
+    {value: 'TX', viewValue: 'personal.component.list.state.tx'},
+    {value: 'UT', viewValue: 'personal.component.list.state.ut'},
+    {value: 'VT', viewValue: 'personal.component.list.state.vt'},
+    {value: 'VA', viewValue: 'personal.component.list.state.va'},
+    {value: 'WA', viewValue: 'personal.component.list.state.wa'},
+    {value: 'WV', viewValue: 'personal.component.list.state.wv'},
+    {value: 'WI', viewValue: 'personal.component.list.state.wi'},
+    {value: 'WY', viewValue: 'personal.component.list.state.wy'}
     ];
+
+    @HostListener('window:beforeunload', ['$event'])
+    unloadNotification($event: any) {
+        if (this.hasUnsavedData()) {
+            $event.returnValue = true;
+        }
+    }
 
   constructor(private dataSvc: DataService,
               private translate: TranslateService,
@@ -145,51 +165,6 @@ export class PersonalComponent implements OnInit {
     });
   }
 
-  changeHomeCountry(event) {
-    this.form.controls.homeCountry.setValue(event.target.value, {
-      onlySelf: true
-    });
-  }
-
-  changeHomeState(event) {
-    this.form.controls.homeState.setValue(event.target.value, {
-      onlySelf: true
-    });
-  }
-
-  onSubmit() {
-    this.showSpinner = true;
-    console.log('user before', this.user);
-    this.httpError = false;
-    this.httpErrorText = '';
-    this.user.firstName = this.form.controls.firstName.value;
-    this.user.lastName = this.form.controls.lastName.value;
-    this.user.displayName = this.form.controls.displayName.value;
-    this.user.yearOfBirth = this.form.controls.yearOfBirth.value;
-    this.user.homeCountry = this.form.controls.homeCountry.value;
-    this.user.homeState = this.form.controls.homeState.value;
-    console.log('user after', this.user);
-    this.dataSvc.updateProfilePersonal(this.user)
-    .subscribe ((responseData) => {
-      this.showSpinner = false;
-      console.log('Updated ', responseData);
-      this.shared.openSnackBar('Personal profile updated successfully', 'message');
-      this.form.patchValue({
-        firstName: responseData.firstName,
-        lastName: responseData.lastName,
-        displayName: responseData.displayName,
-        yearOfBirth: responseData.yearOfBirth,
-        homeCountry: responseData.homeCountry,
-        homeState: responseData.homeState
-      });
-    }, error => {
-      this.showSpinner = false;
-      console.log('in error!', error);
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-    });
-  }
-
   yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
     if (control.value !== undefined && (isNaN(control.value))) {
       return { birthYear: true };
@@ -198,36 +173,124 @@ export class PersonalComponent implements OnInit {
   }
 
   nameHelp() {
-    this.helpMsg = this.translate.instant('profile.component.helpName');
+    this.helpMsg = this.translate.instant('personal.component.helpName');
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   displayNameHelp() {
-    this.helpMsg = this.translate.instant('profile.component.helpDisplayName');
+    this.helpMsg = this.translate.instant('personal.component.helpDisplayName');
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   emailHelp() {
-    this.helpMsg = this.translate.instant('profile.component.helpEmail');
+    this.helpMsg = this.translate.instant('personal.component.helpEmail');
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   yearOfBirthHelp() {
-    this.helpMsg = this.translate.instant('profile.component.helpYearOfBirth');
+    this.helpMsg = this.translate.instant('personal.component.helpYearOfBirth');
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   homeCountryHelp() {
-    this.helpMsg = this.translate.instant('profile.component.helpHomeCountry');
+    this.helpMsg = this.translate.instant('personal.component.helpHomeCountry');
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   homeStateHelp() {
-    this.helpMsg = this.translate.instant('profile.component.helpHomeState');
+    this.helpMsg = this.translate.instant('personal.component.helpHomeState');
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
+  }
+
+  updateFirstName() {
+    this.showFirstNameSpinner = true;
+    this.user.firstName = this.form.controls.firstName.value;
+    this.updateProfile('firstName');
+  }
+
+  updateLastName() {
+    this.showLastNameSpinner = true;
+    this.user.lastName = this.form.controls.lastName.value;
+    this.updateProfile('lastName');
+  }
+
+  updateDisplayName() {
+    this.showDisplayNameSpinner = true;
+    this.user.displayName = this.form.controls.displayName.value;
+    this.updateProfile('displayName');
+  }
+
+  updateYearOfBirth() {
+    this.showYearOfBirthSpinner = true;
+    this.user.yearOfBirth = this.form.controls.yearOfBirth.value;
+    this.updateProfile('yearOfBirth');
+  }
+
+  updateHomeCountry(country: string) {
+    this.showHomeCountrySpinner = true;
+    this.user.homeCountry = country;
+    this.updateProfile('homeCountry');
+  }
+
+  updateHomeState(state: string) {
+    this.showHomeStateSpinner = true;
+    this.user.homeState = state;
+    this.updateProfile('homeState');
+  }
+
+  updateProfile(field: string) {
+    this.httpError = false;
+    this.httpErrorText = '';
+    this.dataSvc.updateProfilePersonal(this.user)
+    .subscribe ((responseData) => {
+      if (field === 'firstName') {
+        this.showFirstNameSpinner = false;
+      }
+      if (field === 'lastName') {
+        this.showLastNameSpinner = false;
+      }
+      if (field === 'displayName') {
+        this.showDisplayNameSpinner = false;
+      }
+      if (field === 'yearOfBirth') {
+        this.showYearOfBirthSpinner = false;
+      }
+      if (field === 'homeCountry') {
+        this.showHomeCountrySpinner = false;
+      }
+      if (field === 'homeState') {
+        this.showHomeStateSpinner = false;
+      }
+    }, error => {
+      if (field === 'firstName') {
+        this.showFirstNameSpinner = false;
+      }
+      if (field === 'lastName') {
+        this.showLastNameSpinner = false;
+      }
+      if (field === 'displayName') {
+        this.showDisplayNameSpinner = false;
+      }
+      if (field === 'yearOfBirth') {
+        this.showYearOfBirthSpinner = false;
+      }
+      if (field === 'homeCountry') {
+        this.showHomeCountrySpinner = false;
+      }
+      if (field === 'homeState') {
+        this.showHomeStateSpinner = false;
+      }
+      console.log('in error!', error);
+      this.httpError = true;
+      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+    });
+  }
+
+  private hasUnsavedData() {
+    return true;
   }
 }

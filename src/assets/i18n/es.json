@@ -35,24 +35,115 @@
     "spanish": "Español",
     "personal": "Personal",
     "personalex": "gente como tú",
-    "personalExplanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
-    "personalHelp": "Haga clic en cualquier icono de ayuda para obtener información sobre cómo se utilizará el punto de datos.",
-    "personalFirstName": "Nombre de pila",
-    "personalLastName": "Apellido",
-    "personalDisplayName": "Nombre para mostrar",
-    "personalYearOfBirth": "Año de nacimiento",
-    "personalHomeCountry": "Elige tu país de origen",
-    "personalHomeState": "Elige tu estado de origen",
-    "lifestyle": "Estilo de vida",
+    "lifestyle": "RVs como tú",
     "lifestyleex": "vive como tu",
     "rig": "RV",
     "rigex": "RV como la tuya",
+    "aboutMe": "Describete",
+    "list": {
+      "aboutMe": {
+        "dreamer": "Soñando con RVing",
+        "newbie": "Nuevo en RVing",
+        "experienced": "RVer experimentado"
+      }
+    }
+  },
+  "personal.component": {
+    "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
+    "help": "Haga clic en cualquier icono de ayuda para obtener información sobre cómo se utilizará el punto de datos.",
+    "firstName": "Nombre de pila",
+    "lastName": "Apellido",
+    "displayName": "Nombre para mostrar",
+    "yearOfBirth": "Año de nacimiento",
+    "homeCountry": "Elige tu país de origen",
+    "homeState": "Elige tu estado de origen",
     "helpName": "Utilizado para la comunicación entre RVLikeMe.com y usted",
     "helpDisplayName": "Su 'nombre' como se muestra a otros usuarios. Este podría ser tu nombre real o un 'identificador'.",
     "helpEmail": "Su nombre de usuario para iniciar sesión y para comunicaciones de RVLikeMe.com",
     "helpYearOfBirth": "Se usa para permitirle encontrar personas cercanas a su grupo de edad y no se mostrará a otros usuarios.",
     "helpHomeCountry": "Se utiliza para encontrar otros usuarios que comparten su país de origen o domicilio.",
-    "helpHomeState": "Se usa para encontrar otros usuarios que comparten su estado de origen o domicilio"
+    "helpHomeState": "Se usa para encontrar otros usuarios que comparten su estado de origen o domicilio",
+    "list": {
+      "country": {
+        "usa": "Estados Unidos",
+        "can": "Canadá",
+        "mex": "Mexico"
+      },
+      "state": {
+        "al": "Alabama",
+        "ak": "Alaska",
+        "az": "Arizona",
+        "ar": "Arkansas",
+        "ca": "California",
+        "co": "Colorado",
+        "ct": "Connecticut",
+        "de": "Delaware",
+        "dc": "District of Columbia",
+        "fl": "Forida",
+        "ga": "Georgia",
+        "hi": "Hawaii",
+        "id": "Idaho",
+        "il": "Illinois",
+        "in": "Indiana",
+        "ia": "Iowa",
+        "ks": "Kansas",
+        "ky": "Kentucky",
+        "la": "Louisiana",
+        "me": "Maine",
+        "md": "Maryland",
+        "ma": "Massachusetts",
+        "mi": "Michigan",
+        "mn": "Minnesota",
+        "ms": "Mississippi",
+        "mo": "Missouri",
+        "mt": "Montana",
+        "ne": "Nebraska",
+        "nv": "Nevada",
+        "nh": "New Hampshire",
+        "nj": "New Jersey",
+        "nm": "New Mexico",
+        "ny": "New York",
+        "nc": "North Carolina",
+        "nd": "North Dakota",
+        "oh": "Ohio",
+        "ok": "Oklahoma",
+        "or": "Oregon",
+        "pa": "Pennsylvania",
+        "sc": "South Carolina",
+        "sd": "South Dakota",
+        "tn": "Tennessee",
+        "tx": "Texas",
+        "ut": "Utah",
+        "vt": "Vermont",
+        "va": "Virginia",
+        "wa": "Washington",
+        "wv": "West Virginia",
+        "wi": "Wisconsin",
+        "wy": "Wyoming"
+      }
+    }
+  },
+  "lifestyle.component": {
+    "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
+    "helpRvUse": "Se usa para hacer que las interacciones sean más relevantes",
+    "helpWorklife": "Se usa para hacer que las interacciones sean más relevantes",
+    "rvuseDesc": "Cómo RV",
+    "work": "¿Trabajando?",
+    "list": {
+      "rvuse": {
+        "ft": "Viajar a tiempo completo",
+        "fs": "Estacionario a tiempo completo",
+        "fp": "A tiempo completo con viajes a tiempo parcial",
+        "ps": "Viaje a tiempo parcial con bastón / ladrillos",
+        "ny": "¡No he comenzado todavía!"
+      },
+      "worklife": {
+        "retired": "Retirado",
+        "work-travel": "Trabaja a tiempo completo mientras viajas",
+        "work-full-time": "Trabajo de tiempo completo",
+        "work-part-time": "Trabajo a media jornada"
+      }
+    }
   },
   "landing-page.component": {
     "header": "RV como yo"

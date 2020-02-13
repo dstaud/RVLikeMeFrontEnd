@@ -1,1 +1,44 @@
-<p class="mat-body">Lifestyle</p>
+<div class="mat-app-background container">
+  <div>
+    <p class="mat-body">{{ "lifestyle.component.explanation" | translate}}</p>
+    <!-- <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p> -->
+  </div>
+  <form [formGroup]="form">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "lifestyle.component.rvuseDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="updateRvUse($event.source.value)"
+          formControlName="rvUse">
+          <mat-option
+            aria-placeholder="RV Lifestyle"
+            *ngFor="let RvLifestyle of RvLifestyles" [value]="RvLifestyle.value">
+            {{ RvLifestyle.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="rvUseHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showRvUseSpinner">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "lifestyle.component.work" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="updateWorklife($event.source.value)"
+          formControlName="work">
+          <mat-option
+            aria-placeholder="work life"
+            *ngFor="let Worklife of Worklives" [value]="Worklife.value">
+            {{ Worklife.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="worklifeHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showWorklifeSpinner">save</mat-icon>
+    </div>
+  </form>
+  <br>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>
