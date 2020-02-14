@@ -31,7 +31,8 @@
     <mat-form-field>
       <mat-select formControlName="aboutMe"
                   placeholder="{{ 'profile.component.aboutMe' | translate }}"
-                  (selectionChange)="updateAboutMe($event.source.value)"
+                  (selectionChange)="selectedAboutMe($event.source.value)"
+                  (openedChange) = "activatedAboutMe()"
                   aria-label="my rv experience">
         <mat-option
           aria-placeholder="About Me"
@@ -40,6 +41,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-icon class="icon" *ngIf="showAboutMeSpinner">save</mat-icon>
     <mat-form-field>
       <mat-select formControlName="language"
                   placeholder="{{ 'profile.component.preferred-language' | translate }}"
@@ -49,6 +51,7 @@
         <mat-option value='es'>{{ "profile.component.spanish" | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-icon class="icon" *ngIf="showLanguageSpinner">save</mat-icon>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

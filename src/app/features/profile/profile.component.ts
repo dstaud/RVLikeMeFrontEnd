@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
@@ -10,6 +11,7 @@ import { ActivateBackArrowService } from './../../core/services/activate-back-ar
 import { DataService } from './../../core/services/data-services/data.service';
 import { SharedComponent } from './../../shared/shared.component';
 import { LanguageService } from './../../core/services/language.service';
+import { OtherDialogComponent } from './../../dialogs/other-dialog.component';
 
 export interface AboutMe {
   value: string;
@@ -35,23 +37,28 @@ export class ProfileComponent implements OnInit {
   lifestyle: Ilifestyle = {
     aboutMe: '',
     rvUse: '',
-    work: ''
+    work: '',
+    campsWithMe: ''
   };
 
   showSpinner = false;
+  showAboutMeSpinner = false;
+  showLanguageSpinner = false;
   backPath = '';
   totalFieldsWithData = 0;
   totalNbrOfFields = 6;
   percentPersonal: number;
   percentLifestyle: number;
   percentRig: number;
+  other: string;
   form: FormGroup;
 
   AboutMes: AboutMe[] = [
     {value: '', viewValue: ''},
     {value: 'dreamer', viewValue: 'profile.component.list.aboutMe.dreamer'},
     {value: 'newbie', viewValue: 'profile.component.list.aboutMe.newbie'},
-    {value: 'experienced', viewValue: 'profile.component.list.aboutMe.experienced'}
+    {value: 'experienced', viewValue: 'profile.component.list.aboutMe.experienced'},
+    {value: 'other', viewValue: 'profile.component.list.aboutMe.other'}
   ];
 
   constructor(private authSvc: AuthenticationService,
@@ -61,6 +68,7 @@ export class ProfileComponent implements OnInit {
               private language: LanguageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private shared: SharedComponent,
+              private dialog: MatDialog,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -104,6 +112,13 @@ export class ProfileComponent implements OnInit {
     .subscribe(lifestyle => {
       console.log('lifestyle back from server ', lifestyle);
       this.lifestyle = lifestyle;
+      if (this.lifestyle.aboutMe) {
+        if (this.lifestyle.aboutMe.substring(0, 1) === '@') {
+          this.other = this.lifestyle.aboutMe.substring(1, this.lifestyle.aboutMe.length);
+          this.lifestyle.aboutMe = 'other';
+          console.log('other read=', this.other);
+        }
+      }
       this.form.patchValue({
         aboutMe: this.lifestyle.aboutMe
       });
@@ -131,34 +146,99 @@ export class ProfileComponent implements OnInit {
 
   setLanguage(entry: string) {
     console.log('in set language');
-    this.showSpinner = true;
+    this.showLanguageSpinner = true;
     console.log('user before', this.user);
     this.user.language = this.form.controls.language.value;
     console.log('user after', this.user);
     this.dataSvc.updateProfilePersonal(this.user)
     .subscribe ((responseData) => {
-      this.showSpinner = false;
+      this.showLanguageSpinner = false;
       console.log('Updated ', responseData);
       this.language.setLanguage(entry);
     }, error => {
-      this.showSpinner = false;
+      this.showLanguageSpinner = false;
       console.log('in error!', error);
     });
   }
 
+  selectedAboutMe(event: string) {
+    console.log('selectedSelect', event);
+    if (event === 'other') {
+      this.openDialog(event);
+    } else {
+      this.updateAboutMe(event);
+    }
+  }
+
+  activatedAboutMe() {
+    console.log('activatedSelect', this.other);
+    if (this.other) {
+      this.openDialog('other');
+    }
+  }
+
   updateAboutMe(event: string) {
     console.log('in update About me');
-    this.showSpinner = true;
     console.log('lifestyle before', this.lifestyle);
-    this.lifestyle.aboutMe = this.form.controls.aboutMe.value;
+    if (this.form.controls.aboutMe.value === '') {
+      this.lifestyle.aboutMe = null;
+      this.form.patchValue({
+        aboutMe: null
+      });
+      console.log('auto-selected no other. aboutMe=', this.lifestyle.aboutMe);
+    } else {
+      if (this.form.controls.aboutMe.value !== 'other') {
+        this.lifestyle.aboutMe = this.form.controls.aboutMe.value;
+      }
+    }
     console.log('lifestyle after', this.lifestyle);
+    this.showAboutMeSpinner = true;
     this.dataSvc.updateProfileLifestyle(this.lifestyle)
     .subscribe ((responseData) => {
-      this.showSpinner = false;
+      this.showAboutMeSpinner = false;
       console.log('Updated ', responseData);
     }, error => {
-      this.showSpinner = false;
+      this.showAboutMeSpinner = false;
       console.log('in error!', error);
+    });
+  }
+
+  openDialog(event: string): void {
+    let other = '';
+    if (this.other) {
+      other = this.other;
+    }
+    console.log ('other=', other);
+    const dialogRef = this.dialog.open(OtherDialogComponent, {
+      width: '250px',
+      disableClose: true,
+      data: {other: other }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed ', result);
+      if (result) {
+        if (this.other !== result) {
+          this.other = result;
+          this.lifestyle.aboutMe = '@' + result;
+          console.log('lifestyle=', this.lifestyle);
+          this.updateAboutMe(event);
+        }
+      } else {
+        if (this.other) {
+          console.log('other exists but no value', this.other);
+          this.lifestyle.aboutMe = null;
+          this.updateAboutMe('');
+          this.other = '';
+          this.form.patchValue({
+            aboutMe: null
+          });
+        } else {
+          this.form.patchValue({
+            aboutMe: null
+          });
+        }
+      }
     });
   }
 }

@@ -22,10 +22,12 @@ import { ThemeService } from './core/services/theme.service';
 import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 import { HttpInterceptorService } from './core/services/data-services/http-interceptor.service';
 import { DeactivateGuardService } from './core/guards/deactivate-guard.service';
+import { OtherDialogComponent } from './dialogs/other-dialog.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -59,7 +61,8 @@ export function getErrorHandler(): ErrorHandler {
     HeaderMobileComponent,
     SigninComponent,
     RegisterUserComponent,
-    LearnMoreComponent
+    LearnMoreComponent,
+    OtherDialogComponent
     ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -75,6 +78,7 @@ export function getErrorHandler(): ErrorHandler {
     AppRoutingModule,
     SharedModule,
     ReactiveFormsModule,
+    FormsModule,
     FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule

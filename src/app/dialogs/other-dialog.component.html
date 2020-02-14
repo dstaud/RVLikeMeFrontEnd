@@ -1,0 +1,13 @@
+<div>
+  <mat-form-field appearance="outline">
+    <mat-label>{{ "Describe yourself" }}</mat-label>
+    <input matInput
+          type="text"
+          cdkFocusInitial
+          [(ngModel)]="data.other">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="data.other">Ok</button>
+  <button mat-button [mat-dialog-close]="data.other">Cancel</button>
+</div>

@@ -44,7 +44,8 @@
       "aboutMe": {
         "dreamer": "Dreaming of RVing",
         "newbie": "New to RVing",
-        "experienced": "Experienced RVer"
+        "experienced": "Experienced RVer",
+        "other": "Other"
       }
     }
   },
@@ -140,6 +141,7 @@
       "worklife": {
         "retired": "Retired",
         "work-travel": "Work full-time while traveling",
+        "workamping": "Workamping",
         "work-full-time": "Work full-time",
         "work-part-time": "Work part-time"
       }

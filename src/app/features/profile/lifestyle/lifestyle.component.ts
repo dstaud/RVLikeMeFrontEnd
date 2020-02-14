@@ -17,6 +17,11 @@ export interface Worklife {
   viewValue: string;
 }
 
+export interface CampsWithMe {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-rvlm-lifestyle',
   templateUrl: './lifestyle.component.html',
@@ -34,7 +39,8 @@ export class LifestyleComponent implements OnInit {
   lifestyle: Ilifestyle = {
     aboutMe: '',
     rvUse: '',
-    work: ''
+    work: '',
+    campsWithMe: ''
   };
 
   RvLifestyles: RvLifestyle[] = [
@@ -52,6 +58,15 @@ export class LifestyleComponent implements OnInit {
     {value: 'work-travel', viewValue: 'lifestyle.component.list.worklife.work-travel'},
     {value: 'work-full-time', viewValue: 'lifestyle.component.list.worklife.work-full-time'},
     {value: 'work-part-time', viewValue: 'lifestyle.component.list.worklife.work-part-time'}
+  ];
+
+  CampsWithMes: CampsWithMe[] = [
+    {value: '', viewValue: ''},
+    {value: 'single', viewValue: 'lifestyle.component.list.campswithme.single'},
+    {value: 'partner', viewValue: 'lifestyle.component.list.campswithme.partner'},
+    {value: 'children', viewValue: 'lifestyle.component.list.campswithme.children'},
+    {value: 'family', viewValue: 'lifestyle.component.list.campswithme.family'},
+    {value: 'friend', viewValue: 'lifestyle.component.list.campswithme.friend'}
   ];
 
   constructor(private dataSvc: DataService,
