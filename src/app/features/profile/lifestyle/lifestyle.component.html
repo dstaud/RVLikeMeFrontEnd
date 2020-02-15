@@ -40,6 +40,24 @@
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="worklifeHelp()">help</mat-icon>
       <mat-icon class="icon" *ngIf="showWorklifeSaveIcon">save</mat-icon>
     </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "lifestyle.component.campsWithMeDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="selectedSelectItem('campsWithMe', $event.source.value)"
+          (openedChange) = "activatedSelectItem('campsWithMe')"
+          formControlName="campsWithMe">
+          <mat-option
+            aria-placeholder="Camps with me"
+            *ngFor="let CampsWithMe of CampsWithMes" [value]="CampsWithMe.value">
+            {{ CampsWithMe.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="campsWithMeHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showCampsWithMeSaveIcon">save</mat-icon>
+    </div>
   </form>
   <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

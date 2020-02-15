@@ -25,13 +25,13 @@ export interface AboutMe {
 })
 export class ProfileComponent implements OnInit {
   user: Iuser = {
-    firstName: '',
-    lastName: '',
-    displayName: '',
-    yearOfBirth: 0,
-    homeCountry: '',
-    homeState: '',
-    language: ''
+    firstName: null,
+    lastName: null,
+    displayName: null,
+    yearOfBirth: null,
+    homeCountry: null,
+    homeState: null,
+    language: null
   };
 
   lifestyle: Ilifestyle = {
@@ -45,9 +45,11 @@ export class ProfileComponent implements OnInit {
   showAboutMeSaveIcon = false;
   showLanguageSaveIcon = false;
   backPath = '';
-  totalFieldsWithData = 0;
-  totalNbrOfFields = 6;
+  totalPersonalFieldsWithData = 0;
+  totalPersonalNbrOfFields = 6;
   percentPersonal: number;
+  totalLifestyleFieldsWithData = 0;
+  totalLifestyleNbrOfFields = 3;
   percentLifestyle: number;
   percentRig: number;
   other: string;
@@ -93,15 +95,15 @@ export class ProfileComponent implements OnInit {
         });
       }
 
-      console.log('count before=', this.totalFieldsWithData);
-      if (user.firstName) { this.totalFieldsWithData++; }
-      if (user.lastName) { this.totalFieldsWithData++; }
-      if (user.displayName) { this.totalFieldsWithData++; }
-      if (user.yearOfBirth) { this.totalFieldsWithData++; }
-      if (user.homeCountry) { this.totalFieldsWithData++; }
-      if (user.homeState) { this.totalFieldsWithData++; }
-      console.log('count after=', this.totalFieldsWithData);
-      this.percentPersonal = (this.totalFieldsWithData / this.totalNbrOfFields) * 100;
+      console.log('count before=', this.totalPersonalFieldsWithData);
+      if (user.firstName) { this.totalPersonalFieldsWithData++; }
+      if (user.lastName) { this.totalPersonalFieldsWithData++; }
+      if (user.displayName) { this.totalPersonalFieldsWithData++; }
+      if (user.yearOfBirth) { this.totalPersonalFieldsWithData++; }
+      if (user.homeCountry) { this.totalPersonalFieldsWithData++; }
+      if (user.homeState) { this.totalPersonalFieldsWithData++; }
+      console.log('count after=', this.totalPersonalFieldsWithData);
+      this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
       console.log('% complete=', this.percentPersonal);
     }, (error) => {
       this.showSpinner = false;
@@ -123,6 +125,13 @@ export class ProfileComponent implements OnInit {
         aboutMe: this.lifestyle.aboutMe
       });
       this.showSpinner = false;
+      console.log('count before=', this.totalLifestyleFieldsWithData);
+      if (lifestyle.rvUse) { this.totalLifestyleFieldsWithData++; }
+      if (lifestyle.worklife) { this.totalLifestyleFieldsWithData++; }
+      if (lifestyle.campsWithMe) { this.totalLifestyleFieldsWithData++; }
+      console.log('count after=', this.totalLifestyleFieldsWithData);
+      this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+      console.log('% complete=', this.percentLifestyle);
     }, (error) => {
         this.showSpinner = false;
         console.error(error);

@@ -37,8 +37,10 @@ export class LifestyleComponent implements OnInit {
   showSpinner = false;
   showRvUseSaveIcon = false;
   showWorklifeSaveIcon = false;
+  showCampsWithMeSaveIcon = false;
   otherRvUse: string;
   otherWorklife: string;
+  otherCampsWithMe: string;
 
   lifestyle: Ilifestyle = {
     aboutMe: null,
@@ -72,7 +74,9 @@ export class LifestyleComponent implements OnInit {
     {value: 'partner', viewValue: 'lifestyle.component.list.campswithme.partner'},
     {value: 'children', viewValue: 'lifestyle.component.list.campswithme.children'},
     {value: 'family', viewValue: 'lifestyle.component.list.campswithme.family'},
-    {value: 'friend', viewValue: 'lifestyle.component.list.campswithme.friend'}
+    {value: 'friend', viewValue: 'lifestyle.component.list.campswithme.friend'},
+    {value: 'pet', viewValue: 'lifestyle.component.list.campswithme.pet'},
+    {value: 'other', viewValue: 'lifestyle.component.list.campswithme.other'}
   ];
 
   constructor(private dataSvc: DataService,
@@ -82,7 +86,8 @@ export class LifestyleComponent implements OnInit {
               fb: FormBuilder) {
               this.form = fb.group({
                 rvUse: new FormControl(''),
-                worklife: new FormControl('')
+                worklife: new FormControl(''),
+                campsWithMe: new FormControl('')
 /*                 use: new FormControl({value: ''}),
                 retired: new FormControl({value: ''}),
                 workRemote: new FormControl({value: ''}),
@@ -108,9 +113,16 @@ export class LifestyleComponent implements OnInit {
           this.lifestyle.worklife = 'other';
         }
       }
+      if (this.lifestyle.campsWithMe) {
+        if (this.lifestyle.campsWithMe.substring(0, 1) === '@') {
+          this.otherCampsWithMe = this.lifestyle.campsWithMe.substring(1, this.lifestyle.campsWithMe.length);
+          this.lifestyle.campsWithMe = 'other';
+        }
+      }
       this.form.patchValue({
         rvUse: this.lifestyle.rvUse,
-        worklife: this.lifestyle.worklife
+        worklife: this.lifestyle.worklife,
+        campsWithMe: this.lifestyle.campsWithMe
 /*         use: this.lifestyle.use,
         retired: this.lifestyle.retired,
         workRemote: this.lifestyle.workRemote,
@@ -133,6 +145,11 @@ export class LifestyleComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
+  campsWithMeHelp() {
+    this.helpMsg = this.translate.instant('lifestyle.component.helpCampsWithMe');
+    this.shared.openSnackBar(this.helpMsg, 'message');
+  }
+
   selectedSelectItem(control: string, event: string) {
     let name = '';
     if (event === 'other') {
@@ -142,6 +159,9 @@ export class LifestyleComponent implements OnInit {
           break;
         case 'worklife':
           name = 'lifestyle.component.worklifeDesc';
+          break;
+        case 'campsWithMe':
+          name = 'lifestyle.component.campsWithMeDesc';
           break;
       }
       console.log('open dialog ', control, name, event);
@@ -155,6 +175,10 @@ export class LifestyleComponent implements OnInit {
         case 'worklife':
           this.otherWorklife = '';
           this.updateWorklife(event);
+          break;
+        case 'campsWithMe':
+          this.otherCampsWithMe = '';
+          this.updateCampsWithMe(event);
           break;
       }
     }
@@ -172,6 +196,12 @@ export class LifestyleComponent implements OnInit {
       case 'worklife':
         if (this.otherWorklife) {
           name = 'lifestyle.component.worklifeDesc';
+          this.openDialog(control, name, 'other');
+        }
+        break;
+      case 'campsWithMe':
+        if (this.otherCampsWithMe) {
+          name = 'lifestyle.component.campsWithMeDesc';
           this.openDialog(control, name, 'other');
         }
         break;
@@ -195,13 +225,26 @@ export class LifestyleComponent implements OnInit {
     this.showWorklifeSaveIcon = true;
     if (this.form.controls.worklife.value === '') {
       this.lifestyle.worklife = null;
-      this.form.patchValue({ work: null });
+      this.form.patchValue({ worklife: null });
     } else {
       if (this.form.controls.worklife.value !== 'other') {
         this.lifestyle.worklife = this.form.controls.worklife.value;
       }
     }
     this.updateLifestyle('worklife');
+  }
+
+  updateCampsWithMe(event: string) {
+    this.showCampsWithMeSaveIcon = true;
+    if (this.form.controls.campsWithMe.value === '') {
+      this.lifestyle.campsWithMe = null;
+      this.form.patchValue({ campsWithMe: null });
+    } else {
+      if (this.form.controls.campsWithMe.value !== 'other') {
+        this.lifestyle.campsWithMe = this.form.controls.campsWithMe.value;
+      }
+    }
+    this.updateLifestyle('campsWithMe');
   }
 
   updateLifestyle(control: string) {
@@ -219,6 +262,10 @@ export class LifestyleComponent implements OnInit {
           this.showWorklifeSaveIcon = false;
           console.log('should be false');
           break;
+        case 'campsWithMe':
+          this.showCampsWithMeSaveIcon = false;
+          console.log('should be false');
+          break;
       }
     }, error => {
       switch (control) {
@@ -227,6 +274,9 @@ export class LifestyleComponent implements OnInit {
           break;
         case 'worklife':
           this.showWorklifeSaveIcon = false;
+          break;
+        case 'campsWithMe':
+          this.showCampsWithMeSaveIcon = false;
           break;
       }
       console.log('in error!', error);
@@ -244,6 +294,9 @@ export class LifestyleComponent implements OnInit {
         break;
       case 'worklife':
         other = this.otherWorklife;
+        break;
+      case 'campsWithMe':
+        other = this.otherCampsWithMe;
         break;
     }
     console.log ('other=', other);
@@ -272,7 +325,16 @@ export class LifestyleComponent implements OnInit {
                 console.log('in update ', result, control);
                 this.otherWorklife = result;
                 this.lifestyle.worklife = '@' + result;
-                this.updateRvUse(event);
+                this.updateWorklife(event);
+                console.log('lifestyle=', this.lifestyle);
+              }
+              break;
+            case 'campsWithMe':
+              if (this.otherCampsWithMe !== result ) {
+                console.log('in update ', result, control);
+                this.otherCampsWithMe = result;
+                this.lifestyle.campsWithMe = '@' + result;
+                this.updateCampsWithMe(event);
                 console.log('lifestyle=', this.lifestyle);
               }
               break;
@@ -303,14 +365,31 @@ export class LifestyleComponent implements OnInit {
               this.lifestyle.worklife = null;
               this.updateWorklife(event);
               this.form.patchValue({
-                work: null
+                worklife: null
               });
             } else {
               if (this.lifestyle.worklife) {
                 selection = this.lifestyle.worklife;
               }
               this.form.patchValue({
-                rvUse: selection
+                worklife: selection
+              });
+            }
+            break;
+          case 'campsWithMe':
+            if (this.otherCampsWithMe) {
+              this.otherCampsWithMe = '';
+              this.lifestyle.campsWithMe = null;
+              this.updateCampsWithMe(event);
+              this.form.patchValue({
+                campsWithMe: null
+              });
+            } else {
+              if (this.lifestyle.campsWithMe) {
+                selection = this.lifestyle.campsWithMe;
+              }
+              this.form.patchValue({
+                campsWithMe: selection
               });
             }
             break;

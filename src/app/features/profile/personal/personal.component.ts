@@ -57,8 +57,7 @@ export interface State {
   countries: Country[] = [
     {value: '', viewValue: ''},
     {value: 'USA', viewValue: 'personal.component.list.country.usa'},
-    {value: 'CAN', viewValue: 'personal.component.list.country.can'},
-    {value: 'MEX', viewValue: 'personal.component.list.country.mex'}
+    {value: 'CAN', viewValue: 'personal.component.list.country.can'}
   ];
 
   states: State[] = [

@@ -134,6 +134,7 @@
     "helpWorklife": "Se usa para hacer que las interacciones sean más relevantes",
     "rvUseDesc": "Cómo RV",
     "worklifeDesc": "Vida laboral",
+    "campsWithMeDesc": "Campamentos conmigo",
     "list": {
       "rvuse": {
         "ft": "Viajar a tiempo completo",
@@ -149,6 +150,15 @@
         "workamping": "Workamping",
         "work-full-time": "Trabajo de tiempo completo",
         "work-part-time": "Trabajo a media jornada",
+        "other": "Otro"
+      },
+      "campswithme": {
+        "single": "Soltero",
+        "partner": "Cónyuge o pareja",
+        "children": "Niños",
+        "family": "Familia",
+        "friend": "Amigo(s)",
+        "pet": "Mascota(s)",
         "other": "Otro"
       }
     }
