@@ -13,13 +13,13 @@
               formControlName="firstName"
               autocomplete="name"
               required
-              (blur)="updateFirstName()">
+              (blur)="updateDataPoint('firstName')">
         <mat-error *ngIf="errorHandling('firstName', 'required')">
           Please enter your <strong>{{ "personal.component.firstName" | translate }}</strong>
         </mat-error>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showFirstNameSpinner">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showfirstNameSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
@@ -29,10 +29,10 @@
               placeholder="Last name"
               formControlName="lastName"
               autocomplete="name"
-              (blur)="updateLastName()">
+              (blur)="updateDataPoint('lastName')">
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="nameHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showLastNameSpinner">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showlastNameSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
@@ -42,13 +42,13 @@
               placeholder="Display name"
               formControlName="displayName"
               required
-              (blur)="updateDisplayName()">
+              (blur)="updateDataPoint('displayName')">
         <mat-error *ngIf="errorHandling('displayName', 'required')">
           Please enter a <strong>{{ "personal.component.displayName" | translate }}</strong>
         </mat-error>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="displayNameHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showDisplayNameSpinner">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpDisplayName')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
@@ -57,44 +57,44 @@
               type="text"
               placeholder="Year of birth"
               formControlName="yearOfBirth"
-              (blur)="updateYearOfBirth()">
+              (blur)="updateDataPoint('yearOfBirth')">
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="yearOfBirthHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showYearOfBirthSpinner">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpYearOfBirth')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showyearOfBirthSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "personal.component.homeCountry" | translate }}</mat-label>
         <mat-select
             matNativeControl
-            (selectionChange)="updateHomeCountry($event.source.value)"
+            (selectionChange)="updateSelectItem('homeCountry', $event.source.value)"
             formControlName="homeCountry">
           <mat-option
             aria-placeholder="country"
-            *ngFor="let Country of countries" [value]="Country.value">
+            *ngFor="let Country of Countries" [value]="Country.value">
             {{ Country.viewValue | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeCountryHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showHomeCountrySpinner">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeCountry')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showhomeCountrySaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "personal.component.homeState" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="updateHomeState($event.source.value)"
+          (selectionChange)="updateSelectItem('homeState', $event.source.value)"
           formControlName="homeState">
           <mat-option
             aria-placeholder="state"
-            *ngFor="let State of states" [value]="State.value">
+            *ngFor="let State of States" [value]="State.value">
             {{ State.viewValue | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="homeStateHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showHomeStateSpinner">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeState')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showhomeStateSaveIcon">save</mat-icon>
     </div>
   </form>
   <br>

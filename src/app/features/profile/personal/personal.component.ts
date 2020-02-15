@@ -1,9 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
+
+import { take } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 import { DataService } from './../../../core/services/data-services/data.service';
 import { ActivateBackArrowService } from './../../../core/services/activate-back-arrow.service';
@@ -11,8 +12,8 @@ import { AuthenticationService } from './../../../core/services/data-services/au
 import { Iuser } from './../../../interfaces/user';
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 import { SharedComponent } from './../../../shared/shared.component';
-// import { IDeactivate } from './../../../core/guards/can-deactivate';
 
+/**** Interfaces for data for form selects ****/
 export interface Country {
   value: string;
   viewValue: string;
@@ -23,18 +24,27 @@ export interface State {
   viewValue: string;
 }
 
+/* This component allows users to enter personal information about themselves.
+I decided to implement auto-save in all large forms where changes are saved as user leaves the field.
+It's possible this will be too noisy with internet traffic.  If that's the case, can move to save locally and submit at once,
+but don't want to go to a Submit button model because that isn't very app-like and because I populate the form from the database
+on-load, it's always dirty and marking pristine doesn't help.  This means route-guards won't work so user might leave form
+and I can't notify them. */
+
 @Component({
   selector: 'app-rvlm-personal',
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.scss']
 })
 
-  // export class PersonalComponent implements OnInit, IDeactivate {
-  // Using IDeactivate works to stop user from leaving form BUT, ALWAYS stops them whether typed anything or not.
-  // markAsPristine() and markAsUntouched() didn't seem to have an impact.
-  // So, had to take that guard off.
-  // export class PersonalComponent implements OnInit, IDeactivate {
-  export class PersonalComponent implements OnInit {
+export class PersonalComponent implements OnInit {
+  form: FormGroup;
+  backPath: string;
+  httpError = false;
+  httpErrorText = '';
+  helpMsg = '';
+  
+  // Interface for Personal data
   user: Iuser = {
     firstName: null,
     lastName: null,
@@ -45,27 +55,26 @@ export interface State {
     language: null
   };
 
-  credentials: ItokenPayload;
-  form: FormGroup;
-  showSpinner = false;
-  backPath: string;
-  showFirstNameSpinner = false;
-  showLastNameSpinner = false;
-  showDisplayNameSpinner = false;
-  showYearOfBirthSpinner = false;
-  showHomeCountrySpinner = false;
-  showHomeStateSpinner = false;
-  httpError = false;
-  httpErrorText = '';
-  helpMsg = '';
 
-  countries: Country[] = [
+  // Spinner is for initial load from the database only.
+  // SaveIcons are shown next to each field as users leave the field, while doing the update
+  showSpinner = false;
+  showfirstNameSaveIcon = false;
+  showlastNameSaveIcon = false;
+  showdisplayNameSaveIcon = false;
+  showyearOfBirthSaveIcon = false;
+  showhomeCountrySaveIcon = false;
+  showhomeStateSaveIcon = false;
+
+
+  /**** Select form select field option data. ****/
+  Countries: Country[] = [
     {value: '', viewValue: ''},
     {value: 'USA', viewValue: 'personal.component.list.country.usa'},
     {value: 'CAN', viewValue: 'personal.component.list.country.can'}
   ];
 
-  states: State[] = [
+  States: State[] = [
     {value: '', viewValue: ''},
     {value: 'AL', viewValue: 'personal.component.list.state.al'},
     {value: 'AK', viewValue: 'personal.component.list.state.ak'},
@@ -119,11 +128,11 @@ export interface State {
     {value: 'WY', viewValue: 'personal.component.list.state.wy'}
     ];
 
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have 
+  // changed anything.  Activating a notification upon reload, just in case.
     @HostListener('window:beforeunload', ['$event'])
     unloadNotification($event: any) {
-        if (this.hasUnsavedData()) {
-            $event.returnValue = true;
-        }
+      $event.returnValue = true;
     }
 
   constructor(private dataSvc: DataService,
@@ -151,6 +160,9 @@ export interface State {
 
   ngOnInit() {
     this.form.disable();
+
+    // If user got to this page without logging in (i.e. a bookmark or attack), send
+    // them to the signin page and set the back path to the page they wanted to go
     this.showSpinner = true;
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
@@ -159,8 +171,8 @@ export interface State {
     }
 
     this.dataSvc.getProfilePersonal()
+    .pipe(take(1)) // Auto-unsubscribe after first execution
     .subscribe(user => {
-      console.log('back from server');
       this.user = user;
       if (!this.user.displayName) { this.user.displayName = this.user.firstName; }
       this.form.patchValue({
@@ -179,6 +191,57 @@ export interface State {
     });
   }
 
+  // Help pop-up text
+  formFieldHelp(controlDesc: string) {
+    this.helpMsg = this.translate.instant(controlDesc);
+    this.shared.openSnackBar(this.helpMsg, 'message');
+  }
+
+
+  /**** Field auto-update processing ****/
+  updateDataPoint(control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (this.form.controls[control].value === '') {
+      this.user[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      this.user[control] = this.form.controls[control].value;
+    }
+    this.updatePersonal(control);
+  }
+
+
+  updateSelectItem(control: string, event) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (event === '') {
+      this.user[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      this.user[control] = event;
+    }
+    this.updatePersonal(control);
+  }
+
+  
+  updatePersonal(control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this.httpError = false;
+    this.httpErrorText = '';
+    this.dataSvc.updateProfilePersonal(this.user)
+    .subscribe ((responseData) => {
+      this[SaveIcon] = false;
+    }, error => {
+      this[SaveIcon] = false;
+      console.log('in error!', error);
+      this.httpError = true;
+      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+    });
+  }
+
+
+  // Validate year of birth entered is a number
   yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
     if (control.value !== undefined && (isNaN(control.value))) {
       return { birthYear: true };
@@ -186,125 +249,7 @@ export interface State {
     return null;
   }
 
-  nameHelp() {
-    this.helpMsg = this.translate.instant('personal.component.helpName');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  displayNameHelp() {
-    this.helpMsg = this.translate.instant('personal.component.helpDisplayName');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  emailHelp() {
-    this.helpMsg = this.translate.instant('personal.component.helpEmail');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  yearOfBirthHelp() {
-    this.helpMsg = this.translate.instant('personal.component.helpYearOfBirth');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  homeCountryHelp() {
-    this.helpMsg = this.translate.instant('personal.component.helpHomeCountry');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  homeStateHelp() {
-    this.helpMsg = this.translate.instant('personal.component.helpHomeState');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
-  }
-
-  updateFirstName() {
-    this.showFirstNameSpinner = true;
-    this.user.firstName = this.form.controls.firstName.value;
-    this.updateProfile('firstName');
-  }
-
-  updateLastName() {
-    this.showLastNameSpinner = true;
-    this.user.lastName = this.form.controls.lastName.value;
-    this.updateProfile('lastName');
-  }
-
-  updateDisplayName() {
-    this.showDisplayNameSpinner = true;
-    this.user.displayName = this.form.controls.displayName.value;
-    this.updateProfile('displayName');
-  }
-
-  updateYearOfBirth() {
-    this.showYearOfBirthSpinner = true;
-    this.user.yearOfBirth = this.form.controls.yearOfBirth.value;
-    this.updateProfile('yearOfBirth');
-  }
-
-  updateHomeCountry(country: string) {
-    this.showHomeCountrySpinner = true;
-    this.user.homeCountry = country;
-    this.updateProfile('homeCountry');
-  }
-
-  updateHomeState(state: string) {
-    this.showHomeStateSpinner = true;
-    this.user.homeState = state;
-    this.updateProfile('homeState');
-  }
-
-  updateProfile(field: string) {
-    this.httpError = false;
-    this.httpErrorText = '';
-    this.dataSvc.updateProfilePersonal(this.user)
-    .subscribe ((responseData) => {
-      if (field === 'firstName') {
-        this.showFirstNameSpinner = false;
-      }
-      if (field === 'lastName') {
-        this.showLastNameSpinner = false;
-      }
-      if (field === 'displayName') {
-        this.showDisplayNameSpinner = false;
-      }
-      if (field === 'yearOfBirth') {
-        this.showYearOfBirthSpinner = false;
-      }
-      if (field === 'homeCountry') {
-        this.showHomeCountrySpinner = false;
-      }
-      if (field === 'homeState') {
-        this.showHomeStateSpinner = false;
-      }
-    }, error => {
-      if (field === 'firstName') {
-        this.showFirstNameSpinner = false;
-      }
-      if (field === 'lastName') {
-        this.showLastNameSpinner = false;
-      }
-      if (field === 'displayName') {
-        this.showDisplayNameSpinner = false;
-      }
-      if (field === 'yearOfBirth') {
-        this.showYearOfBirthSpinner = false;
-      }
-      if (field === 'homeCountry') {
-        this.showHomeCountrySpinner = false;
-      }
-      if (field === 'homeState') {
-        this.showHomeStateSpinner = false;
-      }
-      console.log('in error!', error);
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-    });
-  }
-
-  private hasUnsavedData() {
-    return true;
   }
 }

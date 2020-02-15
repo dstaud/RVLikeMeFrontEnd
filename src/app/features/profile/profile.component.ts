@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
+
+import { take } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { Iuser } from './../../interfaces/user';
 import { Ilifestyle } from './../../interfaces/lifestyle';
@@ -89,6 +92,7 @@ export class ProfileComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
     this.dataSvc.getProfilePersonal()
+    .pipe(take(1)) // Auto-unsubscribe after first execution
     .subscribe(user => {
       this.user = user;
       if (this.user.language) {
@@ -113,6 +117,7 @@ export class ProfileComponent implements OnInit {
     });
 
     this.dataSvc.getProfileLifestyle()
+    .pipe(take(1)) // Auto-unsubscribe after first execution
     .subscribe(lifestyle => {
       console.log('lifestyle back from server ', lifestyle);
       this.lifestyle = lifestyle;
@@ -142,6 +147,15 @@ export class ProfileComponent implements OnInit {
     });
    }
 
+  // If use touches aboutMe control and had previously selected 'other' then open the dialog to show what they had entered.
+  activatedAboutMe() {
+    if (this.other) {
+      this.openDialog('other');
+    }
+  }
+
+
+  /**** Route to sub-profile pages as user selects ****/
   onPersonal() {
     this.activateBackArrowSvc.setBackRoute('profile');
     this.router.navigateByUrl('/profile-personal');
@@ -157,73 +171,14 @@ export class ProfileComponent implements OnInit {
     this.router.navigateByUrl('/profile-rig');
   }
 
-  setLanguage(entry: string) {
-    console.log('in set language');
-    this.showLanguageSaveIcon = true;
-    console.log('user before', this.user);
-    this.user.language = this.form.controls.language.value;
-    console.log('user after', this.user);
-    this.dataSvc.updateProfilePersonal(this.user)
-    .subscribe ((responseData) => {
-      this.showLanguageSaveIcon = false;
-      console.log('Updated ', responseData);
-      this.language.setLanguage(entry);
-    }, error => {
-      this.showLanguageSaveIcon = false;
-      console.log('in error!', error);
-    });
-  }
 
-  selectedAboutMe(event: string) {
-    console.log('selectedSelect', event);
-    if (event === 'other') {
-      this.openDialog(event);
-    } else {
-      this.other = '';
-      this.updateAboutMe(event);
-    }
-  }
-
-  activatedAboutMe() {
-    console.log('activatedSelect', this.other);
-    if (this.other) {
-      this.openDialog('other');
-    }
-  }
-
-  updateAboutMe(event: string) {
-    console.log('in update About me');
-    console.log('lifestyle before', this.lifestyle);
-    if (this.form.controls.aboutMe.value === '') {
-      this.lifestyle.aboutMe = null;
-      this.form.patchValue({
-        aboutMe: null
-      });
-      console.log('auto-selected no other. aboutMe=', this.lifestyle.aboutMe);
-    } else {
-      if (this.form.controls.aboutMe.value !== 'other') {
-        this.lifestyle.aboutMe = this.form.controls.aboutMe.value;
-      }
-    }
-    console.log('lifestyle after', this.lifestyle);
-    this.showAboutMeSaveIcon = true;
-    this.dataSvc.updateProfileLifestyle(this.lifestyle)
-    .subscribe ((responseData) => {
-      this.showAboutMeSaveIcon = false;
-      console.log('Updated ', responseData);
-    }, error => {
-      this.showAboutMeSaveIcon = false;
-      console.log('in error!', error);
-    });
-  }
-
+  // Wen user selects 'other' open dialog to collect data
   openDialog(event: string): void {
     let other = '';
     let selection = null;
     if (this.other) {
       other = this.other;
     }
-    console.log ('other=', other);
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
       disableClose: true,
@@ -231,17 +186,14 @@ export class ProfileComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed ', result);
       if (result) {
         if (this.other !== result && result !== 'canceled') {
           this.other = result;
           this.lifestyle.aboutMe = '@' + result;
-          console.log('lifestyle=', this.lifestyle);
           this.updateAboutMe(event);
         }
       } else {
         if (this.other) {
-          console.log('other exists but no value', this.other);
           this.lifestyle.aboutMe = null;
           this.updateAboutMe('');
           this.other = '';
@@ -257,6 +209,53 @@ export class ProfileComponent implements OnInit {
           });
         }
       }
+    });
+  }
+
+
+  // On user selection of Other from aboutMe control, open dialog to collection information. If not other, update database.
+  selectedAboutMe(event: string) {
+    if (event === 'other') {
+      this.openDialog(event);
+    } else {
+      this.other = '';
+      this.updateAboutMe(event);
+    }
+  }
+
+
+  // Set language based on user selection, stored in database
+  setLanguage(entry: string) {
+    this.showLanguageSaveIcon = true;
+    this.user.language = this.form.controls.language.value;
+    this.dataSvc.updateProfilePersonal(this.user)
+    .subscribe ((responseData) => {
+      this.showLanguageSaveIcon = false;
+      this.language.setLanguage(entry);
+    }, error => {
+      this.showLanguageSaveIcon = false;
+    });
+  }
+
+  
+  // Auto-update aboutMe selection to server
+  updateAboutMe(event: string) {
+    if (this.form.controls.aboutMe.value === '') {
+      this.lifestyle.aboutMe = null;
+      this.form.patchValue({
+        aboutMe: null
+      });
+    } else {
+      if (this.form.controls.aboutMe.value !== 'other') {
+        this.lifestyle.aboutMe = this.form.controls.aboutMe.value;
+      }
+    }
+    this.showAboutMeSaveIcon = true;
+    this.dataSvc.updateProfileLifestyle(this.lifestyle)
+    .subscribe ((responseData) => {
+      this.showAboutMeSaveIcon = false;
+    }, error => {
+      this.showAboutMeSaveIcon = false;
     });
   }
 }

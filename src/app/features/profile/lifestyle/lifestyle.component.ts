@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-
-import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
+
+import { take } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 import { SharedComponent } from './../../../shared/shared.component';
 import { DataService } from './../../../core/services/data-services/data.service';
@@ -13,6 +14,7 @@ import { ActivateBackArrowService } from './../../../core/services/activate-back
 import { Ilifestyle } from './../../../interfaces/lifestyle';
 import { OtherDialogComponent } from './../../../dialogs/other-dialog.component';
 
+/**** Interfaces for data for form selects ****/
 export interface RvLifestyle {
   value: string;
   viewValue: string;
@@ -39,7 +41,7 @@ export interface Traveling {
 }
 
 /* This component allows users to enter information about their lifestyle.
-I decided to implement auto-save where changes are saved as user leaves the field.
+I decided to implement auto-save in all large forms where changes are saved as user leaves the field.
 It's possible this will be too noisy with internet traffic.  If that's the case, can move to save locally and submit at once,
 but don't want to go to a Submit button model because that isn't very app-like and because I populate the form from the database
 on-load, it's always dirty and marking pristine doesn't help.  This means route-guards won't work so user might leave form
@@ -57,22 +59,6 @@ export class LifestyleComponent implements OnInit {
   helpMsg = '';
   backPath: string;
 
-  // Spinner is for initial load from the database only.
-  // SaveIcons are shown next to each field as users leave the field, while doing the update
-  showSpinner = false;
-  showrvUseSaveIcon = false;
-  showworklifeSaveIcon = false;
-  showcampsWithMeSaveIcon = false;
-  showboondockingSaveIcon = false;
-  showtravelingSaveIcon = false;
-
-  // Each field that has an 'other' option in the Select, keeps the other entered value in the corresponding field below
-  // otherRvUse: string;
-  rvUse: string;
-  otherWorklife: string;
-  otherCampsWithMe: string;
-  otherBoondocking: string;
-  otherTraveling: string;
 
   // Interface for Lifestyle data
   lifestyle: Ilifestyle = {
@@ -84,7 +70,18 @@ export class LifestyleComponent implements OnInit {
     traveling: null
   };
 
-  /**** Select form field option data. ****/
+
+  // Spinner is for initial load from the database only.
+  // SaveIcons are shown next to each field as users leave the field, while doing the update
+  showSpinner = false;
+  showrvUseSaveIcon = false;
+  showworklifeSaveIcon = false;
+  showcampsWithMeSaveIcon = false;
+  showboondockingSaveIcon = false;
+  showtravelingSaveIcon = false;
+
+
+  /**** Select form select field option data. ****/
   RvLifestyles: RvLifestyle[] = [
     {value: '', viewValue: ''},
     {value: 'FT', viewValue: 'lifestyle.component.list.rvuse.ft'},
@@ -138,6 +135,13 @@ export class LifestyleComponent implements OnInit {
     {value: 'other', viewValue: 'lifestyle.component.list.traveling.other'},
   ];
 
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have 
+  // changed anything.  Activating a notification upon reload, just in case.
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    $event.returnValue = true;
+  }
+
   constructor(private dataSvc: DataService,
               private translate: TranslateService,
               private shared: SharedComponent,
@@ -158,6 +162,9 @@ export class LifestyleComponent implements OnInit {
 
   ngOnInit() {
     this.form.disable();
+
+    // If user got to this page without logging in (i.e. a bookmark or attack), send
+    // them to the signin page and set the back path to the page they wanted to go
     this.showSpinner = true;
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
@@ -165,7 +172,9 @@ export class LifestyleComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.dataSvc.getProfileLifestyle().subscribe(lifestyle => {
+    this.dataSvc.getProfileLifestyle()
+    .pipe(take(1)) // Auto-unsubscribe after first execution
+    .subscribe(lifestyle => {
       this.lifestyle = lifestyle;
 
       // If user selected other on a form field, need to get the data they entered
@@ -192,21 +201,22 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
-  /**** Automatically pop-up the 'other' dialog with the correct control and name when use clicks on select if other ****/
+  // Automatically pop-up the 'other' dialog with the correct
+  // control and name when use clicks on select if other
   activatedSelectItem(control: string, controlDesc: string) {
     if (this[control]) {
       this.openDialog(control, controlDesc, 'other');
     }
   }
 
-  /**** Help pop-up text ****/
+  // Help pop-up text
   formFieldHelp(controlDesc: string) {
     this.helpMsg = this.translate.instant(controlDesc);
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
 
-  /**** 'Other' Dialog ****/
+  // Select form 'Other' Dialog
   openDialog(control: string, name: string, event: string): void {
     let other = '';
     let selection = '';
@@ -251,13 +261,14 @@ export class LifestyleComponent implements OnInit {
     if (this.lifestyle[control]) {
       if (this.lifestyle[control].substring(0, 1) === '@') {
         this[control] = this.lifestyle[control].substring(1, this.lifestyle[control].length);
+        console.log('other=', control, this[control]);
         this.lifestyle[control] = 'other';
       }
     }
   }
 
 
-  /**** Drop-down selection processing ****/
+  // Form Select option processing
   selectedSelectItem(control: string, controlDesc: string, event: string) {
 
     // If user chose other, set description for dialog
@@ -276,12 +287,12 @@ export class LifestyleComponent implements OnInit {
   updateDataPoint(event: string, control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
-    if (this.form.controls[control].value === '') {
+    if (event === '') {
       this.lifestyle[control] = null;
       this.form.patchValue({ [control]: null });
     } else {
       if (this.form.controls[control].value !== 'other') {
-        this.lifestyle[control] = this.form.controls[control].value;
+        this.lifestyle[control] = event;
       }
     }
     this.updateLifestyle(control);
