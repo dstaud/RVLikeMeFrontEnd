@@ -1,6 +1,6 @@
 <div>
   <mat-form-field appearance="outline">
-    <mat-label>{{ "Describe yourself" }}</mat-label>
+    <mat-label>{{ data.name | translate }}</mat-label>
     <input matInput
           type="text"
           cdkFocusInitial
@@ -8,6 +8,6 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.other">Ok</button>
-  <button mat-button [mat-dialog-close]="data.other">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.other">{{ 'other-dialog.component.ok' | translate }}</button>
+  <button mat-button (click)="onNoClick()">{{ 'other-dialog.component.cancel' | translate }}</button>
 </div>

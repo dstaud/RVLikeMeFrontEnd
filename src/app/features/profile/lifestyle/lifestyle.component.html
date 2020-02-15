@@ -6,10 +6,11 @@
   <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.rvuseDesc" | translate }}</mat-label>
+        <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="updateRvUse($event.source.value)"
+          (selectionChange)="selectedSelectItem('rvUse', $event.source.value)"
+          (openedChange) = "activatedSelectItem('rvUse')"
           formControlName="rvUse">
           <mat-option
             aria-placeholder="RV Lifestyle"
@@ -19,15 +20,16 @@
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="rvUseHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showRvUseSpinner">save</mat-icon>
+      <mat-icon class="icon" *ngIf="showRvUseSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.work" | translate }}</mat-label>
+        <mat-label>{{ "lifestyle.component.worklifeDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="updateWorklife($event.source.value)"
-          formControlName="work">
+          (selectionChange)="selectedSelectItem('worklife', $event.source.value)"
+          (openedChange) = "activatedSelectItem('worklife')"
+          formControlName="worklife">
           <mat-option
             aria-placeholder="work life"
             *ngFor="let Worklife of Worklives" [value]="Worklife.value">
@@ -36,7 +38,7 @@
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="worklifeHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showWorklifeSpinner">save</mat-icon>
+      <mat-icon class="icon" *ngIf="showWorklifeSaveIcon">save</mat-icon>
     </div>
   </form>
   <br>

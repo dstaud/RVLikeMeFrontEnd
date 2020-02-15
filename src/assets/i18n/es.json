@@ -27,6 +27,10 @@
   "about.component": {
     "header": "Acerca de"
   },
+  "other-dialog.component": {
+    "ok": "Okay",
+    "cancel": "Cancelar"
+  },
   "profile.component": {
     "header": "Perfil",
     "explanation": "Ingrese información sobre usted, su estilo de vida y su equipo para ayudarnos a relacionarlo con otros RVers para obtener más información relevante y respuestas a sus preguntas.",
@@ -44,7 +48,8 @@
       "aboutMe": {
         "dreamer": "Soñando con RVing",
         "newbie": "Nuevo en RVing",
-        "experienced": "RVer experimentado"
+        "experienced": "RVer experimentado",
+        "other": "Otro"
       }
     }
   },
@@ -127,22 +132,24 @@
     "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
     "helpRvUse": "Se usa para hacer que las interacciones sean más relevantes",
     "helpWorklife": "Se usa para hacer que las interacciones sean más relevantes",
-    "rvuseDesc": "Cómo RV",
-    "work": "¿Trabajando?",
+    "rvUseDesc": "Cómo RV",
+    "worklifeDesc": "Vida laboral",
     "list": {
       "rvuse": {
         "ft": "Viajar a tiempo completo",
         "fs": "Estacionario a tiempo completo",
         "fp": "A tiempo completo con viajes a tiempo parcial",
         "ps": "Viaje a tiempo parcial con bastón / ladrillos",
-        "ny": "¡No he comenzado todavía!"
+        "ny": "¡No he comenzado todavía!",
+        "other": "Otro"
       },
       "worklife": {
         "retired": "Retirado",
         "work-travel": "Trabaja a tiempo completo mientras viajas",
         "workamping": "Workamping",
         "work-full-time": "Trabajo de tiempo completo",
-        "work-part-time": "Trabajo a media jornada"
+        "work-part-time": "Trabajo a media jornada",
+        "other": "Otro"
       }
     }
   },

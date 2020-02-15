@@ -32,13 +32,13 @@ export interface State {
   // export class PersonalComponent implements OnInit, IDeactivate {
   export class PersonalComponent implements OnInit {
   user: Iuser = {
-    firstName: '',
-    lastName: '',
-    displayName: '',
-    yearOfBirth: 0,
-    homeCountry: '',
-    homeState: '',
-    language: ''
+    firstName: null,
+    lastName: null,
+    displayName: null,
+    yearOfBirth: null,
+    homeCountry: null,
+    homeState: null,
+    language: null
   };
 
   credentials: ItokenPayload;

@@ -35,15 +35,15 @@ export class ProfileComponent implements OnInit {
   };
 
   lifestyle: Ilifestyle = {
-    aboutMe: '',
-    rvUse: '',
-    work: '',
-    campsWithMe: ''
+    aboutMe: null,
+    rvUse: null,
+    worklife: null,
+    campsWithMe: null
   };
 
   showSpinner = false;
-  showAboutMeSpinner = false;
-  showLanguageSpinner = false;
+  showAboutMeSaveIcon = false;
+  showLanguageSaveIcon = false;
   backPath = '';
   totalFieldsWithData = 0;
   totalNbrOfFields = 6;
@@ -146,17 +146,17 @@ export class ProfileComponent implements OnInit {
 
   setLanguage(entry: string) {
     console.log('in set language');
-    this.showLanguageSpinner = true;
+    this.showLanguageSaveIcon = true;
     console.log('user before', this.user);
     this.user.language = this.form.controls.language.value;
     console.log('user after', this.user);
     this.dataSvc.updateProfilePersonal(this.user)
     .subscribe ((responseData) => {
-      this.showLanguageSpinner = false;
+      this.showLanguageSaveIcon = false;
       console.log('Updated ', responseData);
       this.language.setLanguage(entry);
     }, error => {
-      this.showLanguageSpinner = false;
+      this.showLanguageSaveIcon = false;
       console.log('in error!', error);
     });
   }
@@ -166,6 +166,7 @@ export class ProfileComponent implements OnInit {
     if (event === 'other') {
       this.openDialog(event);
     } else {
+      this.other = '';
       this.updateAboutMe(event);
     }
   }
@@ -192,19 +193,20 @@ export class ProfileComponent implements OnInit {
       }
     }
     console.log('lifestyle after', this.lifestyle);
-    this.showAboutMeSpinner = true;
+    this.showAboutMeSaveIcon = true;
     this.dataSvc.updateProfileLifestyle(this.lifestyle)
     .subscribe ((responseData) => {
-      this.showAboutMeSpinner = false;
+      this.showAboutMeSaveIcon = false;
       console.log('Updated ', responseData);
     }, error => {
-      this.showAboutMeSpinner = false;
+      this.showAboutMeSaveIcon = false;
       console.log('in error!', error);
     });
   }
 
   openDialog(event: string): void {
     let other = '';
+    let selection = null;
     if (this.other) {
       other = this.other;
     }
@@ -212,13 +214,13 @@ export class ProfileComponent implements OnInit {
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
       disableClose: true,
-      data: {other: other }
+      data: {name: 'profile.component.aboutMe', other: other }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed ', result);
       if (result) {
-        if (this.other !== result) {
+        if (this.other !== result && result !== 'canceled') {
           this.other = result;
           this.lifestyle.aboutMe = '@' + result;
           console.log('lifestyle=', this.lifestyle);
@@ -234,8 +236,11 @@ export class ProfileComponent implements OnInit {
             aboutMe: null
           });
         } else {
+          if (this.lifestyle.aboutMe) {
+            selection = this.lifestyle.aboutMe;
+          }
           this.form.patchValue({
-            aboutMe: null
+            aboutMe: selection
           });
         }
       }

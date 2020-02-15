@@ -27,6 +27,10 @@
   "about.component": {
     "header": "About"
   },
+  "other-dialog.component": {
+    "ok": "OK",
+    "cancel": "Cancel"
+  },
   "profile.component": {
     "header": "Profile",
     "explanation": "Please enter information about you, your lifestyle and your rig to help us match you with other RVers for more relavant information and answers to your questions.",
@@ -128,22 +132,24 @@
     "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
     "helpRvUse": "Used to make interactions more relavant",
     "helpWorklife": "Used to make interactions more relavant",
-    "rvuseDesc": "How I RV",
-    "work": "Working?",
+    "rvUseDesc": "How I RV",
+    "worklifeDesc": "Work life",
     "list": {
       "rvuse": {
         "ft": "Full-time traveling",
         "fs": "Full-time stationary",
         "fp": "Full-time with part-time travel",
         "ps": "Part-time travel with stick/bricks",
-        "ny": "Have not started yet!"
+        "ny": "Have not started yet!",
+        "other": "Other"
       },
       "worklife": {
         "retired": "Retired",
         "work-travel": "Work full-time while traveling",
         "workamping": "Workamping",
         "work-full-time": "Work full-time",
-        "work-part-time": "Work part-time"
+        "work-part-time": "Work part-time",
+        "other": "Other"
       }
     }
   },
