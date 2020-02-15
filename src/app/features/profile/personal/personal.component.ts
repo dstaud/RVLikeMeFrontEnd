@@ -1,9 +1,10 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { DataService } from './../../../core/services/data-services/data.service';
@@ -191,6 +192,8 @@ export class PersonalComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {};
+
   // Help pop-up text
   formFieldHelp(controlDesc: string) {
     this.helpMsg = this.translate.instant(controlDesc);
@@ -230,6 +233,7 @@ export class PersonalComponent implements OnInit {
     this.httpError = false;
     this.httpErrorText = '';
     this.dataSvc.updateProfilePersonal(this.user)
+    .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
     }, error => {

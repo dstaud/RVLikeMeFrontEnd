@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { DataService } from './../../../core/services/data-services/data.service';
@@ -46,7 +48,9 @@ export class RvRigComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.dataSvc.getProfilePersonal().subscribe(rig => {
+    this.dataSvc.getProfilePersonal()
+    .pipe(take(1))
+    .subscribe(rig => {
       this.rig = rig;
       this.form.patchValue({
         type: this.rig.type,

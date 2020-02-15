@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
 import { Location } from '@angular/common';
+
 import { Observable } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { filter } from 'rxjs/operators';
+
 import { DeviceService } from './core/services/device.service';
 import { LanguageService } from './core/services/language.service';
 import { ThemeService } from './core/services/theme.service';
@@ -43,50 +47,18 @@ export class AppComponent implements OnInit {
           ( event: NavigationEvent ) => {
             return( event instanceof NavigationStart );
           }
-      )
+      ),
+      untilComponentDestroyed(this)
     )
     .subscribe(
       (event: NavigationStart ) => {
-        console.group('NavigationStart Event');
-        // Every navigation sequence is given a unique ID. Even "popstate"
-        // navigations are really just "roll forward" navigations that get
-        // a new, unique ID.
-        console.log('navigation id:', event.id);
-        console.log('route:', event.url);
-
-        // The "navigationTrigger" will be one of:
-        // --
-        // - imperative (ie, user clicked a link).
-        // - popstate (ie, browser controlled change such as Back button).
-        // - hashchange
-        // --
-        // NOTE: I am not sure what triggers the "hashchange" type.
-        console.log('trigger:', event.navigationTrigger);
-
-        // This "restoredState" property is defined when the navigation
-        // event is triggered by a "popstate" event (ex, back / forward
-        // buttons). It will contain the ID of the earlier navigation event
-        // to which the browser is returning.
-        // --
-        // CAUTION: This ID may not be part of the current page rendering.
-        // This value is pulled out of the browser; and, may exist across
-        // page refreshes.
-        if (event.restoredState) {
-          console.warn('restoring navigation id:', event.restoredState.navigationId);
-        }
-        console.groupEnd();
-
-        console.log('in app component');
         // If user returns to the app through root URL, but their auth token is still valid, then send them to the home page.
         // No need to login again.  However, if auth but coming to the root page, route to home.
-        // This messing up logout which routes to '/' and causes a race condition where still logged in when get here so routes to home.
         if (this.authSvc.isLoggedIn()) {
           if (event.url === '/') {
-            console.log('in app component, routing to home');
             this.router.navigateByUrl('/home');
             this.getPreferredLanguage();
           } else {
-            console.log('event = ', event.url);
             // TODO: Race condition where title of page not set.
             this.getPreferredLanguage();
           }
@@ -98,6 +70,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
      // Listen for changes in font theme;
     this.themeSvc.defaultGlobalFontTheme
+      .pipe(untilComponentDestroyed(this))
       .subscribe(fontData => {
         this.font = fontData.valueOf();
         console.log('Font=', this.font);
@@ -105,6 +78,7 @@ export class AppComponent implements OnInit {
 
     // Listen for changes in color theme;
     this.themeSvc.defaultGlobalColorTheme
+      .pipe(untilComponentDestroyed(this))
       .subscribe(themeData => {
         this.theme = themeData.valueOf();
         console.log('Theme=', this.theme);
@@ -112,8 +86,8 @@ export class AppComponent implements OnInit {
 
     // Listen for changes in user authorization state
     this.authSvc.userAuth$
+      .pipe(untilComponentDestroyed(this))
       .subscribe(authData => {
-        console.log('user authorized=', authData.valueOf());
         this.userAuthorized = authData.valueOf();
       });
 
@@ -121,8 +95,8 @@ export class AppComponent implements OnInit {
     if (this.authSvc.isLoggedIn()) {
       // Get user profile
       this.dataSvc.getProfilePersonal()
+      .pipe(take(1))
       .subscribe(user => {
-        console.log('got language', user.language);
         if (user.language) {
           this.language.setLanguage(user.language);
         } else {
@@ -135,12 +109,15 @@ export class AppComponent implements OnInit {
       this.authSvc.setUserToAuthorized(true);
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
-  }
+  };
+
+  ngOnDestroy() {};
 
   private getPreferredLanguage() {
     this.dataSvc.getProfilePersonal()
+    .pipe(untilComponentDestroyed(this))
     .subscribe(user => {
-      console.log('constructor language=', user.language);
+      console.log('Language=', user.language);
       if (user.language) {
         this.language.setLanguage(user.language);
       } else {

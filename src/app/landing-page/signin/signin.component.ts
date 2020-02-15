@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
+
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
+
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { DataService } from './../../core/services/data-services/data.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
@@ -48,18 +52,19 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
-    console.log('in Signin Init');
     this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.returnRoute = data.valueOf();
       if (this.returnRoute) {
         if (this.returnRoute.substring(0, 1) === '*') {
             this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
-            console.log('auto route=', this.returnRoute);
         }
       }
     });
   }
+
+  ngOnDestroy() {};
 
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
@@ -67,14 +72,13 @@ export class SigninComponent implements OnInit {
     this.credentials.password = this.form.controls.password.value;
     this.httpError = false;
     this.httpErrorText = '';
-    console.log('about to call login', this.credentials);
     this.showSpinner = true;
     this.authSvc.login(this.credentials)
+    .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      console.log('logged in');
       this.dataSvc.getProfilePersonal()
+      .pipe(untilComponentDestroyed(this))
       .subscribe(user => {
-        console.log('back from server');
         if (user.language) {
           this.language.setLanguage(user.language);
         } else {
@@ -89,7 +93,6 @@ export class SigninComponent implements OnInit {
       });
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(true);
-      console.log('is there an auto route ', this.returnRoute);
       if (this.returnRoute && this.returnRoute !== 'landing-page') {
         // User booked-marked a specific page which can route too after authorization
         this.router.navigateByUrl(this.returnRoute);

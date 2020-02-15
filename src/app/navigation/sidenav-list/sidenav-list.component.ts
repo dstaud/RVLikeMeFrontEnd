@@ -26,7 +26,6 @@ export class SidenavListComponent implements OnInit {
 
   public closeSideNav = () => {
     this.backPath = this.location.path().substring(1, this.location.path().length);
-    console.log('Back Path=', this.backPath);
     this.activateBackArrowSvc.setBackRoute(this.backPath);
     this.sideNavClosed.emit();
   }

@@ -1,10 +1,11 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { SharedComponent } from './../../../shared/shared.component';
@@ -201,6 +202,8 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {};
+
   // Automatically pop-up the 'other' dialog with the correct
   // control and name when use clicks on select if other
   activatedSelectItem(control: string, controlDesc: string) {
@@ -222,15 +225,15 @@ export class LifestyleComponent implements OnInit {
     let selection = '';
     other = this[control];
 
-    console.log ('other=', other);
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
       disableClose: true,
       data: {name: name, other: other }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed ', result);
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
       if (result) {
         if (result !== 'canceled') {
           if (this[control] !== result ) {
@@ -261,7 +264,6 @@ export class LifestyleComponent implements OnInit {
     if (this.lifestyle[control]) {
       if (this.lifestyle[control].substring(0, 1) === '@') {
         this[control] = this.lifestyle[control].substring(1, this.lifestyle[control].length);
-        console.log('other=', control, this[control]);
         this.lifestyle[control] = 'other';
       }
     }
@@ -300,17 +302,14 @@ export class LifestyleComponent implements OnInit {
 
   updateLifestyle(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    console.log('save icon = ', SaveIcon)
     this.httpError = false;
     this.httpErrorText = '';
-    console.log('Update lifestyle ', this.lifestyle);
     this.dataSvc.updateProfileLifestyle(this.lifestyle)
+    .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      console.log('update, control=', control);
       this[SaveIcon] = false;
     }, error => {
       this[SaveIcon] = false;
-      console.log('in error!', error);
       this.httpError = true;
       this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
     });

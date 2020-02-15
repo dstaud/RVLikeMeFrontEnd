@@ -88,5 +88,11 @@
   },
   "rulesDirectory": [
     "codelyzer"
-  ]
+  ],
+  "rulesDirectory": [
+    "node_modules/@w11k/rx-ninja/dist/tslint_rules"
+  ],
+  "rules": {
+    "rx-ninja-subscribe-takeuntil": [true, "takeUntil", "untilComponentDestroyed"]
+  }
 }

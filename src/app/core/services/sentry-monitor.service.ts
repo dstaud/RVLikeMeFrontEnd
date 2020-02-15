@@ -7,7 +7,6 @@ import { ItokenPayload } from './../../interfaces/tokenPayload';
 export class SentryMonitorService {
 
   monitorUser(user: ItokenPayload): void {
-    console.log('configuring user for Sentry ', user.email);
     Sentry.configureScope(scope => {
       scope.setUser({
         email: user.email

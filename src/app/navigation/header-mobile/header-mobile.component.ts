@@ -1,14 +1,16 @@
-import { element } from 'protractor';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouteConfigLoadEnd } from '@angular/router';
+
+import { Observable } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
+
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 import { RegisterBtnVisibleService } from './../../core/services/register-btn-visiblity.service';
 import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
 import { DeviceService } from './../../core/services/device.service';
-import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
 
 @Component({
   selector: 'app-rvlm-header-mobile',
@@ -38,6 +40,7 @@ export class HeaderMobileComponent implements OnInit {
 
   ngOnInit() {
     this.router.events
+    .pipe(untilComponentDestroyed(this))
     .subscribe({
       next: (event) => {
         if (event instanceof NavigationEnd) {
@@ -47,7 +50,6 @@ export class HeaderMobileComponent implements OnInit {
     });
 
     this.device = this.deviceSvc.device;
-    console.log('Device=', this.device);
 
     if (this.device === 'iPhone') {
       // arrow_back_ios icon not coming up at all regardless of this if
@@ -57,17 +59,20 @@ export class HeaderMobileComponent implements OnInit {
 
     // Listen for changes in user authorization state
     this.authSvc.userAuth$
+      .pipe(untilComponentDestroyed(this))
       .subscribe(authData => {
         this.userAuthorized = authData.valueOf();
       });
 
     // Listen for changes that determine whether to display 'Signin' or 'Sign up for free' which depend on context of what user is viewing
     this.signinBtnVisibleSvc.signinButtonVisible$
+      .pipe(untilComponentDestroyed(this))
       .subscribe(data => {
         this.signinVisible = data.valueOf();
     });
 
     this.registerBtnVisibleSvc.registerButtonVisible$
+    .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.registerVisible = data.valueOf();
     });
@@ -79,16 +84,15 @@ export class HeaderMobileComponent implements OnInit {
     }
 
     this.activateBackArrowSvc.route$
+      .pipe(untilComponentDestroyed(this))
       .subscribe(data => {
         this.returnRoute = data.valueOf();
         if (this.returnRoute) {
           if (this.returnRoute.substring(0, 1) === '*') {
               this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
-              console.log('auto route=', this.returnRoute);
               this.autoRoute = true;
               this.showBackArrow = false;
             } else {
-              console.log('Return Route Changed to ', this.returnRoute);
               this.showBackArrow = true;
             }
           } else {
@@ -98,9 +102,10 @@ export class HeaderMobileComponent implements OnInit {
       });
   }
 
+  ngOnDestroy() {}
+
   setTitleOnRouteChange(): void {
     if (this.router.url.includes('home')) {
-     console.log('set title home');
      this.pageTitle = this.translate.instant('home.component.header');
     } else {
       if (this.router.url.includes('forums')) {
@@ -155,15 +160,12 @@ export class HeaderMobileComponent implements OnInit {
     }
   }
 
-  signIn() {
-    this.router.navigateByUrl('/signin');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
-  }
 
   changeUsername() {
     this.router.navigateByUrl('/credentials');
     this.activateBackArrowSvc.setBackRoute('/home');
   }
+
 
   public logout() {
     this.authSvc.logout();
@@ -172,13 +174,19 @@ export class HeaderMobileComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
+
+  register() {
+    this.router.navigateByUrl('/register');
+    this.activateBackArrowSvc.setBackRoute('landing-page');
+    this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
+  }
+
+
   returnToBackRoute() {
-    console.log('Back To Route=', this.returnRoute);
     if (this.returnRoute === '') {
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
       this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
     }
-    console.log('navigating to ', this.returnRoute);
     if (this.returnRoute === 'landing-page') {
       this.router.navigateByUrl('/');
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
@@ -189,9 +197,9 @@ export class HeaderMobileComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute('');
   }
 
-  register() {
-    this.router.navigateByUrl('/register');
+
+  signIn() {
+    this.router.navigateByUrl('/signin');
     this.activateBackArrowSvc.setBackRoute('landing-page');
-    this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
   }
 }

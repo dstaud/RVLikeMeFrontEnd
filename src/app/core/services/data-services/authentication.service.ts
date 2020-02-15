@@ -41,9 +41,7 @@ export class AuthenticationService {
       // server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    console.log('throwing error', error.status);
     if (error.status === 401) {
-      console.log('401');
       return;
     } else {
       // return throwError(errorMessage);
@@ -53,7 +51,6 @@ export class AuthenticationService {
    public isLoggedIn(): boolean {
     const token = this.getLocalToken();
     if (token) {
-      console.log('Token Expire ', token.tokenExpire)
       return token.tokenExpire > Date.now() / 1000;
     } else {
       return false;
@@ -61,13 +58,11 @@ export class AuthenticationService {
   }
 
   public login(user: ItokenPayload): Observable<any> {
-    console.log('in login');
     let base;
     const dataSvcURL = this.commonData.getLocation();
     base = this.http.post(`${dataSvcURL}/login`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
-        console.log('response=', data);
         if (data.token) {
           this.saveToken(data.token);
         }
@@ -84,15 +79,12 @@ export class AuthenticationService {
   }
 
   public registerUser(user: ItokenPayload): Observable<any> {
-    console.log('registering user=', user);
     let base;
     const dataSvcURL = this.commonData.getLocation();
     base = this.http.post(`${dataSvcURL}/register`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
-        console.log('response=', data);
         if (data.token) {
-          console.log('saving token ', data.token);
           this.saveToken(data.token);
         }
         this.sentryMonitorSvc.monitorUser(user);
@@ -108,7 +100,6 @@ export class AuthenticationService {
 
   public updateUsername(user: ItokenPayload): Observable<any> {
     const dataSvcURL = this.commonData.getLocation();
-    console.log('patching with token ', dataSvcURL, user);
     return this.http.patch(`${dataSvcURL}/username`, user,
     { headers: { Authorization: `Bearer ${this.getToken()}` }});
   }
@@ -117,19 +108,15 @@ export class AuthenticationService {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');
     }
-    console.log('token=', this.token);
     return this.token;
   }
 
   private getLocalToken(): ItokenPayload {
     const token = this.getToken();
-    console.log('getLocalToken=', token);
     let payload;
     if (token) {
       payload = token.split('.')[1];
-      console.log('payload after split=', payload);
       payload = window.atob(payload);
-      console.log('payload after atob=', JSON.parse(payload));
       this.sentryMonitorSvc.monitorUser(JSON.parse(payload));
       return JSON.parse(payload);
     } else {
@@ -138,7 +125,6 @@ export class AuthenticationService {
   }
 
   private saveToken(token: string): void {
-    console.log('save token=', token);
     localStorage.setItem('rvlikeme-token', token);
     this.token = token;
   }

@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
@@ -36,7 +39,9 @@ export class CredentialsComponent implements OnInit {
   ngOnInit() {
     this.form.disable();
     this.showSpinner = true;
-    this.authSvc.getUsername().subscribe(credentials => {
+    this.authSvc.getUsername()
+    .pipe(take(1))
+    .subscribe(credentials => {
       this.credentials = credentials;
       this.form.patchValue({
         username: this.credentials.email
@@ -49,17 +54,17 @@ export class CredentialsComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {};
+
   onSubmit() {
-    console.log('credentials before', this.credentials);
     this.credentials.email = this.form.controls.username.value;
     this.credentials.email = this.credentials.email.toLowerCase();
     this.httpError = false;
     this.httpErrorText = '';
-    console.log('credentials after', this.credentials);
     this.authSvc.updateUsername(this.credentials)
+    .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showSpinner = false;
-      console.log(responseData);
       this.shared.openSnackBar('Username updated successfully', 'message');
     }, error => {
       this.showSpinner = false;

@@ -1,6 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
+
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
 import { DataService } from './../../core/services/data-services/data.service';
 import { ItokenPayload } from './../../interfaces/tokenPayload';
@@ -54,6 +58,8 @@ export class RegisterUserComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {};
+
   onSubmit() {
     if (this.form.controls.password.value !== this.form.controls.passwordConfirm.value) {
       this.shared.openSnackBar('Passwords do not match', 'error');
@@ -67,15 +73,15 @@ export class RegisterUserComponent implements OnInit {
       this.credentials.password = this.form.controls.password.value;
       this.showSpinner = true;
       this.authSvc.registerUser(this.credentials)
+      .pipe(untilComponentDestroyed(this))
       .subscribe((responseData) => {
         if (responseData.status === 201) {
           this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
         } else {
-          console.log('response data=', responseData);
           this.profile.firstName = this.form.controls.firstName.value;
           this.profile.language = 'en';
-          console.log('profile=', this.profile);
-          this.dataSvc.addProfilePersonal(this.profile) // TODO: for some reason when going to get the token for this, it is an old token
+          this.dataSvc.addProfilePersonal(this.profile)
+          .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
             this.showSpinner = false;
             this.shared.openSnackBar('Credentials saved.  Please sign in', 'message');
@@ -85,7 +91,6 @@ export class RegisterUserComponent implements OnInit {
         }
       }, error => {
         this.showSpinner = false;
-        console.log('in error!', error);
         this.httpError = true;
         if (error.status === 401) {
           this.httpErrorText = 'Invalid email address or password';

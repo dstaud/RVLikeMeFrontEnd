@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
 
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from './../../core/services/data-services/authentication.service';
@@ -68,6 +69,15 @@ export class ProfileComponent implements OnInit {
     {value: 'other', viewValue: 'profile.component.list.aboutMe.other'}
   ];
 
+
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have 
+  // changed anything.  Activating a notification upon reload, just in case.
+    @HostListener('window:beforeunload', ['$event'])
+    unloadNotification($event: any) {
+      $event.returnValue = true;
+    }
+
+
   constructor(private authSvc: AuthenticationService,
               private dataSvc: DataService,
               private translate: TranslateService,
@@ -101,16 +111,13 @@ export class ProfileComponent implements OnInit {
         });
       }
 
-      console.log('count before=', this.totalPersonalFieldsWithData);
       if (user.firstName) { this.totalPersonalFieldsWithData++; }
       if (user.lastName) { this.totalPersonalFieldsWithData++; }
       if (user.displayName) { this.totalPersonalFieldsWithData++; }
       if (user.yearOfBirth) { this.totalPersonalFieldsWithData++; }
       if (user.homeCountry) { this.totalPersonalFieldsWithData++; }
       if (user.homeState) { this.totalPersonalFieldsWithData++; }
-      console.log('count after=', this.totalPersonalFieldsWithData);
       this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
-      console.log('% complete=', this.percentPersonal);
     }, (error) => {
       this.showSpinner = false;
       console.error(error);
@@ -119,33 +126,30 @@ export class ProfileComponent implements OnInit {
     this.dataSvc.getProfileLifestyle()
     .pipe(take(1)) // Auto-unsubscribe after first execution
     .subscribe(lifestyle => {
-      console.log('lifestyle back from server ', lifestyle);
       this.lifestyle = lifestyle;
       if (this.lifestyle.aboutMe) {
         if (this.lifestyle.aboutMe.substring(0, 1) === '@') {
           this.other = this.lifestyle.aboutMe.substring(1, this.lifestyle.aboutMe.length);
           this.lifestyle.aboutMe = 'other';
-          console.log('other read=', this.other);
         }
       }
       this.form.patchValue({
         aboutMe: this.lifestyle.aboutMe
       });
       this.showSpinner = false;
-      console.log('count before=', this.totalLifestyleFieldsWithData);
       if (lifestyle.rvUse) { this.totalLifestyleFieldsWithData++; }
       if (lifestyle.worklife) { this.totalLifestyleFieldsWithData++; }
       if (lifestyle.campsWithMe) { this.totalLifestyleFieldsWithData++; }
       if (lifestyle.boondocking) { this.totalLifestyleFieldsWithData++; }
       if (lifestyle.traveling) { this.totalLifestyleFieldsWithData++; }
-      console.log('count after=', this.totalLifestyleFieldsWithData);
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
-      console.log('% complete=', this.percentLifestyle);
     }, (error) => {
         this.showSpinner = false;
         console.error(error);
     });
    }
+
+   ngOnDestroy() {}
 
   // If use touches aboutMe control and had previously selected 'other' then open the dialog to show what they had entered.
   activatedAboutMe() {
@@ -185,7 +189,9 @@ export class ProfileComponent implements OnInit {
       data: {name: 'profile.component.aboutMe', other: other }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
       if (result) {
         if (this.other !== result && result !== 'canceled') {
           this.other = result;
@@ -229,6 +235,7 @@ export class ProfileComponent implements OnInit {
     this.showLanguageSaveIcon = true;
     this.user.language = this.form.controls.language.value;
     this.dataSvc.updateProfilePersonal(this.user)
+    .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showLanguageSaveIcon = false;
       this.language.setLanguage(entry);
@@ -237,7 +244,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  
+
   // Auto-update aboutMe selection to server
   updateAboutMe(event: string) {
     if (this.form.controls.aboutMe.value === '') {
@@ -252,6 +259,7 @@ export class ProfileComponent implements OnInit {
     }
     this.showAboutMeSaveIcon = true;
     this.dataSvc.updateProfileLifestyle(this.lifestyle)
+    .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;
     }, error => {

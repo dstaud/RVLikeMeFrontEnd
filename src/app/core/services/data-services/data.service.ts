@@ -53,7 +53,6 @@ export class DataService {
   private getToken(): string {
     // Get from local storage everytime in cae different people register on same machine and this.token is from previous
     this.token = localStorage.getItem('rvlikeme-token');
-    console.log('get token=', this.token);
     return this.token;
   }
 }
