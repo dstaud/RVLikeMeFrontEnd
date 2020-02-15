@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
+import { Location } from '@angular/common';
 
 import { SharedComponent } from './../../../shared/shared.component';
 import { DataService } from './../../../core/services/data-services/data.service';
+import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
+import { ActivateBackArrowService } from './../../../core/services/activate-back-arrow.service';
 import { Ilifestyle } from './../../../interfaces/lifestyle';
 import { OtherDialogComponent } from './../../../dialogs/other-dialog.component';
 
@@ -34,6 +38,13 @@ export interface Traveling {
   viewValue: string;
 }
 
+/* This component allows users to enter information about their lifestyle.
+I decided to implement auto-save where changes are saved as user leaves the field.
+It's possible this will be too noisy with internet traffic.  If that's the case, can move to save locally and submit at once,
+but don't want to go to a Submit button model because that isn't very app-like and because I populate the form from the database
+on-load, it's always dirty and marking pristine doesn't help.  This means route-guards won't work so user might leave form
+and I can't notify them. */
+
 @Component({
   selector: 'app-rvlm-lifestyle',
   templateUrl: './lifestyle.component.html',
@@ -44,18 +55,26 @@ export class LifestyleComponent implements OnInit {
   httpError = false;
   httpErrorText = '';
   helpMsg = '';
+  backPath: string;
+
+  // Spinner is for initial load from the database only.
+  // SaveIcons are shown next to each field as users leave the field, while doing the update
   showSpinner = false;
-  showRvUseSaveIcon = false;
-  showWorklifeSaveIcon = false;
-  showCampsWithMeSaveIcon = false;
-  showBoondockingSaveIcon = false;
-  showTravelingSaveIcon = false;
-  otherRvUse: string;
+  showrvUseSaveIcon = false;
+  showworklifeSaveIcon = false;
+  showcampsWithMeSaveIcon = false;
+  showboondockingSaveIcon = false;
+  showtravelingSaveIcon = false;
+
+  // Each field that has an 'other' option in the Select, keeps the other entered value in the corresponding field below
+  // otherRvUse: string;
+  rvUse: string;
   otherWorklife: string;
   otherCampsWithMe: string;
   otherBoondocking: string;
   otherTraveling: string;
 
+  // Interface for Lifestyle data
   lifestyle: Ilifestyle = {
     aboutMe: null,
     rvUse: null,
@@ -65,6 +84,7 @@ export class LifestyleComponent implements OnInit {
     traveling: null
   };
 
+  /**** Select form field option data. ****/
   RvLifestyles: RvLifestyle[] = [
     {value: '', viewValue: ''},
     {value: 'FT', viewValue: 'lifestyle.component.list.rvuse.ft'},
@@ -122,6 +142,10 @@ export class LifestyleComponent implements OnInit {
               private translate: TranslateService,
               private shared: SharedComponent,
               private dialog: MatDialog,
+              private location: Location,
+              private router: Router,
+              private authSvc: AuthenticationService,
+              private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
                 rvUse: new FormControl(''),
@@ -129,44 +153,27 @@ export class LifestyleComponent implements OnInit {
                 campsWithMe: new FormControl(''),
                 boondocking: new FormControl(''),
                 traveling: new FormControl('')
-              });
+                })
 }
 
   ngOnInit() {
+    this.form.disable();
+    this.showSpinner = true;
+    if (!this.authSvc.isLoggedIn()) {
+      this.backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.router.navigateByUrl('/signin');
+    }
+
     this.dataSvc.getProfileLifestyle().subscribe(lifestyle => {
       this.lifestyle = lifestyle;
 
-      // @ indicates user selected 'other' and this is what they entered
-      if (this.lifestyle.rvUse) {
-        if (this.lifestyle.rvUse.substring(0, 1) === '@') {
-          this.otherRvUse = this.lifestyle.rvUse.substring(1, this.lifestyle.rvUse.length);
-          this.lifestyle.rvUse = 'other';
-        }
-      }
-      if (this.lifestyle.worklife) {
-        if (this.lifestyle.worklife.substring(0, 1) === '@') {
-          this.otherWorklife = this.lifestyle.worklife.substring(1, this.lifestyle.worklife.length);
-          this.lifestyle.worklife = 'other';
-        }
-      }
-      if (this.lifestyle.campsWithMe) {
-        if (this.lifestyle.campsWithMe.substring(0, 1) === '@') {
-          this.otherCampsWithMe = this.lifestyle.campsWithMe.substring(1, this.lifestyle.campsWithMe.length);
-          this.lifestyle.campsWithMe = 'other';
-        }
-      }
-      if (this.lifestyle.boondocking) {
-        if (this.lifestyle.boondocking.substring(0, 1) === '@') {
-          this.otherBoondocking = this.lifestyle.boondocking.substring(1, this.lifestyle.boondocking.length);
-          this.lifestyle.boondocking = 'other';
-        }
-      }
-      if (this.lifestyle.traveling) {
-        if (this.lifestyle.traveling.substring(0, 1) === '@') {
-          this.otherTraveling = this.lifestyle.traveling.substring(1, this.lifestyle.traveling.length);
-          this.lifestyle.traveling = 'other';
-        }
-      }
+      // If user selected other on a form field, need to get the data they entered
+      this.setOtherData('rvUse');
+      this.setOtherData('worklife');
+      this.setOtherData('campsWithMe');
+      this.setOtherData('boondocking');
+      this.setOtherData('traveling');
 
       // Update form with values from server
       this.form.patchValue({
@@ -176,266 +183,35 @@ export class LifestyleComponent implements OnInit {
         boondocking: this.lifestyle.boondocking,
         traveling: this.lifestyle.traveling
       });
+      this.showSpinner = false;
+      this.form.enable();
     }, (err) => {
       // TODO: What to do with error handling here
+      this.showSpinner = false;
       console.error(err);
     });
   }
 
-/**** Help pop-up text ****/
- rvUseHelp() {
-    this.helpMsg = this.translate.instant('lifestyle.component.helpRvUse');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  worklifeHelp() {
-    this.helpMsg = this.translate.instant('lifestyle.component.helpWorklife');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  campsWithMeHelp() {
-    this.helpMsg = this.translate.instant('lifestyle.component.helpCampsWithMe');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  boondockingHelp() {
-    this.helpMsg = this.translate.instant('lifestyle.component.helpBoondocking');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
-  travelingHelp() {
-    this.helpMsg = this.translate.instant('lifestyle.component.helpTraveling');
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-  /**************************/
-
-  /**** Drop-down selection processing ****/
-  selectedSelectItem(control: string, event: string) {
-    let name = '';
-
-    // If user chose other, set description for dialog
-    if (event === 'other') {
-      switch (control) {
-        case 'rvUse':
-          name = 'lifestyle.component.rvUseDesc';
-          break;
-        case 'worklife':
-          name = 'lifestyle.component.worklifeDesc';
-          break;
-        case 'campsWithMe':
-          name = 'lifestyle.component.campsWithMeDesc';
-          break;
-        case 'boondocking':
-          name = 'lifestyle.component.boondockingDesc';
-          break;
-        case 'traveling':
-          name = 'lifestyle.component.travelingDesc';
-          break;
-      }
-      this.openDialog(control, name, event);
-    } else {
-
-      // If user did not choose other, call the correct update processor for the field selected
-      switch (control) {
-        case 'rvUse':
-          this.otherRvUse = '';
-          this.updateRvUse(event);
-          break;
-        case 'worklife':
-          this.otherWorklife = '';
-          this.updateWorklife(event);
-          break;
-        case 'campsWithMe':
-          this.otherCampsWithMe = '';
-          this.updateCampsWithMe(event);
-          break;
-        case 'boondocking':
-          this.otherBoondocking = '';
-          this.updateBoondocking(event);
-          break;
-        case 'traveling':
-          this.otherTraveling = '';
-          this.updateTraveling(event);
-          break;
-      }
-    }
-  }
-  /****************************************/
-
   /**** Automatically pop-up the 'other' dialog with the correct control and name when use clicks on select if other ****/
-  activatedSelectItem(control: string) {
-    let name = '';
-    switch (control) {
-      case 'rvUse':
-        if (this.otherRvUse) {
-          name = 'lifestyle.component.rvUseDesc';
-          this.openDialog(control, name, 'other');
-        }
-        break;
-      case 'worklife':
-        if (this.otherWorklife) {
-          name = 'lifestyle.component.worklifeDesc';
-          this.openDialog(control, name, 'other');
-        }
-        break;
-      case 'campsWithMe':
-        if (this.otherCampsWithMe) {
-          name = 'lifestyle.component.campsWithMeDesc';
-          this.openDialog(control, name, 'other');
-        }
-        break;
-      case 'boondocking':
-        if (this.otherBoondocking) {
-          name = 'lifestyle.component.boondockingDesc';
-          this.openDialog(control, name, 'other');
-        }
-        break;
-      case 'traveling':
-        if (this.otherTraveling) {
-          name = 'lifestyle.component.travelingDesc';
-          this.openDialog(control, name, 'other');
-        }
-        break;
-      }
-  }
-  /**********************************************************************************************************************/
-
-  /**** Field auto-update processing ****/
-  updateRvUse(use: string) {
-    this.showRvUseSaveIcon = true;
-    if (this.form.controls.rvUse.value === '') {
-      this.lifestyle.rvUse = null;
-      this.form.patchValue({ rvUse: null });
-    } else {
-      if (this.form.controls.rvUse.value !== 'other') {
-        this.lifestyle.rvUse = this.form.controls.rvUse.value;
-      }
+  activatedSelectItem(control: string, controlDesc: string) {
+    if (this[control]) {
+      this.openDialog(control, controlDesc, 'other');
     }
-    this.updateLifestyle('rvUse');
   }
 
-  updateWorklife(event: string) {
-    this.showWorklifeSaveIcon = true;
-    if (this.form.controls.worklife.value === '') {
-      this.lifestyle.worklife = null;
-      this.form.patchValue({ worklife: null });
-    } else {
-      if (this.form.controls.worklife.value !== 'other') {
-        this.lifestyle.worklife = this.form.controls.worklife.value;
-      }
-    }
-    this.updateLifestyle('worklife');
+  /**** Help pop-up text ****/
+  formFieldHelp(controlDesc: string) {
+    this.helpMsg = this.translate.instant(controlDesc);
+    this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
-  updateCampsWithMe(event: string) {
-    this.showCampsWithMeSaveIcon = true;
-    if (this.form.controls.campsWithMe.value === '') {
-      this.lifestyle.campsWithMe = null;
-      this.form.patchValue({ campsWithMe: null });
-    } else {
-      if (this.form.controls.campsWithMe.value !== 'other') {
-        this.lifestyle.campsWithMe = this.form.controls.campsWithMe.value;
-      }
-    }
-    this.updateLifestyle('campsWithMe');
-  }
-
-  updateBoondocking(event: string) {
-    this.showBoondockingSaveIcon = true;
-    if (this.form.controls.boondocking.value === '') {
-      this.lifestyle.boondocking = null;
-      this.form.patchValue({ boondocking: null });
-    } else {
-      if (this.form.controls.boondocking.value !== 'other') {
-        this.lifestyle.boondocking = this.form.controls.boondocking.value;
-      }
-    }
-    this.updateLifestyle('boondocking');
-  }
-
-  updateTraveling(event: string) {
-    this.showTravelingSaveIcon = true;
-    if (this.form.controls.traveling.value === '') {
-      this.lifestyle.traveling = null;
-      this.form.patchValue({ traveling: null });
-    } else {
-      if (this.form.controls.traveling.value !== 'other') {
-        this.lifestyle.traveling = this.form.controls.traveling.value;
-      }
-    }
-    this.updateLifestyle('traveling');
-  }
-
-  updateLifestyle(control: string) {
-    this.httpError = false;
-    this.httpErrorText = '';
-    console.log('Update lifestyle ', this.lifestyle);
-    this.dataSvc.updateProfileLifestyle(this.lifestyle)
-    .subscribe ((responseData) => {
-      console.log('update, control=', control);
-      switch (control) {
-        case 'rvUse':
-          this.showRvUseSaveIcon = false;
-          break;
-        case 'worklife':
-          this.showWorklifeSaveIcon = false;
-          break;
-        case 'campsWithMe':
-          this.showCampsWithMeSaveIcon = false;
-          break;
-        case 'boondocking':
-          this.showBoondockingSaveIcon = false;
-          break;
-        case 'traveling':
-          this.showTravelingSaveIcon = false;
-          break;
-      }
-    }, error => {
-      switch (control) {
-        case 'rvUse':
-          this.showRvUseSaveIcon = false;
-          break;
-        case 'worklife':
-          this.showWorklifeSaveIcon = false;
-          break;
-        case 'campsWithMe':
-          this.showCampsWithMeSaveIcon = false;
-          break;
-        case 'boondocking':
-          this.showBoondockingSaveIcon = false;
-          break;
-        case 'traveling':
-          this.showTravelingSaveIcon = false;
-          break;
-      }
-      console.log('in error!', error);
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-    });
-  }
-  /**************************************/
 
   /**** 'Other' Dialog ****/
   openDialog(control: string, name: string, event: string): void {
     let other = '';
     let selection = '';
-    switch (control) {
-      case 'rvUse':
-        other = this.otherRvUse;
-        break;
-      case 'worklife':
-        other = this.otherWorklife;
-        break;
-      case 'campsWithMe':
-        other = this.otherCampsWithMe;
-        break;
-      case 'boondocking':
-        other = this.otherBoondocking;
-        break;
-      case 'traveling':
-        other = this.otherTraveling;
-        break;
-    }
+    other = this[control];
+
     console.log ('other=', other);
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
@@ -447,116 +223,87 @@ export class LifestyleComponent implements OnInit {
       console.log('The dialog was closed ', result);
       if (result) {
         if (result !== 'canceled') {
-          switch (control) {
-            case 'rvUse':
-              if (this.otherRvUse !== result ) {
-                this.otherRvUse = result;
-                this.lifestyle.rvUse = '@' + result;
-                this.updateRvUse(event);
-              }
-              break;
-            case 'worklife':
-              if (this.otherWorklife !== result ) {
-                this.otherWorklife = result;
-                this.lifestyle.worklife = '@' + result;
-                this.updateWorklife(event);
-              }
-              break;
-            case 'campsWithMe':
-              if (this.otherCampsWithMe !== result ) {
-                this.otherCampsWithMe = result;
-                this.lifestyle.campsWithMe = '@' + result;
-                this.updateCampsWithMe(event);
-              }
-              break;
-            case 'boondocking':
-              if (this.otherBoondocking !== result ) {
-                this.otherBoondocking = result;
-                this.lifestyle.boondocking = '@' + result;
-                this.updateBoondocking(event);
-              }
-              break;
-            case 'traveling':
-              if (this.otherTraveling !== result ) {
-                this.otherTraveling = result;
-                this.lifestyle.traveling = '@' + result;
-                this.updateTraveling(event);
-              }
-              break;
-           }
+          if (this[control] !== result ) {
+            this[control] = result;
+            this.lifestyle[control] = '@' + result;
+            this.updateDataPoint(event, control);
+          }
         }
       } else {
-        switch (control) {
-          case 'rvUse':
-            if (this.otherRvUse) {
-              this.otherRvUse = '';
-              this.lifestyle.rvUse = null;
-              this.updateRvUse(event);
-              this.form.patchValue({rvUse: null});
-            } else {
-              if (this.lifestyle.rvUse) {
-                selection = this.lifestyle.rvUse;
-              }
-              this.form.patchValue({rvUse: selection});
-            }
-            break;
-          case 'worklife':
-            if (this.otherWorklife) {
-              this.otherWorklife = '';
-              this.lifestyle.worklife = null;
-              this.updateWorklife(event);
-              this.form.patchValue({worklife: null});
-            } else {
-              if (this.lifestyle.worklife) {
-                selection = this.lifestyle.worklife;
-              }
-              this.form.patchValue({worklife: selection});
-            }
-            break;
-          case 'campsWithMe':
-            if (this.otherCampsWithMe) {
-              this.otherCampsWithMe = '';
-              this.lifestyle.campsWithMe = null;
-              this.updateCampsWithMe(event);
-              this.form.patchValue({campsWithMe: null});
-            } else {
-              if (this.lifestyle.campsWithMe) {
-                selection = this.lifestyle.campsWithMe;
-              }
-              this.form.patchValue({campsWithMe: selection});
-            }
-            break;
-          case 'boondocking':
-            if (this.otherBoondocking) {
-              this.otherBoondocking = '';
-              this.lifestyle.boondocking = null;
-              this.updateBoondocking(event);
-              this.form.patchValue({boondocking: null});
-            } else {
-              if (this.lifestyle.boondocking) {
-                selection = this.lifestyle.boondocking;
-              }
-              this.form.patchValue({boondocking: selection});
-            }
-            break;
-          case 'traveling':
-            if (this.otherTraveling) {
-              this.otherTraveling = '';
-              this.lifestyle.traveling = null;
-              this.updateTraveling(event);
-              this.form.patchValue({traveling: null});
-            } else {
-              if (this.lifestyle.traveling) {
-                selection = this.lifestyle.traveling;
-              }
-              this.form.patchValue({traveling: selection});
-            }
-            break;
+        if (this[control]) {
+          this[control] = '';
+          this.lifestyle[control] = null;
+          this.updateDataPoint(event, control);
+          this.form.patchValue({[control]: null});
+        } else {
+          if (this.lifestyle[control]) {
+            selection = this.lifestyle[control];
+          }
+          this.form.patchValue({[control]: selection});
         }
       }
     });
   }
-  /************************/
+
+
+  // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
+  setOtherData(control: string) {
+    if (this.lifestyle[control]) {
+      if (this.lifestyle[control].substring(0, 1) === '@') {
+        this[control] = this.lifestyle[control].substring(1, this.lifestyle[control].length);
+        this.lifestyle[control] = 'other';
+      }
+    }
+  }
+
+
+  /**** Drop-down selection processing ****/
+  selectedSelectItem(control: string, controlDesc: string, event: string) {
+
+    // If user chose other, set description for dialog
+    if (event === 'other') {
+      this.openDialog(control, controlDesc, event);
+    } else {
+
+      // If user did not choose other, call the correct update processor for the field selected
+      this[control] = '';
+      this.updateDataPoint(event, control);
+    }
+  }
+
+
+  /**** Field auto-update processing ****/
+  updateDataPoint(event: string, control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (this.form.controls[control].value === '') {
+      this.lifestyle[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      if (this.form.controls[control].value !== 'other') {
+        this.lifestyle[control] = this.form.controls[control].value;
+      }
+    }
+    this.updateLifestyle(control);
+  }
+
+  updateLifestyle(control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    console.log('save icon = ', SaveIcon)
+    this.httpError = false;
+    this.httpErrorText = '';
+    console.log('Update lifestyle ', this.lifestyle);
+    this.dataSvc.updateProfileLifestyle(this.lifestyle)
+    .subscribe ((responseData) => {
+      console.log('update, control=', control);
+      this[SaveIcon] = false;
+    }, error => {
+      this[SaveIcon] = false;
+      console.log('in error!', error);
+      this.httpError = true;
+      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+    });
+  }
 
 
   public errorHandling = (control: string, error: string) => {

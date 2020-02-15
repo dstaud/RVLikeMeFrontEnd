@@ -51,7 +51,8 @@ export class HeaderMobileComponent implements OnInit {
 
     if (this.device === 'iPhone') {
       // arrow_back_ios icon not coming up at all regardless of this if
-      this.arrowIcon = 'keyboard_arrow_left';
+      this.arrowIcon = 'arrow_back_ios';
+      // this.arrowIcon = 'keyboard_arrow_left';
     }
 
     // Listen for changes in user authorization state

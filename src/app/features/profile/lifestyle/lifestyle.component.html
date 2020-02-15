@@ -8,8 +8,8 @@
         <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="selectedSelectItem('rvUse', $event.source.value)"
-          (openedChange) = "activatedSelectItem('rvUse')"
+          (selectionChange)="selectedSelectItem('rvUse', 'lifestyle.component.rvUseDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('rvUse', 'lifestyle.component.rvUseDesc')"
           formControlName="rvUse">
           <mat-option
             aria-placeholder="RV Lifestyle"
@@ -18,16 +18,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="rvUseHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showRvUseSaveIcon">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('lifestyle.component.helpRvUse')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showrvUseSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.worklifeDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="selectedSelectItem('worklife', $event.source.value)"
-          (openedChange) = "activatedSelectItem('worklife')"
+          (selectionChange)="selectedSelectItem('worklife', 'lifestyle.component.worklifeDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('worklife', 'lifestyle.component.worklifeDesc')"
           formControlName="worklife">
           <mat-option
             aria-placeholder="work life"
@@ -36,16 +36,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="worklifeHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showWorklifeSaveIcon">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('lifestyle.component.helpRvUse')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showworklifeSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.campsWithMeDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="selectedSelectItem('campsWithMe', $event.source.value)"
-          (openedChange) = "activatedSelectItem('campsWithMe')"
+          (selectionChange)="selectedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc')"
           formControlName="campsWithMe">
           <mat-option
             aria-placeholder="Camps with me"
@@ -54,16 +54,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="campsWithMeHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showCampsWithMeSaveIcon">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('lifestyle.component.helpRvUse')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showcampsWithMeSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.boondockingDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="selectedSelectItem('boondocking', $event.source.value)"
-          (openedChange) = "activatedSelectItem('boondocking')"
+          (selectionChange)="selectedSelectItem('boondocking', 'lifestyle.component.boondockingDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('boondocking', 'lifestyle.component.boondockingDesc')"
           formControlName="boondocking">
           <mat-option
             aria-placeholder="Boondocking"
@@ -72,16 +72,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="boondockingHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showBoondockingSaveIcon">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('lifestyle.component.helpRvUse')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showboondockingSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.travelingDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl
-          (selectionChange)="selectedSelectItem('traveling', $event.source.value)"
-          (openedChange) = "activatedSelectItem('traveling')"
+          (selectionChange)="selectedSelectItem('traveling', 'lifestyle.component.travelingDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('traveling', 'lifestyle.component.travelingDesc')"
           formControlName="traveling">
           <mat-option
             aria-placeholder="Traveling"
@@ -90,8 +90,8 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="travelingHelp()">help</mat-icon>
-      <mat-icon class="icon" *ngIf="showTravelingSaveIcon">save</mat-icon>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('lifestyle.component.helpRvUse')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showtravelingSaveIcon">save</mat-icon>
     </div>
   </form>
   <br>

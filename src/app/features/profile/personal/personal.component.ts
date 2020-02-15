@@ -1,9 +1,13 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
+import { Location } from '@angular/common';
 
 import { DataService } from './../../../core/services/data-services/data.service';
+import { ActivateBackArrowService } from './../../../core/services/activate-back-arrow.service';
+import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
 import { Iuser } from './../../../interfaces/user';
 import { ItokenPayload } from './../../../interfaces/tokenPayload';
 import { SharedComponent } from './../../../shared/shared.component';
@@ -44,6 +48,7 @@ export interface State {
   credentials: ItokenPayload;
   form: FormGroup;
   showSpinner = false;
+  backPath: string;
   showFirstNameSpinner = false;
   showLastNameSpinner = false;
   showDisplayNameSpinner = false;
@@ -124,6 +129,10 @@ export interface State {
   constructor(private dataSvc: DataService,
               private translate: TranslateService,
               private shared: SharedComponent,
+              private authSvc: AuthenticationService,
+              private router: Router,
+              private location: Location,
+              private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
@@ -143,6 +152,12 @@ export interface State {
   ngOnInit() {
     this.form.disable();
     this.showSpinner = true;
+    if (!this.authSvc.isLoggedIn()) {
+      this.backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.router.navigateByUrl('/signin');
+    }
+
     this.dataSvc.getProfilePersonal()
     .subscribe(user => {
       console.log('back from server');
