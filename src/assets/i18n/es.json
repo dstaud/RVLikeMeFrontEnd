@@ -132,9 +132,13 @@
     "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
     "helpRvUse": "Se usa para hacer que las interacciones sean más relevantes",
     "helpWorklife": "Se usa para hacer que las interacciones sean más relevantes",
+    "helpBoondocking": "Se usa para hacer que las interacciones sean más relevantes",
+    "helpTraveling": "Se usa para hacer que las interacciones sean más relevantes",
     "rvUseDesc": "Cómo RV",
     "worklifeDesc": "Vida laboral",
     "campsWithMeDesc": "Campamentos conmigo",
+    "boondockingDesc": "Boondocking",
+    "travelingDesc": "Cómo viajo en mi RV",
     "list": {
       "rvuse": {
         "ft": "Viajar a tiempo completo",
@@ -146,10 +150,13 @@
       },
       "worklife": {
         "retired": "Retirado",
+        "military": "Militar",
         "work-travel": "Trabaja a tiempo completo mientras viajas",
         "workamping": "Workamping",
         "work-full-time": "Trabajo de tiempo completo",
         "work-part-time": "Trabajo a media jornada",
+        "onleave": "De vacaciones",
+        "workamp": "Workamp",
         "other": "Otro"
       },
       "campswithme": {
@@ -159,6 +166,23 @@
         "family": "Familia",
         "friend": "Amigo(s)",
         "pet": "Mascota(s)",
+        "other": "Otro"
+      },
+      "boondocking": {
+        "most": "La mayor parte del tiempo",
+        "alot": "Mucho del tiempo",
+        "some": "Algo de tiempo",
+        "while": "De vez en cuando",
+        "haveto": "Cuando tengo que",
+        "rarely": "Raramente",
+        "never": "Nunca",
+        "want": "Quieres probarlo"
+      },
+      "traveling": {
+        "countries": "A través de los Estados Unidos y Canadá / México",
+        "country": "A través de los Estados Unidos o Canadá",
+        "regional": "Regionalmente dentro de mi país",
+        "none": "Yo no viajo",
         "other": "Otro"
       }
     }

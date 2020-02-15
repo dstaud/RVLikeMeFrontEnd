@@ -3,10 +3,6 @@ export interface Ilifestyle {
   rvUse: string;
   worklife: string;
   campsWithMe: string;
-/*   use: string;
-  retired: boolean;
-  workRemote: boolean;
-  workCamp: boolean;
-  workAtLocation: boolean;
-  occupation: string; */
+  boondocking: string;
+  traveling: string;
 }

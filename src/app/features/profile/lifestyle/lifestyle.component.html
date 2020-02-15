@@ -1,7 +1,6 @@
 <div class="mat-app-background container">
   <div>
     <p class="mat-body">{{ "lifestyle.component.explanation" | translate}}</p>
-    <!-- <p class="mat-body">{{ "profile.component.personalHelp" | translate }}</p> -->
   </div>
   <form [formGroup]="form">
     <div>
@@ -57,6 +56,42 @@
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="campsWithMeHelp()">help</mat-icon>
       <mat-icon class="icon" *ngIf="showCampsWithMeSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "lifestyle.component.boondockingDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="selectedSelectItem('boondocking', $event.source.value)"
+          (openedChange) = "activatedSelectItem('boondocking')"
+          formControlName="boondocking">
+          <mat-option
+            aria-placeholder="Boondocking"
+            *ngFor="let Boondocking of Boondockings" [value]="Boondocking.value">
+            {{ Boondocking.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="boondockingHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showBoondockingSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "lifestyle.component.travelingDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="selectedSelectItem('traveling', $event.source.value)"
+          (openedChange) = "activatedSelectItem('traveling')"
+          formControlName="traveling">
+          <mat-option
+            aria-placeholder="Traveling"
+            *ngFor="let Traveling of Travelings" [value]="Traveling.value">
+            {{ Traveling.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="travelingHelp()">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showTravelingSaveIcon">save</mat-icon>
     </div>
   </form>
   <br>

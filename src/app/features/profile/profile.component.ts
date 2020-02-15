@@ -38,7 +38,9 @@ export class ProfileComponent implements OnInit {
     aboutMe: null,
     rvUse: null,
     worklife: null,
-    campsWithMe: null
+    campsWithMe: null,
+    boondocking: null,
+    traveling: null
   };
 
   showSpinner = false;
@@ -49,7 +51,7 @@ export class ProfileComponent implements OnInit {
   totalPersonalNbrOfFields = 6;
   percentPersonal: number;
   totalLifestyleFieldsWithData = 0;
-  totalLifestyleNbrOfFields = 3;
+  totalLifestyleNbrOfFields = 5;
   percentLifestyle: number;
   percentRig: number;
   other: string;
@@ -129,6 +131,8 @@ export class ProfileComponent implements OnInit {
       if (lifestyle.rvUse) { this.totalLifestyleFieldsWithData++; }
       if (lifestyle.worklife) { this.totalLifestyleFieldsWithData++; }
       if (lifestyle.campsWithMe) { this.totalLifestyleFieldsWithData++; }
+      if (lifestyle.boondocking) { this.totalLifestyleFieldsWithData++; }
+      if (lifestyle.traveling) { this.totalLifestyleFieldsWithData++; }
       console.log('count after=', this.totalLifestyleFieldsWithData);
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
       console.log('% complete=', this.percentLifestyle);

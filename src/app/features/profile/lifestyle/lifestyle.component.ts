@@ -24,6 +24,16 @@ export interface CampsWithMe {
   viewValue: string;
 }
 
+export interface Boondocking {
+  value: string;
+  viewValue: string;
+}
+
+export interface Traveling {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-rvlm-lifestyle',
   templateUrl: './lifestyle.component.html',
@@ -38,15 +48,21 @@ export class LifestyleComponent implements OnInit {
   showRvUseSaveIcon = false;
   showWorklifeSaveIcon = false;
   showCampsWithMeSaveIcon = false;
+  showBoondockingSaveIcon = false;
+  showTravelingSaveIcon = false;
   otherRvUse: string;
   otherWorklife: string;
   otherCampsWithMe: string;
+  otherBoondocking: string;
+  otherTraveling: string;
 
   lifestyle: Ilifestyle = {
     aboutMe: null,
     rvUse: null,
     worklife: null,
-    campsWithMe: null
+    campsWithMe: null,
+    boondocking: null,
+    traveling: null
   };
 
   RvLifestyles: RvLifestyle[] = [
@@ -62,9 +78,12 @@ export class LifestyleComponent implements OnInit {
   Worklives: Worklife[] = [
     {value: '', viewValue: ''},
     {value: 'retired', viewValue: 'lifestyle.component.list.worklife.retired'},
+    {value: 'military', viewValue: 'lifestyle.component.list.worklife.military'},
     {value: 'work-travel', viewValue: 'lifestyle.component.list.worklife.work-travel'},
     {value: 'work-full-time', viewValue: 'lifestyle.component.list.worklife.work-full-time'},
     {value: 'work-part-time', viewValue: 'lifestyle.component.list.worklife.work-part-time'},
+    {value: 'onleave', viewValue: 'lifestyle.component.list.worklife.onleave'},
+    {value: 'workamp', viewValue: 'lifestyle.component.list.worklife.workamp'},
     {value: 'other', viewValue: 'lifestyle.component.list.worklife.other'}
   ];
 
@@ -75,8 +94,28 @@ export class LifestyleComponent implements OnInit {
     {value: 'children', viewValue: 'lifestyle.component.list.campswithme.children'},
     {value: 'family', viewValue: 'lifestyle.component.list.campswithme.family'},
     {value: 'friend', viewValue: 'lifestyle.component.list.campswithme.friend'},
-    {value: 'pet', viewValue: 'lifestyle.component.list.campswithme.pet'},
     {value: 'other', viewValue: 'lifestyle.component.list.campswithme.other'}
+  ];
+
+  Boondockings: Boondocking[] = [
+    {value: '', viewValue: ''},
+    {value: 'most', viewValue: 'lifestyle.component.list.boondocking.most'},
+    {value: 'alot', viewValue: 'lifestyle.component.list.boondocking.alot'},
+    {value: 'some', viewValue: 'lifestyle.component.list.boondocking.some'},
+    {value: 'while', viewValue: 'lifestyle.component.list.boondocking.while'},
+    {value: 'haveto', viewValue: 'lifestyle.component.list.boondocking.haveto'},
+    {value: 'rarely', viewValue: 'lifestyle.component.list.boondocking.rarely'},
+    {value: 'never', viewValue: 'lifestyle.component.list.boondocking.never'},
+    {value: 'want', viewValue: 'lifestyle.component.list.boondocking.want'}
+  ];
+
+  Travelings: Traveling[] = [
+    {value: '', viewValue: ''},
+    {value: 'countries', viewValue: 'lifestyle.component.list.traveling.countries'},
+    {value: 'country', viewValue: 'lifestyle.component.list.traveling.country'},
+    {value: 'regional', viewValue: 'lifestyle.component.list.traveling.regional'},
+    {value: 'none', viewValue: 'lifestyle.component.list.traveling.none'},
+    {value: 'other', viewValue: 'lifestyle.component.list.traveling.other'},
   ];
 
   constructor(private dataSvc: DataService,
@@ -87,20 +126,17 @@ export class LifestyleComponent implements OnInit {
               this.form = fb.group({
                 rvUse: new FormControl(''),
                 worklife: new FormControl(''),
-                campsWithMe: new FormControl('')
-/*                 use: new FormControl({value: ''}),
-                retired: new FormControl({value: ''}),
-                workRemote: new FormControl({value: ''}),
-                workCamp: new FormControl({value: ''}),
-                workAtLocation: new FormControl({value: ''}),
-                occupation: new FormControl({value: ''}) */
+                campsWithMe: new FormControl(''),
+                boondocking: new FormControl(''),
+                traveling: new FormControl('')
               });
 }
 
   ngOnInit() {
     this.dataSvc.getProfileLifestyle().subscribe(lifestyle => {
       this.lifestyle = lifestyle;
-      console.log('read=', this.lifestyle);
+
+      // @ indicates user selected 'other' and this is what they entered
       if (this.lifestyle.rvUse) {
         if (this.lifestyle.rvUse.substring(0, 1) === '@') {
           this.otherRvUse = this.lifestyle.rvUse.substring(1, this.lifestyle.rvUse.length);
@@ -119,22 +155,34 @@ export class LifestyleComponent implements OnInit {
           this.lifestyle.campsWithMe = 'other';
         }
       }
+      if (this.lifestyle.boondocking) {
+        if (this.lifestyle.boondocking.substring(0, 1) === '@') {
+          this.otherBoondocking = this.lifestyle.boondocking.substring(1, this.lifestyle.boondocking.length);
+          this.lifestyle.boondocking = 'other';
+        }
+      }
+      if (this.lifestyle.traveling) {
+        if (this.lifestyle.traveling.substring(0, 1) === '@') {
+          this.otherTraveling = this.lifestyle.traveling.substring(1, this.lifestyle.traveling.length);
+          this.lifestyle.traveling = 'other';
+        }
+      }
+
+      // Update form with values from server
       this.form.patchValue({
         rvUse: this.lifestyle.rvUse,
         worklife: this.lifestyle.worklife,
-        campsWithMe: this.lifestyle.campsWithMe
-/*         use: this.lifestyle.use,
-        retired: this.lifestyle.retired,
-        workRemote: this.lifestyle.workRemote,
-        workCamp: this.lifestyle.workCamp,
-        workAtLocation: this.lifestyle.workAtLocation,
-        occupation: this.lifestyle.occupation */
+        campsWithMe: this.lifestyle.campsWithMe,
+        boondocking: this.lifestyle.boondocking,
+        traveling: this.lifestyle.traveling
       });
     }, (err) => {
+      // TODO: What to do with error handling here
       console.error(err);
     });
   }
 
+/**** Help pop-up text ****/
  rvUseHelp() {
     this.helpMsg = this.translate.instant('lifestyle.component.helpRvUse');
     this.shared.openSnackBar(this.helpMsg, 'message');
@@ -150,8 +198,22 @@ export class LifestyleComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
+  boondockingHelp() {
+    this.helpMsg = this.translate.instant('lifestyle.component.helpBoondocking');
+    this.shared.openSnackBar(this.helpMsg, 'message');
+  }
+
+  travelingHelp() {
+    this.helpMsg = this.translate.instant('lifestyle.component.helpTraveling');
+    this.shared.openSnackBar(this.helpMsg, 'message');
+  }
+  /**************************/
+
+  /**** Drop-down selection processing ****/
   selectedSelectItem(control: string, event: string) {
     let name = '';
+
+    // If user chose other, set description for dialog
     if (event === 'other') {
       switch (control) {
         case 'rvUse':
@@ -163,10 +225,17 @@ export class LifestyleComponent implements OnInit {
         case 'campsWithMe':
           name = 'lifestyle.component.campsWithMeDesc';
           break;
+        case 'boondocking':
+          name = 'lifestyle.component.boondockingDesc';
+          break;
+        case 'traveling':
+          name = 'lifestyle.component.travelingDesc';
+          break;
       }
-      console.log('open dialog ', control, name, event);
       this.openDialog(control, name, event);
     } else {
+
+      // If user did not choose other, call the correct update processor for the field selected
       switch (control) {
         case 'rvUse':
           this.otherRvUse = '';
@@ -180,10 +249,20 @@ export class LifestyleComponent implements OnInit {
           this.otherCampsWithMe = '';
           this.updateCampsWithMe(event);
           break;
+        case 'boondocking':
+          this.otherBoondocking = '';
+          this.updateBoondocking(event);
+          break;
+        case 'traveling':
+          this.otherTraveling = '';
+          this.updateTraveling(event);
+          break;
       }
     }
   }
+  /****************************************/
 
+  /**** Automatically pop-up the 'other' dialog with the correct control and name when use clicks on select if other ****/
   activatedSelectItem(control: string) {
     let name = '';
     switch (control) {
@@ -205,9 +284,23 @@ export class LifestyleComponent implements OnInit {
           this.openDialog(control, name, 'other');
         }
         break;
+      case 'boondocking':
+        if (this.otherBoondocking) {
+          name = 'lifestyle.component.boondockingDesc';
+          this.openDialog(control, name, 'other');
+        }
+        break;
+      case 'traveling':
+        if (this.otherTraveling) {
+          name = 'lifestyle.component.travelingDesc';
+          this.openDialog(control, name, 'other');
+        }
+        break;
       }
   }
+  /**********************************************************************************************************************/
 
+  /**** Field auto-update processing ****/
   updateRvUse(use: string) {
     this.showRvUseSaveIcon = true;
     if (this.form.controls.rvUse.value === '') {
@@ -247,6 +340,32 @@ export class LifestyleComponent implements OnInit {
     this.updateLifestyle('campsWithMe');
   }
 
+  updateBoondocking(event: string) {
+    this.showBoondockingSaveIcon = true;
+    if (this.form.controls.boondocking.value === '') {
+      this.lifestyle.boondocking = null;
+      this.form.patchValue({ boondocking: null });
+    } else {
+      if (this.form.controls.boondocking.value !== 'other') {
+        this.lifestyle.boondocking = this.form.controls.boondocking.value;
+      }
+    }
+    this.updateLifestyle('boondocking');
+  }
+
+  updateTraveling(event: string) {
+    this.showTravelingSaveIcon = true;
+    if (this.form.controls.traveling.value === '') {
+      this.lifestyle.traveling = null;
+      this.form.patchValue({ traveling: null });
+    } else {
+      if (this.form.controls.traveling.value !== 'other') {
+        this.lifestyle.traveling = this.form.controls.traveling.value;
+      }
+    }
+    this.updateLifestyle('traveling');
+  }
+
   updateLifestyle(control: string) {
     this.httpError = false;
     this.httpErrorText = '';
@@ -260,11 +379,15 @@ export class LifestyleComponent implements OnInit {
           break;
         case 'worklife':
           this.showWorklifeSaveIcon = false;
-          console.log('should be false');
           break;
         case 'campsWithMe':
           this.showCampsWithMeSaveIcon = false;
-          console.log('should be false');
+          break;
+        case 'boondocking':
+          this.showBoondockingSaveIcon = false;
+          break;
+        case 'traveling':
+          this.showTravelingSaveIcon = false;
           break;
       }
     }, error => {
@@ -278,13 +401,21 @@ export class LifestyleComponent implements OnInit {
         case 'campsWithMe':
           this.showCampsWithMeSaveIcon = false;
           break;
+        case 'boondocking':
+          this.showBoondockingSaveIcon = false;
+          break;
+        case 'traveling':
+          this.showTravelingSaveIcon = false;
+          break;
       }
       console.log('in error!', error);
       this.httpError = true;
       this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
     });
   }
+  /**************************************/
 
+  /**** 'Other' Dialog ****/
   openDialog(control: string, name: string, event: string): void {
     let other = '';
     let selection = '';
@@ -297,6 +428,12 @@ export class LifestyleComponent implements OnInit {
         break;
       case 'campsWithMe':
         other = this.otherCampsWithMe;
+        break;
+      case 'boondocking':
+        other = this.otherBoondocking;
+        break;
+      case 'traveling':
+        other = this.otherTraveling;
         break;
     }
     console.log ('other=', other);
@@ -313,29 +450,37 @@ export class LifestyleComponent implements OnInit {
           switch (control) {
             case 'rvUse':
               if (this.otherRvUse !== result ) {
-                console.log('in update ', result, control);
                 this.otherRvUse = result;
                 this.lifestyle.rvUse = '@' + result;
                 this.updateRvUse(event);
-                console.log('lifestyle=', this.lifestyle);
               }
               break;
             case 'worklife':
               if (this.otherWorklife !== result ) {
-                console.log('in update ', result, control);
                 this.otherWorklife = result;
                 this.lifestyle.worklife = '@' + result;
                 this.updateWorklife(event);
-                console.log('lifestyle=', this.lifestyle);
               }
               break;
             case 'campsWithMe':
               if (this.otherCampsWithMe !== result ) {
-                console.log('in update ', result, control);
                 this.otherCampsWithMe = result;
                 this.lifestyle.campsWithMe = '@' + result;
                 this.updateCampsWithMe(event);
-                console.log('lifestyle=', this.lifestyle);
+              }
+              break;
+            case 'boondocking':
+              if (this.otherBoondocking !== result ) {
+                this.otherBoondocking = result;
+                this.lifestyle.boondocking = '@' + result;
+                this.updateBoondocking(event);
+              }
+              break;
+            case 'traveling':
+              if (this.otherTraveling !== result ) {
+                this.otherTraveling = result;
+                this.lifestyle.traveling = '@' + result;
+                this.updateTraveling(event);
               }
               break;
            }
@@ -347,16 +492,12 @@ export class LifestyleComponent implements OnInit {
               this.otherRvUse = '';
               this.lifestyle.rvUse = null;
               this.updateRvUse(event);
-              this.form.patchValue({
-                rvUse: null
-              });
+              this.form.patchValue({rvUse: null});
             } else {
               if (this.lifestyle.rvUse) {
                 selection = this.lifestyle.rvUse;
               }
-              this.form.patchValue({
-                rvUse: selection
-              });
+              this.form.patchValue({rvUse: selection});
             }
             break;
           case 'worklife':
@@ -364,16 +505,12 @@ export class LifestyleComponent implements OnInit {
               this.otherWorklife = '';
               this.lifestyle.worklife = null;
               this.updateWorklife(event);
-              this.form.patchValue({
-                worklife: null
-              });
+              this.form.patchValue({worklife: null});
             } else {
               if (this.lifestyle.worklife) {
                 selection = this.lifestyle.worklife;
               }
-              this.form.patchValue({
-                worklife: selection
-              });
+              this.form.patchValue({worklife: selection});
             }
             break;
           case 'campsWithMe':
@@ -381,22 +518,46 @@ export class LifestyleComponent implements OnInit {
               this.otherCampsWithMe = '';
               this.lifestyle.campsWithMe = null;
               this.updateCampsWithMe(event);
-              this.form.patchValue({
-                campsWithMe: null
-              });
+              this.form.patchValue({campsWithMe: null});
             } else {
               if (this.lifestyle.campsWithMe) {
                 selection = this.lifestyle.campsWithMe;
               }
-              this.form.patchValue({
-                campsWithMe: selection
-              });
+              this.form.patchValue({campsWithMe: selection});
+            }
+            break;
+          case 'boondocking':
+            if (this.otherBoondocking) {
+              this.otherBoondocking = '';
+              this.lifestyle.boondocking = null;
+              this.updateBoondocking(event);
+              this.form.patchValue({boondocking: null});
+            } else {
+              if (this.lifestyle.boondocking) {
+                selection = this.lifestyle.boondocking;
+              }
+              this.form.patchValue({boondocking: selection});
+            }
+            break;
+          case 'traveling':
+            if (this.otherTraveling) {
+              this.otherTraveling = '';
+              this.lifestyle.traveling = null;
+              this.updateTraveling(event);
+              this.form.patchValue({traveling: null});
+            } else {
+              if (this.lifestyle.traveling) {
+                selection = this.lifestyle.traveling;
+              }
+              this.form.patchValue({traveling: selection});
             }
             break;
         }
       }
     });
   }
+  /************************/
+
 
   public errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
