@@ -1,9 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 
 @Component({

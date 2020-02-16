@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient} from '@angular/common/http';
+
 import { CommonDataService } from './common-data.service';
-import { Iuser } from './../../../interfaces/user';
-import { Ilifestyle } from './../../../interfaces/lifestyle';
+
+import { Iuser } from '@interfaces/user';
+import { Ilifestyle } from '@interfaces/lifestyle';
 
 @Injectable({
   providedIn: 'root'

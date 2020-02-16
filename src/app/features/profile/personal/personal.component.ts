@@ -7,12 +7,13 @@ import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DataService } from './../../../core/services/data-services/data.service';
-import { ActivateBackArrowService } from './../../../core/services/activate-back-arrow.service';
-import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
-import { Iuser } from './../../../interfaces/user';
-import { ItokenPayload } from './../../../interfaces/tokenPayload';
-import { SharedComponent } from './../../../shared/shared.component';
+import { DataService } from '@services/data-services/data.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+
+import { Iuser } from '@interfaces/user';
+
+import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
 export interface Country {
@@ -44,7 +45,7 @@ export class PersonalComponent implements OnInit {
   httpError = false;
   httpErrorText = '';
   helpMsg = '';
-  
+
   // Interface for Personal data
   user: Iuser = {
     firstName: null,
@@ -129,7 +130,7 @@ export class PersonalComponent implements OnInit {
     {value: 'WY', viewValue: 'personal.component.list.state.wy'}
     ];
 
-  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have 
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
     @HostListener('window:beforeunload', ['$event'])
     unloadNotification($event: any) {
@@ -227,7 +228,7 @@ export class PersonalComponent implements OnInit {
     this.updatePersonal(control);
   }
 
-  
+
   updatePersonal(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;

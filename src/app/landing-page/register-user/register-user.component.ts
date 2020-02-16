@@ -5,13 +5,16 @@ import { Router} from '@angular/router';
 import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { DataService } from './../../core/services/data-services/data.service';
-import { ItokenPayload } from './../../interfaces/tokenPayload';
-import { Iuser } from './../../interfaces/user';
-import { SharedComponent } from './../../shared/shared.component';
-import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { DataService } from '@services/data-services/data.service';
+import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+
+import { ItokenPayload } from '@interfaces/tokenPayload';
+import { Iuser } from '@interfaces/user';
+
+import { SharedComponent } from '@shared/shared.component';
+
 
 @Component({
   selector: 'app-rvlm-register-user',

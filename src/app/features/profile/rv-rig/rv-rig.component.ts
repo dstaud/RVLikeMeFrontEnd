@@ -5,8 +5,9 @@ import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DataService } from './../../../core/services/data-services/data.service';
-import { Irig } from './../../../interfaces/rig';
+import { DataService } from '@services/data-services/data.service';
+
+import { Irig } from '@interfaces/rig';
 
 export interface RVType {
   value: string;

@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-footer',

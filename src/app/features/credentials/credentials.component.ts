@@ -2,14 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { DataService } from './../../core/services/data-services/data.service';
-import { ItokenPayload } from './../../interfaces/tokenPayload';
-import { SharedComponent } from './../../shared/shared.component';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { DataService } from '@services/data-services/data.service';
+
+import { ItokenPayload } from '@interfaces/tokenPayload';
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-credentials',

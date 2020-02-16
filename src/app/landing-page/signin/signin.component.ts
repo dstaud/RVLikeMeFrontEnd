@@ -2,17 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
-import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { DataService } from './../../core/services/data-services/data.service';
-import { ItokenPayload } from './../../interfaces/tokenPayload';
-import { Iuser } from './../../interfaces/user';
-import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
-import { LanguageService } from './../../core/services/language.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { DataService } from '@services/data-services/data.service';
+import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { LanguageService } from '@services/language.service';
+
+import { ItokenPayload } from '@interfaces/tokenPayload';
+import { Iuser } from '@interfaces/user';
 
 @Component({
   selector: 'app-rvlm-signin',

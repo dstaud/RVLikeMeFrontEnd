@@ -10,12 +10,12 @@ import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { filter } from 'rxjs/operators';
 
-import { DeviceService } from './core/services/device.service';
-import { LanguageService } from './core/services/language.service';
-import { ThemeService } from './core/services/theme.service';
-import { AuthenticationService } from './core/services/data-services/authentication.service';
-import { DataService } from './core/services/data-services/data.service';
-import { SigninButtonVisibleService } from './core/services/signin-btn-visibility.service';
+import { DeviceService } from '@services/device.service';
+import { LanguageService } from '@services/language.service';
+import { ThemeService } from '@services/theme.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { DataService } from '@services/data-services/data.service';
+import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 
 @Component({
   selector: 'app-root',

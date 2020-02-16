@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SigninButtonVisibleService } from './../core/services/signin-btn-visibility.service';
-import { RegisterBtnVisibleService } from './../core/services/register-btn-visiblity.service';
-import { ActivateBackArrowService } from './../core/services/activate-back-arrow.service';
+
+import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
+import { RegisterBtnVisibleService } from '@services/register-btn-visiblity.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 // import { timingSafeEqual } from 'crypto';
 
 @Component({

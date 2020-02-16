@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+
 import { WindowService } from './../window.service';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Iuser } from '../../../interfaces/user';
-import { ItokenPayload } from '../../../interfaces/tokenPayload';
-import { ItokenResponse } from '../../../interfaces/tokenResponse';
+
 import { DataService } from './data.service';
 import { CommonDataService } from './common-data.service';
+
+import { Iuser } from '@interfaces/user';
+import { ItokenPayload } from '@interfaces/tokenPayload';
+import { ItokenResponse } from '@interfaces/tokenResponse';
+
 import { SentryMonitorService } from './../sentry-monitor.service';
 
 @Injectable({

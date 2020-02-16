@@ -1,4 +1,10 @@
 <mat-nav-list>
+  <a mat-list-item routerLink="/profile"
+    (click)="closeSideNav()"
+    routerLinkActive="active-menu-item">
+    <mat-icon fontSet="material-icons-outlined" >person</mat-icon>
+    <span class="nav-caption">{{ "menu.profile" | translate }}</span>
+  </a>
   <a mat-list-item routerLink="/messages"
     (click)="closeSideNav()"
     routerLinkActive="active-menu-item">
@@ -10,11 +16,5 @@
     routerLinkActive="active-menu-item">
     <mat-icon fontSet="material-icons-outlined" >rv_hookup</mat-icon>
     <span class="nav-caption">{{ "menu.about" | translate }}</span>
-  </a>
-  <a mat-list-item routerLink="/profile"
-    (click)="closeSideNav()"
-    routerLinkActive="active-menu-item">
-    <mat-icon fontSet="material-icons-outlined" >person</mat-icon>
-    <span class="nav-caption">{{ "menu.profile" | translate }}</span>
   </a>
 </mat-nav-list>

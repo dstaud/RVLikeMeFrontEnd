@@ -2,15 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouteConfigLoadEnd } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
-import { RegisterBtnVisibleService } from './../../core/services/register-btn-visiblity.service';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
-import { DeviceService } from './../../core/services/device.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
+import { RegisterBtnVisibleService } from '@services/register-btn-visiblity.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-header-mobile',

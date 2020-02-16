@@ -1,9 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router} from '@angular/router';
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { SigninButtonVisibleService } from './../../core/services/signin-btn-visibility.service';
 import { Location } from '@angular/common';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-sidenav-list',

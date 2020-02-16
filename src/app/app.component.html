@@ -13,9 +13,3 @@
       <app-rvlm-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-footer>
     </mat-sidenav-content>
 </mat-sidenav-container>
-<!-- <mat-sidenav-container *ngIf="!userAuthorized" fullscreen [ngClass]="theme">
-    <mat-sidenav-content fxLayout="column">
-      <app-header-mobile class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-header-mobile>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-</mat-sidenav-container> -->

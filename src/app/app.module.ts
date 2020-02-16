@@ -4,30 +4,35 @@ import { NgModule, ErrorHandler, Injectable } from '@angular/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppComponent } from './app.component';
-import * as Sentry from '@sentry/browser';
-import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
-import { WindowService } from './core/services/window.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LandingPageComponent } from './landing-page/landing-page.component';
-import { AppRoutingModule } from './app-routing.module';
-import { HeaderComponent } from './navigation/header/header.component';
-import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
-import { FooterComponent } from './navigation/footer/footer.component';
-import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
-import { DeviceDetectorModule } from 'ngx-device-detector';
-import { ThemeService } from './core/services/theme.service';
-import { HeaderMobileComponent } from './navigation/header-mobile/header-mobile.component';
-import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+
+import { DeviceDetectorModule } from 'ngx-device-detector';
+import * as Sentry from '@sentry/browser';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { environment } from '../environments/environment';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
-import { HttpInterceptorService } from './core/services/data-services/http-interceptor.service';
-import { DeactivateGuardService } from './core/guards/deactivate-guard.service';
-import { OtherDialogComponent } from './dialogs/other-dialog.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+
+import { WindowService } from '@services/window.service';
+import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
+
+import { HeaderComponent } from '@navigation/header/header.component';
+import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
+import { FooterComponent } from '@navigation/footer/footer.component';
+import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found.component';
+import { ThemeService } from '@services/theme.service';
+import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
+import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
+
+import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+
+import { SharedModule } from '@shared/shared.module';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -86,7 +91,6 @@ export function getErrorHandler(): ErrorHandler {
   providers: [
     WindowService,
     HttpClient,
-    DeactivateGuardService,
     ThemeService,
     {
       provide: ErrorHandler,

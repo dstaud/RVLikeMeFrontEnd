@@ -8,12 +8,14 @@ import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { SharedComponent } from './../../../shared/shared.component';
-import { DataService } from './../../../core/services/data-services/data.service';
-import { AuthenticationService } from './../../../core/services/data-services/authentication.service';
-import { ActivateBackArrowService } from './../../../core/services/activate-back-arrow.service';
-import { Ilifestyle } from './../../../interfaces/lifestyle';
-import { OtherDialogComponent } from './../../../dialogs/other-dialog.component';
+import { DataService } from '@services/data-services/data.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+
+import { Ilifestyle } from '@interfaces/lifestyle';
+import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+
+import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
 export interface RvLifestyle {
@@ -136,7 +138,7 @@ export class LifestyleComponent implements OnInit {
     {value: 'other', viewValue: 'lifestyle.component.list.traveling.other'},
   ];
 
-  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have 
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {

@@ -8,14 +8,17 @@ import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { Iuser } from './../../interfaces/user';
-import { Ilifestyle } from './../../interfaces/lifestyle';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
-import { DataService } from './../../core/services/data-services/data.service';
-import { SharedComponent } from './../../shared/shared.component';
-import { LanguageService } from './../../core/services/language.service';
-import { OtherDialogComponent } from './../../dialogs/other-dialog.component';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { LanguageService } from '@services/language.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { DataService } from '@services/data-services/data.service';
+
+import { Iuser } from '@interfaces/user';
+import { Ilifestyle } from '@interfaces/lifestyle';
+
+import { SharedComponent } from '@shared/shared.component';
+
+import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
 export interface AboutMe {
   value: string;
@@ -70,7 +73,7 @@ export class ProfileComponent implements OnInit {
   ];
 
 
-  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have 
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
     @HostListener('window:beforeunload', ['$event'])
     unloadNotification($event: any) {
