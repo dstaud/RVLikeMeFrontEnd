@@ -116,6 +116,7 @@ export class ProfileComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       console.log('in Profile component=', data);
+      this.user = data;
       if (data.language) {
         this.form.patchValue ({
           language: data.language
@@ -241,7 +242,7 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  // Set language based on user selection, stored in database
+  // Set language based on user selection and store in database
   setLanguage(entry: string) {
     this.showLanguageSaveIcon = true;
     this.user.language = this.form.controls.language.value;

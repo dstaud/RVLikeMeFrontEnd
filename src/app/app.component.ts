@@ -113,26 +113,11 @@ export class AppComponent implements OnInit {
         console.error(error);
         this.language.setLanguage('en');
       });
+
       this.authSvc.setUserToAuthorized(true);
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
   };
 
   ngOnDestroy() {};
-
-/*   private getPreferredLanguage() {
-    this.dataSvc.getProfilePersonal()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(user => {
-      console.log('Language=', user.language);
-      if (user.language) {
-        this.language.setLanguage(user.language);
-      } else {
-        this.language.setLanguage('en');
-      }
-    }, (error) => {
-        console.error(error);
-        this.language.setLanguage('en');
-    });
-  } */
 }
