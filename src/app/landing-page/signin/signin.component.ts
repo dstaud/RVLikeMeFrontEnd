@@ -2,11 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { DataService } from '@services/data-services/data.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LanguageService } from '@services/language.service';
@@ -21,6 +23,7 @@ import { Iuser } from '@interfaces/user';
 })
 export class SigninComponent implements OnInit {
   user: Iuser;
+  userProfile: Observable<IuserProfile>;
   form: FormGroup;
   hidePassword = true;
   credentials: ItokenPayload = {
@@ -37,6 +40,7 @@ export class SigninComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private dataSvc: DataService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private profileSvc: ProfileService,
               private router: Router,
               private translate: TranslateService,
               private language: LanguageService,
@@ -62,7 +66,7 @@ export class SigninComponent implements OnInit {
         }
       }
     });
-  }
+   }
 
   ngOnDestroy() {};
 
@@ -76,32 +80,36 @@ export class SigninComponent implements OnInit {
     this.authSvc.login(this.credentials)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      this.dataSvc.getProfilePersonal()
+      // Get user profile
+      this.userProfile = this.profileSvc.profilePersonal;
+      this.profileSvc.getProfilePersonal();
+      this.userProfile
       .pipe(untilComponentDestroyed(this))
-      .subscribe(user => {
-        if (user.language) {
-          this.language.setLanguage(user.language);
+      .subscribe(data => {
+        console.log('in login component=', data);
+        if (data.language) {
+          this.language.setLanguage(data.language);
         } else {
           this.language.setLanguage('en');
         }
         this.showSpinner = false;
+        this.authSvc.setUserToAuthorized(true);
+        if (this.returnRoute && this.returnRoute !== 'landing-page') {
+          // User booked-marked a specific page which can route too after authorization
+          this.router.navigateByUrl(this.returnRoute);
+          this.activateBackArrowSvc.setBackRoute('');
+        } else {
+          // After user authorizied go to home page
+          this.router.navigateByUrl('/home');
+          this.activateBackArrowSvc.setBackRoute('');
+        }
       }, (error) => {
-          this.showSpinner = false;
-          console.error(error);
-          this.httpError = true;
-          this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        console.error(error);
+        this.showSpinner = false;
+        this.httpError = true;
+        this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        this.language.setLanguage('en');
       });
-      this.showSpinner = false;
-      this.authSvc.setUserToAuthorized(true);
-      if (this.returnRoute && this.returnRoute !== 'landing-page') {
-        // User booked-marked a specific page which can route too after authorization
-        this.router.navigateByUrl(this.returnRoute);
-        this.activateBackArrowSvc.setBackRoute('');
-      } else {
-        // After user authorizied to to home page
-        this.router.navigateByUrl('/home');
-        this.activateBackArrowSvc.setBackRoute('');
-      }
     }, error => {
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(false);

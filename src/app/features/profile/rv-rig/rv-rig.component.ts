@@ -49,7 +49,7 @@ export class RvRigComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.dataSvc.getProfilePersonal()
+/*     this.dataSvc.getProfilePersonal()
     .pipe(take(1))
     .subscribe(rig => {
       this.rig = rig;
@@ -67,7 +67,7 @@ export class RvRigComponent implements OnInit {
       });
     }, (err) => {
       console.error(err);
-    });
+    }); */
   }
 
   public changeType(val) {

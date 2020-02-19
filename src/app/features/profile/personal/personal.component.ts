@@ -172,7 +172,7 @@ export class PersonalComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.dataSvc.getProfilePersonal()
+/*     this.dataSvc.getProfilePersonal()
     .pipe(take(1)) // Auto-unsubscribe after first execution
     .subscribe(user => {
       this.user = user;
@@ -190,7 +190,7 @@ export class PersonalComponent implements OnInit {
     }, (error) => {
         this.showSpinner = false;
         console.error(error);
-    });
+    }); */
   }
 
   ngOnDestroy() {};

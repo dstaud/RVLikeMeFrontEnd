@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -12,6 +13,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { LanguageService } from '@services/language.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DataService } from '@services/data-services/data.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { Iuser } from '@interfaces/user';
 import { Ilifestyle } from '@interfaces/lifestyle';
@@ -40,6 +42,8 @@ export class ProfileComponent implements OnInit {
     homeState: null,
     language: null
   };
+
+  userProfile: Observable<IuserProfile>;
 
   lifestyle: Ilifestyle = {
     aboutMe: null,
@@ -84,6 +88,7 @@ export class ProfileComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private dataSvc: DataService,
               private translate: TranslateService,
+              private profileSvc: ProfileService,
               private location: Location,
               private language: LanguageService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -104,27 +109,30 @@ export class ProfileComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-    this.dataSvc.getProfilePersonal()
-    .pipe(take(1)) // Auto-unsubscribe after first execution
-    .subscribe(user => {
-      this.user = user;
-      if (this.user.language) {
+
+    this.userProfile = this.profileSvc.profilePersonal;
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in Profile component=', data);
+      if (data.language) {
         this.form.patchValue ({
-          language: this.user.language
+          language: data.language
         });
       }
-
-      if (user.firstName) { this.totalPersonalFieldsWithData++; }
-      if (user.lastName) { this.totalPersonalFieldsWithData++; }
-      if (user.displayName) { this.totalPersonalFieldsWithData++; }
-      if (user.yearOfBirth) { this.totalPersonalFieldsWithData++; }
-      if (user.homeCountry) { this.totalPersonalFieldsWithData++; }
-      if (user.homeState) { this.totalPersonalFieldsWithData++; }
+      if (data.firstName) { this.totalPersonalFieldsWithData++; }
+      if (data.lastName) { this.totalPersonalFieldsWithData++; }
+      if (data.displayName) { this.totalPersonalFieldsWithData++; }
+      if (data.yearOfBirth) { this.totalPersonalFieldsWithData++; }
+      if (data.homeCountry) { this.totalPersonalFieldsWithData++; }
+      if (data.homeState) { this.totalPersonalFieldsWithData++; }
       this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
     }, (error) => {
       this.showSpinner = false;
       console.error(error);
     });
+
 
     this.dataSvc.getProfileLifestyle()
     .pipe(take(1)) // Auto-unsubscribe after first execution

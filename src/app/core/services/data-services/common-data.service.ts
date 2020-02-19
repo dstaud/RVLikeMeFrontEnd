@@ -27,4 +27,10 @@ export class CommonDataService {
     return dataSvcURL;
   }
 
+  public getToken(): string {
+    // Get from local storage everytime in cae different people register on same machine and this.token is from previous
+    this.token = localStorage.getItem('rvlikeme-token');
+    return this.token;
+  }
+
 }

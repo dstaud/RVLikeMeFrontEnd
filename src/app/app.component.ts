@@ -12,6 +12,7 @@ import { filter } from 'rxjs/operators';
 
 import { DeviceService } from '@services/device.service';
 import { LanguageService } from '@services/language.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { DataService } from '@services/data-services/data.service';
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
   theme: string;
   font: string;
   userAuthorized = false;
+  userProfile: Observable<IuserProfile>;
 
 
   constructor(public translateSvc: TranslateService,
@@ -36,6 +38,7 @@ export class AppComponent implements OnInit {
               private themeSvc: ThemeService,
               private language: LanguageService,
               private authSvc: AuthenticationService,
+              private profileSvc: ProfileService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               private dataSvc: DataService,
               private location: Location,
@@ -57,10 +60,10 @@ export class AppComponent implements OnInit {
         if (this.authSvc.isLoggedIn()) {
           if (event.url === '/') {
             this.router.navigateByUrl('/home');
-            this.getPreferredLanguage();
+            // this.getPreferredLanguage();
           } else {
             // TODO: Race condition where title of page not set.
-            this.getPreferredLanguage();
+            // this.getPreferredLanguage();
           }
         }
       }
@@ -94,17 +97,21 @@ export class AppComponent implements OnInit {
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
       // Get user profile
-      this.dataSvc.getProfilePersonal()
-      .pipe(take(1))
-      .subscribe(user => {
-        if (user.language) {
-          this.language.setLanguage(user.language);
+      this.userProfile = this.profileSvc.profilePersonal;
+      this.profileSvc.getProfilePersonal();
+
+      this.userProfile
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(data => {
+        console.log('in app component=', data);
+        if (data.language) {
+          this.language.setLanguage(data.language);
         } else {
           this.language.setLanguage('en');
         }
       }, (error) => {
-          console.error(error);
-          this.language.setLanguage('en');
+        console.error(error);
+        this.language.setLanguage('en');
       });
       this.authSvc.setUserToAuthorized(true);
       this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
@@ -113,7 +120,7 @@ export class AppComponent implements OnInit {
 
   ngOnDestroy() {};
 
-  private getPreferredLanguage() {
+/*   private getPreferredLanguage() {
     this.dataSvc.getProfilePersonal()
     .pipe(untilComponentDestroyed(this))
     .subscribe(user => {
@@ -127,5 +134,5 @@ export class AppComponent implements OnInit {
         console.error(error);
         this.language.setLanguage('en');
     });
-  }
+  } */
 }
