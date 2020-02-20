@@ -3,10 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
-import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { filter } from 'rxjs/operators';
 
@@ -15,7 +13,6 @@ import { LanguageService } from '@services/language.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { DataService } from '@services/data-services/data.service';
 import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 
 @Component({
@@ -40,8 +37,6 @@ export class AppComponent implements OnInit {
               private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private dataSvc: DataService,
-              private location: Location,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
@@ -97,8 +92,8 @@ export class AppComponent implements OnInit {
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
       // Get user profile
-      this.userProfile = this.profileSvc.profilePersonal;
-      this.profileSvc.getProfilePersonal();
+      this.userProfile = this.profileSvc.profile;
+      this.profileSvc.getProfile();
 
       this.userProfile
       .pipe(untilComponentDestroyed(this))
@@ -119,5 +114,7 @@ export class AppComponent implements OnInit {
     }
   };
 
-  ngOnDestroy() {};
+  ngOnDestroy() {
+    this.profileSvc.dispose();
+  };
 }

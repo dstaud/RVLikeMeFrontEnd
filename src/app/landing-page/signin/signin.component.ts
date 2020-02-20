@@ -7,14 +7,12 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { DataService } from '@services/data-services/data.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LanguageService } from '@services/language.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
-import { Iuser } from '@interfaces/user';
 
 @Component({
   selector: 'app-rvlm-signin',
@@ -22,7 +20,6 @@ import { Iuser } from '@interfaces/user';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
-  user: Iuser;
   userProfile: Observable<IuserProfile>;
   form: FormGroup;
   hidePassword = true;
@@ -38,7 +35,6 @@ export class SigninComponent implements OnInit {
   returnRoute = '';
 
   constructor(private authSvc: AuthenticationService,
-              private dataSvc: DataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
               private router: Router,
@@ -68,7 +64,9 @@ export class SigninComponent implements OnInit {
     });
    }
 
-  ngOnDestroy() {};
+  ngOnDestroy() {
+    this.profileSvc.dispose();
+  };
 
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
@@ -81,8 +79,8 @@ export class SigninComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       // Get user profile
-      this.userProfile = this.profileSvc.profilePersonal;
-      this.profileSvc.getProfilePersonal();
+      this.userProfile = this.profileSvc.profile;
+      this.profileSvc.getProfile();
       this.userProfile
       .pipe(untilComponentDestroyed(this))
       .subscribe(data => {

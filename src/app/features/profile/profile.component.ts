@@ -5,20 +5,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { LanguageService } from '@services/language.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { DataService } from '@services/data-services/data.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-
-import { Iuser } from '@interfaces/user';
-import { Ilifestyle } from '@interfaces/lifestyle';
-
-import { SharedComponent } from '@shared/shared.component';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
@@ -33,19 +26,14 @@ export interface AboutMe {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  user: Iuser = {
+  profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null
-  };
-
-  userProfile: Observable<IuserProfile>;
-
-  lifestyle: Ilifestyle = {
+    language: null,
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -53,6 +41,8 @@ export class ProfileComponent implements OnInit {
     boondocking: null,
     traveling: null
   };
+
+  userProfile: Observable<IuserProfile>;
 
   showSpinner = false;
   showAboutMeSaveIcon = false;
@@ -86,13 +76,11 @@ export class ProfileComponent implements OnInit {
 
 
   constructor(private authSvc: AuthenticationService,
-              private dataSvc: DataService,
               private translate: TranslateService,
               private profileSvc: ProfileService,
               private location: Location,
               private language: LanguageService,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private shared: SharedComponent,
               private dialog: MatDialog,
               private router: Router,
               fb: FormBuilder) {
@@ -103,6 +91,7 @@ export class ProfileComponent implements OnInit {
             }
 
   ngOnInit() {
+    this.form.disable();
     this.showSpinner = true;
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
@@ -110,18 +99,26 @@ export class ProfileComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.userProfile = this.profileSvc.profilePersonal;
+    this.userProfile = this.profileSvc.profile;
 
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       console.log('in Profile component=', data);
-      this.user = data;
-      if (data.language) {
-        this.form.patchValue ({
-          language: data.language
-        });
+      this.profile = data;
+
+      if (this.profile.aboutMe) {
+        if (this.profile.aboutMe.substring(0, 1) === '@') {
+          this.other = this.profile.aboutMe.substring(1, this.profile.aboutMe.length);
+          this.profile.aboutMe = 'other';
+        }
       }
+
+      this.form.patchValue ({
+        language: data.language,
+        aboutMe: data.aboutMe
+      });
+
       if (data.firstName) { this.totalPersonalFieldsWithData++; }
       if (data.lastName) { this.totalPersonalFieldsWithData++; }
       if (data.displayName) { this.totalPersonalFieldsWithData++; }
@@ -129,39 +126,25 @@ export class ProfileComponent implements OnInit {
       if (data.homeCountry) { this.totalPersonalFieldsWithData++; }
       if (data.homeState) { this.totalPersonalFieldsWithData++; }
       this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
+
+      if (data.rvUse) { this.totalLifestyleFieldsWithData++; }
+      if (data.worklife) { this.totalLifestyleFieldsWithData++; }
+      if (data.campsWithMe) { this.totalLifestyleFieldsWithData++; }
+      if (data.boondocking) { this.totalLifestyleFieldsWithData++; }
+      if (data.traveling) { this.totalLifestyleFieldsWithData++; }
+      this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+
+      this.showSpinner = false;
+      this.form.enable();
     }, (error) => {
       this.showSpinner = false;
       console.error(error);
     });
-
-
-    this.dataSvc.getProfileLifestyle()
-    .pipe(take(1)) // Auto-unsubscribe after first execution
-    .subscribe(lifestyle => {
-      this.lifestyle = lifestyle;
-      if (this.lifestyle.aboutMe) {
-        if (this.lifestyle.aboutMe.substring(0, 1) === '@') {
-          this.other = this.lifestyle.aboutMe.substring(1, this.lifestyle.aboutMe.length);
-          this.lifestyle.aboutMe = 'other';
-        }
-      }
-      this.form.patchValue({
-        aboutMe: this.lifestyle.aboutMe
-      });
-      this.showSpinner = false;
-      if (lifestyle.rvUse) { this.totalLifestyleFieldsWithData++; }
-      if (lifestyle.worklife) { this.totalLifestyleFieldsWithData++; }
-      if (lifestyle.campsWithMe) { this.totalLifestyleFieldsWithData++; }
-      if (lifestyle.boondocking) { this.totalLifestyleFieldsWithData++; }
-      if (lifestyle.traveling) { this.totalLifestyleFieldsWithData++; }
-      this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
-    }, (error) => {
-        this.showSpinner = false;
-        console.error(error);
-    });
    }
 
-   ngOnDestroy() {}
+   ngOnDestroy() {
+     this.profileSvc.dispose();
+   }
 
   // If use touches aboutMe control and had previously selected 'other' then open the dialog to show what they had entered.
   activatedAboutMe() {
@@ -207,20 +190,20 @@ export class ProfileComponent implements OnInit {
       if (result) {
         if (this.other !== result && result !== 'canceled') {
           this.other = result;
-          this.lifestyle.aboutMe = '@' + result;
+          this.profile.aboutMe = '@' + result;
           this.updateAboutMe(event);
         }
       } else {
         if (this.other) {
-          this.lifestyle.aboutMe = null;
+          this.profile.aboutMe = null;
           this.updateAboutMe('');
           this.other = '';
           this.form.patchValue({
             aboutMe: null
           });
         } else {
-          if (this.lifestyle.aboutMe) {
-            selection = this.lifestyle.aboutMe;
+          if (this.profile.aboutMe) {
+            selection = this.profile.aboutMe;
           }
           this.form.patchValue({
             aboutMe: selection
@@ -245,8 +228,8 @@ export class ProfileComponent implements OnInit {
   // Set language based on user selection and store in database
   setLanguage(entry: string) {
     this.showLanguageSaveIcon = true;
-    this.user.language = this.form.controls.language.value;
-    this.dataSvc.updateProfilePersonal(this.user)
+    this.profile.language = this.form.controls.language.value;
+    this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showLanguageSaveIcon = false;
@@ -260,17 +243,18 @@ export class ProfileComponent implements OnInit {
   // Auto-update aboutMe selection to server
   updateAboutMe(event: string) {
     if (this.form.controls.aboutMe.value === '') {
-      this.lifestyle.aboutMe = null;
+      this.profile.aboutMe = null;
       this.form.patchValue({
         aboutMe: null
       });
     } else {
       if (this.form.controls.aboutMe.value !== 'other') {
-        this.lifestyle.aboutMe = this.form.controls.aboutMe.value;
+        this.profile.aboutMe = this.form.controls.aboutMe.value;
       }
     }
     this.showAboutMeSaveIcon = true;
-    this.dataSvc.updateProfileLifestyle(this.lifestyle)
+    console.log('calling updateProfile:', this.profile);
+    this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;

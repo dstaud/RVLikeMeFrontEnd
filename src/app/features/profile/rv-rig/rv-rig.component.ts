@@ -5,8 +5,6 @@ import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DataService } from '@services/data-services/data.service';
-
 import { Irig } from '@interfaces/rig';
 
 export interface RVType {
@@ -31,8 +29,7 @@ export class RvRigComponent implements OnInit {
     {value: 'none', viewValue: 'none'}
     ];
 
-  constructor(private dataSvc: DataService,
-              private translate: TranslateService,
+  constructor(private translate: TranslateService,
               fb: FormBuilder) {
               this.form = fb.group({
                 type: new FormControl({value: ''}),

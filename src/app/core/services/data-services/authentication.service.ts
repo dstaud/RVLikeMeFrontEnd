@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 
-import { WindowService } from './../window.service';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { DataService } from './data.service';
 import { CommonDataService } from './common-data.service';
 
-import { Iuser } from '@interfaces/user';
 import { ItokenPayload } from '@interfaces/tokenPayload';
 import { ItokenResponse } from '@interfaces/tokenResponse';
 
@@ -21,11 +18,8 @@ export class AuthenticationService {
   private token: string;
   private userAuth = new Subject<boolean>();
   userAuth$ = this.userAuth.asObservable();
-  body: Iuser;
 
   constructor(private http: HttpClient,
-              private dataSvc: DataService,
-              private WindowRef: WindowService,
               private sentryMonitorSvc: SentryMonitorService,
               private commonData: CommonDataService) { }
 

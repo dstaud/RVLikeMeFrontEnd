@@ -3,15 +3,13 @@ import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DataService } from '@services/data-services/data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
-
-import { Iuser } from '@interfaces/user';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -47,15 +45,23 @@ export class PersonalComponent implements OnInit {
   helpMsg = '';
 
   // Interface for Personal data
-  user: Iuser = {
+  profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null
+    language: null,
+    aboutMe: null,
+    rvUse: null,
+    worklife: null,
+    campsWithMe: null,
+    boondocking: null,
+    traveling: null
   };
+
+  userProfile: Observable<IuserProfile>;
 
 
   // Spinner is for initial load from the database only.
@@ -137,10 +143,10 @@ export class PersonalComponent implements OnInit {
       $event.returnValue = true;
     }
 
-  constructor(private dataSvc: DataService,
-              private translate: TranslateService,
+  constructor(private translate: TranslateService,
               private shared: SharedComponent,
               private authSvc: AuthenticationService,
+              private profileSvc: ProfileService,
               private router: Router,
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -172,25 +178,30 @@ export class PersonalComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-/*     this.dataSvc.getProfilePersonal()
-    .pipe(take(1)) // Auto-unsubscribe after first execution
-    .subscribe(user => {
-      this.user = user;
-      if (!this.user.displayName) { this.user.displayName = this.user.firstName; }
-      this.form.patchValue({
-        firstName: this.user.firstName,
-        lastName: this.user.lastName,
-        displayName: this.user.displayName,
-        yearOfBirth: this.user.yearOfBirth,
-        homeCountry: this.user.homeCountry,
-        homeState: this.user.homeState
-      });
+    this.userProfile = this.profileSvc.profile;
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in personal component=', data);
+      this.profile = data;
+      if (data) {
+        if (!data.displayName) { this.profile.displayName = this.profile.firstName }
+        this.form.patchValue ({
+          firstName: this.profile.firstName,
+          lastName: this.profile.lastName,
+          displayName: this.profile.displayName,
+          yearOfBirth: this.profile.yearOfBirth,
+          homeCountry: this.profile.homeCountry,
+          homeState: this.profile.homeState
+        });
+      }
       this.showSpinner = false;
       this.form.enable();
     }, (error) => {
-        this.showSpinner = false;
-        console.error(error);
-    }); */
+      this.showSpinner = false;
+      console.error(error);
+    });
   }
 
   ngOnDestroy() {};
@@ -207,10 +218,10 @@ export class PersonalComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     if (this.form.controls[control].value === '') {
-      this.user[control] = null;
+      this.profile[control] = null;
       this.form.patchValue({ [control]: null });
     } else {
-      this.user[control] = this.form.controls[control].value;
+      this.profile[control] = this.form.controls[control].value;
     }
     this.updatePersonal(control);
   }
@@ -220,10 +231,10 @@ export class PersonalComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     if (event === '') {
-      this.user[control] = null;
+      this.profile[control] = null;
       this.form.patchValue({ [control]: null });
     } else {
-      this.user[control] = event;
+      this.profile[control] = event;
     }
     this.updatePersonal(control);
   }
@@ -233,7 +244,7 @@ export class PersonalComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;
     this.httpErrorText = '';
-    this.dataSvc.updateProfilePersonal(this.user)
+    this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;

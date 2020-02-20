@@ -2,16 +2,14 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
-import { take, takeUntil } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { DataService } from '@services/data-services/data.service';
 import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
-import { Iuser } from '@interfaces/user';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -31,21 +29,27 @@ export class RegisterUserComponent implements OnInit {
     password: '',
     tokenExpire: 0
   };
-  profile: Iuser = {
+  profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null
+    language: null,
+    aboutMe: null,
+    rvUse: null,
+    worklife: null,
+    campsWithMe: null,
+    boondocking: null,
+    traveling: null
   };
   httpError = false;
   httpErrorText = '';
 
   constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
               private authSvc: AuthenticationService,
-              private dataSvc: DataService,
+              private profileSvc: ProfileService,
               private shared: SharedComponent,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -83,7 +87,8 @@ export class RegisterUserComponent implements OnInit {
         } else {
           this.profile.firstName = this.form.controls.firstName.value;
           this.profile.language = 'en';
-          this.dataSvc.addProfilePersonal(this.profile)
+          console.log('calling add profile:', this.profile);
+          this.profileSvc.addProfile(this.profile)
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
             this.showSpinner = false;

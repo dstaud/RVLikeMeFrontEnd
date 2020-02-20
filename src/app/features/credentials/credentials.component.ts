@@ -4,10 +4,8 @@ import { Router } from '@angular/router';
 
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { DataService } from '@services/data-services/data.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
 import { SharedComponent } from '@shared/shared.component';
@@ -25,8 +23,6 @@ export class CredentialsComponent implements OnInit {
   httpErrorText = '';
 
   constructor(private authSvc: AuthenticationService,
-              private dataSvc: DataService,
-              private translate: TranslateService,
               private shared: SharedComponent,
               private router: Router,
               fb: FormBuilder) {

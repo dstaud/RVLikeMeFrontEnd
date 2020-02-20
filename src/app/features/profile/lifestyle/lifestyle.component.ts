@@ -4,15 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DataService } from '@services/data-services/data.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
-import { Ilifestyle } from '@interfaces/lifestyle';
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
 import { SharedComponent } from '@shared/shared.component';
@@ -63,8 +62,15 @@ export class LifestyleComponent implements OnInit {
   backPath: string;
 
 
-  // Interface for Lifestyle data
-  lifestyle: Ilifestyle = {
+  // Interface for profile data
+  profile: IuserProfile = {
+    firstName: null,
+    lastName: null,
+    displayName: null,
+    yearOfBirth: null,
+    homeCountry: null,
+    homeState: null,
+    language: null,
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -73,6 +79,7 @@ export class LifestyleComponent implements OnInit {
     traveling: null
   };
 
+  userProfile: Observable<IuserProfile>;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -145,7 +152,7 @@ export class LifestyleComponent implements OnInit {
     $event.returnValue = true;
   }
 
-  constructor(private dataSvc: DataService,
+  constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
               private shared: SharedComponent,
               private dialog: MatDialog,
@@ -175,10 +182,13 @@ export class LifestyleComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.dataSvc.getProfileLifestyle()
-    .pipe(take(1)) // Auto-unsubscribe after first execution
-    .subscribe(lifestyle => {
-      this.lifestyle = lifestyle;
+    this.userProfile = this.profileSvc.profile;
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in lifestyle component=', data);
+      this.profile = data;
 
       // If user selected other on a form field, need to get the data they entered
       this.setOtherData('rvUse');
@@ -187,20 +197,18 @@ export class LifestyleComponent implements OnInit {
       this.setOtherData('boondocking');
       this.setOtherData('traveling');
 
-      // Update form with values from server
-      this.form.patchValue({
-        rvUse: this.lifestyle.rvUse,
-        worklife: this.lifestyle.worklife,
-        campsWithMe: this.lifestyle.campsWithMe,
-        boondocking: this.lifestyle.boondocking,
-        traveling: this.lifestyle.traveling
+      this.form.patchValue ({
+        rvUse: this.profile.rvUse,
+        worklife: this.profile.worklife,
+        campsWithMe: this.profile.campsWithMe,
+        boondocking: this.profile.boondocking,
+        traveling: this.profile.traveling
       });
       this.showSpinner = false;
       this.form.enable();
-    }, (err) => {
-      // TODO: What to do with error handling here
+    }, (error) => {
       this.showSpinner = false;
-      console.error(err);
+      console.error(error);
     });
   }
 
@@ -240,19 +248,19 @@ export class LifestyleComponent implements OnInit {
         if (result !== 'canceled') {
           if (this[control] !== result ) {
             this[control] = result;
-            this.lifestyle[control] = '@' + result;
+            this.profile[control] = '@' + result;
             this.updateDataPoint(event, control);
           }
         }
       } else {
         if (this[control]) {
           this[control] = '';
-          this.lifestyle[control] = null;
+          this.profile[control] = null;
           this.updateDataPoint(event, control);
           this.form.patchValue({[control]: null});
         } else {
-          if (this.lifestyle[control]) {
-            selection = this.lifestyle[control];
+          if (this.profile[control]) {
+            selection = this.profile[control];
           }
           this.form.patchValue({[control]: selection});
         }
@@ -263,10 +271,10 @@ export class LifestyleComponent implements OnInit {
 
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
   setOtherData(control: string) {
-    if (this.lifestyle[control]) {
-      if (this.lifestyle[control].substring(0, 1) === '@') {
-        this[control] = this.lifestyle[control].substring(1, this.lifestyle[control].length);
-        this.lifestyle[control] = 'other';
+    if (this.profile[control]) {
+      if (this.profile[control].substring(0, 1) === '@') {
+        this[control] = this.profile[control].substring(1, this.profile[control].length);
+        this.profile[control] = 'other';
       }
     }
   }
@@ -292,11 +300,11 @@ export class LifestyleComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     if (event === '') {
-      this.lifestyle[control] = null;
+      this.profile[control] = null;
       this.form.patchValue({ [control]: null });
     } else {
       if (this.form.controls[control].value !== 'other') {
-        this.lifestyle[control] = event;
+        this.profile[control] = event;
       }
     }
     this.updateLifestyle(control);
@@ -306,7 +314,7 @@ export class LifestyleComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;
     this.httpErrorText = '';
-    this.dataSvc.updateProfileLifestyle(this.lifestyle)
+    this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
