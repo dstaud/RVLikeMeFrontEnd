@@ -21,6 +21,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 
 import { WindowService } from '@services/window.service';
 import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
+import { ProfileService } from '@services/data-services/profile.service';
 
 import { HeaderComponent } from '@navigation/header/header.component';
 import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
@@ -91,6 +92,7 @@ export function getErrorHandler(): ErrorHandler {
   providers: [
     WindowService,
     HttpClient,
+    ProfileService,
     ThemeService,
     {
       provide: ErrorHandler,

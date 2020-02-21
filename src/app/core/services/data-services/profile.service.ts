@@ -54,7 +54,7 @@ export class ProfileService {
 
   public getProfile() {
     console.log('getProfile');
-    this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
+    this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
     .subscribe(data => {
       console.log('subscribed', data);
@@ -78,6 +78,6 @@ export class ProfileService {
   }
 
   public dispose() {
-    this.profileSubscription.unsubscribe();
+    // this.profileSubscription.unsubscribe();
   }
 }
