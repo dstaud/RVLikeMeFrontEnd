@@ -13,7 +13,7 @@
     <button *ngIf="!userAuthorized && signinVisible"
             mat-button
             class="toolbar-item"
-            (click)="signIn()">Sign in
+            (click)="signIn()">Log in
     </button>
     <button *ngIf="!userAuthorized && registerVisible"
             mat-button
@@ -34,6 +34,14 @@
       <button mat-menu-item>
         <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
         {{ "account.changePassword" | translate }}
+      </button>
+      <button *ngIf="lightTheme" mat-menu-item (click)="selectTheme('dark-theme')">
+        <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
+        {{ "account.darkTheme" | translate }}
+      </button>
+      <button *ngIf="!lightTheme" mat-menu-item (click)="selectTheme('light-theme')">
+        <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
+        {{ "account.lightTheme" | translate }}
       </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>

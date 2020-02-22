@@ -1,12 +1,10 @@
-<!-- <mat-sidenav-container fullscreen [ngClass]="globalFontTheme | async" > -->
-<!-- <mat-sidenav-container fullscreen [ngClass]="globalColorTheme | async"> -->
   <mat-sidenav-container fullscreen [ngClass]="theme">
     <mat-sidenav #sidenav role="navigation" mode="push">
       <app-rvlm-sidenav-list (sideNavClosed)="sidenav.close()"></app-rvlm-sidenav-list>
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
-      <app-rvlm-header class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-rvlm-header>
-      <app-rvlm-header-mobile class="header" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
+      <app-rvlm-header (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-rvlm-header>
+      <app-rvlm-header-mobile (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
       <main class="container" [ngClass]="{'bottom-bar-spacing': userAuthorized}">
         <router-outlet></router-outlet>
       </main>

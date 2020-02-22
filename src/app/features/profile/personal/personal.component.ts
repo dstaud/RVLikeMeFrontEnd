@@ -44,7 +44,7 @@ export class PersonalComponent implements OnInit {
   httpErrorText = '';
   helpMsg = '';
 
-  // Interface for Personal data
+  // Interface for Profile data
   profile: IuserProfile = {
     firstName: null,
     lastName: null,
@@ -58,7 +58,12 @@ export class PersonalComponent implements OnInit {
     worklife: null,
     campsWithMe: null,
     boondocking: null,
-    traveling: null
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null
   };
 
   userProfile: Observable<IuserProfile>;

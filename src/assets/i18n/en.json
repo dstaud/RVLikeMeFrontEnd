@@ -1,7 +1,8 @@
 {
   "general": {
     "submit": "Submit",
-    "rvlikeme": "RV Like Me"
+    "rvlikeme": "RV Like Me",
+    "complete": "complete"
   },
   "menu": {
     "connections": "like me",
@@ -33,7 +34,7 @@
   },
   "profile.component": {
     "header": "Profile",
-    "explanation": "Please enter information about you, your lifestyle and your rig to help us match you with other RVers for more relavant information and answers to your questions.",
+    "explanation": "Please enter information about you and how you RV to help us give you more relavant information and answers to your questions.",
     "preferred-language": "Preferred language",
     "english": "English",
     "spanish": "Spanish",
@@ -187,6 +188,32 @@
       }
     }
   },
+  "rig.component": {
+    "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
+    "rigTypeDesc": "Type of rig",
+    "rigManufacturerDesc": "Rig Manufacturer",
+    "list": {
+      "rigtype": {
+        "a": "Class A motorhome",
+        "b": "Class B moterhome",
+        "c": "Class C motorhome",
+        "sc": "Class C (Super C) moterhome",
+        "fw": "Fifth wheel trailer",
+        "tt": "Travel Trailer",
+        "tc": "Truck camper",
+        "ft": "Folding trailer",
+        "v": "Van",
+        "cb": "Customized bus",
+        "other": "Other"
+      },
+      "rigmanufacturer": {
+        "airstream": "Airstream",
+        "monaco": "REV Group",
+        "thor": "Thor Industries",
+        "other": "Other"
+      }
+    }
+  },
   "landing-page.component": {
     "header": "RV Like Me"
   },
@@ -197,6 +224,8 @@
   "account": {
     "changeUsername": "Change username",
     "changePassword": "Change password",
+    "darkTheme": "Dark mode",
+    "lightTheme": "Light mode",
     "logout": "Logout"
   }
 }

@@ -48,8 +48,18 @@ $orange-theme: mat-light-theme(
   $orange-warn
 );
 
+$white-primary: mat-palette($mat-grey, 50, 300, 900);
+$white-accent: mat-palette($mat-blue-grey, 400);
+$white-warn: mat-palette($mat-red, 500);
+
+$white-theme: mat-light-theme(
+  $white-primary,
+  $white-accent,
+  $white-warn
+);
+
 $dark-primary: mat-palette($mat-blue-grey, 700, 300, 900);
-$dark-accent: mat-palette($mat-grey, 400);
+$dark-accent: mat-palette($mat-brown, 600);
 $dark-warn: mat-palette($mat-red, 500);
 
 $dark-theme: mat-dark-theme(
@@ -58,7 +68,7 @@ $dark-theme: mat-dark-theme(
   $dark-warn
 );
 
-$orange-dark-primary: mat-palette($mat-deep-orange, 700, 300, 900);
+/* $orange-dark-primary: mat-palette($mat-deep-orange, 700, 300, 900);
 $orange-dark-accent: mat-palette($mat-blue, 700);
 $orange-dark-warn: mat-palette($mat-red, 500);
 
@@ -66,4 +76,4 @@ $orange-dark-theme: mat-dark-theme(
   $orange-dark-primary,
   $orange-dark-accent,
   $orange-dark-warn
-);
+); */

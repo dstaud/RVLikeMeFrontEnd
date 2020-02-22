@@ -1,13 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Irig } from '@interfaces/rig';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
-export interface RVType {
+import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+
+import { SharedComponent } from '@shared/shared.component';
+
+export interface RigType {
+  value: string;
+  viewValue: string;
+}
+
+export interface RigManufacturer {
+  value: string;
+  viewValue: string;
+}
+
+export interface RigBrand {
   value: string;
   viewValue: string;
 }
@@ -18,61 +37,263 @@ export interface RVType {
   styleUrls: ['./rv-rig.component.scss']
 })
 export class RvRigComponent implements OnInit {
-  rig: Irig;
   form: FormGroup;
-  RVTypes: RVType[] = [
-    {value: 'class-a', viewValue: 'Class A'},
-    {value: 'class-b', viewValue: 'Class B'},
-    {value: 'class-c', viewValue: 'Class C'},
-    {value: 'fifth-wheel', viewValue: 'Fifth Wheel'},
-    {value: 'travel-trailer', viewValue: 'Travel Trailer'},
-    {value: 'none', viewValue: 'none'}
-    ];
+  backPath: string;
+  httpError = false;
+  httpErrorText = '';
+  helpMsg = '';
+
+  // Interface for Profile data
+  profile: IuserProfile = {
+    firstName: null,
+    lastName: null,
+    displayName: null,
+    yearOfBirth: null,
+    homeCountry: null,
+    homeState: null,
+    language: null,
+    aboutMe: null,
+    rvUse: null,
+    worklife: null,
+    campsWithMe: null,
+    boondocking: null,
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null
+  };
+
+  userProfile: Observable<IuserProfile>;
+
+
+  // Spinner is for initial load from the database only.
+  // SaveIcons are shown next to each field as users leave the field, while doing the update
+  showSpinner = false;
+  showrigTypeSaveIcon = false;
+  showrigManufacturerSaveIcon = false;
+  showrigBrandSaveIcon = false;
+  showrigModelSaveIcon = false;
+  showrigYearSaveIcon = false;
+
+  /**** Select form select field option data. ****/
+  RigTypes: RigType[] = [
+    {value: '', viewValue: ''},
+    {value: 'A', viewValue: 'rig.component.list.rigtype.a'},
+    {value: 'B', viewValue: 'rig.component.list.rigtype.b'},
+    {value: 'C', viewValue: 'rig.component.list.rigtype.c'},
+    {value: 'SC', viewValue: 'rig.component.list.rigtype.sc'},
+    {value: 'FW', viewValue: 'rig.component.list.rigtype.fw'},
+    {value: 'TT', viewValue: 'rig.component.list.rigtype.tt'},
+    {value: 'TC', viewValue: 'rig.component.list.rigtype.tc'},
+    {value: 'FT', viewValue: 'rig.component.list.rigtype.ft'},
+    {value: 'V', viewValue: 'rig.component.list.rigtype.v'},
+    {value: 'CB', viewValue: 'rig.component.list.rigtype.cb'},
+    {value: 'other', viewValue: 'rig.component.list.rigtype.other'}
+  ];
+
+  RigManufacturers: RigManufacturer[] = [
+    {value: '', viewValue: ''},
+    {value: 'airstream', viewValue: 'rig.component.list.rigmanufacturer.airstream'},
+    {value: 'monaco', viewValue: 'rig.component.list.rigmanufacturer.monaco'},
+    {value: 'thor', viewValue: 'rig.component.list.rigmanufacturer.thor'},
+    {value: 'other', viewValue: 'rig.component.list.rigmanufacturer.other'}
+  ];
+
+  RigBrands: RigBrand[] = [
+    {value: '', viewValue: ''},
+    {value: 'airstream', viewValue: 'rig.component.list.rigmanufacturer.airstream'},
+    {value: 'autobahn', viewValue: 'rig.component.list.rigmanufacturer.autobahn'},
+    {value: 'bambi', viewValue: 'rig.component.list.rigmanufacturer.bambi'},
+    {value: 'classic', viewValue: 'rig.component.list.rigmanufacturer.classic'}
+  ];
+
+  // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
+  // changed anything.  Activating a notification upon reload, just in case.
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    $event.returnValue = true;
+  }
 
   constructor(private translate: TranslateService,
+              private shared: SharedComponent,
+              private authSvc: AuthenticationService,
+              private profileSvc: ProfileService,
+              private dialog: MatDialog,
+              private router: Router,
+              private location: Location,
+              private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
-                type: new FormControl({value: ''}),
-                year: new FormControl({value: ''}),
-                brand: new FormControl({value: ''}),
-                model: new FormControl({value: ''}),
-                other: new FormControl({value: ''}),
-                lengthInFeet: new FormControl({value: ''}),
-                heightInFeet: new FormControl({value: ''}),
-                dieselOrGas: new FormControl({value: ''}),
-                towing: new FormControl({value: ''}),
-                toad: new FormControl({value: ''})
-              });
+                rigType: new FormControl('', Validators.required),
+                rigManufacturer: new FormControl(''),
+                rigBrand: new FormControl(''),
+                rigModel: new FormControl(''),
+                rigYear: new FormControl('',
+                                              [Validators.minLength(4),
+                                              Validators.maxLength(4)])
+              },
+                { updateOn: 'blur' }
+              );
 }
 
   ngOnInit() {
-/*     this.dataSvc.getProfilePersonal()
-    .pipe(take(1))
-    .subscribe(rig => {
-      this.rig = rig;
-      this.form.patchValue({
-        type: this.rig.type,
-        year: this.rig.year,
-        brand: this.rig.brand,
-        model: this.rig.model,
-        other: this.rig.other,
-        lengthInFeet: this.rig.lengthInFeet,
-        heightInFeet: this.rig.heightInFeet,
-        dieselOrGas: this.rig.dieselOrGas,
-        towing: this.rig.towing,
-        toad: this.rig.toad
-      });
-    }, (err) => {
-      console.error(err);
-    }); */
+    this.form.disable();
+
+    // If user got to this page without logging in (i.e. a bookmark or attack), send
+    // them to the signin page and set the back path to the page they wanted to go
+    this.showSpinner = true;
+    if (!this.authSvc.isLoggedIn()) {
+      this.backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.router.navigateByUrl('/signin');
+    }
+
+    this.userProfile = this.profileSvc.profile;
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in rig component=', data);
+      this.profile = data;
+
+      // If user selected other on a form field, need to get the data they entered
+      this.setOtherData('rigType');
+      this.setOtherData('rigManufacturer');
+      this.setOtherData('rigBrand');
+      this.setOtherData('rigModel');
+      this.setOtherData('rigYear');
+
+      if (data) {
+        this.form.patchValue ({
+          rigType: this.profile.rigType,
+          rigManufacturer: this.profile.rigManufacturer,
+          rigBrand: this.profile.rigBrand,
+          rigModel: this.profile.rigModel,
+          rigYear: this.profile.rigYear
+        });
+      }
+
+      this.showSpinner = false;
+      this.form.enable();
+    }, (error) => {
+      this.showSpinner = false;
+      console.error(error);
+    });
   }
 
-  public changeType(val) {
-    console.log(val);
-/*     this.rig.setValue(e.target.value, {
-      onlySelf: true
-    }) */
+  ngOnDestroy() {};
+
+  // Automatically pop-up the 'other' dialog with the correct
+  // control and name when use clicks on select if other
+  activatedSelectItem(control: string, controlDesc: string) {
+    if (this[control]) {
+      this.openDialog(control, controlDesc, 'other');
+    }
   }
+
+  // Select form 'Other' Dialog
+  openDialog(control: string, name: string, event: string): void {
+    let other = '';
+    let selection = '';
+    other = this[control];
+
+    const dialogRef = this.dialog.open(OtherDialogComponent, {
+      width: '250px',
+      disableClose: true,
+      data: {name: name, other: other }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result) {
+        if (result !== 'canceled') {
+          if (this[control] !== result ) {
+            this[control] = result;
+            this.profile[control] = '@' + result;
+            this.updateDataPoint(event, control);
+          }
+        }
+      } else {
+        if (this[control]) {
+          this[control] = '';
+          this.profile[control] = null;
+          this.updateDataPoint(event, control);
+          this.form.patchValue({[control]: null});
+        } else {
+          if (this.profile[control]) {
+            selection = this.profile[control];
+          }
+          this.form.patchValue({[control]: selection});
+        }
+      }
+    });
+  }
+
+  // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
+  setOtherData(control: string) {
+    if (this.profile[control]) {
+      if (this.profile[control].substring(0, 1) === '@') {
+        this[control] = this.profile[control].substring(1, this.profile[control].length);
+        this.profile[control] = 'other';
+      }
+    }
+  }
+
+  // Form Select option processing
+  selectedSelectItem(control: string, controlDesc: string, event: string) {
+
+    // If user chose other, set description for dialog
+    if (event === 'other') {
+      this.openDialog(control, controlDesc, event);
+    } else {
+
+      // If user did not choose other, call the correct update processor for the field selected
+      this[control] = '';
+      this.updateDataPoint(event, control);
+    }
+  }
+
+  /**** Field auto-update processing ****/
+  updateDataPoint(event: string, control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (event === '') {
+      this.profile[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      if (this.form.controls[control].value !== 'other') {
+        this.profile[control] = event;
+      }
+    }
+    this.updateLifestyle(control);
+  }
+
+  updateLifestyle(control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this.httpError = false;
+    this.httpErrorText = '';
+    this.profileSvc.updateProfile(this.profile)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this[SaveIcon] = false;
+    }, error => {
+      this[SaveIcon] = false;
+      this.httpError = true;
+      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+    });
+  }
+
+  // Validate year of birth entered is a number
+  yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
+    if (control.value !== undefined && (isNaN(control.value))) {
+      return { birthYear: true };
+    }
+    return null;
+  }
+
   public errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
   }

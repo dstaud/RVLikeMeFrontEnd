@@ -19,6 +19,11 @@ export interface IuserProfile {
   campsWithMe: string;
   boondocking: string;
   traveling: string;
+  rigType: string;
+  rigManufacturer: string;
+  rigBrand: string;
+  rigModel: string;
+  rigYear: number;
 }
 
 @Injectable({
@@ -39,7 +44,12 @@ export class ProfileService {
     worklife: null,
     campsWithMe: null,
     boondocking: null,
-    traveling: null
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null
   };
   private profileSubscription: any;
 
@@ -54,7 +64,7 @@ export class ProfileService {
 
   public getProfile() {
     console.log('getProfile');
-    this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
+    this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
     .subscribe(data => {
       console.log('subscribed', data);
@@ -78,6 +88,6 @@ export class ProfileService {
   }
 
   public dispose() {
-    // this.profileSubscription.unsubscribe();
+    this.profileSubscription.unsubscribe();
   }
 }

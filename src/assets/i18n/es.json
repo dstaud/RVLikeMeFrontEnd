@@ -1,7 +1,8 @@
 {
   "general": {
     "submit": "Enviar",
-    "rvlikeme": "RV como yo"
+    "rvlikeme": "RV como yo",
+    "complete": "completo"
   },
   "menu": {
     "connections": "como yo",
@@ -33,7 +34,7 @@
   },
   "profile.component": {
     "header": "Perfil",
-    "explanation": "Ingrese información sobre usted, su estilo de vida y su equipo para ayudarnos a relacionarlo con otros RVers para obtener más información relevante y respuestas a sus preguntas.",
+    "explanation": "Ingrese información sobre usted y cómo su RV para ayudarnos a brindarle más información relevante y respuestas a sus preguntas.",
     "preferred-language": "Idioma preferido",
     "english": "Inglés",
     "spanish": "Español",
@@ -197,6 +198,8 @@
   "account": {
     "changeUsername": "Cambie el nombre de usuario",
     "changePassword": "Cambia la contraseña",
+    "darkTheme": "Modo oscuro",
+    "lightTheme": "Modo de luz",
     "logout": "Cerrar sesión"
   }
 }

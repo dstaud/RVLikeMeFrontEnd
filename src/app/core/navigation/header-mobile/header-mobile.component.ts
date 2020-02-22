@@ -10,6 +10,7 @@ import { SigninButtonVisibleService } from '@services/signin-btn-visibility.serv
 import { RegisterBtnVisibleService } from '@services/register-btn-visiblity.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DeviceService } from '@services/device.service';
+import { ThemeService } from '@services/theme.service';
 
 @Component({
   selector: 'app-rvlm-header-mobile',
@@ -28,10 +29,12 @@ export class HeaderMobileComponent implements OnInit {
   returnRoute = '';
   autoRoute = false;
   device: string;
+  lightTheme = true;
 
   constructor(private translate: TranslateService,
               private router: Router,
               private deviceSvc: DeviceService,
+              private themeSvc: ThemeService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               private registerBtnVisibleSvc: RegisterBtnVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -196,6 +199,11 @@ export class HeaderMobileComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute('');
   }
 
+  selectTheme(theme: string) {
+    this.lightTheme = !this.lightTheme;
+
+    this.themeSvc.setGlobalColorTheme(theme);
+  }
 
   signIn() {
     this.router.navigateByUrl('/signin');

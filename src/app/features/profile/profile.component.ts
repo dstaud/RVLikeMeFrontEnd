@@ -39,7 +39,12 @@ export class ProfileComponent implements OnInit {
     worklife: null,
     campsWithMe: null,
     boondocking: null,
-    traveling: null
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null
   };
 
   userProfile: Observable<IuserProfile>;
@@ -54,6 +59,8 @@ export class ProfileComponent implements OnInit {
   totalLifestyleFieldsWithData = 0;
   totalLifestyleNbrOfFields = 5;
   percentLifestyle: number;
+  totalRigFieldsWithData = 0;
+  totalRigNbrOfFields = 1;
   percentRig: number;
   other: string;
   form: FormGroup;
@@ -133,6 +140,10 @@ export class ProfileComponent implements OnInit {
       if (data.boondocking) { this.totalLifestyleFieldsWithData++; }
       if (data.traveling) { this.totalLifestyleFieldsWithData++; }
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+
+
+      if (data.rigType) { this.totalRigFieldsWithData++; }
+      this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
 
       this.showSpinner = false;
       this.form.enable();

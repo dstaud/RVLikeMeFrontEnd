@@ -29,9 +29,11 @@ html, body {
 // @include angular-material-theme($deep-purple-theme);
 // @include angular-material-theme($orange-theme);
 // @include angular-material-theme($indigo-theme);
+// @include angular-material-theme($white-theme);
+// @include angular-material-theme($dark-theme);
 
 .light-theme {
-  @include angular-material-theme($light-theme);
+  @include angular-material-theme($cyan-theme);
 }
 
 .orange-theme {

@@ -42,7 +42,12 @@ export class RegisterUserComponent implements OnInit {
     worklife: null,
     campsWithMe: null,
     boondocking: null,
-    traveling: null
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null
   };
   httpError = false;
   httpErrorText = '';

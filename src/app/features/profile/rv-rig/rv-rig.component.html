@@ -1,15 +1,72 @@
-<div class="mat-app-background container">
+<div class="mat-app-background background">
+  <div>
+    <p class="mat-body">{{ "rig.component.explanation" | translate}}</p>
+  </div>
   <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
-        <!-- <mat-icon matPrefix>person</mat-icon> -->
-        <mat-label>RV type</mat-label>
-        <mat-select (change)="changeType($event)">
-          <mat-option *ngFor="let RVType of RVTypes" [value]="RVType.value">
-            {{ RVType.viewValue }}
+        <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="selectedSelectItem('rigType', 'rig.component.rigTypeDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('rigType', 'rig.component.rigTypeDesc')"
+          formControlName="rigType">
+          <mat-option
+            aria-placeholder="Rig Type"
+            *ngFor="let RigType of RigTypes" [value]="RigType.value">
+            {{ RigType.viewValue | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigTypeSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "rig.component.rigManufacturerDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="selectedSelectItem('rigManufacturer', 'rig.component.rigManufacturerDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('rigManufacturer', 'rig.component.rigManufacturerDesc')"
+          formControlName="rigManufacturer">
+          <mat-option
+            aria-placeholder="Rig Manufacturer"
+            *ngFor="let RigManufacturer of RigManufacturers" [value]="RigManufacturer.value">
+            {{ RigManufacturer.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigManufacturerSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "rig.component.rigBrandDesc" | translate }}</mat-label>
+        <mat-select
+          matNativeControl
+          (selectionChange)="selectedSelectItem('rigBrand', 'rig.component.rigBrandDesc', $event.source.value)"
+          (openedChange) = "activatedSelectItem('rigBrand', 'rig.component.rigBrandDesc')"
+          formControlName="rigBrand">
+          <mat-option
+            aria-placeholder="Rig Brand"
+            *ngFor="let RigBrand of RigBrands" [value]="RigBrand.value">
+            {{ RigBrand.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigManufacturerSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "rig.component.rigYearDesc" | translate }} (YYYY)</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Rig Year"
+              formControlName="rigYear"
+              (blur)="updateDataPoint($event, 'rigYear')">
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigYearSaveIcon">save</mat-icon>
     </div>
   </form>
+  <br>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
+

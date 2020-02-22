@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -76,7 +76,12 @@ export class LifestyleComponent implements OnInit {
     worklife: null,
     campsWithMe: null,
     boondocking: null,
-    traveling: null
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null,
   };
 
   userProfile: Observable<IuserProfile>;
@@ -227,7 +232,6 @@ export class LifestyleComponent implements OnInit {
     this.helpMsg = this.translate.instant(controlDesc);
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
-
 
   // Select form 'Other' Dialog
   openDialog(control: string, name: string, event: string): void {

@@ -1,27 +1,36 @@
-<div class="mat-app-background container">
+<div class="mat-app-background container background"> <!-- TODO: Do I need this container here? -->
   <p class="mat-body">{{ "profile.component.explanation" | translate }}</p>
   <mat-list>
+<!--     <div class="row" (click)="onPersonal()">
+      <div [ngStyle]="{width: 10%, color: red}">Personal</div>
+    </div> -->
     <div class="row" (click)="onPersonal()">
       <mat-icon class="icon" fontSet="material-icons-outlined">person</mat-icon>
       <mat-list-item>{{ "profile.component.personal" | translate }}
-        ({{ "profile.component.personalex" | translate }})
-        {{ percentPersonal  | number:'1.0-0'}}%</mat-list-item>
+        <span class="percent-complete">
+            ({{ percentPersonal  | number:'1.0-0'}}% {{ "general.complete" | translate }})
+        </span>
+      </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
     <mat-divider class="divider"></mat-divider>
     <div class="row" (click)="onLifestyle()">
       <mat-icon class="icon" fontSet="material-icons-outlined">tag_faces</mat-icon>
       <mat-list-item class="row-item">{{ "profile.component.lifestyle" | translate }}
-        ({{ "profile.component.lifestyleex" | translate }})
-        {{ percentLifestyle  | number:'1.0-0'}}%</mat-list-item>
+        <span class="percent-complete">
+          ({{ percentLifestyle  | number:'1.0-0'}}% {{ "general.complete" | translate }})
+        </span>
+      </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
     <mat-divider class="divider"></mat-divider>
     <div class="row" (click)="onRig()">
       <mat-icon class="icon" fontSet="material-icons-outlined">rv_hookup</mat-icon>
       <mat-list-item class="row-item">{{ "profile.component.rig" | translate }}
-        ({{ "profile.component.rigex" | translate }})
-        {{ percentRig  | number:'1.0-0'}}%</mat-list-item>
+        <span class="percent-complete">
+          ({{ percentRig  | number:'1.0-0'}}% {{ "general.complete" | translate }})
+        </span>
+      </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
     <mat-divider class="divider"></mat-divider>
