@@ -114,6 +114,9 @@ export class ProfileComponent implements OnInit {
     .subscribe(data => {
       console.log('in Profile component=', data);
       this.profile = data;
+      this.totalPersonalFieldsWithData = 0;
+      this.totalLifestyleFieldsWithData = 0;
+      this.totalRigFieldsWithData = 0;
 
       if (this.profile.aboutMe) {
         if (this.profile.aboutMe.substring(0, 1) === '@') {
@@ -271,7 +274,7 @@ export class ProfileComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;
-      this.profileSvc.distributeProfileUpdate(this.profile);
+      // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this.showAboutMeSaveIcon = false;
     });

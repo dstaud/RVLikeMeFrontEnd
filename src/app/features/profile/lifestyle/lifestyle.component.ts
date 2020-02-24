@@ -363,7 +363,7 @@ export class LifestyleComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
-      this.profileSvc.distributeProfileUpdate(this.profile);
+      // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
       this.httpError = true;
