@@ -92,7 +92,8 @@ export class ProfileService {
       { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
       .subscribe(data => {
         console.log('subscribed', this.dataStore.profile);
-        this.dataStore.profile.firstName = data.firstName;
+        this.dataStore.profile = data;
+/*         this.dataStore.profile.firstName = data.firstName;
         this.dataStore.profile.lastName = data.lastName;
         this.dataStore.profile.displayName = data.displayName;
         this.dataStore.profile.yearOfBirth = data.yearOfBirth;
@@ -109,7 +110,7 @@ export class ProfileService {
         this.dataStore.profile.rigManufacturer = data.rigManufacturer;
         this.dataStore.profile.rigBrand = data.rigBrand;
         this.dataStore.profile.rigModel = data.rigModel;
-        this.dataStore.profile.rigYear = data.rigYear;
+        this.dataStore.profile.rigYear = data.rigYear; */
         console.log('Service profile=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, error =>
