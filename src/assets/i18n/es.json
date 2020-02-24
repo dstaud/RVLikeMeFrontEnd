@@ -38,12 +38,9 @@
     "preferred-language": "Idioma preferido",
     "english": "Inglés",
     "spanish": "Español",
-    "personal": "Personal",
-    "personalex": "gente como tú",
-    "lifestyle": "RVs como tú",
-    "lifestyleex": "vive como tu",
-    "rig": "RV",
-    "rigex": "RV como la tuya",
+    "personal": "Sobre mí",
+    "lifestyle": "Mi estilo de vida",
+    "rig": "Mi RV",
     "aboutMe": "Describete",
     "list": {
       "aboutMe": {
@@ -184,6 +181,26 @@
         "country": "A través de los Estados Unidos o Canadá",
         "regional": "Regionalmente dentro de mi país",
         "none": "Yo no viajo",
+        "other": "Otro"
+      }
+    }
+  },
+  "rig.component": {
+    "explanation": "Esta información se usará para otras personas con RV similares para obtener respuestas más relevantes. ¡Cuanto más completo, mejores serán sus resultados!",
+    "rigTypeDesc": "Tipo de RV",
+    "rigYearDesc": "RV año",
+    "list": {
+      "rigtype": {
+        "a": "Autocaravana clase A",
+        "b": "Autocaravana clase B",
+        "c": "Autocaravana clase C",
+        "sc": "Autocaravana clase C (Super C)",
+        "fw": "Remolque de quinta rueda",
+        "tt": "Trailer de viaje",
+        "tc": "Camper de Camión",
+        "ft": "Remolque plegable",
+        "v": "Camioneta",
+        "cb": "Bus personalizado",
         "other": "Otro"
       }
     }

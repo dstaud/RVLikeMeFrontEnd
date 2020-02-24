@@ -62,23 +62,71 @@ export class ProfileService {
   constructor(private commonData: CommonDataService,
               private http: HttpClient) { }
 
-  public getProfile() {
-    console.log('getProfile');
-    this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
-    .subscribe(data => {
-      console.log('subscribed', data);
-      this.dataStore.profile = data;
+  public getProfile(reset?: boolean) {
+    console.log('getProfile, reset=', reset);
+    if (reset) {
+      console.log('resetting');
+      this.dataStore.profile.firstName = null;
+      this.dataStore.profile.lastName = null;
+      this.dataStore.profile.displayName =null;
+      this.dataStore.profile.yearOfBirth = null;
+      this.dataStore.profile.homeCountry = null;
+      this.dataStore.profile.homeState = null;
+      this.dataStore.profile.language = null;
+      this.dataStore.profile.aboutMe = null;
+      this.dataStore.profile.rvUse = null;
+      this.dataStore.profile.worklife = null;
+      this.dataStore.profile.campsWithMe = null;
+      this.dataStore.profile.boondocking = null;
+      this.dataStore.profile.traveling = null;
+      this.dataStore.profile.rigType = null;
+      this.dataStore.profile.rigManufacturer = null;
+      this.dataStore.profile.rigBrand = null;
+      this.dataStore.profile.rigModel = null;
+      this.dataStore.profile.rigYear = null;
       console.log('Service profile=', this.dataStore.profile);
       this._profile.next(Object.assign({}, this.dataStore).profile);
-    }, error =>
-        console.log('error loading profile'));
+    } else {
+      console.log('getting data');
+      this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
+      { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
+      .subscribe(data => {
+        console.log('subscribed', this.dataStore.profile);
+        this.dataStore.profile.firstName = data.firstName;
+        this.dataStore.profile.lastName = data.lastName;
+        this.dataStore.profile.displayName = data.displayName;
+        this.dataStore.profile.yearOfBirth = data.yearOfBirth;
+        this.dataStore.profile.homeCountry = data.homeCountry;
+        this.dataStore.profile.homeState = data.homeState;
+        this.dataStore.profile.language = data.language;
+        this.dataStore.profile.aboutMe = data.aboutMe;
+        this.dataStore.profile.rvUse = data.rvUse;
+        this.dataStore.profile.worklife = data.worklife;
+        this.dataStore.profile.campsWithMe = data.campsWithMe;
+        this.dataStore.profile.boondocking = data.boondocking;
+        this.dataStore.profile.traveling = data.traveling;
+        this.dataStore.profile.rigType = data.rigType;
+        this.dataStore.profile.rigManufacturer = data.rigManufacturer;
+        this.dataStore.profile.rigBrand = data.rigBrand;
+        this.dataStore.profile.rigModel = data.rigModel;
+        this.dataStore.profile.rigYear = data.rigYear;
+        console.log('Service profile=', this.dataStore.profile);
+        this._profile.next(Object.assign({}, this.dataStore).profile);
+      }, error =>
+          console.log('error loading profile'));
+    }
   }
 
   public addProfile(userProfile: IuserProfile): Observable<any> {
     console.log('http add profile=', userProfile);
     return this.http.post(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
+  public distributeProfileUpdate(userProfile: IuserProfile) {
+    console.log('distribute profile=', userProfile);
+    this.dataStore.profile = userProfile;
+    this._profile.next(Object.assign({}, this.dataStore).profile);
   }
 
   public updateProfile(userProfile: IuserProfile): Observable<any> {
@@ -88,6 +136,7 @@ export class ProfileService {
   }
 
   public dispose() {
+    console.log('dispose of subscription');
     this.profileSubscription.unsubscribe();
   }
 }

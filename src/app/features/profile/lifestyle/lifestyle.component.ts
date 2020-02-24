@@ -95,6 +95,17 @@ export class LifestyleComponent implements OnInit {
   showboondockingSaveIcon = false;
   showtravelingSaveIcon = false;
 
+  // Store 'other' value locally
+  rvUse = '';
+  worklife = '';
+  campsWithMe = '';
+  boondocking = '';
+  traveling = '';
+  rvUseFormValue = '';
+  worklifeFormValue = '';
+  campsWithMeFormValue = '';
+  boondockingFormValue = '';
+  travelingFormValue = '';
 
   /**** Select form select field option data. ****/
   RvLifestyles: RvLifestyle[] = [
@@ -196,19 +207,42 @@ export class LifestyleComponent implements OnInit {
       this.profile = data;
 
       // If user selected other on a form field, need to get the data they entered
-      this.setOtherData('rvUse');
-      this.setOtherData('worklife');
-      this.setOtherData('campsWithMe');
-      this.setOtherData('boondocking');
-      this.setOtherData('traveling');
+      // and set the form field to display 'other'
+      console.log('set others');
+      if (this.otherData('rvUse')) {
+        this.rvUseFormValue = 'other';
+      } else {
+        this.rvUseFormValue = this.profile.rvUse;
+      }
+      if (this.otherData('worklife')) {
+        this.worklifeFormValue = 'other';
+      } else {
+        this.worklifeFormValue = this.profile.worklife;
+      }
+      if (this.otherData('campsWithMe')) {
+        this.campsWithMeFormValue = 'other';
+      } else {
+        this.campsWithMeFormValue = this.profile.campsWithMe;
+      }
+      if (this.otherData('boondocking')) {
+        this.boondockingFormValue = 'other';
+      } else {
+        this.boondockingFormValue = this.profile.boondocking;
+      }
+      if (this.otherData('traveling')) {
+        this.travelingFormValue = 'other';
+      } else {
+        this.travelingFormValue = this.profile.traveling;
+      }
 
       this.form.patchValue ({
-        rvUse: this.profile.rvUse,
-        worklife: this.profile.worklife,
-        campsWithMe: this.profile.campsWithMe,
-        boondocking: this.profile.boondocking,
-        traveling: this.profile.traveling
+        rvUse: this.rvUseFormValue,
+        worklife: this.worklifeFormValue,
+        campsWithMe: this.campsWithMeFormValue,
+        boondocking: this.boondockingFormValue,
+        traveling: this.travelingFormValue
       });
+
       this.showSpinner = false;
       this.form.enable();
     }, (error) => {
@@ -250,9 +284,12 @@ export class LifestyleComponent implements OnInit {
     .subscribe(result => {
       if (result) {
         if (result !== 'canceled') {
+          console.log('other and result ', this[control], result);
           if (this[control] !== result ) {
             this[control] = result;
+            console.log('lifestyle before ', this.profile);
             this.profile[control] = '@' + result;
+            console.log('lifestyle after', this.profile);
             this.updateDataPoint(event, control);
           }
         }
@@ -274,13 +311,15 @@ export class LifestyleComponent implements OnInit {
 
 
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
-  setOtherData(control: string) {
+  otherData(control: string): boolean {
+    let result = false;
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
         this[control] = this.profile[control].substring(1, this.profile[control].length);
-        this.profile[control] = 'other';
+        result = true;
       }
     }
+    return result;
   }
 
 
@@ -308,6 +347,7 @@ export class LifestyleComponent implements OnInit {
       this.form.patchValue({ [control]: null });
     } else {
       if (this.form.controls[control].value !== 'other') {
+        console.log('updatedatapoint ', event);
         this.profile[control] = event;
       }
     }
@@ -318,10 +358,12 @@ export class LifestyleComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;
     this.httpErrorText = '';
+    console.log('updating lifestyle=', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
+      this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
       this.httpError = true;

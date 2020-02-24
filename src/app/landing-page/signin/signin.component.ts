@@ -64,9 +64,7 @@ export class SigninComponent implements OnInit {
     });
    }
 
-  ngOnDestroy() {
-    this.profileSvc.dispose();
-  };
+  ngOnDestroy() {};
 
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
@@ -80,6 +78,7 @@ export class SigninComponent implements OnInit {
     .subscribe ((responseData) => {
       // Get user profile
       this.userProfile = this.profileSvc.profile;
+      console.log('get profile')
       this.profileSvc.getProfile();
       this.userProfile
       .pipe(untilComponentDestroyed(this))

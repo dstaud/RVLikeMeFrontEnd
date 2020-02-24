@@ -38,12 +38,9 @@
     "preferred-language": "Preferred language",
     "english": "English",
     "spanish": "Spanish",
-    "personal": "Personal",
-    "personalex": "people like you",
-    "lifestyle": "Lifestyle",
-    "lifestyleex": "RVs like you",
-    "rig": "Rig",
-    "rigex": "rig like yours",
+    "personal": "About me",
+    "lifestyle": "My lifestyle",
+    "rig": "My rig",
     "aboutMe": "Describe yourself",
     "list": {
       "aboutMe": {
@@ -191,7 +188,7 @@
   "rig.component": {
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
     "rigTypeDesc": "Type of rig",
-    "rigManufacturerDesc": "Rig Manufacturer",
+    "rigYearDesc": "Rig year",
     "list": {
       "rigtype": {
         "a": "Class A motorhome",
@@ -204,12 +201,6 @@
         "ft": "Folding trailer",
         "v": "Van",
         "cb": "Customized bus",
-        "other": "Other"
-      },
-      "rigmanufacturer": {
-        "airstream": "Airstream",
-        "monaco": "REV Group",
-        "thor": "Thor Industries",
         "other": "Other"
       }
     }

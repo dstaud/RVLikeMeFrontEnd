@@ -169,7 +169,7 @@ export class HeaderMobileComponent implements OnInit {
   }
 
 
-  public logout() {
+  logout() {
     this.authSvc.logout();
     this.authSvc.setUserToAuthorized(false);
     this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);

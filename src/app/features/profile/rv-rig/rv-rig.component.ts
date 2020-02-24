@@ -21,16 +21,6 @@ export interface RigType {
   viewValue: string;
 }
 
-export interface RigManufacturer {
-  value: string;
-  viewValue: string;
-}
-
-export interface RigBrand {
-  value: string;
-  viewValue: string;
-}
-
 @Component({
   selector: 'app-rvlm-rv-rig',
   templateUrl: './rv-rig.component.html',
@@ -67,6 +57,8 @@ export class RvRigComponent implements OnInit {
 
   userProfile: Observable<IuserProfile>;
 
+  rigType = '';
+  rigTypeFormValue = '';
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -76,6 +68,8 @@ export class RvRigComponent implements OnInit {
   showrigBrandSaveIcon = false;
   showrigModelSaveIcon = false;
   showrigYearSaveIcon = false;
+
+  rvType = '';
 
   /**** Select form select field option data. ****/
   RigTypes: RigType[] = [
@@ -93,21 +87,6 @@ export class RvRigComponent implements OnInit {
     {value: 'other', viewValue: 'rig.component.list.rigtype.other'}
   ];
 
-  RigManufacturers: RigManufacturer[] = [
-    {value: '', viewValue: ''},
-    {value: 'airstream', viewValue: 'rig.component.list.rigmanufacturer.airstream'},
-    {value: 'monaco', viewValue: 'rig.component.list.rigmanufacturer.monaco'},
-    {value: 'thor', viewValue: 'rig.component.list.rigmanufacturer.thor'},
-    {value: 'other', viewValue: 'rig.component.list.rigmanufacturer.other'}
-  ];
-
-  RigBrands: RigBrand[] = [
-    {value: '', viewValue: ''},
-    {value: 'airstream', viewValue: 'rig.component.list.rigmanufacturer.airstream'},
-    {value: 'autobahn', viewValue: 'rig.component.list.rigmanufacturer.autobahn'},
-    {value: 'bambi', viewValue: 'rig.component.list.rigmanufacturer.bambi'},
-    {value: 'classic', viewValue: 'rig.component.list.rigmanufacturer.classic'}
-  ];
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -159,18 +138,15 @@ export class RvRigComponent implements OnInit {
       this.profile = data;
 
       // If user selected other on a form field, need to get the data they entered
-      this.setOtherData('rigType');
-      this.setOtherData('rigManufacturer');
-      this.setOtherData('rigBrand');
-      this.setOtherData('rigModel');
-      this.setOtherData('rigYear');
+      if (this.otherData('rigType')) {
+        this.rigTypeFormValue = 'other';
+      } else {
+        this.rigTypeFormValue = this.profile.rigType;
+      }
 
       if (data) {
         this.form.patchValue ({
-          rigType: this.profile.rigType,
-          rigManufacturer: this.profile.rigManufacturer,
-          rigBrand: this.profile.rigBrand,
-          rigModel: this.profile.rigModel,
+          rigType: this.rigTypeFormValue,
           rigYear: this.profile.rigYear
         });
       }
@@ -183,7 +159,7 @@ export class RvRigComponent implements OnInit {
     });
   }
 
-  ngOnDestroy() {};
+  ngOnDestroy() {}
 
   // Automatically pop-up the 'other' dialog with the correct
   // control and name when use clicks on select if other
@@ -208,19 +184,24 @@ export class RvRigComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
+      console.log('result and profile ', result, this.profile);
       if (result) {
         if (result !== 'canceled') {
+          console.log('other=', this[control]);
           if (this[control] !== result ) {
             this[control] = result;
+            console.log('before ', this.profile, this.profile.rvUse);
             this.profile[control] = '@' + result;
-            this.updateDataPoint(event, control);
+            console.log('after ', this.profile, this.profile.rvUse);
+            console.log('calling update select ', this.profile, control, this.profile[control]);
+            this.updateRig(control);
           }
         }
       } else {
         if (this[control]) {
           this[control] = '';
           this.profile[control] = null;
-          this.updateDataPoint(event, control);
+          this.updateSelectItem(control, event);
           this.form.patchValue({[control]: null});
         } else {
           if (this.profile[control]) {
@@ -233,13 +214,15 @@ export class RvRigComponent implements OnInit {
   }
 
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
-  setOtherData(control: string) {
+  otherData(control: string): boolean {
+    let result = false;
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
         this[control] = this.profile[control].substring(1, this.profile[control].length);
-        this.profile[control] = 'other';
+        result = true;
       }
     }
+    return result;
   }
 
   // Form Select option processing
@@ -252,39 +235,54 @@ export class RvRigComponent implements OnInit {
 
       // If user did not choose other, call the correct update processor for the field selected
       this[control] = '';
-      this.updateDataPoint(event, control);
+      this.updateSelectItem(control, event);
     }
   }
 
   /**** Field auto-update processing ****/
-  updateDataPoint(event: string, control: string) {
+  updateDataPoint(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (this.form.controls[control].value === '') {
+      this.profile[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      this.profile[control] = this.form.controls[control].value;
+    }
+    this.updateRig(control);
+  }
+
+  updateSelectItem(control: string, event) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    console.log('in select item', this.profile);
     this[SaveIcon] = true;
     if (event === '') {
       this.profile[control] = null;
       this.form.patchValue({ [control]: null });
     } else {
-      if (this.form.controls[control].value !== 'other') {
-        this.profile[control] = event;
-      }
+      this.profile[control] = event;
     }
-    this.updateLifestyle(control);
+    this.updateRig(control);
   }
 
-  updateLifestyle(control: string) {
+  updateRig(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;
     this.httpErrorText = '';
+    console.log('update profile=', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
+      this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
       this.httpError = true;
       this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
     });
   }
+
+
 
   // Validate year of birth entered is a number
   yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {

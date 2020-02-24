@@ -115,6 +115,7 @@ export class AppComponent implements OnInit {
   };
 
   ngOnDestroy() {
+    console.log('dispose from app');
     this.profileSvc.dispose();
   };
 }

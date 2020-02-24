@@ -62,8 +62,9 @@ export class ProfileComponent implements OnInit {
   totalRigFieldsWithData = 0;
   totalRigNbrOfFields = 1;
   percentRig: number;
-  other: string;
+  aboutMeOther: string;
   form: FormGroup;
+  aboutMeFormValue = '';
 
   AboutMes: AboutMe[] = [
     {value: '', viewValue: ''},
@@ -116,14 +117,16 @@ export class ProfileComponent implements OnInit {
 
       if (this.profile.aboutMe) {
         if (this.profile.aboutMe.substring(0, 1) === '@') {
-          this.other = this.profile.aboutMe.substring(1, this.profile.aboutMe.length);
-          this.profile.aboutMe = 'other';
+          this.aboutMeOther = this.profile.aboutMe.substring(1, this.profile.aboutMe.length);
+          this.aboutMeFormValue = 'other';
+        } else {
+          this.aboutMeFormValue = this.profile.aboutMe;
         }
       }
 
       this.form.patchValue ({
         language: data.language,
-        aboutMe: data.aboutMe
+        aboutMe: this.aboutMeFormValue
       });
 
       if (data.firstName) { this.totalPersonalFieldsWithData++; }
@@ -153,13 +156,11 @@ export class ProfileComponent implements OnInit {
     });
    }
 
-   ngOnDestroy() {
-     this.profileSvc.dispose();
-   }
+   ngOnDestroy() { }
 
   // If use touches aboutMe control and had previously selected 'other' then open the dialog to show what they had entered.
   activatedAboutMe() {
-    if (this.other) {
+    if (this.aboutMeOther) {
       this.openDialog('other');
     }
   }
@@ -186,8 +187,8 @@ export class ProfileComponent implements OnInit {
   openDialog(event: string): void {
     let other = '';
     let selection = null;
-    if (this.other) {
-      other = this.other;
+    if (this.aboutMeOther) {
+      other = this.aboutMeOther;
     }
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
@@ -199,16 +200,16 @@ export class ProfileComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
       if (result) {
-        if (this.other !== result && result !== 'canceled') {
-          this.other = result;
+        if (this.aboutMeOther !== result && result !== 'canceled') {
+          this.aboutMeOther = result;
           this.profile.aboutMe = '@' + result;
           this.updateAboutMe(event);
         }
       } else {
-        if (this.other) {
+        if (this.aboutMeOther) {
           this.profile.aboutMe = null;
           this.updateAboutMe('');
-          this.other = '';
+          this.aboutMeOther = '';
           this.form.patchValue({
             aboutMe: null
           });
@@ -230,7 +231,7 @@ export class ProfileComponent implements OnInit {
     if (event === 'other') {
       this.openDialog(event);
     } else {
-      this.other = '';
+      this.aboutMeOther = '';
       this.updateAboutMe(event);
     }
   }
@@ -253,6 +254,7 @@ export class ProfileComponent implements OnInit {
 
   // Auto-update aboutMe selection to server
   updateAboutMe(event: string) {
+    console.log('updating profile ', this.profile);
     if (this.form.controls.aboutMe.value === '') {
       this.profile.aboutMe = null;
       this.form.patchValue({
@@ -269,6 +271,7 @@ export class ProfileComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;
+      this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this.showAboutMeSaveIcon = false;
     });

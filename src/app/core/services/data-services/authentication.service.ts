@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { CommonDataService } from './common-data.service';
+import { ProfileService } from '@services/data-services/profile.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
 import { ItokenResponse } from '@interfaces/tokenResponse';
@@ -20,6 +21,7 @@ export class AuthenticationService {
   userAuth$ = this.userAuth.asObservable();
 
   constructor(private http: HttpClient,
+              private profileSvc: ProfileService,
               private sentryMonitorSvc: SentryMonitorService,
               private commonData: CommonDataService) { }
 
@@ -74,6 +76,8 @@ export class AuthenticationService {
   public logout(): void {
     this.token = '';
     window.localStorage.removeItem('rvlikeme-token');
+    this.profileSvc.getProfile(true);
+    this.profileSvc.dispose();
   }
 
   public registerUser(user: ItokenPayload): Observable<any> {
