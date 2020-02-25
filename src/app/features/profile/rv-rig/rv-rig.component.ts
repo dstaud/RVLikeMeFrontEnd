@@ -34,14 +34,15 @@ export class RvRigComponent implements OnInit {
   helpMsg = '';
 
   // Interface for Profile data
-  profile: IuserProfile = {
+/*   profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null,
+    language: 'en',
+    colorThemePreference: 'light-theme',
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -53,7 +54,8 @@ export class RvRigComponent implements OnInit {
     rigBrand: null,
     rigModel: null,
     rigYear: null
-  };
+  }; */
+  profile: IuserProfile;
 
   userProfile: Observable<IuserProfile>;
 
@@ -147,7 +149,10 @@ export class RvRigComponent implements OnInit {
       if (data) {
         this.form.patchValue ({
           rigType: this.rigTypeFormValue,
-          rigYear: this.profile.rigYear
+          rigYear: this.profile.rigYear,
+          rigManufacturer: this.profile.rigManufacturer,
+          rigBrand: this.profile.rigBrand,
+          rigModel: this.profile.rigModel
         });
       }
 

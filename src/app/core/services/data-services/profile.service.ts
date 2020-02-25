@@ -13,6 +13,7 @@ export interface IuserProfile {
   homeCountry: string;
   homeState: string;
   language: string;
+  colorThemePreference: string;
   aboutMe: string;
   rvUse: string;
   worklife: string;
@@ -39,6 +40,7 @@ export class ProfileService {
     homeCountry: null,
     homeState: null,
     language: 'en',
+    colorThemePreference: 'light-theme',
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -62,7 +64,7 @@ export class ProfileService {
   constructor(private commonData: CommonDataService,
               private http: HttpClient) { }
 
-  public getProfile(reset?: boolean) {
+  getProfile(reset?: boolean) {
     console.log('getProfile, reset=', reset);
     if (reset) {
       console.log('resetting');
@@ -72,7 +74,8 @@ export class ProfileService {
       this.dataStore.profile.yearOfBirth = null;
       this.dataStore.profile.homeCountry = null;
       this.dataStore.profile.homeState = null;
-      this.dataStore.profile.language = null;
+      this.dataStore.profile.language = 'en';
+      this.dataStore.profile.colorThemePreference = 'light-theme';
       this.dataStore.profile.aboutMe = null;
       this.dataStore.profile.rvUse = null;
       this.dataStore.profile.worklife = null;
@@ -93,24 +96,6 @@ export class ProfileService {
       .subscribe(data => {
         console.log('subscribed', this.dataStore.profile);
         this.dataStore.profile = data;
-/*         this.dataStore.profile.firstName = data.firstName;
-        this.dataStore.profile.lastName = data.lastName;
-        this.dataStore.profile.displayName = data.displayName;
-        this.dataStore.profile.yearOfBirth = data.yearOfBirth;
-        this.dataStore.profile.homeCountry = data.homeCountry;
-        this.dataStore.profile.homeState = data.homeState;
-        this.dataStore.profile.language = data.language;
-        this.dataStore.profile.aboutMe = data.aboutMe;
-        this.dataStore.profile.rvUse = data.rvUse;
-        this.dataStore.profile.worklife = data.worklife;
-        this.dataStore.profile.campsWithMe = data.campsWithMe;
-        this.dataStore.profile.boondocking = data.boondocking;
-        this.dataStore.profile.traveling = data.traveling;
-        this.dataStore.profile.rigType = data.rigType;
-        this.dataStore.profile.rigManufacturer = data.rigManufacturer;
-        this.dataStore.profile.rigBrand = data.rigBrand;
-        this.dataStore.profile.rigModel = data.rigModel;
-        this.dataStore.profile.rigYear = data.rigYear; */
         console.log('Service profile=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, error =>
@@ -118,19 +103,19 @@ export class ProfileService {
     }
   }
 
-  public addProfile(userProfile: IuserProfile): Observable<any> {
+  addProfile(userProfile: IuserProfile): Observable<any> {
     console.log('http add profile=', userProfile);
     return this.http.post(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
-  public distributeProfileUpdate(userProfile: IuserProfile) {
+/*   distributeProfileUpdate(userProfile: IuserProfile) {
     console.log('distribute profile=', userProfile);
     this.dataStore.profile = userProfile;
     this._profile.next(Object.assign({}, this.dataStore).profile);
-  }
+  } */
 
-  public updateProfile(userProfile: IuserProfile): Observable<any> {
+  updateProfile(userProfile: IuserProfile): Observable<any> {
     console.log('http update profile=', userProfile);
     return this.http.put(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});

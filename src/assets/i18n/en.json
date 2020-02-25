@@ -189,6 +189,9 @@
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
     "rigTypeDesc": "Type of rig",
     "rigYearDesc": "Rig year",
+    "rigManufacturer": "Rig manufacturer",
+    "rigBrand": "Rig brand",
+    "rigModel": "rig model",
     "list": {
       "rigtype": {
         "a": "Class A motorhome",

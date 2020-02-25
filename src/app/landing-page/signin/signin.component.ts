@@ -4,13 +4,13 @@ import { Router} from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LanguageService } from '@services/language.service';
+import { ThemeService } from '@services/theme.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
 
@@ -38,7 +38,7 @@ export class SigninComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
               private router: Router,
-              private translate: TranslateService,
+              private themeSvc: ThemeService,
               private language: LanguageService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               fb: FormBuilder) {
@@ -55,6 +55,7 @@ export class SigninComponent implements OnInit {
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('in Signing return=', data);
       this.returnRoute = data.valueOf();
       if (this.returnRoute) {
         if (this.returnRoute.substring(0, 1) === '*') {
@@ -89,6 +90,11 @@ export class SigninComponent implements OnInit {
         } else {
           this.language.setLanguage('en');
         }
+        if (data.colorThemePreference) {
+          this.themeSvc.setGlobalColorTheme(data.colorThemePreference);
+        } else {
+          this.themeSvc.setGlobalColorTheme('light-theme');
+        }
         this.showSpinner = false;
         this.authSvc.setUserToAuthorized(true);
         if (this.returnRoute && this.returnRoute !== 'landing-page') {
@@ -106,6 +112,7 @@ export class SigninComponent implements OnInit {
         this.httpError = true;
         this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
         this.language.setLanguage('en');
+        this.themeSvc.setGlobalColorTheme('light-theme');
       });
     }, error => {
       this.showSpinner = false;

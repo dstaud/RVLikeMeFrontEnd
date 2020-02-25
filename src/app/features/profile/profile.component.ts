@@ -26,14 +26,15 @@ export interface AboutMe {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  profile: IuserProfile = {
+/*   profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null,
+    language: 'en',
+    colorThemePreference: 'light-theme',
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -45,7 +46,8 @@ export class ProfileComponent implements OnInit {
     rigBrand: null,
     rigModel: null,
     rigYear: null
-  };
+  }; */
+  profile: IuserProfile;
 
   userProfile: Observable<IuserProfile>;
 
@@ -60,7 +62,7 @@ export class ProfileComponent implements OnInit {
   totalLifestyleNbrOfFields = 5;
   percentLifestyle: number;
   totalRigFieldsWithData = 0;
-  totalRigNbrOfFields = 1;
+  totalRigNbrOfFields = 5;
   percentRig: number;
   aboutMeOther: string;
   form: FormGroup;
@@ -149,6 +151,10 @@ export class ProfileComponent implements OnInit {
 
 
       if (data.rigType) { this.totalRigFieldsWithData++; }
+      if (data.rigYear) { this.totalRigFieldsWithData++; }
+      if (data.rigManufacturer) { this.totalRigFieldsWithData++; }
+      if (data.rigBrand) { this.totalRigFieldsWithData++; }
+      if (data.rigModel) { this.totalRigFieldsWithData++; }
       this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
 
       this.showSpinner = false;

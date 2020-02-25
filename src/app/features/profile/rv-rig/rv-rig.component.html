@@ -31,6 +31,39 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigYearSaveIcon">save</mat-icon>
     </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "rig.component.rigManufacturer" | translate }}</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Rig manufacturer"
+              formControlName="rigManufacturer"
+              (blur)="updateDataPoint('rigManufacturer')">
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigManufacturerSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "rig.component.rigBrand" | translate }}</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Rig brand"
+              formControlName="rigBrand"
+              (blur)="updateDataPoint('rigBrand')">
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigBrandSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "rig.component.rigModel" | translate }}</mat-label>
+        <input matInput
+              type="text"
+              placeholder="Rig model"
+              formControlName="rigModel"
+              (blur)="updateDataPoint('rigModel')">
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showrigModelSaveIcon">save</mat-icon>
+    </div>
   </form>
   <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

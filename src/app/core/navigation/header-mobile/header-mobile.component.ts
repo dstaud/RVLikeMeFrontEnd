@@ -10,6 +10,7 @@ import { SigninButtonVisibleService } from '@services/signin-btn-visibility.serv
 import { RegisterBtnVisibleService } from '@services/register-btn-visiblity.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DeviceService } from '@services/device.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 
 @Component({
@@ -31,10 +32,36 @@ export class HeaderMobileComponent implements OnInit {
   device: string;
   lightTheme = true;
 
+  // Interface for profile data
+  profile: IuserProfile = {
+    firstName: null,
+    lastName: null,
+    displayName: null,
+    yearOfBirth: null,
+    homeCountry: null,
+    homeState: null,
+    language: 'en',
+    colorThemePreference: 'light-theme',
+    aboutMe: null,
+    rvUse: null,
+    worklife: null,
+    campsWithMe: null,
+    boondocking: null,
+    traveling: null,
+    rigType: null,
+    rigManufacturer: null,
+    rigBrand: null,
+    rigModel: null,
+    rigYear: null,
+  };
+
+  userProfile: Observable<IuserProfile>;
+
   constructor(private translate: TranslateService,
               private router: Router,
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
+              private profileSvc: ProfileService,
               private signinBtnVisibleSvc: SigninButtonVisibleService,
               private registerBtnVisibleSvc: RegisterBtnVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -49,6 +76,22 @@ export class HeaderMobileComponent implements OnInit {
           this.setTitleOnRouteChange();
         }
       }
+    });
+
+    this.userProfile = this.profileSvc.profile;
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in header component=', data);
+      this.profile = data;
+      if (this.profile.colorThemePreference === 'light-theme') {
+        this.lightTheme = true;
+      } else {
+        this.lightTheme = false;
+      }
+    }, (error) => {
+      console.error(error);
     });
 
     this.device = this.deviceSvc.device;
@@ -203,6 +246,15 @@ export class HeaderMobileComponent implements OnInit {
     this.lightTheme = !this.lightTheme;
 
     this.themeSvc.setGlobalColorTheme(theme);
+    this.profile.colorThemePreference = theme;
+    this.profileSvc.updateProfile(this.profile)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      console.log('update color theme response = ', responseData);
+      // this.profileSvc.distributeProfileUpdate(this.profile);
+    }, error => {
+      console.log(error);
+    });
   }
 
   signIn() {

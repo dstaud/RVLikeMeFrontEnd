@@ -63,14 +63,15 @@ export class LifestyleComponent implements OnInit {
 
 
   // Interface for profile data
-  profile: IuserProfile = {
+/*   profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null,
+    language: 'en',
+    colorThemePreference: 'light-theme',
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -82,7 +83,8 @@ export class LifestyleComponent implements OnInit {
     rigBrand: null,
     rigModel: null,
     rigYear: null,
-  };
+  }; */
+  profile: IuserProfile;
 
   userProfile: Observable<IuserProfile>;
 

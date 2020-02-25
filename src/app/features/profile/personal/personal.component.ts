@@ -45,14 +45,15 @@ export class PersonalComponent implements OnInit {
   helpMsg = '';
 
   // Interface for Profile data
-  profile: IuserProfile = {
+/*   profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
     yearOfBirth: null,
     homeCountry: null,
     homeState: null,
-    language: null,
+    language: 'en',
+    colorThemePreference: 'light-theme',
     aboutMe: null,
     rvUse: null,
     worklife: null,
@@ -64,7 +65,8 @@ export class PersonalComponent implements OnInit {
     rigBrand: null,
     rigModel: null,
     rigYear: null
-  };
+  }; */
+  profile: IuserProfile;
 
   userProfile: Observable<IuserProfile>;
 

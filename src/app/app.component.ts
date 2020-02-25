@@ -104,9 +104,15 @@ export class AppComponent implements OnInit {
         } else {
           this.language.setLanguage('en');
         }
+        if (data.colorThemePreference) {
+          this.themeSvc.setGlobalColorTheme(data.colorThemePreference);
+        } else {
+          this.themeSvc.setGlobalColorTheme('light-theme');
+        }
       }, (error) => {
         console.error(error);
         this.language.setLanguage('en');
+        this.themeSvc.setGlobalColorTheme('light-theme');
       });
 
       this.authSvc.setUserToAuthorized(true);
