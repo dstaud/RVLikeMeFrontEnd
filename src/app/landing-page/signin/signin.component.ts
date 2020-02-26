@@ -7,8 +7,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 
@@ -37,10 +37,10 @@ export class SigninComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
+              private headerVisibleSvc: HeaderVisibleService,
               private router: Router,
               private themeSvc: ThemeService,
               private language: LanguageService,
-              private signinBtnVisibleSvc: SigninButtonVisibleService,
               fb: FormBuilder) {
               this.form = fb.group({
                 username: new FormControl({value: '', disabled: this.showSpinner},
@@ -51,7 +51,7 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
+    this.headerVisibleSvc.toggleSigninButtonVisible(true);
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {

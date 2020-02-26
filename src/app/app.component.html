@@ -4,7 +4,7 @@
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
       <app-rvlm-header (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-rvlm-header>
-      <app-rvlm-header-mobile (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
+      <app-rvlm-header-mobile *ngIf="headerVisible || userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
       <main class="container" [ngClass]="{'bottom-bar-spacing': userAuthorized}">
         <router-outlet></router-outlet>
       </main>

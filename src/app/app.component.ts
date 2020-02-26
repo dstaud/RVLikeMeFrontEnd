@@ -13,7 +13,7 @@ import { LanguageService } from '@services/language.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   theme: string;
   font: string;
   userAuthorized = false;
+  headerVisible = false;
   userProfile: Observable<IuserProfile>;
 
 
@@ -34,9 +35,9 @@ export class AppComponent implements OnInit {
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
               private language: LanguageService,
+              private headerVisibleSvc: HeaderVisibleService,
               private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
-              private signinBtnVisibleSvc: SigninButtonVisibleService,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
@@ -89,6 +90,13 @@ export class AppComponent implements OnInit {
         this.userAuthorized = authData.valueOf();
       });
 
+    // Listen for changes in user authorization state
+    this.headerVisibleSvc.headerVisible$
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(header => {
+        this.headerVisible = header.valueOf();
+      });
+
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
       // Get user profile
@@ -116,7 +124,6 @@ export class AppComponent implements OnInit {
       });
 
       this.authSvc.setUserToAuthorized(true);
-      this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
   };
 

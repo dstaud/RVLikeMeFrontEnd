@@ -1,32 +1,21 @@
-<div *ngIf="showLanding" class="mat-app-background container">
-  <span class="mat-display-1 hook">
-    Connect with people who RV like you do!
-  </span>
-  <br><br>
-  <p class="mat-body">
-    Whether you are
-  </p>
-  <p class="mat-body sub-text">
-    full-time traveling or stationary,
-  </p>
-  <p class="mat-body sub-text">
-    driving solo or with the family,
-  </p>
-  <p class="mat-body sub-text">
-    a big rig or a small trailer,
-  </p>
-  <p class="mat-body">
-    we are here to connect you with other RV'ers who do the RV lifestyle the way you do!
-  </p>
-  <br>
-  <div class="button">
-    <button mat-flat-button color="primary" (click)="registerUser()">Sign up for free</button>
-  </div>
-  <div class="button">
-    <button mat-button color="primary" (click)="learnMore()">Learn more</button>
-  </div>
+<div>
+  <img src='./../../assets/images/{{landingImage}}'
+  alt="rv view"
+  class="illustration"
+  style="max-width: 900px">
 </div>
-<div *ngIf="showLearnMore" class="mat-app-background background">
+<div class="rvlikeme">
+  <h2 class="mat-h2"><img src="../../../assets/images/trailer.png"
+    class="logo"
+    alt="travel trailer logo"
+    style="width:60px;height:37.2px;">RV Like Me</h2>
+</div>
+<div *ngIf="showLanding" class="mat-app-background container">
+  <button mat-flat-button class="button" color="primary" (click)="registerUser()">Sign up for free</button>
+  <button mat-stroked-button class="button" (click)="signIn()">Log in</button>
+  <button mat-stroked-button class="button" (click)="learnMore()">What is RV Like Me?</button>
+</div>
+<!-- <div *ngIf="showLearnMore" class="mat-app-background background">
   <app-rvlm-learn-more
     (toggle)="toggleLearnMore($event)">
   </app-rvlm-learn-more>
@@ -40,7 +29,7 @@
   <app-rvlm-register-user
     (toggle)="toggleRegisterUser($event)">
   </app-rvlm-register-user>
-</div>
+</div> -->
 
 
 

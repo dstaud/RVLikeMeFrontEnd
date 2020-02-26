@@ -5,13 +5,14 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class SigninButtonVisibleService {
-  private signinButtonVisible = new Subject<boolean>();
-  signinButtonVisible$ = this.signinButtonVisible.asObservable();
+export class HeaderVisibleService {
+  private headerVisible = new Subject<boolean>();
+  headerVisible$ = this.headerVisible.asObservable();
 
   constructor() { }
 
   public toggleSigninButtonVisible(show: boolean): void {
-    this.signinButtonVisible.next(show);
+    this.headerVisible.next(show);
   }
 }
+

@@ -6,8 +6,6 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
-import { RegisterBtnVisibleService } from '@services/register-btn-visiblity.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DeviceService } from '@services/device.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
@@ -22,7 +20,6 @@ export class HeaderMobileComponent implements OnInit {
   pageTitle = 'RV Like Me';
   userAuthorized$: Observable<boolean>;
   userAuthorized = false;
-  signinVisible = true;
   registerVisible = false;
   showSpinner = false;
   showBackArrow = false;
@@ -62,8 +59,6 @@ export class HeaderMobileComponent implements OnInit {
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
               private profileSvc: ProfileService,
-              private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private registerBtnVisibleSvc: RegisterBtnVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService) { }
 
@@ -109,23 +104,10 @@ export class HeaderMobileComponent implements OnInit {
         this.userAuthorized = authData.valueOf();
       });
 
-    // Listen for changes that determine whether to display 'Signin' or 'Sign up for free' which depend on context of what user is viewing
-    this.signinBtnVisibleSvc.signinButtonVisible$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(data => {
-        this.signinVisible = data.valueOf();
-    });
 
-    this.registerBtnVisibleSvc.registerButtonVisible$
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      this.registerVisible = data.valueOf();
-    });
-
-    // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
+      // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
     if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
-      this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     }
 
     this.activateBackArrowSvc.route$
@@ -215,7 +197,6 @@ export class HeaderMobileComponent implements OnInit {
   logout() {
     this.authSvc.logout();
     this.authSvc.setUserToAuthorized(false);
-    this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
     this.router.navigateByUrl('/');
   }
 
@@ -223,19 +204,12 @@ export class HeaderMobileComponent implements OnInit {
   register() {
     this.router.navigateByUrl('/register');
     this.activateBackArrowSvc.setBackRoute('landing-page');
-    this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
   }
 
 
   returnToBackRoute() {
-    if (this.returnRoute === '') {
-      this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
-      this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
-    }
     if (this.returnRoute === 'landing-page') {
       this.router.navigateByUrl('/');
-      this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
-      this.registerBtnVisibleSvc.toggleRegisterButtonVisible(false);
     } else {
       this.router.navigateByUrl('/' + this.returnRoute);
     }

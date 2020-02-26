@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { DeviceService } from './../../core/services/device.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
 
@@ -23,6 +24,9 @@ export class RegisterUserComponent implements OnInit {
   form: FormGroup;
   hidePassword = true;
   showSpinner = false;
+  arrowIcon = 'arrow_back';
+  device: string;
+
   credentials: ItokenPayload = {
     _id: '',
     email: '',
@@ -53,10 +57,11 @@ export class RegisterUserComponent implements OnInit {
   httpError = false;
   httpErrorText = '';
 
-  constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private authSvc: AuthenticationService,
+  constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
+              private deviceSvc: DeviceService,
               private shared: SharedComponent,
+              private headerVisibleSvc: HeaderVisibleService,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
@@ -69,6 +74,15 @@ export class RegisterUserComponent implements OnInit {
 }
 
   ngOnInit() {
+    this.device = this.deviceSvc.device;
+
+    if (this.device === 'iPhone') {
+      // arrow_back_ios icon not coming up at all regardless of this if
+      // this.arrowIcon = 'arrow_back_ios';
+      this.arrowIcon = 'keyboard_arrow_left';
+    }
+
+    this.headerVisibleSvc.toggleSigninButtonVisible(true);
   }
 
   ngOnDestroy() {};
@@ -112,13 +126,17 @@ export class RegisterUserComponent implements OnInit {
         } else {
           if (error.status === 403) {
             this.httpErrorText = 'Email address already registered';
-            this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
           } else {
             this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
           }
         }
       });
     }
+  }
+
+  returnToBackRoute() {
+    this.router.navigateByUrl('/');
+    this.activateBackArrowSvc.setBackRoute('');
   }
 
   public errorHandling = (control: string, error: string) => {

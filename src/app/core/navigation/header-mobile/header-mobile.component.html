@@ -10,11 +10,6 @@
           style="width:60px;height:37.2px;">
     <span class="page-title toolbar-item">{{ pageTitle }}</span>
     <span class="fill-space"></span>
-    <button *ngIf="!userAuthorized && signinVisible"
-            mat-button
-            class="toolbar-item"
-            (click)="signIn()">Log in
-    </button>
     <button *ngIf="!userAuthorized && registerVisible"
             mat-button
             class="toolbar-item"

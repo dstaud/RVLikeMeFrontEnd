@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { PageNotFoundComponent } from './core/navigation/page-not-found/page-not-found.component';

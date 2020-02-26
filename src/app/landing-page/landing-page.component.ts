@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SigninButtonVisibleService } from '@services/signin-btn-visibility.service';
-import { RegisterBtnVisibleService } from '@services/register-btn-visiblity.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 // import { timingSafeEqual } from 'crypto';
 
 @Component({
@@ -16,30 +15,36 @@ export class LandingPageComponent implements OnInit {
   showSignin = false;
   showLearnMore = false;
   showRegisterUser = false;
+  landingImage: string;
+  imageNbr: number;
 
-  constructor(private signinBtnVisibleSvc: SigninButtonVisibleService,
-              private registerBtnVisibleSvc: RegisterBtnVisibleService,
-              private activateBackArrowSvc: ActivateBackArrowService,
+  constructor(private activateBackArrowSvc: ActivateBackArrowService,
+              private headerVisibleSvc: HeaderVisibleService,
               private router: Router) {
 }
 
   ngOnInit() {
+    this.imageNbr = Math.floor(Math.random() * 3) + 1;
+    this.landingImage = 'landing-image' + this.imageNbr + '.jpeg';
+    this.headerVisibleSvc.toggleSigninButtonVisible(false);
   }
 
   registerUser() {
     this.router.navigateByUrl('/register');
-    this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
   learnMore() {
     this.router.navigateByUrl('/learn-more');
-    this.signinBtnVisibleSvc.toggleSigninButtonVisible(false);
-    this.registerBtnVisibleSvc.toggleRegisterButtonVisible(true);
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
-  toggleRegisterUser(show: boolean) {
+  signIn() {
+    this.router.navigateByUrl('/signin');
+    this.activateBackArrowSvc.setBackRoute('landing-page');
+  }
+
+/*   toggleRegisterUser(show: boolean) {
     this.showRegisterUser = show;
     this.showLanding = true;
     this.showLearnMore = false;
@@ -63,11 +68,5 @@ export class LandingPageComponent implements OnInit {
   toggleLanding(show: boolean) {
     this.showLanding = show;
     this.showLearnMore = false;
-    this.signinBtnVisibleSvc.toggleSigninButtonVisible(true);
-/*     window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    }); */
-  }
+  } */
 }
