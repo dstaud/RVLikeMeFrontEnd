@@ -26,47 +26,23 @@ export class LandingPageComponent implements OnInit {
   ngOnInit() {
     this.imageNbr = Math.floor(Math.random() * 3) + 1;
     this.landingImage = 'landing-image' + this.imageNbr + '.jpeg';
-    this.headerVisibleSvc.toggleSigninButtonVisible(false);
   }
 
   registerUser() {
+    this.headerVisibleSvc.toggleHeaderVisible(true);
     this.router.navigateByUrl('/register');
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
   learnMore() {
+    this.headerVisibleSvc.toggleHeaderVisible(true);
     this.router.navigateByUrl('/learn-more');
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
   signIn() {
+    this.headerVisibleSvc.toggleHeaderVisible(true);
     this.router.navigateByUrl('/signin');
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
-
-/*   toggleRegisterUser(show: boolean) {
-    this.showRegisterUser = show;
-    this.showLanding = true;
-    this.showLearnMore = false;
-    this.showSignin = false;
-  }
-
-  toggleSignin(show: boolean) {
-    this.showSignin = show;
-    this.showLanding = true;
-    this.showLearnMore = false;
-    this.showRegisterUser = false;
-  }
-
-  toggleLearnMore(show: boolean) {
-    this.showLearnMore = show;
-    this.showLanding = true;
-    this.showSignin = false;
-    this.showRegisterUser = true;
-  }
-
-  toggleLanding(show: boolean) {
-    this.showLanding = show;
-    this.showLearnMore = false;
-  } */
 }

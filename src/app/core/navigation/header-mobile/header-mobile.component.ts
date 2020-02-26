@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 import { DeviceService } from '@services/device.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
@@ -59,6 +60,7 @@ export class HeaderMobileComponent implements OnInit {
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
               private profileSvc: ProfileService,
+              private headerVisibleSvc: HeaderVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService) { }
 
@@ -197,6 +199,7 @@ export class HeaderMobileComponent implements OnInit {
   logout() {
     this.authSvc.logout();
     this.authSvc.setUserToAuthorized(false);
+    this.headerVisibleSvc.toggleHeaderVisible(false);
     this.router.navigateByUrl('/');
   }
 
@@ -209,6 +212,7 @@ export class HeaderMobileComponent implements OnInit {
 
   returnToBackRoute() {
     if (this.returnRoute === 'landing-page') {
+      this.headerVisibleSvc.toggleHeaderVisible(false);
       this.router.navigateByUrl('/');
     } else {
       this.router.navigateByUrl('/' + this.returnRoute);

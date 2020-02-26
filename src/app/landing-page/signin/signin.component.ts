@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { HeaderVisibleService } from '@services/header-visibility.service';
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 
@@ -37,7 +37,7 @@ export class SigninComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
-              private headerVisibleSvc: HeaderVisibleService,
+              private HeaderVisibleSvc: HeaderVisibleService,
               private router: Router,
               private themeSvc: ThemeService,
               private language: LanguageService,
@@ -51,7 +51,7 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.headerVisibleSvc.toggleSigninButtonVisible(true);
+    this.HeaderVisibleSvc.toggleHeaderVisible(true);
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {

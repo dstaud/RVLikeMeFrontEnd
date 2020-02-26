@@ -11,7 +11,7 @@ export class HeaderVisibleService {
 
   constructor() { }
 
-  public toggleSigninButtonVisible(show: boolean): void {
+  public toggleHeaderVisible(show: boolean): void {
     this.headerVisible.next(show);
   }
 }

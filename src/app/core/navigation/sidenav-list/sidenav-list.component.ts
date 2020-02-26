@@ -21,7 +21,6 @@ export class SidenavListComponent implements OnInit {
               private authSvc: AuthenticationService) { }
 
   ngOnInit() {
-    console.log('IN SIDE NAV');
   }
 
   public closeSideNav = () => {

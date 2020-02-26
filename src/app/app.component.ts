@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
         this.userAuthorized = authData.valueOf();
       });
 
-    // Listen for changes in user authorization state
+    // Listen for changes in whether should show header toolbar
     this.headerVisibleSvc.headerVisible$
       .pipe(untilComponentDestroyed(this))
       .subscribe(header => {

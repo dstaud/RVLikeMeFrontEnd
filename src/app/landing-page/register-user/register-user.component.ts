@@ -6,7 +6,6 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { DeviceService } from './../../core/services/device.service';
 
@@ -61,7 +60,6 @@ export class RegisterUserComponent implements OnInit {
               private profileSvc: ProfileService,
               private deviceSvc: DeviceService,
               private shared: SharedComponent,
-              private headerVisibleSvc: HeaderVisibleService,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
@@ -81,8 +79,6 @@ export class RegisterUserComponent implements OnInit {
       // this.arrowIcon = 'arrow_back_ios';
       this.arrowIcon = 'keyboard_arrow_left';
     }
-
-    this.headerVisibleSvc.toggleSigninButtonVisible(true);
   }
 
   ngOnDestroy() {};
