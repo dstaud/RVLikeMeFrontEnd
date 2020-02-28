@@ -1,8 +1,8 @@
 {
   "name": "RV Like Me",
   "short_name": "RV Like Me",
-  "description": "Connect with other people that RV the way you do!",
-  "theme_color": "#000C3F",
+  "description": "Connect with other people that RV the way you do",
+  "theme_color": "#0097a7",
   "background_color": "#FFFFFF",
   "display": "standalone",
   "scope": "/",

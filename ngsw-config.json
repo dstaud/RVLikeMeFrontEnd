@@ -7,12 +7,16 @@
       "installMode": "prefetch",
       "resources": {
         "files": [
-          "/favicon.ico",
+          "/favicon-196.png",
           "/index.html",
           "/*.scss",
           "/*.css",
           "/*.js",
           "/assets/i18n/en.json",
+          "/assets/i18n/es.json",
+          "/assets/images/landing-image1.jpeg",
+          "/assets/images/landing-image2.jpeg",
+          "/assets/images/landing-image3.jpeg",
           "/manifest.webmanifest"
         ]
       }
