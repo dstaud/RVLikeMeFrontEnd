@@ -128,31 +128,31 @@ export class AppComponent implements OnInit {
       this.authSvc.setUserToAuthorized(true);
     }
 
+    // Listen for Chrome event that indicates we can offer the user option to install the app
     window.addEventListener('beforeinstallprompt', (event) => {
 
-      // Prevent the mini-infobar from appearing on Android mobile
+      // Prevent the default Chrome mini-infobar from appearing on Android mobile
       event.preventDefault();
 
-      // Save the event so it can be triggered later.
+      // Save the event so it can be triggered later in another component
       this.beforeInstallEventSvc.saveBeforeInstallEvent(event);
-
-      // Update UI notify the user they can install the PWA
-      this.showInstallPromotion();
     });
 
+    // Listen for Chrome event that indicates the user installed the app
     window.addEventListener('appinstalled', (event) => {
-      console.log('app installed!');
+      console.log('app installed!'); //TODO: Get this information in Google Analytics somehow
     });
 
+    // Determine if user has installed the app previously
     let navigator: any;
     navigator = window.navigator;
     window.addEventListener('load', () => {
       if (navigator.standalone) {
         alert('Launched: Installed (iOS)');
       } else if (matchMedia('(display-mode: standalone)').matches) {
-        alert('Launched: Installed');
+        console.log('Launched: Installed');
       } else {
-        alert('Launched: Browser Tab');
+        console.log('Launched: Browser Tab');
       }
     });
   };
@@ -161,8 +161,4 @@ export class AppComponent implements OnInit {
     console.log('dispose from app');
     this.profileSvc.dispose();
   };
-
-  showInstallPromotion() {
-    alert('you can install!');
-  }
 }

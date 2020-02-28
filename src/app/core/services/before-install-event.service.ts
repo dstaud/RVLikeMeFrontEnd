@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-// Publish color and font themes
+// Publish the beforeInstallEvent for app installation
 @Injectable({
   providedIn: 'root'
 })

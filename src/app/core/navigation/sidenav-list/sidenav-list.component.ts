@@ -23,6 +23,9 @@ export class SidenavListComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,) { }
 
   ngOnInit() {
+
+    // Get the event handle when beforeInstallEvent fired that allows for app installation.
+    // When fired, offer user option to install app from menu
     this.beforeInstallEventSvc.beforeInstallEvent$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
@@ -40,9 +43,6 @@ export class SidenavListComponent implements OnInit {
   }
 
   installApp() {
-
-    // Hide the app provided install promotion
-    // hideMyInstallPromotion();
 
     // Show the install prompt
     this.event.prompt();
