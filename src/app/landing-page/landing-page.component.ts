@@ -11,7 +11,6 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-  showLanding = true;
   showSignin = false;
   showLearnMore = false;
   showRegisterUser = false;

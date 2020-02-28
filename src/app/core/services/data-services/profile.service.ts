@@ -116,7 +116,7 @@ export class ProfileService {
   } */
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
-    console.log('http update profile=', userProfile);
+    console.log('http update profile=', userProfile, this.dataStore.profile);
     return this.http.put(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }

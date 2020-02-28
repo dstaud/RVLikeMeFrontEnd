@@ -55,7 +55,7 @@ export class SigninComponent implements OnInit {
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Signing return=', data);
+      console.log('in Signin return=', data);
       this.returnRoute = data.valueOf();
       if (this.returnRoute) {
         if (this.returnRoute.substring(0, 1) === '*') {

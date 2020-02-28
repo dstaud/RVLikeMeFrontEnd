@@ -1,9 +1,6 @@
 <div class="mat-app-background container background"> <!-- TODO: Do I need this container here? -->
   <p class="mat-body">{{ "profile.component.explanation" | translate }}</p>
   <mat-list>
-<!--     <div class="row" (click)="onPersonal()">
-      <div [ngStyle]="{width: 10%, color: red}">Personal</div>
-    </div> -->
     <div class="row" (click)="onPersonal()">
       <mat-icon class="icon" fontSet="material-icons-outlined">person</mat-icon>
       <mat-list-item>{{ "profile.component.personal" | translate }}
@@ -37,30 +34,34 @@
   </mat-list>
   <br>
   <form [formGroup]="form">
-    <mat-form-field>
-      <mat-select formControlName="aboutMe"
-                  placeholder="{{ 'profile.component.aboutMe'| translate }}"
-                  (selectionChange)="selectedAboutMe($event.source.value)"
-                  (openedChange) = "activatedAboutMe()"
-                  aria-label="my rv experience">
-        <mat-option
-          aria-placeholder="About Me"
-          *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
-          {{ AboutMe.viewValue | translate }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-icon class="icon" *ngIf="showAboutMeSaveIcon">save</mat-icon>
-    <mat-form-field>
-      <mat-select formControlName="language"
-                  placeholder="{{ 'profile.component.preferred-language' | translate }}"
-                  (selectionChange)="setLanguage($event.source.value)"
-                  aria-label="select language">
-        <mat-option value='en'>{{ "profile.component.english" | translate }}</mat-option>
-        <mat-option value='es'>{{ "profile.component.spanish" | translate }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-icon class="icon" *ngIf="showLanguageSaveIcon">save</mat-icon>
+    <div>
+      <mat-form-field>
+        <mat-select formControlName="aboutMe"
+                    placeholder="{{ 'profile.component.aboutMe'| translate }}"
+                    (selectionChange)="selectedAboutMe($event.source.value)"
+                    (openedChange) = "activatedAboutMe()"
+                    aria-label="my rv experience">
+          <mat-option
+            aria-placeholder="About Me"
+            *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
+            {{ AboutMe.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showAboutMeSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-select formControlName="language"
+                    placeholder="{{ 'profile.component.preferred-language' | translate }}"
+                    (selectionChange)="setLanguage($event.source.value)"
+                    aria-label="select language">
+          <mat-option value='en'>{{ "profile.component.english" | translate }}</mat-option>
+          <mat-option value='es'>{{ "profile.component.spanish" | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showLanguageSaveIcon">save</mat-icon>
+    </div>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
