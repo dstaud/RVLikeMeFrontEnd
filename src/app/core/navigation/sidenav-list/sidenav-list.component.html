@@ -17,4 +17,10 @@
     <mat-icon fontSet="material-icons-outlined" >rv_hookup</mat-icon>
     <span class="nav-caption">{{ "menu.about" | translate }}</span>
   </a>
+  <a mat-list-item
+    *ngIf="showInstallLink"
+    (click)="installApp()">
+    <mat-icon fontSet="material-icons-outlined" >save_alt</mat-icon>
+    <span class="nav-caption">{{ "menu.install" | translate }}</span>
+</a>
 </mat-nav-list>

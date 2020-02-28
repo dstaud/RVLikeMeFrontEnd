@@ -11,7 +11,8 @@
     "home": "casa",
     "about": "acerca de",
     "more": "más",
-    "profile": "Perfil"
+    "profile": "perfil",
+    "install": "instalar aplicación"
   },
   "messages.component": {
     "header": "Mensajes"

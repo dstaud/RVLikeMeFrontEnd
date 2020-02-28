@@ -14,6 +14,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ThemeService } from '@services/theme.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
+import { BeforeInstallEventService } from '@services/before-install-event.service';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
               private headerVisibleSvc: HeaderVisibleService,
               private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
+              private beforeInstallEventSvc: BeforeInstallEventService,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
@@ -125,10 +127,42 @@ export class AppComponent implements OnInit {
 
       this.authSvc.setUserToAuthorized(true);
     }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+
+      // Prevent the mini-infobar from appearing on Android mobile
+      event.preventDefault();
+
+      // Save the event so it can be triggered later.
+      this.beforeInstallEventSvc.saveBeforeInstallEvent(event);
+
+      // Update UI notify the user they can install the PWA
+      this.showInstallPromotion();
+    });
+
+    window.addEventListener('appinstalled', (event) => {
+      console.log('app installed!');
+    });
+
+    let navigator: any;
+    navigator = window.navigator;
+    window.addEventListener('load', () => {
+      if (navigator.standalone) {
+        alert('Launched: Installed (iOS)');
+      } else if (matchMedia('(display-mode: standalone)').matches) {
+        alert('Launched: Installed');
+      } else {
+        alert('Launched: Browser Tab');
+      }
+    });
   };
 
   ngOnDestroy() {
     console.log('dispose from app');
     this.profileSvc.dispose();
   };
+
+  showInstallPromotion() {
+    alert('you can install!');
+  }
 }
