@@ -10,6 +10,7 @@
         <input matInput
               type="text"
               placeholder="Email"
+              autocapitalize="none"
               formControlName="username"
               autocomplete="username email"
               required>
@@ -25,6 +26,7 @@
         <input matInput
               [type]="hidePassword ? 'password' : 'text'"
               placeholder="Password"
+              autocapitalize="none"
               formControlName="password"
               autocomplete="new-password"
               required>

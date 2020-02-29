@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
+import { FocusMonitor } from '@angular/cdk/a11y';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
@@ -19,6 +20,7 @@ export class SidenavListComponent implements OnInit {
   @Output() sideNavClosed = new EventEmitter();
 
   constructor(private location: Location,
+              private focusMonitor: FocusMonitor,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private activateBackArrowSvc: ActivateBackArrowService,) { }
 
@@ -26,12 +28,23 @@ export class SidenavListComponent implements OnInit {
 
     // Get the event handle when beforeInstallEvent fired that allows for app installation.
     // When fired, offer user option to install app from menu
-    this.beforeInstallEventSvc.beforeInstallEvent$
+    this.event = this.beforeInstallEventSvc.beforeInstallEvent$
+
+    this.event
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      this.event = data.valueOf();
-      this.showInstallLink = true;
+      if (data !== null) {
+        this.event = data.valueOf();
+        this.showInstallLink = true;
+      }
     });
+  }
+
+  ngAfterViewInit() {
+    this.focusMonitor.stopMonitoring(document.getElementById('routeProfile'));
+    this.focusMonitor.stopMonitoring(document.getElementById('routeMessages'));
+    this.focusMonitor.stopMonitoring(document.getElementById('routeAbout'));
+    this.focusMonitor.stopMonitoring(document.getElementById('installApp'));
   }
 
   ngOnDestroy() {}
@@ -51,6 +64,7 @@ export class SidenavListComponent implements OnInit {
     this.event.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the install prompt');
+        this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
       } else {
         console.log('User dismissed the install prompt');
       }

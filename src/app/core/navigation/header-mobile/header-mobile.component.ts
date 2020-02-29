@@ -198,6 +198,7 @@ export class HeaderMobileComponent implements OnInit {
 
   logout() {
     this.authSvc.logout();
+    this.profileSvc.dispose();
     this.authSvc.setUserToAuthorized(false);
     this.headerVisibleSvc.toggleHeaderVisible(false);
     this.router.navigateByUrl('/');

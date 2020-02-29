@@ -26,6 +26,7 @@
               type="text"
               placeholder="Email address"
               formControlName="email"
+              autocapitalize="none"
               autocomplete="email"
               required>
         <mat-error *ngIf="!form.controls.email.pristine &&
@@ -46,6 +47,7 @@
               [type]="hidePassword ? 'password' : 'text'"
               placeholder="Password"
               formControlName="password"
+              autocapitalize="none"
               autocomplete="new-password"
               required>
         <mat-error *ngIf="!form.controls.password.pristine &&
@@ -67,6 +69,7 @@
               [type]="hidePassword ? 'password' : 'text'"
               placeholder="Confirm Password"
               formControlName="passwordConfirm"
+              autocapitalize="none"
               autocomplete="new-password"
               required>
         <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&

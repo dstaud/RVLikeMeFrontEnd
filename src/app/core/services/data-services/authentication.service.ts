@@ -26,13 +26,13 @@ export class AuthenticationService {
               private commonData: CommonDataService) { }
 
 
-    public getUsername(): Observable<any> {
-      const dataSvcURL = this.commonData.getLocation();
-      return this.http.get(`${dataSvcURL}/username`,
-      { headers: { Authorization: `Bearer ${this.getToken()}` }});
-    }
+  getUsername(): Observable<any> {
+    const dataSvcURL = this.commonData.getLocation();
+    return this.http.get(`${dataSvcURL}/username`,
+    { headers: { Authorization: `Bearer ${this.getToken()}` }});
+  }
 
-    public handleBackendError(error) {
+  handleBackendError(error) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
       // client-side error
@@ -48,7 +48,7 @@ export class AuthenticationService {
     }
   }
 
-   public isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
     const token = this.getLocalToken();
     if (token) {
       return token.tokenExpire > Date.now() / 1000;
@@ -57,7 +57,7 @@ export class AuthenticationService {
     }
   }
 
-  public login(user: ItokenPayload): Observable<any> {
+  login(user: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.commonData.getLocation();
     base = this.http.post(`${dataSvcURL}/login`, user);
@@ -73,14 +73,13 @@ export class AuthenticationService {
     return request;
   }
 
-  public logout(): void {
+  logout(): void {
     this.token = '';
     window.localStorage.removeItem('rvlikeme-token');
     this.profileSvc.getProfile(true);
-    this.profileSvc.dispose();
   }
 
-  public registerUser(user: ItokenPayload): Observable<any> {
+  registerUser(user: ItokenPayload): Observable<any> {
     let base;
     const dataSvcURL = this.commonData.getLocation();
     base = this.http.post(`${dataSvcURL}/register`, user);
@@ -96,11 +95,11 @@ export class AuthenticationService {
     return request;
   }
 
-  public setUserToAuthorized(auth: boolean): void {
+  setUserToAuthorized(auth: boolean): void {
     this.userAuth.next(auth);
   }
 
-  public updateUsername(user: ItokenPayload): Observable<any> {
+  updateUsername(user: ItokenPayload): Observable<any> {
     const dataSvcURL = this.commonData.getLocation();
     return this.http.patch(`${dataSvcURL}/username`, user,
     { headers: { Authorization: `Bearer ${this.getToken()}` }});

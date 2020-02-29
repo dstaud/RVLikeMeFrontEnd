@@ -34,6 +34,7 @@ import { RegisterUserComponent } from './landing-page/register-user/register-use
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
+import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -68,7 +69,8 @@ export function getErrorHandler(): ErrorHandler {
     SigninComponent,
     RegisterUserComponent,
     LearnMoreComponent,
-    OtherDialogComponent
+    OtherDialogComponent,
+    InstallDialogComponent
     ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

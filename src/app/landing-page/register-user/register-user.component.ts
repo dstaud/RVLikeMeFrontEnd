@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { DeviceService } from './../../core/services/device.service';
+import { DeviceService } from '@services/device.service';
+import { BeforeInstallEventService } from '@services/before-install-event.service';
+import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
 
@@ -25,6 +28,8 @@ export class RegisterUserComponent implements OnInit {
   showSpinner = false;
   arrowIcon = 'arrow_back';
   device: string;
+  presentInstallOption = false;
+  event: any;
 
   credentials: ItokenPayload = {
     _id: '',
@@ -60,6 +65,8 @@ export class RegisterUserComponent implements OnInit {
               private profileSvc: ProfileService,
               private deviceSvc: DeviceService,
               private shared: SharedComponent,
+              private beforeInstallEventSvc: BeforeInstallEventService,
+              private dialog: MatDialog,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
@@ -79,6 +86,19 @@ export class RegisterUserComponent implements OnInit {
       // this.arrowIcon = 'arrow_back_ios';
       this.arrowIcon = 'keyboard_arrow_left';
     }
+
+    // Get the event handle when beforeInstallEvent fired that allows for app installation.
+    // When fired, offer user option to install app from menu
+    this.event = this.beforeInstallEventSvc.beforeInstallEvent$
+
+    this.event
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      if (data !== null) {
+        this.presentInstallOption = true;
+        this.event = data.valueOf();
+      }
+    });
   }
 
   ngOnDestroy() {};
@@ -109,7 +129,13 @@ export class RegisterUserComponent implements OnInit {
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {
             this.showSpinner = false;
-            this.shared.openSnackBar('Credentials saved.  Please sign in', 'message');
+            if (this.presentInstallOption) {
+              // Show the install prompt
+              this.openInstallDialog();
+            } else {
+              this.shared.openSnackBar('Credentials saved.  Please sign in', 'message', 2000);
+            }
+            this.authSvc.logout();
             this.activateBackArrowSvc.setBackRoute('landing-page');
             this.router.navigateByUrl('/signin');
           });
@@ -129,6 +155,34 @@ export class RegisterUserComponent implements OnInit {
       });
     }
   }
+
+    // App Install Option
+    openInstallDialog(): void {
+      let selection = '';
+
+      const dialogRef = this.dialog.open(InstallDialogComponent, {
+        width: '250px',
+        disableClose: true
+      });
+
+      dialogRef.afterClosed()
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(result => {
+        if (result !== 'canceled') {
+          this.event.prompt();
+
+          // Wait for the user to respond to the prompt
+          this.event.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt');
+              this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
+            } else {
+              console.log('User dismissed the install prompt');
+            }
+          });
+        }
+      });
+    }
 
   returnToBackRoute() {
     this.router.navigateByUrl('/');

@@ -148,7 +148,7 @@ export class AppComponent implements OnInit {
     navigator = window.navigator;
     window.addEventListener('load', () => {
       if (navigator.standalone) {
-        alert('Launched: Installed (iOS)');
+        console.log('Launched: Installed (iOS)');
       } else if (matchMedia('(display-mode: standalone)').matches) {
         console.log('Launched: Installed');
       } else {

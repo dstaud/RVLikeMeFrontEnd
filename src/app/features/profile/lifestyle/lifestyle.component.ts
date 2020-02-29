@@ -61,29 +61,6 @@ export class LifestyleComponent implements OnInit {
   helpMsg = '';
   backPath: string;
 
-
-  // Interface for profile data
-/*   profile: IuserProfile = {
-    firstName: null,
-    lastName: null,
-    displayName: null,
-    yearOfBirth: null,
-    homeCountry: null,
-    homeState: null,
-    language: 'en',
-    colorThemePreference: 'light-theme',
-    aboutMe: null,
-    rvUse: null,
-    worklife: null,
-    campsWithMe: null,
-    boondocking: null,
-    traveling: null,
-    rigType: null,
-    rigManufacturer: null,
-    rigBrand: null,
-    rigModel: null,
-    rigYear: null,
-  }; */
   profile: IuserProfile;
 
   userProfile: Observable<IuserProfile>;
