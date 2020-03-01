@@ -14,6 +14,11 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
+export interface Gender {
+  value: string;
+  viewValue: string;
+}
+
 export interface Country {
   value: string;
   viewValue: string;
@@ -45,27 +50,6 @@ export class PersonalComponent implements OnInit {
   helpMsg = '';
 
   // Interface for Profile data
-/*   profile: IuserProfile = {
-    firstName: null,
-    lastName: null,
-    displayName: null,
-    yearOfBirth: null,
-    homeCountry: null,
-    homeState: null,
-    language: 'en',
-    colorThemePreference: 'light-theme',
-    aboutMe: null,
-    rvUse: null,
-    worklife: null,
-    campsWithMe: null,
-    boondocking: null,
-    traveling: null,
-    rigType: null,
-    rigManufacturer: null,
-    rigBrand: null,
-    rigModel: null,
-    rigYear: null
-  }; */
   profile: IuserProfile;
 
   userProfile: Observable<IuserProfile>;
@@ -80,9 +64,17 @@ export class PersonalComponent implements OnInit {
   showyearOfBirthSaveIcon = false;
   showhomeCountrySaveIcon = false;
   showhomeStateSaveIcon = false;
+  showgenderSaveIcon = false;
+  showmyStorySaveIcon = false;
 
 
   /**** Select form select field option data. ****/
+  Genders: Gender[] = [
+    {value: '', viewValue: ''},
+    {value: 'M', viewValue: 'personal.component.list.gender.male'},
+    {value: 'F', viewValue: 'personal.component.list.gender.female'}
+  ];
+
   Countries: Country[] = [
     {value: '', viewValue: ''},
     {value: 'USA', viewValue: 'personal.component.list.country.usa'},
@@ -166,8 +158,10 @@ export class PersonalComponent implements OnInit {
                                               [Validators.minLength(4),
                                                Validators.maxLength(4),
                                                this.yearOfBirthValidator]),
+                gender: new FormControl(''),
                 homeCountry: new FormControl(''),
-                homeState: new FormControl('')
+                homeState: new FormControl(''),
+                myStory: new FormControl('')
               },
                 { updateOn: 'blur' }
               );
@@ -199,8 +193,10 @@ export class PersonalComponent implements OnInit {
           lastName: this.profile.lastName,
           displayName: this.profile.displayName,
           yearOfBirth: this.profile.yearOfBirth,
+          gender: this.profile.gender,
           homeCountry: this.profile.homeCountry,
-          homeState: this.profile.homeState
+          homeState: this.profile.homeState,
+          myStory: this.profile.myStory
         });
       }
       this.showSpinner = false;

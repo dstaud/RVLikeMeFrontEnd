@@ -1,6 +1,9 @@
 <div class="mat-app-background background">
-  <h2 class="mat-h2">Home content</h2>
-  <button mat-button (click)="throwError()">
-    Throw Error to Test
-  </button>
+  <p class="mat-subheading-2">{{ "home.component.marketingMsg1" | translate }}</p>
+
+  <p class="mat-subheading-2">{{ "home.component.marketingMsg2" | translate }}
+    <a routerLink="/profile"
+    (click)=setBackRoute()>{{ "home.component.marketingMsg3" | translate }}</a>.</p>
+
+  <p class="mat-subheading-2">{{ "home.component.marketingMsg4" | translate }}</p>
 </div>

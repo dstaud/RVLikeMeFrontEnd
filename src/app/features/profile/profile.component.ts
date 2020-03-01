@@ -35,7 +35,7 @@ export class ProfileComponent implements OnInit {
   showLanguageSaveIcon = false;
   backPath = '';
   totalPersonalFieldsWithData = 0;
-  totalPersonalNbrOfFields = 6;
+  totalPersonalNbrOfFields = 8;
   percentPersonal: number;
   totalLifestyleFieldsWithData = 0;
   totalLifestyleNbrOfFields = 5;
@@ -119,6 +119,8 @@ export class ProfileComponent implements OnInit {
       if (data.yearOfBirth) { this.totalPersonalFieldsWithData++; }
       if (data.homeCountry) { this.totalPersonalFieldsWithData++; }
       if (data.homeState) { this.totalPersonalFieldsWithData++; }
+      if (data.gender) { this.totalPersonalFieldsWithData++; }
+      if (data.myStory) { this.totalPersonalFieldsWithData++; }
       this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
 
       if (data.rvUse) { this.totalLifestyleFieldsWithData++; }

@@ -1,35 +1,4 @@
 <div class="mat-app-background background">
   <h2 class="mat-h2">Messages content</h2>
-  <form [formGroup]="form">
-    <mat-form-field>
-      <mat-select formControlName="fontTheme"
-                  placeholder="Font Theme"
-                  (selectionChange)="setThemeFont($event.source.value)">
-        <mat-option value='global=fonts'>Global fonts</mat-option>
-        <mat-option value='android-fonts'>Android fonts</mat-option>
-        <mat-option value='iPhone-fonts'>iPhone fonts</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-select formControlName="colorTheme"
-                    placeholder="Color Theme"
-                    (selectionChange)="setThemeColorScheme($event.source.value)">
-          <mat-option value='light-theme'>Light theme</mat-option>
-          <mat-option value='dark-theme'>Dark theme</mat-option>
-          <mat-option value='orange-theme'>Orange theme</mat-option>
-          <mat-option value='bg-theme'>Blue-grey theme</mat-option>
-        </mat-select>
-      </mat-form-field>
-  </form>
-  <p class="mat-subheading-2">The quick brown fox jumps over the lazy dog</p>
-  <p class="mat-subheading-2">Is a mobile device: {{ isMobile }}</p>
-  <p class="mat-subheading-2">Is a tablet device: {{ isTablet }}</p>
-  <p class="mat-subheading-2">Is a desktop device: {{ isDesktop }}</p>
-  <p class="mat-subheading-2">Browser: {{ browser }}</p>
-  <p class="mat-subheading-2">Browser version: {{ browserVersion }}</p>
-  <p class="mat-subheading-2">Device: {{ device }}</p>
-  <p class="mat-subheading-2">Operating system: {{ os }}</p>
-  <p class="mat-subheading-2">OS version: {{ osVersion }}</p>
-  <p class="mat-subheading-2">User agent: {{ userAgent }}</p>
 </div>
 

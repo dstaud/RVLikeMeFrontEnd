@@ -24,7 +24,11 @@
     "header": "Foros"
   },
   "home.component": {
-    "header": "Casa"
+    "header": "Casa",
+    "marketingMsg1": "Gracias por registrarte. Soy un compañero RV-er desarrollando esta aplicación web como una manera de conectar a las personas que hacen el estilo de vida de RV como tú. Su correo electrónico se ha agregado a una lista de correo electrónico para que pueda mantenerlo informado sobre el progreso.",
+    "marketingMsg2": "Para comenzar, complete su ",
+    "marketingMsg3": "perfil",
+    "marketingMsg4": "Lo que está por venir: la página de inicio dará ideas de quién más está ahí afuera como tú. También habrá un 'rincón para novatos', foros personalizados, mensajes, etc."
   },
   "about.component": {
     "header": "Acerca de"
@@ -59,15 +63,23 @@
     "lastName": "Apellido",
     "displayName": "Nombre para mostrar",
     "yearOfBirth": "Año de nacimiento",
+    "gender": "Género",
     "homeCountry": "Elige tu país de origen",
     "homeState": "Elige tu estado de origen",
+    "myStory": "Cuenta la historia de tu estilo de vida de RV",
     "helpName": "Utilizado para la comunicación entre RVLikeMe.com y usted",
     "helpDisplayName": "Su 'nombre' como se muestra a otros usuarios. Este podría ser tu nombre real o un 'identificador'.",
     "helpEmail": "Su nombre de usuario para iniciar sesión y para comunicaciones de RVLikeMe.com",
+    "helpGender": "Se utiliza para ayudarte a encontrar otros con el mismo género",
     "helpYearOfBirth": "Se usa para permitirle encontrar personas cercanas a su grupo de edad y no se mostrará a otros usuarios.",
     "helpHomeCountry": "Se utiliza para encontrar otros usuarios que comparten su país de origen o domicilio.",
     "helpHomeState": "Se usa para encontrar otros usuarios que comparten su estado de origen o domicilio",
+    "helpMyStory": "Se muestra a otras personas interesadas en su historia.",
     "list": {
+      "gender": {
+        "male": "Masculino",
+        "female": "Hembra"
+      },
       "country": {
         "usa": "Estados Unidos",
         "can": "Canadá",

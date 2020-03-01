@@ -29,6 +29,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  setBackRoute() {
+    this.activateBackArrowSvc.setBackRoute('home');
+  }
+
   throwError() {
     throw new Error('test Sentry error handling');
   }

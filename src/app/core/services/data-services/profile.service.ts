@@ -10,8 +10,10 @@ export interface IuserProfile {
   lastName: string;
   displayName: string;
   yearOfBirth: number;
+  gender: string;
   homeCountry: string;
   homeState: string;
+  myStory: string;
   language: string;
   colorThemePreference: string;
   aboutMe: string;
@@ -37,8 +39,10 @@ export class ProfileService {
     lastName: null,
     displayName: null,
     yearOfBirth: null,
+    gender: null,
     homeCountry: null,
     homeState: null,
+    myStory: null,
     language: 'en',
     colorThemePreference: 'light-theme',
     aboutMe: null,
@@ -72,8 +76,10 @@ export class ProfileService {
       this.dataStore.profile.lastName = null;
       this.dataStore.profile.displayName =null;
       this.dataStore.profile.yearOfBirth = null;
+      this.dataStore.profile.gender = null;
       this.dataStore.profile.homeCountry = null;
       this.dataStore.profile.homeState = null;
+      this.dataStore.profile.myStory = null;
       this.dataStore.profile.language = 'en';
       this.dataStore.profile.colorThemePreference = 'light-theme';
       this.dataStore.profile.aboutMe = null;

@@ -52,6 +52,20 @@
     </div>
     <div>
       <mat-form-field appearance="outline">
+        <mat-label>{{ "personal.component.myStory" | translate }}</mat-label>
+        <textarea matInput
+              type="text"
+              class="large-input"
+              placeholder="My story"
+              formControlName="myStory"
+              (blur)="updateDataPoint('myStory')">
+        </textarea>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpMyStory')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
         <mat-label>{{ "personal.component.yearOfBirth" | translate }} (YYYY)</mat-label>
         <input matInput
               type="text"
@@ -61,6 +75,23 @@
       </mat-form-field>
       <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpYearOfBirth')">help</mat-icon>
       <mat-icon class="icon" *ngIf="showyearOfBirthSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ "personal.component.gender" | translate }}</mat-label>
+        <mat-select
+            matNativeControl
+            (selectionChange)="updateSelectItem('gender', $event.source.value)"
+            formControlName="gender">
+          <mat-option
+            aria-placeholder="gender"
+            *ngFor="let Gender of Genders" [value]="Gender.value">
+            {{ Gender.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpGender')">help</mat-icon>
+      <mat-icon class="icon" *ngIf="showgenderSaveIcon">save</mat-icon>
     </div>
     <div>
       <mat-form-field appearance="outline">

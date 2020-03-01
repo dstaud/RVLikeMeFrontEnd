@@ -24,7 +24,11 @@
     "header": "Forums"
   },
   "home.component": {
-    "header": "Home"
+    "header": "Home",
+    "marketingMsg1": "Thank you for registering. I am a fellow RV-er developing this web app as a way to connect people that do the RV lifestyle like you do. Your email has been added to an email list so I can keep you informed of progress.",
+    "marketingMsg2": "To get started, please fill out your ",
+    "marketingMsg3": "profile",
+    "marketingMsg4": "Things to come: home page will give ideas of who else is out there like you. There will also be  is a 'newbie corner', custom forums, messaging, etc."
   },
   "about.component": {
     "header": "About"
@@ -59,15 +63,23 @@
     "lastName": "Last name",
     "displayName": "Display name",
     "yearOfBirth": "Year of birth",
-    "homeCountry": "Choose your home country",
-    "homeState": "Choose your home state",
+    "gender": "Gender",
+    "homeCountry": "Your home country",
+    "homeState": "Your home state",
+    "myStory": "Your RV lifestyle story",
     "helpName": "Used for communication between RVLikeMe.com and you",
     "helpDisplayName": "Your 'name' as shown to other users.  This could be your real name or a 'handle'.",
     "helpEmail": "Your user name for signing in and for communications from RVLikeMe.com",
     "helpYearOfBirth": "Used to enable you to find people near your age group and will not be displayed to other users.",
+    "helpGender": "Used to help you find others with the same gender",
     "helpHomeCountry": "Used to find other users that share your country of origin or domicile",
     "helpHomeState": "Used to find other users that share your state of origin or domicile",
+    "helpMyStory": "Shown to others who are interested in your story",
     "list": {
+      "gender": {
+        "male": "Male",
+        "female": "Female"
+      },
       "country": {
         "usa": "United States",
         "can": "Canada",
