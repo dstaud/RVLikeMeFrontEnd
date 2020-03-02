@@ -48,6 +48,9 @@ export class PersonalComponent implements OnInit {
   httpError = false;
   httpErrorText = '';
   helpMsg = '';
+  profileImageUploaded:File = null;
+  profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
+  profileImageLabel = 'personal.component.addProfilePic';
 
   // Interface for Profile data
   profile: IuserProfile;
@@ -200,6 +203,10 @@ export class PersonalComponent implements OnInit {
           homeState: this.profile.homeState,
           myStory: this.profile.myStory
         });
+        if (data.profileImageUrl) {
+          this.profileImageUrl = data.profileImageUrl;
+          this.profileImageLabel = 'personal.component.changeProfilePic'
+        }
       }
       this.showSpinner = false;
       this.form.enable();
@@ -217,8 +224,31 @@ export class PersonalComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
-  onFileInput(event: any) {
-    alert('file input');
+  onProfileImageSelected(event: any) {
+    this.profileImageUploaded = <File>event.target.files[0];
+    this.uploadProfileImage();
+
+  }
+
+  uploadProfileImage() {
+    let fd = new FormData();
+    fd.append('image', this.profileImageUploaded, this.profileImageUploaded.name);
+
+    this.showSpinner = true;
+    console.log('file=', this.profileImageUploaded);
+    this.profileSvc.uploadProfileImage(fd)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(res => {
+      this.profile.profileImageUrl = res['imageUrl'];
+      console.log('url=', this.profile.profileImageUrl);
+      this.updatePersonal('profileImage');
+      this.profileImageUrl = this.profile.profileImageUrl;
+      this.profileImageLabel = 'personal.component.changeProfilePic'
+      this.showSpinner = false;
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
   }
 
   /**** Field auto-update processing ****/

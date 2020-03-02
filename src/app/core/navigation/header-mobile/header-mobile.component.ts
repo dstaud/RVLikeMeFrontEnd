@@ -53,6 +53,7 @@ export class HeaderMobileComponent implements OnInit {
     rigBrand: null,
     rigModel: null,
     rigYear: null,
+    profileImageUrl: null
   };
 
   userProfile: Observable<IuserProfile>;

@@ -58,7 +58,8 @@ export class RegisterUserComponent implements OnInit {
     rigManufacturer: null,
     rigBrand: null,
     rigModel: null,
-    rigYear: null
+    rigYear: null,
+    profileImageUrl: null
   };
   httpError = false;
   httpErrorText = '';

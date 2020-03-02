@@ -27,6 +27,7 @@ export interface IuserProfile {
   rigBrand: string;
   rigModel: string;
   rigYear: number;
+  profileImageUrl: string;
 }
 
 @Injectable({
@@ -55,7 +56,8 @@ export class ProfileService {
     rigManufacturer: null,
     rigBrand: null,
     rigModel: null,
-    rigYear: null
+    rigYear: null,
+    profileImageUrl: null
   };
   private profileSubscription: any;
 
@@ -124,6 +126,12 @@ export class ProfileService {
   updateProfile(userProfile: IuserProfile): Observable<any> {
     console.log('http update profile=', userProfile, this.dataStore.profile);
     return this.http.put(`${this.dataSvcURL}/profile`, userProfile,
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
+  uploadProfileImage(fd: FormData) {
+    console.log('http upload image=', fd);
+    return this.http.post(`${this.dataSvcURL}/upload-image`, fd,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 

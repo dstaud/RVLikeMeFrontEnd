@@ -60,6 +60,7 @@
     "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
     "help": "Click on any help icon for information on how the data point will be used for you.",
     "addProfilePic": "Add profile pic",
+    "changeProfilePic": "Change profile pic",
     "firstName": "First name",
     "lastName": "Last name",
     "displayName": "Display name",

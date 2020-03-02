@@ -1,16 +1,17 @@
 <div class="mat-app-background background">
   <div>
-    <div class="profile-image">
-      <img src="./../../../../assets/images/no-profile-pic.jpg">
+    <div id="profileImage" class="profile-image">
+      <img [src]="profileImageUrl"
+        style="width:80px;height:80px;">
     </div>
     <div>
       <button mat-button (click)="fileInput.click()">
         <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
         <input #fileInput type="file"
-          (change)="onFileInput($event)"
+          (change)="onProfileImageSelected($event)"
           accept = "image/*"
           style="display:none;"/>
-          <span>{{ "personal.component.addProfilePic" | translate }}</span>
+          <span>{{ profileImageLabel | translate }}</span>
       </button>
     </div>
   </div>
