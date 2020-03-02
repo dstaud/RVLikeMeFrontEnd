@@ -66,6 +66,7 @@ export class PersonalComponent implements OnInit {
   showhomeStateSaveIcon = false;
   showgenderSaveIcon = false;
   showmyStorySaveIcon = false;
+  showprofileImageSaveIcon = true;
 
 
   /**** Select form select field option data. ****/
@@ -161,7 +162,8 @@ export class PersonalComponent implements OnInit {
                 gender: new FormControl(''),
                 homeCountry: new FormControl(''),
                 homeState: new FormControl(''),
-                myStory: new FormControl('')
+                myStory: new FormControl(''),
+                profileImage: new FormControl('')
               },
                 { updateOn: 'blur' }
               );
@@ -215,6 +217,9 @@ export class PersonalComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
+  onFileInput(event: any) {
+    alert('file input');
+  }
 
   /**** Field auto-update processing ****/
   updateDataPoint(control: string) {

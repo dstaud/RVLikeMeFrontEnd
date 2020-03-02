@@ -59,6 +59,7 @@
   "personal.component": {
     "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
     "help": "Haga clic en cualquier icono de ayuda para obtener información sobre cómo se utilizará el punto de datos.",
+    "addProfilePic": "Añadir foto de perfil",
     "firstName": "Nombre de pila",
     "lastName": "Apellido",
     "displayName": "Nombre para mostrar",
