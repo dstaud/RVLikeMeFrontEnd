@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 
 import Cropper from 'cropperjs';
 import { createUrlResolverWithoutPackagePrefix } from '@angular/compiler';
@@ -16,6 +16,7 @@ export class ImageCropperComponent implements OnInit {
   @Input("src")
   public imageSource: string;
 
+  @Output() updatedImage= new EventEmitter()
   public imageDestination: string;
   private cropper: Cropper;
 
@@ -34,8 +35,12 @@ export class ImageCropperComponent implements OnInit {
       crop: () => {
         const canvas = this.cropper.getCroppedCanvas();
         this.imageDestination = canvas.toDataURL("image/png");
-        // console.log('dest=', this.imageDestination);
       }
     });
+  }
+
+  updateImage() {
+    console.log(this.imageDestination);
+    this.updatedImage.emit(this.imageDestination);
   }
 }

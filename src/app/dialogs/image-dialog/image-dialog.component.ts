@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject, Input, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
@@ -6,6 +6,7 @@ import { SharedComponent } from '@shared/shared.component';
 
 export interface DialogData {
   image: string;
+  updatedImage: string;
 }
 
 @Component({
@@ -30,5 +31,10 @@ export class ImageDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close('canceled');
+  }
+
+  updatedImage(event: string) {
+    this.data.updatedImage = event;
+    console.log(this.data.updatedImage);
   }
 }

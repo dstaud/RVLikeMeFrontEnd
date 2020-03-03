@@ -244,7 +244,9 @@ export class PersonalComponent implements OnInit {
     .subscribe(result => {
       if (result) {
         if (result !== 'canceled') {
-          console.log('have result');
+          console.log('have result=', result);
+          this.profileImageUploaded = result;
+          this.uploadProfileImage();
         }
       } else {
         console.log('no image');
