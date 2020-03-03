@@ -30,11 +30,13 @@ import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found
 import { ThemeService } from '@services/theme.service';
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
+import { ImageCropperComponent } from './features/profile/image-cropper/image-cropper.component';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
+import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
-import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -70,8 +72,10 @@ export function getErrorHandler(): ErrorHandler {
     RegisterUserComponent,
     LearnMoreComponent,
     OtherDialogComponent,
-    InstallDialogComponent
-    ],
+    InstallDialogComponent,
+    ImageDialogComponent,
+    ImageCropperComponent
+  ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,

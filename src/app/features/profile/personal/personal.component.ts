@@ -2,15 +2,19 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { HttpEventType } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
+// import { Ng2ImgMaxService } from 'ng2-img-max';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
+import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
@@ -70,6 +74,7 @@ export class PersonalComponent implements OnInit {
   showgenderSaveIcon = false;
   showmyStorySaveIcon = false;
   showprofileImageSaveIcon = true;
+  showCropper = false;
 
 
   /**** Select form select field option data. ****/
@@ -153,6 +158,8 @@ export class PersonalComponent implements OnInit {
               private router: Router,
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
+              // private ng2ImgMax: Ng2ImgMaxService,
+              private dialog: MatDialog,
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
@@ -224,10 +231,42 @@ export class PersonalComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
-  onProfileImageSelected(event: any) {
-    this.profileImageUploaded = <File>event.target.files[0];
-    this.uploadProfileImage();
+  openDialog(imageSource: string): void {
+    const dialogRef = this.dialog.open(ImageDialogComponent, {
+      width: '90%',
+      height: '90%',
+      disableClose: true,
+      data: { image: imageSource }
+    });
 
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result) {
+        if (result !== 'canceled') {
+          console.log('have result');
+        }
+      } else {
+        console.log('no image');
+      }
+    });
+  }
+
+
+  onProfileImageSelected(event: any) {
+/*     let image = event.target.files[0];
+
+    this.ng2ImgMax.resizeImage(image, 10000, 200)
+    .subscribe(
+      result => {
+        this.profileImageUploaded = new File([result], result.name); */
+        this.profileImageUploaded = <File>event.target.files[0];
+        this.uploadProfileImage();
+/*       },
+      error => {
+        console.log(error);
+      }
+    ); */
   }
 
   uploadProfileImage() {
@@ -238,13 +277,18 @@ export class PersonalComponent implements OnInit {
     console.log('file=', this.profileImageUploaded);
     this.profileSvc.uploadProfileImage(fd)
     .pipe(untilComponentDestroyed(this))
-    .subscribe(res => {
-      this.profile.profileImageUrl = res['imageUrl'];
-      console.log('url=', this.profile.profileImageUrl);
-      this.updatePersonal('profileImage');
-      this.profileImageUrl = this.profile.profileImageUrl;
-      this.profileImageLabel = 'personal.component.changeProfilePic'
-      this.showSpinner = false;
+    .subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        console.log('Upload progress: ', Math.round(event.loaded / event.total * 100))+ '%';
+      } else if (event.type === HttpEventType.Response) {
+          this.profile.profileImageUrl = event.body['imageUrl'];
+          console.log('url=', this.profile.profileImageUrl);
+          this.updatePersonal('profileImage');
+          this.profileImageUrl = this.profile.profileImageUrl;
+          this.profileImageLabel = 'personal.component.changeProfilePic'
+          this.showSpinner = false;
+          this.openDialog(this.profile.profileImageUrl);
+      }
     }, error => {
       console.log(error);
       this.showSpinner = false;

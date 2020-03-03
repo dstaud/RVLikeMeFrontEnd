@@ -132,7 +132,10 @@ export class ProfileService {
   uploadProfileImage(fd: FormData) {
     console.log('http upload image=', fd);
     return this.http.post(`${this.dataSvcURL}/upload-image`, fd,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+    reportProgress: true,
+    observe: 'events'
+    });
   }
 
   public dispose() {

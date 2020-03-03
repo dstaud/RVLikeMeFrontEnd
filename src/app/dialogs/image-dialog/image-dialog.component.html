@@ -1,0 +1,7 @@
+<div class="img-container">
+  <app-image-cropper [src]="data.image"></app-image-cropper>
+</div>
+<div mat-dialog-actions class="buttons">
+  <button id="btnYes" mat-button [mat-dialog-close]="data">OK</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</div>

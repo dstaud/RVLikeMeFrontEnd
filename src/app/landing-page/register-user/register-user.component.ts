@@ -159,33 +159,33 @@ export class RegisterUserComponent implements OnInit {
     }
   }
 
-    // App Install Option
-    openInstallDialog(): void {
-      let selection = '';
+  // App Install Option
+  openInstallDialog(): void {
+    let selection = '';
 
-      const dialogRef = this.dialog.open(InstallDialogComponent, {
-        width: '250px',
-        disableClose: true
-      });
+    const dialogRef = this.dialog.open(InstallDialogComponent, {
+      width: '250px',
+      disableClose: true
+    });
 
-      dialogRef.afterClosed()
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(result => {
-        if (result !== 'canceled') {
-          this.event.prompt();
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result !== 'canceled') {
+        this.event.prompt();
 
-          // Wait for the user to respond to the prompt
-          this.event.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the install prompt');
-              this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
-            } else {
-              console.log('User dismissed the install prompt');
-            }
-          });
-        }
-      });
-    }
+        // Wait for the user to respond to the prompt
+        this.event.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+            this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+        });
+      }
+    });
+  }
 
   returnToBackRoute() {
     this.router.navigateByUrl('/');

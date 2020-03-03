@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+
+import { Ng2ImgMaxModule } from 'ng2-img-max';
+import { ImageCropperComponent } from './image-cropper/image-cropper.component';
+
 import { ProfileComponent } from './profile.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProfileRoutingModule } from './profile-routing.module';
@@ -9,17 +13,21 @@ import { RvRigComponent } from './rv-rig/rv-rig.component';
 import { LifestyleComponent } from './lifestyle/lifestyle.component';
 
 
+
 @NgModule({
   declarations: [
     ProfileComponent,
     PersonalComponent,
     RvRigComponent,
-    LifestyleComponent],
+    LifestyleComponent,
+    ImageCropperComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
     ProfileRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Ng2ImgMaxModule
   ]
 })
 export class ProfileModule { }
