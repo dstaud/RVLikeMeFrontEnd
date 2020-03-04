@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 
 import Cropper from 'cropperjs';
+import { FakeMissingTranslationHandler } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-image-cropper',
