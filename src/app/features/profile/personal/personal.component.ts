@@ -235,8 +235,8 @@ export class PersonalComponent implements OnInit {
 
   openDialog(imageSource: string): void {
     const dialogRef = this.dialog.open(ImageDialogComponent, {
-      width: '90%',
-      height: '90%',
+      width: '95%',
+      height: '400px',
       disableClose: true,
       data: { image: imageSource }
     });

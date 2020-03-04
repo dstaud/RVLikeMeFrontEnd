@@ -1,5 +1,11 @@
-<div class="img-container">
+<div>
   <img #image [src]="imageSource" crossorigin>
 </div>
-<img [src]="imageDestination" class="img-preview">
-<button (click)="updateImage()">Submit</button>
+<div class="rotate">
+  <mat-icon (click)="rotateImage(-90)">rotate_left</mat-icon>
+  <mat-icon (click)="rotateImage(90)">rotate_right</mat-icon>
+</div>
+<div>
+  <img [src]="imageDestination" class="img-preview">
+</div>
+

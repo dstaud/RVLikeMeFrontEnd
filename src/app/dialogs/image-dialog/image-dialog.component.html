@@ -1,10 +1,11 @@
-<div class="img-container">
+<div>
   <app-image-cropper
+    #imageCropper
     [src]="data.image"
     (updatedImage)="updatedImage($event)">
 </app-image-cropper>
 </div>
 <div mat-dialog-actions class="buttons">
-  <button id="btnYes" mat-button [mat-dialog-close]="data.updatedImage">OK</button>
+  <button id="btnOK" mat-button (click)="onOK()">OK</button>
   <button mat-button (click)="onNoClick()">Cancel</button>
 </div>

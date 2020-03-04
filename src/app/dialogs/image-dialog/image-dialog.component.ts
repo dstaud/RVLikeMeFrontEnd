@@ -1,4 +1,5 @@
-import { Component, OnInit, Inject, Input, AfterViewInit } from '@angular/core';
+import { ImageCropperComponent } from './../../features/profile/image-cropper/image-cropper.component';
+import { Component, OnInit, Inject, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
@@ -15,7 +16,9 @@ export interface DialogData {
   styleUrls: ['./image-dialog.component.scss']
 })
 export class ImageDialogComponent implements OnInit {
-  imageSource = './../../../assets/images/landing-image1.jpeg';
+
+  @ViewChild('imageCropper', {static: false })
+  private imageCropper: ImageCropperComponent;
 
   constructor(private shared: SharedComponent,
               private focusMonitor: FocusMonitor,
@@ -26,7 +29,13 @@ export class ImageDialogComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.focusMonitor.stopMonitoring(document.getElementById('btnYes'));
+    this.focusMonitor.stopMonitoring(document.getElementById('btnOK'));
+  }
+
+  onOK() {
+    console.log('setting up notifyDone');
+    this.imageCropper.notifyDone();
+    this.dialogRef.close(this.data.updatedImage);
   }
 
   onNoClick(): void {
@@ -35,6 +44,5 @@ export class ImageDialogComponent implements OnInit {
 
   updatedImage(event: string) {
     this.data.updatedImage = event;
-    console.log(this.data.updatedImage);
   }
 }
