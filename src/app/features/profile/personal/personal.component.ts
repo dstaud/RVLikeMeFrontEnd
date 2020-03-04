@@ -54,6 +54,7 @@ export class PersonalComponent implements OnInit {
   helpMsg = '';
   profileImageUploaded:File = null;
   profileImageUpdated: any;
+  profileImageTempUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
 
@@ -248,9 +249,13 @@ export class PersonalComponent implements OnInit {
           console.log('have result=', result);
           this.profileImageUpdated = result;
           this.uploadUpdatedProfileImageBase64();
+        } else {
+          console.log('no image');
+          this.showSpinner = false;
         }
       } else {
         console.log('no image');
+        this.showSpinner = false;
       }
     });
   }
@@ -265,12 +270,12 @@ export class PersonalComponent implements OnInit {
         console.log('Upload progress: ', Math.round(event.loaded / event.total * 100))+ '%';
       } else if (event.type === HttpEventType.Response) {
         console.log('EVENT=', event);
-          this.profile.profileImageUrl = event.body['imageUrl'];
-          console.log('url=', this.profile.profileImageUrl);
-          this.updatePersonal('profileImage');
-          this.profileImageUrl = this.profile.profileImageUrl;
-          this.profileImageLabel = 'personal.component.changeProfilePic'
-          this.showSpinner = false;
+        this.profile.profileImageUrl = event.body['imageUrl'];
+        console.log('url=', this.profile.profileImageUrl);
+        this.updatePersonal('profileImage');
+        this.profileImageUrl = this.profile.profileImageUrl;
+        this.profileImageLabel = 'personal.component.changeProfilePic'
+        this.showSpinner = false;
       }
     }, error => {
       console.log(error);
@@ -306,13 +311,9 @@ export class PersonalComponent implements OnInit {
       if (event.type === HttpEventType.UploadProgress) {
         console.log('Upload progress: ', Math.round(event.loaded / event.total * 100))+ '%';
       } else if (event.type === HttpEventType.Response) {
-          this.profile.profileImageUrl = event.body['imageUrl'];
-          console.log('url=', this.profile.profileImageUrl);
-          this.updatePersonal('profileImage');
-          this.profileImageUrl = this.profile.profileImageUrl;
-          this.profileImageLabel = 'personal.component.changeProfilePic'
-          this.showSpinner = false;
-          this.openDialog(this.profile.profileImageUrl);
+          this.profileImageTempUrl = event.body['imageUrl'];
+          console.log('url=', event.body['imageUrl']);
+          this.openDialog(this.profileImageTempUrl);
       }
     }, error => {
       console.log(error);
