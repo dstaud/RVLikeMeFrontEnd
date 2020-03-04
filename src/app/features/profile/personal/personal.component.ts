@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
-// import { Ng2ImgMaxService } from 'ng2-img-max';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -57,6 +57,13 @@ export class PersonalComponent implements OnInit {
   profileImageTempUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
+  profileCompressedImage:File = null;
+  imgResultBeforeCompress: string;
+  imgResultAfterCompress: string;
+  localUrl: any;
+  sizeOfOriginalImage: number;
+  localCompressedURl: any;
+  sizeOFCompressedImage:number;
 
   // Interface for Profile data
   profile: IuserProfile;
@@ -159,8 +166,8 @@ export class PersonalComponent implements OnInit {
               private profileSvc: ProfileService,
               private router: Router,
               private location: Location,
+              private imageCompress: NgxImageCompressService,
               private activateBackArrowSvc: ActivateBackArrowService,
-              // private ng2ImgMax: Ng2ImgMaxService,
               private dialog: MatDialog,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -227,6 +234,7 @@ export class PersonalComponent implements OnInit {
 
   ngOnDestroy() {};
 
+
   // Help pop-up text
   formFieldHelp(controlDesc: string) {
     this.helpMsg = this.translate.instant(controlDesc);
@@ -236,7 +244,7 @@ export class PersonalComponent implements OnInit {
   openDialog(imageSource: string): void {
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: '95%',
-      height: '400px',
+      height: '80%',
       disableClose: true,
       data: { image: imageSource }
     });
@@ -259,7 +267,6 @@ export class PersonalComponent implements OnInit {
       }
     });
   }
-
 
   uploadUpdatedProfileImageBase64() {
     this.showSpinner = true;
@@ -284,27 +291,56 @@ export class PersonalComponent implements OnInit {
   }
 
   onProfileImageSelected(event: any) {
-/*     let image = event.target.files[0];
-
-    this.ng2ImgMax.resizeImage(image, 10000, 200)
-    .subscribe(
-      result => {
-        this.profileImageUploaded = new File([result], result.name); */
-        this.profileImageUploaded = <File>event.target.files[0];
-        this.uploadProfileImage();
-/*       },
-      error => {
-        console.log(error);
+    let fileName: string
+    this.profileImageUploaded = <File>event.target.files[0];
+    fileName = this.profileImageUploaded['name'];
+    console.log('file size=', this.profileImageUploaded['size'] / (1024*1024));
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.localUrl = event.target.result;
+        this.compressFile(this.localUrl, fileName)
       }
-    ); */
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
+
+  compressFile(image,  fileName) {
+    var orientation = -1;
+    this.sizeOfOriginalImage = this.imageCompress.byteCount(image)/(1024*1024);
+    console.warn('File size before:',  this.sizeOfOriginalImage);
+
+    this.imageCompress.compressFile(image, orientation, 50, 50).then(
+      result => {
+        this.imgResultAfterCompress = result;
+        // create file from byte
+        const imageName = fileName;
+        // call method that creates a blob from dataUri
+        const imageBlob = this.dataURItoBlob(this.imgResultAfterCompress.split(',')[1]);
+        this.profileCompressedImage = new File([imageBlob], imageName, { type: 'image/jpeg' });
+        console.log("File size after:",this.profileCompressedImage['size']/(1024*1024));
+        this.uploadProfileImage();
+      }
+    );
+  }
+
+  dataURItoBlob(dataURI) {
+    const byteString = window.atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: 'image/jpeg' });
+    return blob;
+ }
 
   uploadProfileImage() {
     let fd = new FormData();
-    fd.append('image', this.profileImageUploaded, this.profileImageUploaded.name);
+    fd.append('image', this.profileCompressedImage, this.profileCompressedImage.name);
 
     this.showSpinner = true;
-    console.log('file=', this.profileImageUploaded);
+    console.log('file=', this.profileCompressedImage);
     this.profileSvc.uploadProfileImage(fd)
     .pipe(untilComponentDestroyed(this))
     .subscribe(event => {

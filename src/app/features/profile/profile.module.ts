@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { ImageCropperComponent } from './image-cropper/image-cropper.component';
 
 import { ProfileComponent } from './profile.component';
@@ -26,8 +25,7 @@ import { LifestyleComponent } from './lifestyle/lifestyle.component';
     CommonModule,
     SharedModule,
     ProfileRoutingModule,
-    ReactiveFormsModule,
-    Ng2ImgMaxModule
+    ReactiveFormsModule
   ]
 })
 export class ProfileModule { }
