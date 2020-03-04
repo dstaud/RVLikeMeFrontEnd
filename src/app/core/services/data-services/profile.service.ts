@@ -138,6 +138,16 @@ export class ProfileService {
     });
   }
 
+  uploadProfileImageBase64(image: string) {
+    let imagePackage = {'image': image}
+    console.log('http upload base64 image=', imagePackage);
+    return this.http.post(`${this.dataSvcURL}/upload-image`, imagePackage,
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+    reportProgress: true,
+    observe: 'events'
+    });
+  }
+
   public dispose() {
     console.log('dispose of subscription');
     this.profileSubscription.unsubscribe();

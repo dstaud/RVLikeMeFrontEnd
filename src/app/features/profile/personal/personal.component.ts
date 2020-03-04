@@ -53,6 +53,7 @@ export class PersonalComponent implements OnInit {
   httpErrorText = '';
   helpMsg = '';
   profileImageUploaded:File = null;
+  profileImageUpdated: any;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
 
@@ -245,8 +246,8 @@ export class PersonalComponent implements OnInit {
       if (result) {
         if (result !== 'canceled') {
           console.log('have result=', result);
-          this.profileImageUploaded = result;
-          this.uploadProfileImage();
+          this.profileImageUpdated = result;
+          this.uploadUpdatedProfileImageBase64();
         }
       } else {
         console.log('no image');
@@ -254,6 +255,28 @@ export class PersonalComponent implements OnInit {
     });
   }
 
+
+  uploadUpdatedProfileImageBase64() {
+    this.showSpinner = true;
+    this.profileSvc.uploadProfileImageBase64(this.profileImageUpdated)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        console.log('Upload progress: ', Math.round(event.loaded / event.total * 100))+ '%';
+      } else if (event.type === HttpEventType.Response) {
+        console.log('EVENT=', event);
+          this.profile.profileImageUrl = event.body['imageUrl'];
+          console.log('url=', this.profile.profileImageUrl);
+          this.updatePersonal('profileImage');
+          this.profileImageUrl = this.profile.profileImageUrl;
+          this.profileImageLabel = 'personal.component.changeProfilePic'
+          this.showSpinner = false;
+      }
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
+  }
 
   onProfileImageSelected(event: any) {
 /*     let image = event.target.files[0];
