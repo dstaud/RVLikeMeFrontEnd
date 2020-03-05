@@ -14,6 +14,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { UploadImageService } from '@services/data-services/upload-image.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
+import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
@@ -241,6 +242,10 @@ export class PersonalComponent implements OnInit {
   }
 
 
+  onMyStory() {
+    this.openMyStoryDialog(this.profile.myStory);
+  }
+
   // Compress Image and offer up for user to crop
   onProfileImageSelected(event: any) {
     this.showSpinner = true;
@@ -248,13 +253,13 @@ export class PersonalComponent implements OnInit {
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       console.log('returned to original, file=', compressedFile);
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
-        this.openDialog(uploadedFileUrl);
+        this.openImageCropperDialog(uploadedFileUrl);
       });
     });
   }
 
   // Present image for user to crop
-  openDialog(imageSource: string): void {
+  openImageCropperDialog(imageSource: string): void {
     let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: '95%',
@@ -283,6 +288,39 @@ export class PersonalComponent implements OnInit {
         }
       } else {
         console.log('no image');
+        this.showSpinner = false;
+      }
+    });
+  }
+
+
+  // Present image for user to crop
+  openMyStoryDialog(myStory: string): void {
+    console.log('myStory=', myStory);
+    const dialogRef = this.dialog.open(MyStoryDialogComponent, {
+      width: '95%',
+      height: '75%',
+      disableClose: true,
+      data: { myStory: myStory }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      console.log('back from dialog, result=', result);
+      if (result) {
+        if (result !== 'canceled') {
+          this.form.patchValue({'myStory': result});
+          this.updateDataPoint('myStory');
+        } else {
+          console.log('no story change');
+          this.showSpinner = false;
+        }
+      } else {
+        if (this.profile.myStory) {
+          this.form.patchValue({'myStory': result});
+          this.updateDataPoint('myStory');
+        }
         this.showSpinner = false;
       }
     });

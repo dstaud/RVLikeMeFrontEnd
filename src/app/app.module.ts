@@ -38,6 +38,7 @@ import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
+import { MyStoryDialogComponent } from './dialogs/my-story-dialog/my-story-dialog.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -75,7 +76,8 @@ export function getErrorHandler(): ErrorHandler {
     OtherDialogComponent,
     InstallDialogComponent,
     ImageDialogComponent,
-    ImageCropperComponent
+    ImageCropperComponent,
+    MyStoryDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

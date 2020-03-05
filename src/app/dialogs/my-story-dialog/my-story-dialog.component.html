@@ -1,0 +1,19 @@
+<div>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ "personal.component.myStory" | translate }}</mat-label>
+      <textarea matInput
+          type="text"
+          placeholder="My story"
+          class="large-input"
+          formControlName="myStory"
+          cdkFocusInitial
+          [(ngModel)]="data.myStory">
+      </textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="buttons">
+  <button id="btnOK" mat-button (click)="onOK()">OK</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</div>
