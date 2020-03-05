@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   font: string;
   userAuthorized = false;
   headerVisible = false;
+  headerDesktopVisible = false;
   userProfile: Observable<IuserProfile>;
 
 
@@ -97,6 +98,11 @@ export class AppComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe(header => {
         this.headerVisible = header.valueOf();
+      });
+      this.headerVisibleSvc.headerDesktopVisible$
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(header => {
+        this.headerDesktopVisible = header.valueOf();
       });
 
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state

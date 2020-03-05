@@ -1,24 +1,40 @@
-.container {
+/* .container {
   height: 100vh;
   overflow: auto;
   padding: 10px
 }
-
+ */
 .rvlikeme {
-  position: absolute;
+  position: relative;
+  float: right;
   top: 5px;
   left: 5px;
   color: white;
 }
+
 .logo {
   float: left;
+}
+
+.logoCombined{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.logoMobile {
+  float: left;
+}
+
+.logoDesktop {
+  top: 0;
 }
 
 .button {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 60%;
+  width: 200px;
   margin-top: 20px;
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
@@ -6,6 +6,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
+
 
 @Component({
   selector: 'app-rvlm-sidenav-list',
@@ -16,8 +17,20 @@ export class SidenavListComponent implements OnInit {
   backPath = '';
   showInstallLink = false;
   event: any;
+  deviceMode = false;
+  private windowWidth: any;
 
   @Output() sideNavClosed = new EventEmitter();
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    if (this.windowWidth > 600) {
+      this.deviceMode = false;
+    } else {
+      this.deviceMode = true;
+    }
+  }
 
   constructor(private location: Location,
               private focusMonitor: FocusMonitor,
@@ -38,6 +51,14 @@ export class SidenavListComponent implements OnInit {
         this.showInstallLink = true;
       }
     });
+
+    // Get window size to determine what items presented in menu
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      this.deviceMode = false;
+    } else {
+      this.deviceMode = true;
+    }
   }
 
   ngAfterViewInit() {

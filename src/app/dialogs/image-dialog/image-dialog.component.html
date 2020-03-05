@@ -1,11 +1,15 @@
 <div>
+  <!-- Image file reference passed from the originating component in the data object, which is passed through to 
+        the image cropper component in the selector.  Also pass reference to updatedImage function 
+        so the image cropper component can call with the updated image and the data object can be updated
+        for passing back to the originating component -->
   <app-image-cropper
     #imageCropper
-    [src]="data.image"
+    [originalImage]="data.image"
     (updatedImage)="updatedImage($event)">
 </app-image-cropper>
 </div>
 <div mat-dialog-actions class="buttons">
-  <button id="btnOK" mat-button (click)="onOK()">OK</button>
-  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button id="btnOK" mat-button (click)="onOK()">{{ 'image-dialog.component.ok' | translate }}</button>
+  <button mat-button (click)="onNoClick()">{{ 'image-dialog.component.cancel' | translate }}</button>
 </div>

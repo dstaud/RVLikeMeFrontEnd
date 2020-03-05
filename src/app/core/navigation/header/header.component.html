@@ -1,16 +1,52 @@
 <mat-toolbar color="primary" class="toolbar" role="toolbar">
   <div class="mat-h3" fxFlex fxLayout fxLayoutAlign="end" fxLayoutGap="15px">
-      <a routerLink="/">
-        <span>{{ "general.rvlikeme" | translate}}</span>
-      </a>
-      <span class="fill-space"></span>
-      <a routerLink="/connections" routerLinkActive="active-menu-item">{{ "menu.connections" | translate}}</a>
-      <span>|</span>
-      <a routerLink="/forums" routerLinkActive="active-menu-item">{{ "menu.forums" | translate}}</a>
-      <span>|</span>
-      <a routerLink="/messages" routerLinkActive="active-menu-item">{{ "menu.messages" | translate}}</a>
-      <button mat-button class="icon-button" (click)="onToggleSidenav()">
-          <mat-icon>menu</mat-icon>
+    <img src="../../../assets/images/trailer.png"
+        alt="travel trailer logo"
+        style="width:60px;height:37.2px;">
+    <span class="page-title toolbar-item">RV Like Me</span>
+    <span class="fill-space"></span>
+    <a routerLink="/home" routerLinkActive="active-menu-item">{{ "menu.home" | translate}}</a>
+    <span>|</span>
+    <a routerLink="/connections" routerLinkActive="active-menu-item">{{ "menu.connections" | translate}}</a>
+    <span>|</span>
+    <a routerLink="/forums" routerLinkActive="active-menu-item">{{ "menu.forums" | translate}}</a>
+    <span>|</span>
+    <a routerLink="/messages" routerLinkActive="active-menu-item">{{ "menu.messages" | translate}}</a>
+    <span>|</span>
+    <a routerLink="/profile" routerLinkActive="active-menu-item">{{ "menu.profile" | translate}}</a>
+
+    <button
+        mat-button
+        class="toolbar-item"
+        [matMenuTriggerFor]="beforeMenu">
+      <mat-icon matPrefix >account_circle</mat-icon>
+    </button>
+
+    <button mat-button class="icon-button" (click)="onToggleSidenav()">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <mat-menu #beforeMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="changeUsername()">
+        <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+        {{ "account.changeUsername" | translate }}
       </button>
+      <button mat-menu-item>
+        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+        {{ "account.changePassword" | translate }}
+      </button>
+      <button *ngIf="lightTheme" mat-menu-item (click)="selectTheme('dark-theme')">
+        <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
+        {{ "account.darkTheme" | translate }}
+      </button>
+      <button *ngIf="!lightTheme" mat-menu-item (click)="selectTheme('light-theme')">
+        <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
+        {{ "account.lightTheme" | translate }}
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>
+        {{ "account.logout" | translate }}
+      </button>
+    </mat-menu>
   </div>
 </mat-toolbar>

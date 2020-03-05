@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd, RouteConfigLoadEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -31,7 +31,8 @@ export class HeaderMobileComponent implements OnInit {
   lightTheme = true;
 
   // Interface for profile data
-  profile: IuserProfile = {
+  profile: IuserProfile;
+  /* profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
@@ -54,7 +55,7 @@ export class HeaderMobileComponent implements OnInit {
     rigModel: null,
     rigYear: null,
     profileImageUrl: null
-  };
+  }; */
 
   userProfile: Observable<IuserProfile>;
 

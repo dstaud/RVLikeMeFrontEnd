@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
+
+import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
+
 // import { timingSafeEqual } from 'crypto';
 
 @Component({
@@ -11,37 +17,125 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-  showSignin = false;
-  showLearnMore = false;
-  showRegisterUser = false;
   landingImage: string;
-  imageNbr: number;
+  maxRvImageHeight = 'auto';
+  maxRvImageWidth = '100%';
+  logoClass: string;
+  logoDesktopLeft: string;
+
+  private landingImageNbr: number;
+  private imageHeight: number
+  private windowWidth: number;
+  private windowHeight: number;
+  private logoDesktopLeftPosition: number;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+  this.windowWidth = window.innerWidth;
+  this.windowHeight = window.innerHeight;
+
+  if (this.windowWidth > 600) {
+    this.imageHeight = this.windowHeight *.6;
+    this.maxRvImageHeight = this.imageHeight.toString() + 'px';
+    this.maxRvImageWidth = 'auto';
+    this.logoClass = 'logoDesktop';
+    this.logoDesktopLeftPosition = 400;
+    this.logoDesktopLeft = this.logoDesktopLeftPosition.toString() + 'px';
+    // document.getElementById("image").style.left = this.logoDesktopLeft;
+  } else {
+    this.maxRvImageHeight = 'auto';
+    this.maxRvImageWidth = '100%';
+    this.logoClass = 'logoMobile'
+  }
+}
 
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private headerVisibleSvc: HeaderVisibleService,
+              private dialog: MatDialog,
               private router: Router) {
 }
 
   ngOnInit() {
-    this.imageNbr = Math.floor(Math.random() * 3) + 1;
-    this.landingImage = 'landing-image' + this.imageNbr + '.jpeg';
+    // Randomly pick one of 3 landing page RV images
+    this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
+    this.landingImage = 'landing-image' + this.landingImageNbr + '.jpeg';
+
+    // Get window size to determine how to present register, signon and learn more
+    this.windowWidth = window.innerWidth;
+    this.windowHeight = window.innerHeight;
+
+    if (this.windowWidth > 600) {
+      this.imageHeight = this.windowHeight *.6;
+      this.maxRvImageHeight = this.imageHeight.toString() + 'px';
+      this.maxRvImageWidth = 'auto';
+      this.logoClass = 'logoDesktop';
+      this.logoDesktopLeftPosition = this.windowWidth *.6;
+      this.logoDesktopLeft = this.logoDesktopLeftPosition.toString() + 'px';
+      console.log('left=', this.logoDesktopLeft)
+      // document.getElementById("logoPackage").style.left = this.logoDesktopLeft;
+    } else {
+      this.maxRvImageHeight = 'auto';
+      this.maxRvImageWidth = '100%';
+      this.logoClass = 'logoMobile';
+    }
+  }
+
+  ngOnDestroy() {}
+
+
+  // For Desktop users, present register as a dialog
+  openDialog(component: string, cb: CallableFunction): void {
+    const dialogRef = this.dialog.open(DesktopDialogComponent, {
+      width: '340px',
+      height: '525px',
+      disableClose: true,
+      data: { component: component }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+        cb(result);
+    });
   }
 
   registerUser() {
-    this.headerVisibleSvc.toggleHeaderVisible(true);
-    this.router.navigateByUrl('/register');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
+    console.log(this.windowWidth);
+    if (this.windowWidth > 600) {
+      this.openDialog('register', (result: string) => {
+        if (result === 'complete') {
+          this.signIn();
+        }
+      });
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.router.navigateByUrl('/register');
+      this.activateBackArrowSvc.setBackRoute('landing-page');
+    }
   }
 
   learnMore() {
     this.headerVisibleSvc.toggleHeaderVisible(true);
+    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.router.navigateByUrl('/learn-more');
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
   signIn() {
-    this.headerVisibleSvc.toggleHeaderVisible(true);
-    this.router.navigateByUrl('/signin');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
+    if (this.windowWidth > 600) {
+      this.openDialog('signin', (result: string) => {
+        if (result === 'complete') {
+          this.activateBackArrowSvc.setBackRoute('landing-page');
+          this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
+          this.router.navigateByUrl('/home');
+        }
+      });
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.router.navigateByUrl('/signin');
+      this.activateBackArrowSvc.setBackRoute('landing-page');
+    }
   }
 }

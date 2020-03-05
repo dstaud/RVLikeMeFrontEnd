@@ -1,0 +1,12 @@
+<app-rvlm-register-user
+  *ngIf="data.component === 'register'"
+  #registerUser
+  [containerDialog]="true"
+  (formComplete)="formComplete($event)">
+</app-rvlm-register-user>
+<app-rvlm-signin
+  *ngIf="data.component === 'signin'"
+  #registerUser
+  [containerDialog]="true"
+  (formComplete)="formComplete($event)">
+</app-rvlm-signin>

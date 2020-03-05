@@ -1,12 +1,14 @@
 <mat-nav-list>
-  <a id="routeProfile"
+  <a *ngIf="deviceMode"
+    id="routeProfile"
     mat-list-item routerLink="/profile"
     (click)="closeSideNav()"
     routerLinkActive="active-menu-item">
     <mat-icon fontSet="material-icons-outlined" >person</mat-icon>
     <span class="nav-caption">{{ "menu.profile" | translate }}</span>
   </a>
-  <a id="routeMessages"
+  <a *ngIf="deviceMode"
+  id="routeMessages"
     mat-list-item routerLink="/messages"
     (click)="closeSideNav()"
     routerLinkActive="active-menu-item">

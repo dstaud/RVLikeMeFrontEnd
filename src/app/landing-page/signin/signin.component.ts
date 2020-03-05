@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
@@ -20,6 +20,15 @@ import { ItokenPayload } from '@interfaces/tokenPayload';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
+
+  // Variable passed from the dialog when on desktop through this component's selector in the dialog compoment template
+  @Input('containerDialog')
+  containerDialog = false;
+
+  // When user is in desktop mode, tell dialog container form is complete, through the reference obtained through the selector
+  @Output() formComplete = new EventEmitter()
+  public formCompleted: string;
+
   userProfile: Observable<IuserProfile>;
   form: FormGroup;
   hidePassword = true;
@@ -37,7 +46,7 @@ export class SigninComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
-              private HeaderVisibleSvc: HeaderVisibleService,
+              private headerVisibleSvc: HeaderVisibleService,
               private router: Router,
               private themeSvc: ThemeService,
               private language: LanguageService,
@@ -51,7 +60,8 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.HeaderVisibleSvc.toggleHeaderVisible(true);
+    this.headerVisibleSvc.toggleHeaderVisible(true);
+    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
@@ -66,6 +76,12 @@ export class SigninComponent implements OnInit {
    }
 
   ngOnDestroy() {};
+
+   // For desktop only, have cancel button because in a dialog
+   onCancel() {
+    this.formCompleted = 'canceled';
+    this.formComplete.emit(this.formCompleted);
+  }
 
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
@@ -102,9 +118,14 @@ export class SigninComponent implements OnInit {
           this.router.navigateByUrl(this.returnRoute);
           this.activateBackArrowSvc.setBackRoute('');
         } else {
-          // After user authorizied go to home page
-          this.router.navigateByUrl('/home');
-          this.activateBackArrowSvc.setBackRoute('');
+          if (this.containerDialog) {
+            this.formCompleted = 'complete';
+            this.formComplete.emit(this.formCompleted);
+          } else {
+            // After user authorizied go to home page
+            this.router.navigateByUrl('/home');
+            this.activateBackArrowSvc.setBackRoute('');
+          }
         }
       }, (error) => {
         console.error(error);

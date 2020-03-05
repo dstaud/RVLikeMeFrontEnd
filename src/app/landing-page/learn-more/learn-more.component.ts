@@ -16,19 +16,20 @@ export class LearnMoreComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
-  @Input() state: boolean;
-  @Output() toggle = new EventEmitter<boolean>();
+/*   @Input() state: boolean;
+  @Output() toggle = new EventEmitter<boolean>(); */
 
   ngOnInit() {
   }
 
   registerUser() {
     this.headerVisibleSvc.toggleHeaderVisible(true);
+    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.router.navigateByUrl('/register');
     this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 
-  close() {
+/*   close() {
     this.toggle.emit(!this.state);
-  }
+  } */
 }

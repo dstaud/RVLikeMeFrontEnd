@@ -1,10 +1,11 @@
-import { ImageCropperComponent } from './../../features/profile/image-cropper/image-cropper.component';
-import { Component, OnInit, Inject, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
 import { SharedComponent } from '@shared/shared.component';
+import { ImageCropperComponent } from './../../features/profile/image-cropper/image-cropper.component';
 
+/* Dialog component specifically for hosting the image cropper component */
 export interface DialogData {
   image: string;
   updatedImage: string;
@@ -17,32 +18,40 @@ export interface DialogData {
 })
 export class ImageDialogComponent implements OnInit {
 
+  // Inject reference to the image cropper component
   @ViewChild('imageCropper', {static: false })
   private imageCropper: ImageCropperComponent;
 
-  constructor(private shared: SharedComponent,
-              private focusMonitor: FocusMonitor,
+  constructor(private focusMonitor: FocusMonitor,
               public dialogRef: MatDialogRef<ImageDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit() {
   }
 
+
+  // Prevent OK buton from getting focus.   Make user click on OK and don't show browser highligh on button.
   ngAfterViewInit() {
     this.focusMonitor.stopMonitoring(document.getElementById('btnOK'));
   }
 
+
+  // Call notifyDone() function on the image cropper compoment when user clicks the OK button on this dialog and then close the dialog 
+  // sending back the updated image obtained from the image cropper compoment
   onOK() {
-    console.log('setting up notifyDone');
     this.imageCropper.notifyDone();
     this.dialogRef.close(this.data.updatedImage);
   }
 
+
+  // Send back 'canceled' to originating component to indicate user clicked the Cancel button
   onNoClick(): void {
     this.dialogRef.close('canceled');
   }
 
-  updatedImage(event: string) {
+
+  // Update data object when image component sends updated image, so can send back up to originating component
+  updatedImage(event: string): void {
     this.data.updatedImage = event;
   }
 }

@@ -64,6 +64,9 @@ export class PersonalComponent implements OnInit {
   sizeOfOriginalImage: number;
   localCompressedURl: any;
   sizeOFCompressedImage:number;
+  private windowWidth: any;
+  private dialogWidth: number;
+  private dialogWidthDisplay: string;
 
   // Interface for Profile data
   profile: IuserProfile;
@@ -155,10 +158,23 @@ export class PersonalComponent implements OnInit {
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
-    @HostListener('window:beforeunload', ['$event'])
-    unloadNotification($event: any) {
-      $event.returnValue = true;
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    $event.returnValue = true;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
     }
+  }
 
   constructor(private translate: TranslateService,
               private shared: SharedComponent,
@@ -189,6 +205,18 @@ export class PersonalComponent implements OnInit {
     }
 
   ngOnInit() {
+
+    // Get window size to determine how to present dialog windows
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
+    }
+
     this.form.disable();
 
     // If user got to this page without logging in (i.e. a bookmark or attack), send
@@ -241,7 +269,7 @@ export class PersonalComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
-
+  // Give user more space to enter their story
   onMyStory() {
     this.openMyStoryDialog(this.profile.myStory);
   }
@@ -262,7 +290,7 @@ export class PersonalComponent implements OnInit {
   openImageCropperDialog(imageSource: string): void {
     let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
-      width: '95%',
+      width: this.dialogWidthDisplay,
       height: '80%',
       disableClose: true,
       data: { image: imageSource }
@@ -273,10 +301,9 @@ export class PersonalComponent implements OnInit {
     .subscribe(result => {
       if (result) {
         if (result !== 'canceled') {
-          console.log('have result=', result);
           croppedImageBase64 = result;
-          this.uploadImageSvc.uploadImageBase64(croppedImageBase64, () => {
-            this.profile.profileImageUrl = croppedImageBase64;
+          this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
+            this.profile.profileImageUrl = uploadedFileUrl;
             this.updatePersonal('profileImage');
             this.profileImageUrl = this.profile.profileImageUrl;
             this.profileImageLabel = 'personal.component.changeProfilePic'
@@ -294,11 +321,11 @@ export class PersonalComponent implements OnInit {
   }
 
 
-  // Present image for user to crop
+  // Let user update their story in a dialog with a lot more space to comfortably enter
   openMyStoryDialog(myStory: string): void {
-    console.log('myStory=', myStory);
+    console.log('dialogwidth=', this.dialogWidthDisplay);
     const dialogRef = this.dialog.open(MyStoryDialogComponent, {
-      width: '95%',
+      width: this.dialogWidthDisplay,
       height: '75%',
       disableClose: true,
       data: { myStory: myStory }

@@ -37,6 +37,10 @@
     "ok": "Okay",
     "cancel": "Cancelar"
   },
+  "image-dialog.component": {
+    "ok": "Okay",
+    "cancel": "Cancelar"
+  },
   "profile.component": {
     "header": "Perfil",
     "explanation": "Ingrese información sobre usted y cómo su RV para ayudarnos a brindarle más información relevante y respuestas a sus preguntas.",

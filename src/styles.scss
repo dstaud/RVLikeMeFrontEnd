@@ -1,8 +1,14 @@
 /* for sidenav to take whole page */
-html, body {
+html {
+  max-width: 1140px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* html, body {
   margin: 0;
   height: 100%;
-}
+} */
 
 // iPhone
 // * {

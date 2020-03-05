@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,21 +23,33 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./register-user.component.scss']
 })
 export class RegisterUserComponent implements OnInit {
+
+  // Variable passed from the dialog when on desktop through this component's selector in the dialog compoment template
+  @Input('containerDialog')
+  containerDialog = false;
+
+  // When user is in desktop mode, tell dialog container form is complete, through the reference obtained through the selector
+  @Output() formComplete = new EventEmitter()
+  public formCompleted: string;
+
   form: FormGroup;
   hidePassword = true;
   showSpinner = false;
   arrowIcon = 'arrow_back';
-  device: string;
-  presentInstallOption = false;
-  event: any;
+  httpError = false;
+  httpErrorText = '';
 
-  credentials: ItokenPayload = {
+  private device: string;
+  private presentInstallOption = false;
+  private event: any;
+
+  private credentials: ItokenPayload = {
     _id: '',
     email: '',
     password: '',
     tokenExpire: 0
   };
-  profile: IuserProfile = {
+  private profile: IuserProfile = {
     firstName: null,
     lastName: null,
     displayName: null,
@@ -61,8 +73,6 @@ export class RegisterUserComponent implements OnInit {
     rigYear: null,
     profileImageUrl: null
   };
-  httpError = false;
-  httpErrorText = '';
 
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
@@ -106,6 +116,12 @@ export class RegisterUserComponent implements OnInit {
 
   ngOnDestroy() {};
 
+  // For desktop only, have cancel button because in a dialog
+  onCancel() {
+    this.formCompleted = 'canceled';
+    this.formComplete.emit(this.formCompleted);
+  }
+
   onSubmit() {
     if (this.form.controls.password.value !== this.form.controls.passwordConfirm.value) {
       this.shared.openSnackBar('Passwords do not match', 'error');
@@ -135,12 +151,17 @@ export class RegisterUserComponent implements OnInit {
             if (this.presentInstallOption) {
               // Show the install prompt
               this.openInstallDialog();
-            } else {
+            } else if (!this.containerDialog) {
               this.shared.openSnackBar('Credentials saved.  Please sign in', 'message', 2000);
             }
             this.authSvc.logout();
-            this.activateBackArrowSvc.setBackRoute('landing-page');
-            this.router.navigateByUrl('/signin');
+            if (this.containerDialog) {
+              this.formCompleted = 'complete';
+              this.formComplete.emit(this.formCompleted);
+            } else {
+              this.activateBackArrowSvc.setBackRoute('landing-page');
+              this.router.navigateByUrl('/signin');
+            }
           });
         }
       }, error => {
@@ -161,8 +182,6 @@ export class RegisterUserComponent implements OnInit {
 
   // App Install Option
   openInstallDialog(): void {
-    let selection = '';
-
     const dialogRef = this.dialog.open(InstallDialogComponent, {
       width: '250px',
       disableClose: true

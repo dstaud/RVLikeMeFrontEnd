@@ -1,4 +1,6 @@
-<div class="mat-app-background background">
+<div ngClass="background background-desktop"
+    [ngClass.xs]="{'background': true, 'background-desktop': false}"
+    [ngClass.md]="{'background': false, 'background-desktop': true}">
   <span class="mat-display-1 hook">
     Connect with people who RV like you do
   </span>

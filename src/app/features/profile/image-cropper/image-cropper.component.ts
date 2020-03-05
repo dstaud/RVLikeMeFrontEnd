@@ -9,17 +9,23 @@ import { FakeMissingTranslationHandler } from '@ngx-translate/core';
   styleUrls: ['./image-cropper.component.scss']
 })
 export class ImageCropperComponent implements OnInit {
-  showDestination = false;
-
-  @ViewChild("image", {static: false })
+  
+  // Inject a reference to the original source image in the HTML (#image) for use as imageElement in the Typescript.  
+  @ViewChild('image', {static: false })
   public imageElement: ElementRef;
 
-  @Input("src")
+  // Original image passed from the dialog through this component's selector in the dialog compoment template
+  @Input('originalImage')
   public imageSource: string;
 
-  @Output() updatedImage= new EventEmitter()
+  // Send updated image back to the dialog through the reference obtained through the selector
+  @Output() updatedImage = new EventEmitter()
   public imageDestination: string;
+
   private cropper: Cropper;
+
+  // TODO: don't show destination image until originl image is ready, but turning this to true in ngAfterViewInit() doesn't work
+  private showDestination = false;
 
 
   constructor() {
@@ -51,8 +57,8 @@ export class ImageCropperComponent implements OnInit {
     this.cropper.rotate(degrees);
   }
 
+  // Called from dialog container when user clicks OK on the dialog, so updated image can be sent back up the chain
   notifyDone() {
-    console.log('In NotifyDone=', this.imageDestination);
     this.updatedImage.emit(this.imageDestination);
   }
 }

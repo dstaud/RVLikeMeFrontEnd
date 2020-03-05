@@ -16,8 +16,7 @@ export interface DialogData {
 })
 export class OtherDialogComponent implements OnInit {
 
-  constructor(private shared: SharedComponent,
-              private translate: TranslateService,
+  constructor(private translate: TranslateService,
               public dialogRef: MatDialogRef<OtherDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 

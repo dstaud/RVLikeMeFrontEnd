@@ -1,5 +1,6 @@
 .button {
-  padding-right: 10px;
+  float: left;
+  margin-right: 10px;
 }
 
 .spinner {
@@ -18,6 +19,11 @@ mat-icon {
 .background {
   padding: 10px;
   margin-top: 50px;
+}
+
+.background-desktop {
+  padding: 10px;
+  margin-top: 0px;
 }
 
 .eyePassword {
