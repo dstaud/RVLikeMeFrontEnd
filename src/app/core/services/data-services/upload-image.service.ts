@@ -41,7 +41,7 @@ export class UploadImageService {
   }
 
 
-  uploadUpdatedProfileImageBase64(croppedImage: string, cb: CallableFunction) {
+  uploadImageBase64(croppedImage: string, cb: CallableFunction) {
     let profileImageUrl: string;
 
     this.profileSvc.uploadProfileImageBase64(croppedImage)

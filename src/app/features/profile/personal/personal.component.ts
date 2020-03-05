@@ -3,12 +3,10 @@ import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { HttpEventType } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
-import { NgxImageCompressService } from 'ngx-image-compress';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -167,7 +165,6 @@ export class PersonalComponent implements OnInit {
               private profileSvc: ProfileService,
               private router: Router,
               private location: Location,
-              private imageCompress: NgxImageCompressService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
               private uploadImageSvc: UploadImageService,
@@ -273,7 +270,7 @@ export class PersonalComponent implements OnInit {
         if (result !== 'canceled') {
           console.log('have result=', result);
           croppedImageBase64 = result;
-          this.uploadImageSvc.uploadUpdatedProfileImageBase64(croppedImageBase64, () => {
+          this.uploadImageSvc.uploadImageBase64(croppedImageBase64, () => {
             this.profile.profileImageUrl = croppedImageBase64;
             this.updatePersonal('profileImage');
             this.profileImageUrl = this.profile.profileImageUrl;
