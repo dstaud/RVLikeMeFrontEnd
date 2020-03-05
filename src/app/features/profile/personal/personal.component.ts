@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { HttpEventType } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
+import { HttpEventType } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -13,6 +13,7 @@ import { NgxImageCompressService } from 'ngx-image-compress';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { UploadImageService } from '@services/data-services/upload-image.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
@@ -169,6 +170,7 @@ export class PersonalComponent implements OnInit {
               private imageCompress: NgxImageCompressService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private uploadImageSvc: UploadImageService,
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
@@ -241,7 +243,22 @@ export class PersonalComponent implements OnInit {
     this.shared.openSnackBar(this.helpMsg, 'message');
   }
 
+
+  // Compress Image and offer up for user to crop
+  onProfileImageSelected(event: any) {
+    this.showSpinner = true;
+    console.log('compress image file');
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      console.log('returned to original, file=', compressedFile);
+      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        this.openDialog(uploadedFileUrl);
+      });
+    });
+  }
+
+  // Present image for user to crop
   openDialog(imageSource: string): void {
+    let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: '95%',
       height: '80%',
@@ -255,8 +272,14 @@ export class PersonalComponent implements OnInit {
       if (result) {
         if (result !== 'canceled') {
           console.log('have result=', result);
-          this.profileImageUpdated = result;
-          this.uploadUpdatedProfileImageBase64();
+          croppedImageBase64 = result;
+          this.uploadImageSvc.uploadUpdatedProfileImageBase64(croppedImageBase64, () => {
+            this.profile.profileImageUrl = croppedImageBase64;
+            this.updatePersonal('profileImage');
+            this.profileImageUrl = this.profile.profileImageUrl;
+            this.profileImageLabel = 'personal.component.changeProfilePic'
+            this.showSpinner = false;
+          })
         } else {
           console.log('no image');
           this.showSpinner = false;
@@ -268,94 +291,6 @@ export class PersonalComponent implements OnInit {
     });
   }
 
-  uploadUpdatedProfileImageBase64() {
-    this.showSpinner = true;
-    this.profileSvc.uploadProfileImageBase64(this.profileImageUpdated)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        console.log('Upload progress: ', Math.round(event.loaded / event.total * 100))+ '%';
-      } else if (event.type === HttpEventType.Response) {
-        console.log('EVENT=', event);
-        this.profile.profileImageUrl = event.body['imageUrl'];
-        console.log('url=', this.profile.profileImageUrl);
-        this.updatePersonal('profileImage');
-        this.profileImageUrl = this.profile.profileImageUrl;
-        this.profileImageLabel = 'personal.component.changeProfilePic'
-        this.showSpinner = false;
-      }
-    }, error => {
-      console.log(error);
-      this.showSpinner = false;
-    });
-  }
-
-  onProfileImageSelected(event: any) {
-    let fileName: string
-    this.profileImageUploaded = <File>event.target.files[0];
-    fileName = this.profileImageUploaded['name'];
-    console.log('file size=', this.profileImageUploaded['size'] / (1024*1024));
-    if (event.target.files && event.target.files[0]) {
-      var reader = new FileReader();
-      reader.onload = (event: any) => {
-        this.localUrl = event.target.result;
-        this.compressFile(this.localUrl, fileName)
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  }
-
-  compressFile(image,  fileName) {
-    var orientation = -1;
-    this.sizeOfOriginalImage = this.imageCompress.byteCount(image)/(1024*1024);
-    console.warn('File size before:',  this.sizeOfOriginalImage);
-
-    this.imageCompress.compressFile(image, orientation, 50, 50).then(
-      result => {
-        this.imgResultAfterCompress = result;
-        // create file from byte
-        const imageName = fileName;
-        // call method that creates a blob from dataUri
-        const imageBlob = this.dataURItoBlob(this.imgResultAfterCompress.split(',')[1]);
-        this.profileCompressedImage = new File([imageBlob], imageName, { type: 'image/jpeg' });
-        console.log("File size after:",this.profileCompressedImage['size']/(1024*1024));
-        this.uploadProfileImage();
-      }
-    );
-  }
-
-  dataURItoBlob(dataURI) {
-    const byteString = window.atob(dataURI);
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const int8Array = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < byteString.length; i++) {
-      int8Array[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([int8Array], { type: 'image/jpeg' });
-    return blob;
- }
-
-  uploadProfileImage() {
-    let fd = new FormData();
-    fd.append('image', this.profileCompressedImage, this.profileCompressedImage.name);
-
-    this.showSpinner = true;
-    console.log('file=', this.profileCompressedImage);
-    this.profileSvc.uploadProfileImage(fd)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        console.log('Upload progress: ', Math.round(event.loaded / event.total * 100))+ '%';
-      } else if (event.type === HttpEventType.Response) {
-          this.profileImageTempUrl = event.body['imageUrl'];
-          console.log('url=', event.body['imageUrl']);
-          this.openDialog(this.profileImageTempUrl);
-      }
-    }, error => {
-      console.log(error);
-      this.showSpinner = false;
-    });
-  }
 
   /**** Field auto-update processing ****/
   updateDataPoint(control: string) {
