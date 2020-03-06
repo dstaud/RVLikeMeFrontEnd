@@ -1,14 +1,15 @@
 <div>
-  <img src='./../../assets/images/{{landingImage}}'
+  <img id="image"
+  src='./../../assets/images/{{landingImage}}'
   alt="rv view"
   class="illustration"
   [style.height]="maxRvImageHeight"
   [style.width]="maxRvImageWidth">
 </div>
-<div id="logoPackage" class="logoCombined">
+<div class="logoCombined">
   <div class="rvlikeme">
     <h2 class="mat-h2">
-      <img id="image"
+      <img
         src="../../../assets/images/trailer.png"
         class="logo"
         alt="travel trailer logo"
@@ -17,9 +18,12 @@
     </h2>
   </div>
 </div>
-<div class="mat-app-background">
-  <button mat-flat-button class="button" color="primary" (click)="registerUser()">Sign up for free</button>
+<div>
+  <app-rvlm-learn-more *ngIf="showLearnMoreDesktop"></app-rvlm-learn-more>
+</div>
+<div class="buttons">
+  <button *ngIf="!showLearnMoreDesktop" mat-flat-button class="button" color="primary" (click)="registerUser()">Sign up for free</button>
   <button mat-stroked-button class="button" (click)="signIn()">Log in</button>
   <button mat-stroked-button class="button" (click)="learnMore()">What is RV Like Me?</button>
-  <p class="mat-subheading-2 construction">UNDER CONSTRUCTION v16</p>
+  <p class="mat-subheading-2 construction">UNDER CONSTRUCTION v17</p>
 </div>

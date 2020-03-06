@@ -16,18 +16,13 @@
   float: left;
 }
 
-.logoCombined{
+.illustration {
+  margin: auto;
+}
+.logoCombined {
   position: absolute;
   top: 0px;
   left: 0px;
-}
-
-.logoMobile {
-  float: left;
-}
-
-.logoDesktop {
-  top: 0;
 }
 
 .button {
@@ -36,6 +31,10 @@
   margin-right: auto;
   width: 200px;
   margin-top: 20px;
+}
+
+.buttons {
+  margin-top: 50px;
 }
 
 .construction {

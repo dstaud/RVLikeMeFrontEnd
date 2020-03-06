@@ -291,7 +291,7 @@ export class PersonalComponent implements OnInit {
     let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: this.dialogWidthDisplay,
-      height: '80%',
+      height: '90%',
       disableClose: true,
       data: { image: imageSource }
     });
@@ -326,7 +326,7 @@ export class PersonalComponent implements OnInit {
     console.log('dialogwidth=', this.dialogWidthDisplay);
     const dialogRef = this.dialog.open(MyStoryDialogComponent, {
       width: this.dialogWidthDisplay,
-      height: '75%',
+      height: '80%',
       disableClose: true,
       data: { myStory: myStory }
     });

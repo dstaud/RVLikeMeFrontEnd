@@ -5,7 +5,7 @@
       <textarea matInput
           type="text"
           placeholder="My story"
-          class="large-input"
+          [style.height]="fieldHeight"
           formControlName="myStory"
           cdkFocusInitial
           [(ngModel)]="data.myStory">

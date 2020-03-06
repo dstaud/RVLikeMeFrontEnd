@@ -1,5 +1,5 @@
 /* Ensure the size of the image fit the container perfectly */
-img {
+.image-source {
   display: block;
 
   /* This rule is very important, please don't ignore this */
@@ -22,3 +22,4 @@ img {
   width: 80px;
   height: 80px;
 }
+

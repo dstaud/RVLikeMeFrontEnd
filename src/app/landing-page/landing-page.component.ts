@@ -22,6 +22,7 @@ export class LandingPageComponent implements OnInit {
   maxRvImageWidth = '100%';
   logoClass: string;
   logoDesktopLeft: string;
+  showLearnMoreDesktop = false;
 
   private landingImageNbr: number;
   private imageHeight: number
@@ -34,19 +35,14 @@ export class LandingPageComponent implements OnInit {
   this.windowWidth = window.innerWidth;
   this.windowHeight = window.innerHeight;
 
-  if (this.windowWidth > 600) {
+/*   if (this.windowWidth > 600) {
     this.imageHeight = this.windowHeight *.6;
     this.maxRvImageHeight = this.imageHeight.toString() + 'px';
     this.maxRvImageWidth = 'auto';
-    this.logoClass = 'logoDesktop';
-    this.logoDesktopLeftPosition = 400;
-    this.logoDesktopLeft = this.logoDesktopLeftPosition.toString() + 'px';
-    // document.getElementById("image").style.left = this.logoDesktopLeft;
-  } else {
+  } else { */
     this.maxRvImageHeight = 'auto';
     this.maxRvImageWidth = '100%';
-    this.logoClass = 'logoMobile'
-  }
+/*   } */
 }
 
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
@@ -56,28 +52,27 @@ export class LandingPageComponent implements OnInit {
 }
 
   ngOnInit() {
-    // Randomly pick one of 3 landing page RV images
-    this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
-    this.landingImage = 'landing-image' + this.landingImageNbr + '.jpeg';
-
     // Get window size to determine how to present register, signon and learn more
     this.windowWidth = window.innerWidth;
     this.windowHeight = window.innerHeight;
 
+    // Randomly pick one of 2 landing page RV images
+    this.landingImageNbr = Math.floor(Math.random() * 2) + 1;
+
     if (this.windowWidth > 600) {
+      this.landingImage = 'landing-image' + this.landingImageNbr + '.jpeg';
+    } else {
+      this.landingImage = 'landing-imageM' + this.landingImageNbr + '.jpeg';
+    }
+
+/*     if (this.windowWidth > 600) {
       this.imageHeight = this.windowHeight *.6;
       this.maxRvImageHeight = this.imageHeight.toString() + 'px';
       this.maxRvImageWidth = 'auto';
-      this.logoClass = 'logoDesktop';
-      this.logoDesktopLeftPosition = this.windowWidth *.6;
-      this.logoDesktopLeft = this.logoDesktopLeftPosition.toString() + 'px';
-      console.log('left=', this.logoDesktopLeft)
-      // document.getElementById("logoPackage").style.left = this.logoDesktopLeft;
-    } else {
-      this.maxRvImageHeight = 'auto';
-      this.maxRvImageWidth = '100%';
-      this.logoClass = 'logoMobile';
-    }
+    } else { */
+    this.maxRvImageHeight = 'auto';
+    this.maxRvImageWidth = '100%';
+/*     } */
   }
 
   ngOnDestroy() {}
