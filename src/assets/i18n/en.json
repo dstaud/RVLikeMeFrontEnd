@@ -235,6 +235,8 @@
     "emailError": "Please enter your"
   },
   "account": {
+    "changeProfileImage": "Change Profile Pic",
+    "updateProfile": "Update profile",
     "changeUsername": "Change username",
     "changePassword": "Change password",
     "darkTheme": "Dark mode",

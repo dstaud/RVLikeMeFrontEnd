@@ -18,6 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedComponent } from './shared.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [SharedComponent],
@@ -39,7 +40,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatDialogModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatTooltipModule
   ],
   providers: [ SharedComponent ]
 })

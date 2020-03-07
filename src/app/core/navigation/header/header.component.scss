@@ -1,19 +1,71 @@
+@import './../../../../styles/_variables';
+
+
 .toolbar {
   display: flex;
   height: 50px;
   position: fixed;
   padding-left: 20px;
   padding-right: 20px;
-  padding-top: 20px;
+  // padding-top: 20px;
   max-width: 1140px;
   top: 0;
   z-index: 1; // To make sure content flows under toolbar for desktop
 }
 
-.toolbar-item {
+.toolbar-image {
+  // border-width: 1;
+  // border-style: solid;
+  // border-color: red;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  padding-right: 5px;
+}
+.toolbar-icon {
+  // border-width: 1;
+  // border-style: solid;
+  // border-color: red;
+  // line-height: 50px;
+  // margin-top: calc(50px - 30px);
+  // font-size: 50px;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  padding-left: 5px;
+  // display: flex !important;
+  // justify-content: center !important;
+  // display: inline-flex;
+  // vertical-align: middle;
+  // margin: 0;
+  // padding: 0;
+  // line-height: 50px;  // 2.6% of viewport height or about 50px on an iphone 6x
+}
+
+.image {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+}
+
+.menu-icon {
+  text-align: center;
   margin: 0;
   padding: 0;
-  line-height: 50px;
+  line-height: 0;
+}
+
+.menu-icon-text {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-size: 70%;
+}
+
+.active-menu-item {
+  color: $accent-color;
+  // font-weight: bold;
 }
 
 .icon-button {
@@ -22,11 +74,11 @@
   justify-content: space-around;
 }
 
-.logoCombined {
+/* .logoCombined {
   position: absolute;
   top: 0px;
   left: 0px;
-}
+} */
 
 .rvlikeme {
   position: relative;
@@ -38,12 +90,6 @@
 
 .logo {
   float: left;
-}
-
-.image {
-  border-radius: 50%;
-  height: 30px;
-  width: 30px;
 }
 
 .active-menu-item {

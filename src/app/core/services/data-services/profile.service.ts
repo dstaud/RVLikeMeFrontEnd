@@ -117,11 +117,11 @@ export class ProfileService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
-/*   distributeProfileUpdate(userProfile: IuserProfile) {
+  distributeProfileUpdate(userProfile: IuserProfile) {
     console.log('distribute profile=', userProfile);
     this.dataStore.profile = userProfile;
     this._profile.next(Object.assign({}, this.dataStore).profile);
-  } */
+  }
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
     console.log('http update profile=', userProfile, this.dataStore.profile);

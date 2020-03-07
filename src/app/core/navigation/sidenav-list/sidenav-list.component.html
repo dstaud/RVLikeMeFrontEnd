@@ -1,20 +1,4 @@
 <mat-nav-list>
-  <a *ngIf="deviceMode"
-    id="routeProfile"
-    mat-list-item routerLink="/profile"
-    (click)="closeSideNav()"
-    routerLinkActive="active-menu-item">
-    <mat-icon fontSet="material-icons-outlined" >person</mat-icon>
-    <span class="nav-caption">{{ "menu.profile" | translate }}</span>
-  </a>
-  <a *ngIf="deviceMode"
-  id="routeMessages"
-    mat-list-item routerLink="/messages"
-    (click)="closeSideNav()"
-    routerLinkActive="active-menu-item">
-    <mat-icon matBadge="2" matBadgePosition="above after" fontSet="material-icons-outlined" >messages</mat-icon>
-    <span class="nav-caption">{{ "menu.messages" | translate }}</span>
-  </a>
   <a id="routeAbout"
     mat-list-item routerLink="/about"
     (click)="closeSideNav()"
@@ -28,5 +12,5 @@
     (click)="installApp()">
     <mat-icon fontSet="material-icons-outlined" >save_alt</mat-icon>
     <span class="nav-caption">{{ "menu.install" | translate }}</span>
-</a>
+  </a>
 </mat-nav-list>

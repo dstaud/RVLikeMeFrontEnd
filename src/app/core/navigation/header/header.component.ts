@@ -10,6 +10,8 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ThemeService } from '@services/theme.service';
 
+import { SharedComponent } from './../../../shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-header',
   templateUrl: './header.component.html',
@@ -79,6 +81,18 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+  changeProfileImage() {
+    this.router.navigateByUrl('/profile-personal');
+    this.activateBackArrowSvc.setBackRoute('/profile');
+  }
+
+
+  updateProfile() {
+    this.router.navigateByUrl('/profile');
+    this.activateBackArrowSvc.setBackRoute('home');
+  }
+
 
   changeUsername() {
     this.router.navigateByUrl('/credentials');

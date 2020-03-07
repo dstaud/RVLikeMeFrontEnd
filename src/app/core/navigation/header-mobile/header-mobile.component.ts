@@ -176,6 +176,17 @@ export class HeaderMobileComponent implements OnInit {
     }
   }
 
+  changeProfileImage() {
+    this.router.navigateByUrl('/profile-personal');
+    this.activateBackArrowSvc.setBackRoute('/profile');
+  }
+
+
+  updateProfile() {
+    this.router.navigateByUrl('/profile');
+    this.activateBackArrowSvc.setBackRoute('home');
+  }
+
 
   changeUsername() {
     this.router.navigateByUrl('/credentials');

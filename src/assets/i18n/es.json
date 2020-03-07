@@ -235,6 +235,8 @@
     "emailError": "Introduzca su"
   },
   "account": {
+    "changeProfileImage": "Cambiar foto de perfil",
+    "updateProfile": "Actualización del perfil",
     "changeUsername": "Cambie el nombre de usuario",
     "changePassword": "Cambia la contraseña",
     "darkTheme": "Modo oscuro",

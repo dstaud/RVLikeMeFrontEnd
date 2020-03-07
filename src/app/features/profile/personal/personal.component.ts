@@ -308,6 +308,7 @@ export class PersonalComponent implements OnInit {
             this.profileImageUrl = this.profile.profileImageUrl;
             this.profileImageLabel = 'personal.component.changeProfilePic'
             this.showSpinner = false;
+            this.profileSvc.distributeProfileUpdate(this.profile);
           })
         } else {
           console.log('no image');
