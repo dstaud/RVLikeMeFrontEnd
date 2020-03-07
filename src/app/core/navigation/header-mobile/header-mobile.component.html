@@ -5,21 +5,20 @@
       alt="back arrow"
       (click)="returnToBackRoute()">{{ arrowIcon }}
     </mat-icon>
-    <img *ngIf="pageTitle === 'RV Like Me'" src="../../../assets/images/trailer.png"
+    <img *ngIf="pageTitle === 'RV Like Me'"
+          src="../../../assets/images/trailer.png"
           alt="travel trailer logo"
           style="width:60px;height:37.2px;">
     <span class="page-title toolbar-item">{{ pageTitle }}</span>
     <span class="fill-space"></span>
-    <button *ngIf="!userAuthorized && registerVisible"
-            mat-button
-            class="toolbar-item"
-            (click)="register()">Sign up for free
-    </button>
     <button *ngIf="userAuthorized"
             mat-button
             class="toolbar-item"
             [matMenuTriggerFor]="beforeMenu">
-            <mat-icon matPrefix >account_circle</mat-icon>
+            <mat-icon *ngIf="!profileImage" matPrefix >account_circle</mat-icon>
+            <img *ngIf="profileImage"
+              class="toolbar-item image"
+              [src]="profileImageUrl">
     </button>
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item (click)="changeUsername()">

@@ -47,7 +47,7 @@ export class MyStoryDialogComponent implements OnInit {
     console.log('80% of height=', winH);
     let fieldH = winH * .8;
     console.log('field=', fieldH);
-    this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 60;
+    this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 80;
     this.fieldHeight = this.containerHeight.toString() + 'px';
     console.log('height=', this.fieldHeight, this.containerHeight);
   }

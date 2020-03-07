@@ -10,10 +10,40 @@
   z-index: 1; // To make sure content flows under toolbar for desktop
 }
 
+.toolbar-item {
+  margin: 0;
+  padding: 0;
+  line-height: 50px;
+}
+
 .icon-button {
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+.logoCombined {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.rvlikeme {
+  position: relative;
+  float: right;
+  top: 5px;
+  left: 5px;
+  color: white;
+}
+
+.logo {
+  float: left;
+}
+
+.image {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
 }
 
 .active-menu-item {

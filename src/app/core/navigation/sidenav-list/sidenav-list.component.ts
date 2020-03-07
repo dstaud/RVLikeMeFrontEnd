@@ -7,6 +7,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 
 @Component({
   selector: 'app-rvlm-sidenav-list',

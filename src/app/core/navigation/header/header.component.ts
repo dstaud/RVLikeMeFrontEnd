@@ -19,6 +19,8 @@ export class HeaderComponent implements OnInit {
   lightTheme = true;
   profile: IuserProfile;
   userAuthorized: boolean;
+  profileImage = false;
+  profileImageUrl = null;
 
   userProfile: Observable<IuserProfile>;
 
@@ -54,17 +56,13 @@ export class HeaderComponent implements OnInit {
       } else {
         this.lightTheme = false;
       }
+      if (this.profile.profileImageUrl) {
+        this.profileImageUrl = this.profile.profileImageUrl;
+        this.profileImage = true;
+      }
     }, (error) => {
       console.error(error);
     });
-
-/*     this.device = this.deviceSvc.device;
-
-    if (this.device === 'iPhone') {
-      // arrow_back_ios icon not coming up at all regardless of this if
-      this.arrowIcon = 'arrow_back_ios';
-      // this.arrowIcon = 'keyboard_arrow_left';
-    } */
 
     // Listen for changes in user authorization state
     this.authSvc.userAuth$
@@ -78,24 +76,6 @@ export class HeaderComponent implements OnInit {
     if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
     }
-
-/*     this.activateBackArrowSvc.route$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(data => {
-        this.returnRoute = data.valueOf();
-        if (this.returnRoute) {
-          if (this.returnRoute.substring(0, 1) === '*') {
-              this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
-              this.autoRoute = true;
-              this.showBackArrow = false;
-            } else {
-              this.showBackArrow = true;
-            }
-          } else {
-              this.showBackArrow = false;
-              this.autoRoute = false;
-          }
-      }); */
   }
 
   ngOnDestroy() {}

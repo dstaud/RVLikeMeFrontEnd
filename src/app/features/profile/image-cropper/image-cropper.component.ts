@@ -9,8 +9,8 @@ import { FakeMissingTranslationHandler } from '@ngx-translate/core';
   styleUrls: ['./image-cropper.component.scss']
 })
 export class ImageCropperComponent implements OnInit {
-  
-  // Inject a reference to the original source image in the HTML (#image) for use as imageElement in the Typescript.  
+
+  // Inject a reference to the original source image in the HTML (#image) for use as imageElement in the Typescript.
   @ViewChild('image', {static: false })
   public imageElement: ElementRef;
 
@@ -41,6 +41,7 @@ export class ImageCropperComponent implements OnInit {
       zoomable: false,
       scalable: false,
       aspectRatio: 1,
+      viewMode: 1,
       rotatable: true,
       crop: () => {
         const canvas = this.cropper.getCroppedCanvas();

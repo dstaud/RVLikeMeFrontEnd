@@ -1,4 +1,3 @@
- <!-- removed fullscreen from mat-sidenav-container -->
  <mat-sidenav-container fullscreen [ngClass]="theme">
     <mat-sidenav #sidenav role="navigation" mode="push">
       <app-rvlm-sidenav-list (sideNavClosed)="sidenav.close()"></app-rvlm-sidenav-list>
@@ -6,7 +5,7 @@
     <mat-sidenav-content fxLayout="column">
       <app-rvlm-header *ngIf="headerDesktopVisible || userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-rvlm-header>
       <app-rvlm-header-mobile *ngIf="headerVisible || userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
-      <main class="container" [ngClass]="{'bottom-bar-spacing': userAuthorized}">
+      <main class="container mat-app-background" [ngClass]="{'bottom-bar-spacing': userAuthorized}">
         <router-outlet></router-outlet>
       </main>
       <app-rvlm-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-footer>

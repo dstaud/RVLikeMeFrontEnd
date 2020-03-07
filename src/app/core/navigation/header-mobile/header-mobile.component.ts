@@ -12,6 +12,7 @@ import { DeviceService } from '@services/device.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 
+
 @Component({
   selector: 'app-rvlm-header-mobile',
   templateUrl: './header-mobile.component.html',
@@ -29,33 +30,11 @@ export class HeaderMobileComponent implements OnInit {
   autoRoute = false;
   device: string;
   lightTheme = true;
+  profileImage = false;
+  profileImageUrl = null;
 
   // Interface for profile data
   profile: IuserProfile;
-  /* profile: IuserProfile = {
-    firstName: null,
-    lastName: null,
-    displayName: null,
-    yearOfBirth: null,
-    gender: null,
-    homeCountry: null,
-    homeState: null,
-    myStory: null,
-    language: 'en',
-    colorThemePreference: 'light-theme',
-    aboutMe: null,
-    rvUse: null,
-    worklife: null,
-    campsWithMe: null,
-    boondocking: null,
-    traveling: null,
-    rigType: null,
-    rigManufacturer: null,
-    rigBrand: null,
-    rigModel: null,
-    rigYear: null,
-    profileImageUrl: null
-  }; */
 
   userProfile: Observable<IuserProfile>;
 
@@ -90,6 +69,10 @@ export class HeaderMobileComponent implements OnInit {
         this.lightTheme = true;
       } else {
         this.lightTheme = false;
+      }
+      if (this.profile.profileImageUrl) {
+        this.profileImageUrl = this.profile.profileImageUrl;
+        this.profileImage = true;
       }
     }, (error) => {
       console.error(error);

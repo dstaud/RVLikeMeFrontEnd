@@ -12,7 +12,7 @@
     mat-list-item routerLink="/messages"
     (click)="closeSideNav()"
     routerLinkActive="active-menu-item">
-    <mat-icon fontSet="material-icons-outlined" >messages</mat-icon>
+    <mat-icon matBadge="2" matBadgePosition="above after" fontSet="material-icons-outlined" >messages</mat-icon>
     <span class="nav-caption">{{ "menu.messages" | translate }}</span>
   </a>
   <a id="routeAbout"

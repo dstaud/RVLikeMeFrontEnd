@@ -4,6 +4,12 @@
   padding: 10px
 }
  */
+ .logoCombined {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .rvlikeme {
   position: relative;
   float: right;
@@ -14,15 +20,6 @@
 
 .logo {
   float: left;
-}
-
-.illustration {
-  margin: auto;
-}
-.logoCombined {
-  position: absolute;
-  top: 0px;
-  left: 0px;
 }
 
 .button {
