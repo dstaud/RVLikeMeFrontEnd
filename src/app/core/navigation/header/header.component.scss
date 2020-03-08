@@ -4,15 +4,11 @@
   display: flex;
   height: 50px;
   position: fixed;
-  padding-left: 20px;
-  padding-right: 20px;
-  // padding-top: 20px;
-  max-width: 1140px;
   top: 0;
-  z-index: 1; // To make sure content flows under toolbar for desktop
-  border-style: solid;
-  border-width: 1;
-  border-color: red;
+  padding-left: 5px;
+  padding-right: 5px;
+  max-width: 1140px;
+  z-index: 1;
 }
 
 .toolbar-image {
@@ -20,29 +16,13 @@
   vertical-align: middle;
   align-items: center;
   padding-right: 5px;
-  border-width: 1;
-  border-style: solid;
-  border-color: red;
 }
 
 .toolbar-icon {
-  border-width: 1;
-  border-style: solid;
-  border-color: red;
-  // line-height: 50px;
-  // margin-top: calc(50px - 30px);
-  // font-size: 50px;
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
   padding-left: 5px;
-  // display: flex !important;
-  // justify-content: center !important;
-  // display: inline-flex;
-  // vertical-align: middle;
-  // margin: 0;
-  // padding: 0;
-  // line-height: 50px;  // 2.6% of viewport height or about 50px on an iphone 6x
 }
 
 .image {
@@ -53,7 +33,6 @@
 
 .active-menu-item {
   color: $accent-color;
-  // font-weight: bold;
 }
 
 .icon-button {
@@ -61,12 +40,6 @@
   align-items: center;
   justify-content: space-around;
 }
-
-/* .logoCombined {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-} */
 
 .rvlikeme {
   position: relative;

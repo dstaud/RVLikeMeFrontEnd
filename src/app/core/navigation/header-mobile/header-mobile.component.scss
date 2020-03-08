@@ -1,8 +1,5 @@
 @import './../../../../styles/_variables';
 
-// @media only screen and (max-width: 599px)
-// { :host { toolbar { height : 50px; }}}
-
 .toolbar {
   display: flex;
   height: 50px;
@@ -14,30 +11,14 @@
 }
 
 .toolbar-image {
-  // border-width: 1;
-  // border-style: solid;
-  // border-color: red;
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
 }
 .toolbar-icon {
-  // border-width: 1;
-  // border-style: solid;
-  // border-color: red;
-  // line-height: 50px;
-  // margin-top: calc(50px - 30px);
-  // font-size: 50px;
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
-  // display: flex !important;
-  // justify-content: center !important;
-  // display: inline-flex;
-  // vertical-align: middle;
-  // margin: 0;
-  // padding: 0;
-  // line-height: 50px;  // 2.6% of viewport height or about 50px on an iphone 6x
 }
 
 .image {

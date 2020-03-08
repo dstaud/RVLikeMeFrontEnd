@@ -1,88 +1,87 @@
-<mat-toolbar color="primary" [className]="device === 'iPhone' ? 'toolbar' : 'toolbar mat-elevation-z4'" role="toolbar"
-  class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
-    <div class="toolbar-image">
-      <mat-icon
-        *ngIf="showBackArrow"
-        mat-button
-        class="back-arrow toolbar-item"
-        alt="back arrow"
-        (click)="returnToBackRoute()">{{ arrowIcon }}
-      </mat-icon>
-    </div>
-    <div class="toolbar-image">
-      <img *ngIf="pageTitle === 'Home'"
-            src="../../../assets/images/trailer.png"
-            alt="travel trailer logo"
-            style="width:60px;height:37.2px;">
-    </div>
-    <!-- <span class="page-title toolbar-item">{{ pageTitle }}</span> -->
-    <span class="fill-space"></span>
-    <button
-      *ngIf="userAuthorized"
+<mat-toolbar color="primary" [className]="device === 'iPhone' ? 'toolbar' : 'toolbar mat-elevation-z4'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
+  <div class="toolbar-image">
+    <mat-icon
+      *ngIf="showBackArrow"
       mat-button
-      class="toolbar-icon"
-      matTooltip="Messages"
-      routerLink="/messages"
-      routerLinkActive="active-menu-item">
-      <mat-icon
-        matBadge="2"
-        matBadgeColor="warn"
-        matBadgeSize="small"
-        matBadgePosition="above after"
-        fontSet="material-icons-outlined">
-        messages
-      </mat-icon>
-    </button>
-    <div class="toolbar-image">
-      <button *ngIf="userAuthorized && profileImage"
-        mat-button
-        [matMenuTriggerFor]="beforeMenu">
-        <img *ngIf="profileImage"
-          class="image"
-          [src]="profileImageUrl">
-      </button>
-    </div>
-    <button
-      *ngIf="userAuthorized && !profileImage"
+      class="back-arrow toolbar-item"
+      alt="back arrow"
+      (click)="returnToBackRoute()">{{ arrowIcon }}
+    </mat-icon>
+  </div>
+  <div class="toolbar-image">
+    <img *ngIf="pageTitle === 'Home'"
+          src="../../../assets/images/trailer.png"
+          alt="travel trailer logo"
+          style="width:60px;height:37.2px;">
+  </div>
+  <!-- <span class="page-title toolbar-item">{{ pageTitle }}</span> -->
+  <span class="fill-space"></span>
+  <button
+    *ngIf="userAuthorized"
+    mat-button
+    class="toolbar-icon"
+    matTooltip="Messages"
+    routerLink="/messages"
+    routerLinkActive="active-menu-item">
+    <mat-icon
+      matBadge="2"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+      matBadgePosition="above after"
+      fontSet="material-icons-outlined">
+      messages
+    </mat-icon>
+  </button>
+  <div class="toolbar-image">
+    <button *ngIf="userAuthorized && profileImage"
       mat-button
-      class="toolbar-icon"
-      matTooltip="Menu">
-      <mat-icon
-        matPrefix
-        [matMenuTriggerFor]="beforeMenu">
-        account_circle
-      </mat-icon>
+      [matMenuTriggerFor]="beforeMenu">
+      <img *ngIf="profileImage"
+        class="image"
+        [src]="profileImageUrl">
     </button>
+  </div>
+  <button
+    *ngIf="userAuthorized && !profileImage"
+    mat-button
+    class="toolbar-icon"
+    matTooltip="Menu">
+    <mat-icon
+      matPrefix
+      [matMenuTriggerFor]="beforeMenu">
+      account_circle
+    </mat-icon>
+  </button>
 
-    <mat-menu #beforeMenu="matMenu" xPosition="before">
-      <button mat-menu-item (click)="changeProfileImage()">
-        <mat-icon matPrefix fontSet="material-icons-outlined">add_a_photo</mat-icon>
-        {{ "account.changeProfileImage" | translate }}
-      </button>
-      <button mat-menu-item (click)="updateProfile()">
-        <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
-        {{ "account.updateProfile" | translate }}
-      </button>
-      <button mat-menu-item (click)="changeUsername()">
-        <mat-icon matPrefix fontSet="material-icons-outlined">account_box</mat-icon>
-        {{ "account.changeUsername" | translate }}
-      </button>
-      <button mat-menu-item>
-        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
-        {{ "account.changePassword" | translate }}
-      </button>
-      <button *ngIf="lightTheme" mat-menu-item (click)="selectTheme('dark-theme')">
-        <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
-        {{ "account.darkTheme" | translate }}
-      </button>
-      <button *ngIf="!lightTheme" mat-menu-item (click)="selectTheme('light-theme')">
-        <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
-        {{ "account.lightTheme" | translate }}
-      </button>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>
-        {{ "account.logout" | translate }}
-      </button>
-    </mat-menu>
+  <mat-menu #beforeMenu="matMenu" xPosition="before">
+    <button mat-menu-item (click)="changeProfileImage()">
+      <mat-icon matPrefix fontSet="material-icons-outlined">add_a_photo</mat-icon>
+      {{ "account.changeProfileImage" | translate }}
+    </button>
+    <button mat-menu-item (click)="updateProfile()">
+      <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
+      {{ "account.updateProfile" | translate }}
+    </button>
+    <button mat-menu-item (click)="changeUsername()">
+      <mat-icon matPrefix fontSet="material-icons-outlined">account_box</mat-icon>
+      {{ "account.changeUsername" | translate }}
+    </button>
+    <button mat-menu-item>
+      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+      {{ "account.changePassword" | translate }}
+    </button>
+    <button *ngIf="lightTheme" mat-menu-item (click)="selectTheme('dark-theme')">
+      <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
+      {{ "account.darkTheme" | translate }}
+    </button>
+    <button *ngIf="!lightTheme" mat-menu-item (click)="selectTheme('light-theme')">
+      <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
+      {{ "account.lightTheme" | translate }}
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>
+      {{ "account.logout" | translate }}
+    </button>
+  </mat-menu>
 </mat-toolbar>
 
