@@ -18,6 +18,7 @@
     <!-- <span class="page-title toolbar-item">{{ pageTitle }}</span> -->
     <span class="fill-space"></span>
     <button
+      *ngIf="userAuthorized"
       mat-button
       class="toolbar-icon"
       matTooltip="Messages"
@@ -33,15 +34,25 @@
       </mat-icon>
     </button>
     <div class="toolbar-image">
-      <button *ngIf="userAuthorized"
-              mat-button
-              [matMenuTriggerFor]="beforeMenu">
-              <mat-icon *ngIf="!profileImage" matPrefix >account_circle</mat-icon>
-              <img *ngIf="profileImage"
-                class="toolbar-item image"
-                [src]="profileImageUrl">
+      <button *ngIf="userAuthorized && profileImage"
+        mat-button
+        [matMenuTriggerFor]="beforeMenu">
+        <img *ngIf="profileImage"
+          class="image"
+          [src]="profileImageUrl">
       </button>
     </div>
+    <button
+      *ngIf="userAuthorized && !profileImage"
+      mat-button
+      class="toolbar-icon"
+      matTooltip="Menu">
+      <mat-icon
+        matPrefix
+        [matMenuTriggerFor]="beforeMenu">
+        account_circle
+      </mat-icon>
+    </button>
 
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item (click)="changeProfileImage()">

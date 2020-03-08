@@ -1,11 +1,16 @@
 @import './../../../../styles/_variables';
 
+// TODO: 80px makes a white bar below toolbar where iPhone X+ home indicator can site,
+// and even looks OK, but won't accept dark coloring for dark mode because of the 80
+// bottom bar spacing in app.compoment.ts that is necessary so content scrolls above
+// the footer bar.   If use 50px, then looks good on anything but iPhone X+, where
+// home indicator covers over toolbar.   Leaving it for now so works on those devices...
 footer {
   position: fixed;
   bottom: 0px;
   overflow: hide;
   width: 100%;
-  height: 50px;
+  height: 80px;
   // min-height: 50px;
   // border-top-style: solid;
   // border-top-width: 1px;

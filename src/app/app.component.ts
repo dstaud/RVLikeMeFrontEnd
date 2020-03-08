@@ -16,6 +16,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

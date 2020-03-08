@@ -173,7 +173,13 @@ export class RegisterUserComponent implements OnInit {
           if (error.status === 403) {
             this.httpErrorText = 'Email address already registered';
           } else {
-            this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+            console.warn('ERROR: ', error);
+            if (error.message.includes('Unknown Error')) {
+              this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+              this.httpErrorText = 'Please connect to Internet and try again';
+            } else {
+              this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+            }
           }
         }
       });

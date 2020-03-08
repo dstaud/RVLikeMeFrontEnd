@@ -13,6 +13,7 @@ import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-signin',
@@ -47,6 +48,7 @@ export class SigninComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
               private headerVisibleSvc: HeaderVisibleService,
+              private shared: SharedComponent,
               private router: Router,
               private themeSvc: ThemeService,
               private language: LanguageService,
@@ -133,7 +135,9 @@ export class SigninComponent implements OnInit {
         this.httpError = true;
         this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
         this.language.setLanguage('en');
-        this.themeSvc.setGlobalColorTheme('light-theme');
+        this.themeSvc.setGlobalColorTheme('light-theme')
+        console.log('error ', error);
+        this.shared.openSnackBar('It looks like you are having trouble connecting to the Internet','error', 5000);
       });
     }, error => {
       this.showSpinner = false;
@@ -143,7 +147,14 @@ export class SigninComponent implements OnInit {
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else {
-        this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        this.httpErrorText = 'Please connect to Internet and retry';
+        console.warn('ERROR: ', error);
+        if (error.message.includes('Unknown Error')) {
+          this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+          this.httpErrorText = 'Please connect to Internet and try again';
+        } else {
+          this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        }
       }
     });
   }

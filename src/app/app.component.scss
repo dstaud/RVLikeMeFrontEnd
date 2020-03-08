@@ -13,8 +13,15 @@ mat-sidenav {
   background-repeat: no-repeat;
   background-size: cover;
   overflow: auto;
+  border-style: solid;
+  border-color: blue;
+  border-width: 1;
 }
 
-.bottom-bar-spacing {
-  margin-bottom: 50px; // 10.4 vh not quite right.iphone 6 innerHeight 438, xr is 619, Galaxy x7 is 560
-}
+// TODO: See comments in footer scss.
+@media only screen and (max-width: 599px)
+{ .bottom-bar-spacing { margin-bottom : 80px; }}
+
+/* .bottom-bar-spacing {
+  margin-bottom: 80px; // 10.4 vh not quite right.iphone 6 innerHeight 438, xr is 619, Galaxy x7 is 560
+} */

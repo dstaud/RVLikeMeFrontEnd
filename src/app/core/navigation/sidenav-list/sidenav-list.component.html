@@ -1,4 +1,11 @@
 <mat-nav-list>
+  <a id="routeProfile"
+    mat-list-item routerLink="/profile"
+    (click)="closeSideNav()"
+    routerLinkActive="active-menu-item">
+    <mat-icon fontSet="material-icons-outlined" >person</mat-icon>
+    <span class="nav-caption">{{ "menu.profile" | translate }}</span>
+  </a>
   <a id="routeAbout"
     mat-list-item routerLink="/about"
     (click)="closeSideNav()"

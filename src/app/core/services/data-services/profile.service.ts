@@ -4,6 +4,7 @@ import { HttpClient} from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { CommonDataService } from './common-data.service';
+import { SharedComponent } from '@shared/shared.component';
 
 export interface IuserProfile {
   firstName: string;
@@ -68,12 +69,11 @@ export class ProfileService {
   readonly profile = this._profile.asObservable();
 
   constructor(private commonData: CommonDataService,
+              private shared: SharedComponent,
               private http: HttpClient) { }
 
   getProfile(reset?: boolean) {
-    console.log('getProfile, reset=', reset);
     if (reset) {
-      console.log('resetting');
       this.dataStore.profile.firstName = null;
       this.dataStore.profile.lastName = null;
       this.dataStore.profile.displayName =null;
@@ -95,19 +95,19 @@ export class ProfileService {
       this.dataStore.profile.rigBrand = null;
       this.dataStore.profile.rigModel = null;
       this.dataStore.profile.rigYear = null;
-      console.log('Service profile=', this.dataStore.profile);
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
-      console.log('getting data');
       this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
       { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
       .subscribe(data => {
-        console.log('subscribed', this.dataStore.profile);
         this.dataStore.profile = data;
-        console.log('Service profile=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
-      }, error =>
-          console.log('error loading profile'));
+      }, (error) => {
+        console.warn('ERROR loading profile: ', error);
+        if (error.message.includes('Unknown Error')) {
+          this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+        }
+      });
     }
   }
 

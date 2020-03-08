@@ -10,7 +10,6 @@
   top: 0;
   padding-left: 5px;
   padding-right: 5px;
-  // padding-top: 18px;
   z-index: 1; // To make sure content flows under toolbar
 }
 
@@ -21,7 +20,6 @@
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
-  padding-right: 5px;
 }
 .toolbar-icon {
   // border-width: 1;
@@ -33,7 +31,6 @@
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
-  padding-right: 5px;
   // display: flex !important;
   // justify-content: center !important;
   // display: inline-flex;

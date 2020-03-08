@@ -25,9 +25,9 @@ export class SharedComponent implements OnInit {
       }
     }
     if (msgType === 'error') {
-      config.panelClass = 'snackBarPanelError';
+      config.panelClass = ['snackBarPanelError'];
     } else {
-      config.panelClass = 'snackBarPanelMessage';
+      config.panelClass = ['snackBarPanelMessage'];
     }
     config.horizontalPosition = 'center';
     config.verticalPosition = 'top';

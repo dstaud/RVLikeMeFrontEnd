@@ -10,7 +10,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ThemeService } from '@services/theme.service';
 
-import { SharedComponent } from './../../../shared/shared.component';
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-header',
