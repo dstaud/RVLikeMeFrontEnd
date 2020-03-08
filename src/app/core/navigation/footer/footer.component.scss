@@ -10,17 +10,15 @@ footer {
   bottom: 0px;
   overflow: hide;
   width: 100%;
-  height: 80px;
-  // min-height: 50px;
-  // border-top-style: solid;
-  // border-top-width: 1px;
-  // border-top-color: $seperator-color;
 }
 
-/* .toolbar {
-  display: flex;
-  justify-content: space-between;
-} */
+.footer-height {
+  height: 50px;
+}
+
+.footer-height-plus {
+  height: 80px;
+}
 
 .menu-icon {
   text-align: center;
@@ -39,15 +37,4 @@ footer {
 
 .active-menu-item {
   color: $accent-color;
-  // font-weight: bold;
 }
-
-/* .fill-space {
-  flex: 1 1 auto;
-} */
-
-/* a {
-  text-decoration: none;
-  color: white;
-} */
-

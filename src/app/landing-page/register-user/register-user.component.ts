@@ -96,8 +96,8 @@ export class RegisterUserComponent implements OnInit {
 
     if (this.device === 'iPhone') {
       // arrow_back_ios icon not coming up at all regardless of this if
-      // this.arrowIcon = 'arrow_back_ios';
-      this.arrowIcon = 'keyboard_arrow_left';
+      this.arrowIcon = 'arrow_back_ios';
+      // this.arrowIcon = 'keyboard_arrow_left';
     }
 
     // Get the event handle when beforeInstallEvent fired that allows for app installation.

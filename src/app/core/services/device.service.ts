@@ -16,6 +16,7 @@ export class DeviceService {
   public os: string;
   public osVersion: string;
   public userAgent: string;
+  public iPhoneModelXPlus: boolean = false;
 
   constructor(private deviceService: DeviceDetectorService,
               private themeService: ThemeService) {
@@ -33,6 +34,12 @@ export class DeviceService {
     this.os = this.deviceInfo.os;
     this.osVersion = this.deviceInfo.os_version;
     this.userAgent = this.deviceInfo.userAgent;
+    let iPhone = /iPhone/.test(navigator.userAgent) && !window.MSStream
+    let aspect = window.screen.width / window.screen.height
+    alert(this.device + ', ' + iPhone + ', ' + aspect.toFixed(3));
+    if (iPhone && aspect.toFixed(3) === "0.462") {
+        this.iPhoneModelXPlus = true;
+    }
   }
 
   // Determine appropriate font theme for user device
