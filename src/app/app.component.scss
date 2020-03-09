@@ -15,10 +15,10 @@ mat-sidenav {
   overflow: auto;
 }
 
-// TODO: See comments in footer scss.
-// @media only screen and (max-width: 599px)
-// { .bottom-bar-spacing { margin-bottom : 80px; }}
+.bottom-bar-spacing {
+  margin-bottom: 50px;
+}
 
-/* .bottom-bar-spacing {
-  margin-bottom: 80px; // 10.4 vh not quite right.iphone 6 innerHeight 438, xr is 619, Galaxy x7 is 560
-} */
+.bottom-bar-spacing-xplus {
+  margin-bottom: 80px;
+}

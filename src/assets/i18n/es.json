@@ -28,7 +28,13 @@
     "marketingMsg1": "Gracias por registrarte. Soy un compañero RV-er desarrollando esta aplicación web como una manera de conectar a las personas que hacen el estilo de vida de RV como tú. Su correo electrónico se ha agregado a una lista de correo electrónico para que pueda mantenerlo informado sobre el progreso.",
     "marketingMsg2": "Para comenzar, complete su ",
     "marketingMsg3": "perfil",
-    "marketingMsg4": "Lo que está por venir: la página de inicio dará ideas de quién más está ahí afuera como tú. También habrá un 'rincón para novatos', foros personalizados, mensajes, etc."
+    "marketingMsg4": "Lo que está por venir: la página de inicio dará ideas de quién más está ahí afuera como tú. También habrá un 'rincón para novatos', foros personalizados, mensajes, etc.",
+    "progressBar0": "¡Para comenzar, complete su perfil!",
+    "progressBar5": "¡Complete su perfil para obtener los mejores resultados!",
+    "progressBar20": "Perfil completo para mejores resultados",
+    "progressBar40": "¡Casi a mitad de camino! Perfil completo",
+    "progressBar50": "Perfil completo para mejores resultados",
+    "progressBar75": "¡Un gran trabajo para completar tu perfil!"
   },
   "about.component": {
     "header": "Acerca de"

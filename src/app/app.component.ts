@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
   headerVisible = false;
   headerDesktopVisible = false;
   userProfile: Observable<IuserProfile>;
+  iphoneModelxPlus: boolean;
 
 
   constructor(public translateSvc: TranslateService,
@@ -100,7 +101,7 @@ export class AppComponent implements OnInit {
       .subscribe(header => {
         this.headerVisible = header.valueOf();
       });
-      this.headerVisibleSvc.headerDesktopVisible$
+    this.headerVisibleSvc.headerDesktopVisible$
       .pipe(untilComponentDestroyed(this))
       .subscribe(header => {
         this.headerDesktopVisible = header.valueOf();
@@ -162,6 +163,7 @@ export class AppComponent implements OnInit {
         console.log('Launched: Browser Tab');
       }
     });
+    this.iphoneModelxPlus = this.deviceSvc.iPhoneModelXPlus;
   };
 
   ngOnDestroy() {

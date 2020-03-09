@@ -36,9 +36,9 @@ export class DeviceService {
     this.userAgent = this.deviceInfo.userAgent;
     let iPhone = /iPhone/.test(navigator.userAgent) && !window.MSStream
     let aspect = window.screen.width / window.screen.height
-    alert(this.device + ', ' + iPhone + ', ' + aspect.toFixed(3));
     if (iPhone && aspect.toFixed(3) === "0.462") {
         this.iPhoneModelXPlus = true;
+        console.log('setting plusx to true');
     }
   }
 

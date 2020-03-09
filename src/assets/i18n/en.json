@@ -28,7 +28,13 @@
     "marketingMsg1": "Thank you for registering. I am a fellow RV-er developing this web app as a way to connect people that do the RV lifestyle like you do. Your email has been added to an email list so I can keep you informed of progress.",
     "marketingMsg2": "To get started, please fill out your ",
     "marketingMsg3": "profile",
-    "marketingMsg4": "Things to come: home page will give ideas of who else is out there like you. There will also be  is a 'newbie corner', custom forums, messaging, etc."
+    "marketingMsg4": "Things to come: home page will give ideas of who else is out there like you. There will also be  is a 'newbie corner', custom forums, messaging, etc.",
+    "progressBar0": "To get started, fill out your profile!",
+    "progressBar5": "Fill out your profile for best results!",
+    "progressBar20": "Complete profile for best results",
+    "progressBar40": "Almost half way there! Complete profile.",
+    "progressBar50": "Complete profile for best results",
+    "progressBar75": "Great job fillout out your profile!"
   },
   "about.component": {
     "header": "About"

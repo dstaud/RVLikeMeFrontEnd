@@ -5,9 +5,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { SharedModule } from '../../shared/shared.module';
+import { ProfilePercentComponent } from './profile-percent/profile-percent.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [
+    HomeComponent,
+    ProfilePercentComponent
+  ],
   imports: [
     CommonModule,
     HomeRoutingModule,
