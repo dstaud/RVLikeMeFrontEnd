@@ -5,6 +5,22 @@
   <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
+        <mat-label>{{ "lifestyle.component.aboutMeDesc" | translate }}</mat-label>
+        <mat-select formControlName="aboutMe"
+                    (selectionChange)="selectedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc', $event.source.value)"
+                    (openedChange) = "activatedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc')"
+                    aria-label="my rv experience">
+          <mat-option
+            aria-placeholder="About Me"
+            *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
+            {{ AboutMe.viewValue | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-icon class="icon" *ngIf="showaboutMeSaveIcon">save</mat-icon>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>
         <mat-select
           matNativeControl

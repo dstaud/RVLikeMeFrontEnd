@@ -1,3 +1,4 @@
 <div class="container">
-  <p class="mat-subheading-2">{{ "home.component.allUserCount" | translate }}: {{ this.allUserCount }}</p>
+  <p class="mat-subheading-2">{{ "home.component.allUserCount" | translate }}: {{ this.allUsersCount }}</p>
+  <p *ngIf="showAboutMe" class="mat-subheading-2">{{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}</p>
 </div>

@@ -15,6 +15,7 @@ import { ThemeService } from '@services/theme.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
+import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit {
               private headerVisibleSvc: HeaderVisibleService,
               private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
+              private likeMeCountsSvc: LikemeCountsService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -126,6 +128,11 @@ export class AppComponent implements OnInit {
           this.themeSvc.setGlobalColorTheme(data.colorThemePreference);
         } else {
           this.themeSvc.setGlobalColorTheme('light-theme');
+        }
+
+        // When we have actual profile data from the database, then go get the counts that will be used on the home page
+        if (data.firstName) {
+          this.likeMeCountsSvc.getLikeMeCounts(data.aboutMe);
         }
       }, (error) => {
         console.error(error);

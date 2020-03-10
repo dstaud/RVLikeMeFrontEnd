@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { CommonDataService } from './common-data.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -20,6 +21,9 @@ export class LikemeCountsService {
     allUsersCount: 0,
     aboutMeCount: 0
   };
+
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
   private likeMeCountsSubscription: any;
   private dataSvcURL = this.commonData.getLocation();
   private _likeMeCounts = new BehaviorSubject<IlikeMeCounts>(this.likeMeUserCounts);
@@ -28,11 +32,26 @@ export class LikemeCountsService {
 
   constructor(private commonData: CommonDataService,
               private http: HttpClient,
-              private shared: SharedComponent) { }
+              private profileSvc: ProfileService,
+              private shared: SharedComponent) {
+                this.userProfile = this.profileSvc.profile;
 
-  getLikeMeCounts() {
+                this.userProfile
+                .subscribe(data => {
+                  this.profile = data;
+                });
+               }
+
+  getLikeMeCounts(aboutMe: string) {
+    // const params = new HttpParams()
+    // .set('aboutMe', this.profile.aboutMe);
+
+    console.log('PARAMS=', this.profile.aboutMe);
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts`,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+      params: { aboutMe: this.profile.aboutMe }
+    })
     .subscribe(data => {
       console.log('data=', data);
       this.dataStore.likeMeCounts = data;

@@ -17,6 +17,11 @@ import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.compone
 import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
+export interface AboutMe {
+  value: string;
+  viewValue: string;
+}
+
 export interface RvLifestyle {
   value: string;
   viewValue: string;
@@ -67,6 +72,7 @@ export class LifestyleComponent implements OnInit {
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
+  showaboutMeSaveIcon = false;
   showSpinner = false;
   showrvUseSaveIcon = false;
   showworklifeSaveIcon = false;
@@ -80,11 +86,21 @@ export class LifestyleComponent implements OnInit {
   campsWithMe = '';
   boondocking = '';
   traveling = '';
+  aboutMeFormValue = '';
   rvUseFormValue = '';
   worklifeFormValue = '';
   campsWithMeFormValue = '';
   boondockingFormValue = '';
   travelingFormValue = '';
+
+
+  AboutMes: AboutMe[] = [
+    {value: '', viewValue: ''},
+    {value: 'dreamer', viewValue: 'profile.component.list.aboutMe.dreamer'},
+    {value: 'newbie', viewValue: 'profile.component.list.aboutMe.newbie'},
+    {value: 'experienced', viewValue: 'profile.component.list.aboutMe.experienced'},
+    {value: 'other', viewValue: 'profile.component.list.aboutMe.other'}
+  ];
 
   /**** Select form select field option data. ****/
   RvLifestyles: RvLifestyle[] = [
@@ -157,6 +173,7 @@ export class LifestyleComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
+                aboutMe: new FormControl(''),
                 rvUse: new FormControl(''),
                 worklife: new FormControl(''),
                 campsWithMe: new FormControl(''),
@@ -188,6 +205,11 @@ export class LifestyleComponent implements OnInit {
       // If user selected other on a form field, need to get the data they entered
       // and set the form field to display 'other'
       console.log('set others');
+      if (this.otherData('aboutMe')) {
+        this.aboutMeFormValue = 'other';
+      } else {
+        this.aboutMeFormValue = this.profile.aboutMe;
+      }
       if (this.otherData('rvUse')) {
         this.rvUseFormValue = 'other';
       } else {
@@ -215,6 +237,7 @@ export class LifestyleComponent implements OnInit {
       }
 
       this.form.patchValue ({
+        aboutMe: this.aboutMeFormValue,
         rvUse: this.rvUseFormValue,
         worklife: this.worklifeFormValue,
         campsWithMe: this.campsWithMeFormValue,

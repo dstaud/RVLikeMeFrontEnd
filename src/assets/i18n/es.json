@@ -35,7 +35,8 @@
     "progressBar40": "¡Casi a mitad de camino! Perfil completo",
     "progressBar50": "Perfil completo para mejores resultados",
     "progressBar75": "¡Un gran trabajo para completar tu perfil!",
-    "allUserCount": "Recuento total de usuarios de RV Like Me"
+    "allUserCount": "Recuento total de usuarios de RV Like Me",
+    "aboutMePrefix": "Otros que son"
   },
   "about.component": {
     "header": "Acerca de"
@@ -158,6 +159,7 @@
     "helpWorklife": "Se usa para hacer que las interacciones sean más relevantes",
     "helpBoondocking": "Se usa para hacer que las interacciones sean más relevantes",
     "helpTraveling": "Se usa para hacer que las interacciones sean más relevantes",
+    "aboutMeDesc": "Describete",
     "rvUseDesc": "Cómo RV",
     "worklifeDesc": "Vida laboral",
     "campsWithMeDesc": "Campamentos conmigo",

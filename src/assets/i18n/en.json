@@ -35,7 +35,9 @@
     "progressBar40": "Almost half way there! Complete profile.",
     "progressBar50": "Complete profile for best results",
     "progressBar75": "Great job fillout out your profile!",
-    "allUserCount": "Total RV Like Me user count"
+    "allUserCount": "Total RV Like Me user count",
+    "aboutMeCount": "Other Dreamers out there",
+    "aboutMePrefix": "Others who are"
   },
   "about.component": {
     "header": "About"
@@ -158,6 +160,7 @@
     "helpWorklife": "Used to make interactions more relavant",
     "helpBoondocking": "Used to make interactions more relavant",
     "helpTraveling": "Used to make interactions more relavant",
+    "aboutMeDesc": "Describe yourself",
     "rvUseDesc": "How I RV",
     "worklifeDesc": "Work life",
     "campsWithMeDesc": "Camps with me",
