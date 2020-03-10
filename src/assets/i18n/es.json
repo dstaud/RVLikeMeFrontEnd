@@ -36,7 +36,9 @@
     "progressBar50": "Perfil completo para mejores resultados",
     "progressBar75": "¡Un gran trabajo para completar tu perfil!",
     "allUserCount": "Recuento total de usuarios de RV Like Me",
-    "aboutMePrefix": "Otros que son"
+    "aboutMePrefix": "Otros que son",
+    "rigTypePrefix": "Otros con un",
+    "rvUsePrefix": "Otros que son"
   },
   "about.component": {
     "header": "Acerca de"

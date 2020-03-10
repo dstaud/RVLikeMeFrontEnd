@@ -36,8 +36,9 @@
     "progressBar50": "Complete profile for best results",
     "progressBar75": "Great job fillout out your profile!",
     "allUserCount": "Total RV Like Me user count",
-    "aboutMeCount": "Other Dreamers out there",
-    "aboutMePrefix": "Others who are"
+    "aboutMePrefix": "Others who are",
+    "rigTypePrefix": "Others with a",
+    "rvUsePrefix": "Others who are"
   },
   "about.component": {
     "header": "About"

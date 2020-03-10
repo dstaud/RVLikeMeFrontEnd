@@ -16,8 +16,15 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 export class LikemeCountsComponent implements OnInit {
   allUsersCount: number;
   aboutMeCount: number;
+  rigTypeCount: number;
+  rvUseCount: number;
   aboutMe: string;
+  rigType: string;
+  rvUse: string;
+  showAllUsersCount: boolean = false;
   showAboutMe: boolean = false;
+  showRigType: boolean = false;
+  showRvUse: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -45,10 +52,23 @@ export class LikemeCountsComponent implements OnInit {
     .subscribe(data => {
       this.allUsersCount = data.allUsersCount;
       this.aboutMeCount = data.aboutMeCount;
-      this.aboutMe = 'profile.component.list.aboutMe.' + this.profile.aboutMe;
+      this.rigTypeCount = data.rigTypeCount;
+      this.rvUseCount = data.rvUseCount;
       console.log('Counts=', data);
+      if (this.allUsersCount > 0) {
+        this.showAllUsersCount = true;
+      }
       if (this.profile.aboutMe && this.aboutMeCount > 0) {
         this.showAboutMe = true;
+        this.aboutMe = 'profile.component.list.aboutMe.' + this.profile.aboutMe;
+      }
+      if (this.profile.rigType && this.rigTypeCount > 0) {
+        this.showRigType = true;
+        this.rigType = 'rig.component.list.rigtype.' + this.profile.rigType.toLowerCase();
+      }
+      if (this.profile.rvUse && this.rvUseCount > 0) {
+        this.showRvUse = true;
+        this.rvUse = 'lifestyle.component.list.rvuse.' + this.profile.rvUse.toLowerCase();
       }
     });
   }

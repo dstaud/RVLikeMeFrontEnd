@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 
@@ -11,6 +11,8 @@ import { SharedComponent } from '@shared/shared.component';
 export interface IlikeMeCounts {
   allUsersCount: number;
   aboutMeCount: number;
+  rigTypeCount: number;
+  rvUseCount: number;
 }
 
 @Injectable({
@@ -19,7 +21,9 @@ export interface IlikeMeCounts {
 export class LikemeCountsService {
   private likeMeUserCounts: IlikeMeCounts = {
     allUsersCount: 0,
-    aboutMeCount: 0
+    aboutMeCount: 0,
+    rigTypeCount: 0,
+    rvUseCount: 0
   };
 
   private profile: IuserProfile;
@@ -43,14 +47,15 @@ export class LikemeCountsService {
                }
 
   getLikeMeCounts(aboutMe: string) {
-    // const params = new HttpParams()
-    // .set('aboutMe', this.profile.aboutMe);
-
-    console.log('PARAMS=', this.profile.aboutMe);
+    console.log('PARAMS=', this.profile.aboutMe, this.profile.rigType);
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: { aboutMe: this.profile.aboutMe }
+      params: {
+        aboutMe: this.profile.aboutMe,
+        rigType: this.profile.rigType,
+        rvUse: this.profile.rvUse
+      }
     })
     .subscribe(data => {
       console.log('data=', data);

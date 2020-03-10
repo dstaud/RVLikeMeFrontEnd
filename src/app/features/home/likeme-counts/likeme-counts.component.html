@@ -1,4 +1,6 @@
 <div class="container">
-  <p class="mat-subheading-2">{{ "home.component.allUserCount" | translate }}: {{ this.allUsersCount }}</p>
+  <p *ngIf="showAllUsersCount" class="mat-subheading-2">{{ "home.component.allUserCount" | translate }}: {{ this.allUsersCount }}</p>
   <p *ngIf="showAboutMe" class="mat-subheading-2">{{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}</p>
+  <p *ngIf="showRigType" class="mat-subheading-2">{{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}</p>
+  <p *ngIf="showRvUse" class="mat-subheading-2">{{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}</p>
 </div>
