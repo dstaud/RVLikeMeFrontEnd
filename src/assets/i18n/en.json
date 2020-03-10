@@ -34,7 +34,8 @@
     "progressBar20": "Complete profile for best results",
     "progressBar40": "Almost half way there! Complete profile.",
     "progressBar50": "Complete profile for best results",
-    "progressBar75": "Great job fillout out your profile!"
+    "progressBar75": "Great job fillout out your profile!",
+    "allUserCount": "Total RV Like Me user count"
   },
   "about.component": {
     "header": "About"

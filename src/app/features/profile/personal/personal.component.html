@@ -32,7 +32,7 @@
             Please enter your <strong>{{ "personal.component.firstName" | translate }}</strong>
           </mat-error>
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showfirstNameSaveIcon">save</mat-icon>
       </div>
       <div>
@@ -45,7 +45,7 @@
                 autocomplete="name"
                 (blur)="updateDataPoint('lastName')">
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showlastNameSaveIcon">save</mat-icon>
       </div>
       <div>
@@ -61,7 +61,7 @@
             Please enter a <strong>{{ "personal.component.displayName" | translate }}</strong>
           </mat-error>
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpDisplayName')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpDisplayName')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
       </div>
       <div>
@@ -76,7 +76,7 @@
                 (blur)="updateDataPoint('myStory')">
           </textarea>
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpMyStory')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpMyStory')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
       </div>
       <div>
@@ -88,7 +88,7 @@
                 formControlName="yearOfBirth"
                 (blur)="updateDataPoint('yearOfBirth')">
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpYearOfBirth')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpYearOfBirth')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showyearOfBirthSaveIcon">save</mat-icon>
       </div>
       <div>
@@ -105,7 +105,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpGender')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpGender')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showgenderSaveIcon">save</mat-icon>
       </div>
       <div>
@@ -122,7 +122,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeCountry')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeCountry')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showhomeCountrySaveIcon">save</mat-icon>
       </div>
       <div>
@@ -139,7 +139,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeState')">help</mat-icon>
+        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeState')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showhomeStateSaveIcon">save</mat-icon>
       </div>
     </form>

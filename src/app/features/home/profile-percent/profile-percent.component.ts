@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -28,6 +29,7 @@ export class ProfilePercentComponent implements OnInit {
 
   constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
+              private likeMeCountSvc: LikemeCountsService,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService) { }
 
@@ -40,11 +42,6 @@ export class ProfilePercentComponent implements OnInit {
       console.log('in Profile component=', data);
       this.profile = data;
       this.totalProfileFieldsWithData = 0;
-
-/*       this.form.patchValue ({
-        language: data.language,
-        aboutMe: this.aboutMeFormValue
-      }); */
 
       if (data.firstName) { this.totalProfileFieldsWithData++; }
       if (data.lastName) { this.totalProfileFieldsWithData++; }
