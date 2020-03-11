@@ -3,13 +3,13 @@
     <p class="mat-body">{{ "interests.component.explanation" | translate}}</p>
   </div>
 
-  <div class="save-icon">
+<!--   <div class="save-icon">
     <span><mat-icon *ngIf="showSaveIcon">save</mat-icon></span>
-  </div>
+  </div> -->
 
   <!-- It would have been nicer to just generate the checkboxes based on an array of field names, but I need to store
         each separately in Mongo as they are critical for querying individually, so went with individual here
-        and in the model. Although, this also causes a sorting issue.  These are sorted manually and by translation desc. 
+        and in the model. Although, this also causes a sorting issue.  These are sorted manually and by translation desc.
         In other languages, will not be sorted.  Something to consider.-->
   <form [formGroup]="form">
       <mat-checkbox formControlName="atv"

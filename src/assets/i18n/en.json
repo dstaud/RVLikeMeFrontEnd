@@ -35,7 +35,9 @@
     "progressBar40": "Almost half way there! Complete profile.",
     "progressBar50": "Complete profile for best results",
     "progressBar75": "Great job fillout out your profile!",
-    "allUserCount": "Total RV Like Me user count",
+    "allUserCount1": "There are",
+    "allUserCount2": "other RV Like Me users",
+    "earlyAdopter": "Thanks for being an early adopter!",
     "aboutMePrefix": "Others who are",
     "rigTypePrefix": "Others with a",
     "rvUsePrefix": "Others who are"

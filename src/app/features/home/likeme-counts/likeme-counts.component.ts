@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -6,6 +7,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+
+import { SharedComponent } from '@shared/shared.component';
 
 
 @Component({
@@ -25,6 +29,7 @@ export class LikemeCountsComponent implements OnInit {
   showAboutMe: boolean = false;
   showRigType: boolean = false;
   showRvUse: boolean = false;
+  // showEarlyAdopter: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -33,7 +38,10 @@ export class LikemeCountsComponent implements OnInit {
 
   constructor(private translate: TranslateService,
               private profileSvc: ProfileService,
-              private likeMeCountsSvc: LikemeCountsService) { }
+              private likeMeCountsSvc: LikemeCountsService,
+              private router: Router,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private shared: SharedComponent) { }
 
   ngOnInit() {
     this.userProfile = this.profileSvc.profile;
@@ -55,9 +63,14 @@ export class LikemeCountsComponent implements OnInit {
       this.rigTypeCount = data.rigTypeCount;
       this.rvUseCount = data.rvUseCount;
       console.log('Counts=', data);
+      console.log('users=', this.allUsersCount);
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
+        if (this.allUsersCount < 100) {
+          this.shared.openSnackBar(this.translate.instant('home.component.earlyAdopter'), 'message', 2000);
+        }
       }
+
       if (this.profile.aboutMe && this.aboutMeCount > 0) {
         this.showAboutMe = true;
         this.aboutMe = 'profile.component.list.aboutMe.' + this.profile.aboutMe;
@@ -74,4 +87,9 @@ export class LikemeCountsComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+  onClick() {
+    this.activateBackArrowSvc.setBackRoute('home');
+    this.router.navigateByUrl('/connections');
+  }
 }
