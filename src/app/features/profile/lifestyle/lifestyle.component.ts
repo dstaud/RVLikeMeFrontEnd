@@ -72,8 +72,8 @@ export class LifestyleComponent implements OnInit {
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
-  showaboutMeSaveIcon = false;
   showSpinner = false;
+  showaboutMeSaveIcon = false;
   showrvUseSaveIcon = false;
   showworklifeSaveIcon = false;
   showcampsWithMeSaveIcon = false;

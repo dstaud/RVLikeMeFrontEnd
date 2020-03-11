@@ -10,6 +10,7 @@ import { ProfileRoutingModule } from './profile-routing.module';
 import { PersonalComponent } from './personal/personal.component';
 import { RvRigComponent } from './rv-rig/rv-rig.component';
 import { LifestyleComponent } from './lifestyle/lifestyle.component';
+import { InterestsComponent } from './interests/interests.component';
 
 
 
@@ -19,7 +20,8 @@ import { LifestyleComponent } from './lifestyle/lifestyle.component';
     PersonalComponent,
     RvRigComponent,
     LifestyleComponent,
-    ImageCropperComponent
+    ImageCropperComponent,
+    InterestsComponent
   ],
   imports: [
     CommonModule,

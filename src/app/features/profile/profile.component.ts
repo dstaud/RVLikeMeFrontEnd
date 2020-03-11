@@ -43,6 +43,7 @@ export class ProfileComponent implements OnInit {
   totalRigFieldsWithData = 0;
   totalRigNbrOfFields = 5;
   percentRig: number;
+  percentInterests: number;
   aboutMeOther: string;
   form: FormGroup;
   aboutMeFormValue = '';
@@ -172,6 +173,10 @@ export class ProfileComponent implements OnInit {
     this.router.navigateByUrl('/profile-rig');
   }
 
+  onInterests() {
+    this.activateBackArrowSvc.setBackRoute('profile');
+    this.router.navigateByUrl('/profile-interests');
+  }
 
   // Wen user selects 'other' open dialog to collect data
   openDialog(event: string): void {

@@ -29,6 +29,17 @@ export interface IuserProfile {
   rigModel: string;
   rigYear: number;
   profileImageUrl: string;
+  atv: boolean;
+  motorcycle: boolean;
+  travel: boolean;
+  quilting: boolean;
+  cooking: boolean;
+  painting: boolean;
+  blogging: boolean;
+  livingFrugally: boolean;
+  gaming: boolean;
+  musicalInstrument: boolean;
+  programming: boolean;
 }
 
 @Injectable({
@@ -58,7 +69,18 @@ export class ProfileService {
     rigBrand: null,
     rigModel: null,
     rigYear: null,
-    profileImageUrl: null
+    profileImageUrl: null,
+    atv: null,
+    motorcycle: null,
+    travel: null,
+    quilting: null,
+    cooking: null,
+    painting: null,
+    blogging: null,
+    livingFrugally: null,
+    gaming: null,
+    musicalInstrument: null,
+    programming: null,
   };
   private profileSubscription: any;
 
@@ -95,6 +117,18 @@ export class ProfileService {
       this.dataStore.profile.rigBrand = null;
       this.dataStore.profile.rigModel = null;
       this.dataStore.profile.rigYear = null;
+      this.dataStore.profile.profileImageUrl = null;
+      this.dataStore.profile.atv = null;
+      this.dataStore.profile.motorcycle = null;
+      this.dataStore.profile.travel = null;
+      this.dataStore.profile.quilting = null;
+      this.dataStore.profile.cooking = null;
+      this.dataStore.profile.painting = null;
+      this.dataStore.profile.blogging = null;
+      this.dataStore.profile.livingFrugally = null;
+      this.dataStore.profile.gaming = null;
+      this.dataStore.profile.musicalInstrument = null;
+      this.dataStore.profile.programming = null;
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,

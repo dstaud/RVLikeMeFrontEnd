@@ -60,6 +60,7 @@
     "personal": "About me",
     "lifestyle": "My lifestyle",
     "rig": "My rig",
+    "interests": "Interests",
     "aboutMe": "Describe yourself",
     "list": {
       "aboutMe": {
@@ -237,6 +238,20 @@
         "other": "Other"
       }
     }
+  },
+  "interests.component": {
+    "explanation": "This information will be used to help find others that share your interests.  Please check all that you are interested in.",
+    "atv": "ATV off-roading",
+    "motorcycle": "Motorcycling",
+    "travel": "Traveling",
+    "quilting": "Quilting",
+    "cooking": "Cooking",
+    "painting": "Painting",
+    "blogging": "Blogging",
+    "livingFrugally": "Living frugally",
+    "gaming": "Gaming",
+    "musicalInstrument": "Musical instrument",
+    "programming": "Computer programming"
   },
   "landing-page.component": {
     "header": "RV Like Me"

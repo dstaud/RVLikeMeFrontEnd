@@ -1,4 +1,4 @@
-<div class="mat-app-background container background"> <!-- TODO: Do I need this container here? -->
+<div class="mat-app-background background">
   <p class="mat-body">{{ "profile.component.explanation" | translate }}</p>
   <mat-list>
     <div class="row" (click)="onPersonal()">
@@ -27,6 +27,13 @@
         <span class="percent-complete">
           ({{ percentRig  | number:'1.0-0'}}% {{ "general.complete" | translate }})
         </span>
+      </mat-list-item>
+      <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
+    </div>
+    <mat-divider class="divider"></mat-divider>
+    <div class="row" (click)="onInterests()">
+      <mat-icon class="icon" fontSet="material-icons-outlined">thumb_up</mat-icon>
+      <mat-list-item class="row-item">{{ "profile.component.interests" | translate }}
       </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>

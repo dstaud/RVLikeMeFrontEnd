@@ -71,7 +71,18 @@ export class RegisterUserComponent implements OnInit {
     rigBrand: null,
     rigModel: null,
     rigYear: null,
-    profileImageUrl: null
+    profileImageUrl: null,
+    atv: null,
+    motorcycle: null,
+    travel: null,
+    quilting: null,
+    cooking: null,
+    painting: null,
+    blogging: null,
+    livingFrugally: null,
+    gaming: null,
+    musicalInstrument: null,
+    programming: null
   };
 
   constructor(private authSvc: AuthenticationService,

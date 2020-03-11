@@ -10,6 +10,7 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
 import { PersonalComponent } from './features/profile/personal/personal.component';
 import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
 import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
+import { InterestsComponent } from './features/profile/interests/interests.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -70,6 +71,10 @@ const routes: Routes = [
   {
     path: 'profile-rig',
     component: RvRigComponent
+  },
+  {
+    path: 'profile-interests',
+    component: InterestsComponent
   },
   {
     path: '',
