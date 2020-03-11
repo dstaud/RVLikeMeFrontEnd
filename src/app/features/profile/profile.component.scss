@@ -6,6 +6,7 @@
 }
 
 .percent-complete {
+  position: relative;
   padding-left: 5px;
   font-size: 75%;
 }
@@ -16,6 +17,26 @@
 .divider {
   margin-left: 40px;
   margin-right: 10px;
+}
+
+.list {
+  width: 300px;
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 0;
+  width: 90%;
+}
+
+.no-interests {
+  color: $warn-color;
+  margin-left: 10px;
+}
+
+.has-interests {
+  color: $primary-color;
+  margin-left: 10px;
 }
 
 .icon {

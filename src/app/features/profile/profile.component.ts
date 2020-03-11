@@ -34,20 +34,31 @@ export class ProfileComponent implements OnInit {
   showAboutMeSaveIcon = false;
   showLanguageSaveIcon = false;
   backPath = '';
-  totalPersonalFieldsWithData = 0;
-  totalPersonalNbrOfFields = 8;
-  percentPersonal: number;
-  totalLifestyleFieldsWithData = 0;
-  totalLifestyleNbrOfFields = 5;
-  percentLifestyle: number;
-  totalRigFieldsWithData = 0;
-  totalRigNbrOfFields = 5;
-  percentRig: number;
-  percentInterests: number;
   aboutMeOther: string;
   form: FormGroup;
   aboutMeFormValue = '';
 
+  totalPersonalFieldsWithData = 0;
+  totalPersonalNbrOfFields = 8;
+  percentPersonal: number;
+  personalProgressBarColor: string;
+
+  totalLifestyleFieldsWithData = 0;
+  totalLifestyleNbrOfFields = 6;
+  percentLifestyle: number;
+  lifestyleProgressBarColor: string;
+
+  totalRigFieldsWithData = 0;
+  totalRigNbrOfFields = 5;
+  percentRig: number;
+  rigProgressBarColor: string;
+
+  interestsIndicator: string;
+  interestsIndClass: string;
+
+  // About me is part of lifestyle, but is duplicated here because it is so important and because I'm hoping
+  // users will see it on this page and select it and see they have already made progress in filling out
+  // their profile!
   AboutMes: AboutMe[] = [
     {value: '', viewValue: ''},
     {value: 'dreamer', viewValue: 'profile.component.list.aboutMe.dreamer'},
@@ -114,30 +125,57 @@ export class ProfileComponent implements OnInit {
         aboutMe: this.aboutMeFormValue
       });
 
-      if (data.firstName) { this.totalPersonalFieldsWithData++; }
-      if (data.lastName) { this.totalPersonalFieldsWithData++; }
-      if (data.displayName) { this.totalPersonalFieldsWithData++; }
-      if (data.yearOfBirth) { this.totalPersonalFieldsWithData++; }
-      if (data.homeCountry) { this.totalPersonalFieldsWithData++; }
-      if (data.homeState) { this.totalPersonalFieldsWithData++; }
-      if (data.gender) { this.totalPersonalFieldsWithData++; }
-      if (data.myStory) { this.totalPersonalFieldsWithData++; }
+      if (data.firstName) { this.totalPersonalFieldsWithData++; };
+      if (data.lastName) { this.totalPersonalFieldsWithData++; };
+      if (data.displayName) { this.totalPersonalFieldsWithData++; };
+      if (data.yearOfBirth) { this.totalPersonalFieldsWithData++; };
+      if (data.homeCountry) { this.totalPersonalFieldsWithData++; };
+      if (data.homeState) { this.totalPersonalFieldsWithData++; };
+      if (data.gender) { this.totalPersonalFieldsWithData++; };
+      if (data.myStory) { this.totalPersonalFieldsWithData++; };
       this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
+      console.log('% Personal = ', this.percentPersonal);
+      if (this.percentPersonal < 13) {
+        this.personalProgressBarColor = 'warn'
+      } else {
+        this.personalProgressBarColor = 'primary'
+      }
 
-      if (data.rvUse) { this.totalLifestyleFieldsWithData++; }
-      if (data.worklife) { this.totalLifestyleFieldsWithData++; }
-      if (data.campsWithMe) { this.totalLifestyleFieldsWithData++; }
-      if (data.boondocking) { this.totalLifestyleFieldsWithData++; }
-      if (data.traveling) { this.totalLifestyleFieldsWithData++; }
+      if (data.aboutMe) { this.totalLifestyleFieldsWithData++; };
+      if (data.rvUse) { this.totalLifestyleFieldsWithData++; };
+      if (data.worklife) { this.totalLifestyleFieldsWithData++; };
+      if (data.campsWithMe) { this.totalLifestyleFieldsWithData++; };
+      if (data.boondocking) { this.totalLifestyleFieldsWithData++; };
+      if (data.traveling) { this.totalLifestyleFieldsWithData++; };
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+      console.log('% Lifestyle = ', this.percentLifestyle);
+      if (this.percentLifestyle < 5) {
+        this.lifestyleProgressBarColor = 'warn'
+      } else {
+        this.lifestyleProgressBarColor = 'primary'
+      }
 
-
-      if (data.rigType) { this.totalRigFieldsWithData++; }
-      if (data.rigYear) { this.totalRigFieldsWithData++; }
-      if (data.rigManufacturer) { this.totalRigFieldsWithData++; }
-      if (data.rigBrand) { this.totalRigFieldsWithData++; }
-      if (data.rigModel) { this.totalRigFieldsWithData++; }
+      if (data.rigType) { this.totalRigFieldsWithData++; };
+      if (data.rigYear) { this.totalRigFieldsWithData++; };
+      if (data.rigManufacturer) { this.totalRigFieldsWithData++; };
+      if (data.rigBrand) { this.totalRigFieldsWithData++; };
+      if (data.rigModel) { this.totalRigFieldsWithData++; };
       this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
+      console.log('% Rig = ', this.percentRig);
+      if (this.percentRig < 13) {
+        this.rigProgressBarColor = 'warn'
+      } else {
+        this.rigProgressBarColor = 'primary'
+      }
+
+      if (data.atv || data.motorcycle || data.travel || data.quilting || data.cooking || data.painting ||
+          data.blogging || data.livingFrugally || data.gaming || data.musicalInstrument || data.programming) {
+        this.interestsIndicator = 'sentiment_very_satisfied';
+        this.interestsIndClass = 'has-interests';
+      } else {
+        this.interestsIndicator = 'sentiment_dissatisfied';
+        this.interestsIndClass = 'no-interests';
+      }
 
       this.showSpinner = false;
       this.form.enable();
@@ -267,6 +305,12 @@ export class ProfileComponent implements OnInit {
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;
       // this.profileSvc.distributeProfileUpdate(this.profile);
+      if (this.form.controls.aboutMe.value) {
+        this.totalLifestyleFieldsWithData++;
+      } else {
+        this.totalLifestyleFieldsWithData--;
+      }
+      this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
     }, error => {
       this.showAboutMeSaveIcon = false;
     });
