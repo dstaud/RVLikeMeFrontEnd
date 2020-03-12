@@ -66,9 +66,6 @@ export class LikemeCountsComponent implements OnInit {
       console.log('users=', this.allUsersCount);
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
-        if (this.allUsersCount < 100) {
-          this.shared.openSnackBar(this.translate.instant('home.component.earlyAdopter'), 'message', 2000);
-        }
       }
 
       if (this.profile.aboutMe && this.aboutMeCount > 0) {

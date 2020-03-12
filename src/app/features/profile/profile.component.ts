@@ -51,10 +51,10 @@ export class ProfileComponent implements OnInit {
   // their profile!
   AboutMes: AboutMe[] = [
     {value: '', viewValue: ''},
-    {value: 'dreamer', viewValue: 'profile.component.list.aboutMe.dreamer'},
-    {value: 'newbie', viewValue: 'profile.component.list.aboutMe.newbie'},
-    {value: 'experienced', viewValue: 'profile.component.list.aboutMe.experienced'},
-    {value: 'other', viewValue: 'profile.component.list.aboutMe.other'}
+    {value: 'dreamer', viewValue: 'profile.component.list.aboutme.dreamer'},
+    {value: 'newbie', viewValue: 'profile.component.list.aboutme.newbie'},
+    {value: 'experienced', viewValue: 'profile.component.list.aboutme.experienced'},
+    {value: 'other', viewValue: 'profile.component.list.aboutme.other'}
   ];
 
   private profile: IuserProfile;

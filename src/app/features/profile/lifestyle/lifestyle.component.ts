@@ -96,64 +96,62 @@ export class LifestyleComponent implements OnInit {
 
   AboutMes: AboutMe[] = [
     {value: '', viewValue: ''},
-    {value: 'dreamer', viewValue: 'profile.component.list.aboutMe.dreamer'},
-    {value: 'newbie', viewValue: 'profile.component.list.aboutMe.newbie'},
-    {value: 'experienced', viewValue: 'profile.component.list.aboutMe.experienced'},
-    {value: 'other', viewValue: 'profile.component.list.aboutMe.other'}
+    {value: 'dreamer', viewValue: 'profile.component.list.aboutme.dreamer'},
+    {value: 'newbie', viewValue: 'profile.component.list.aboutme.newbie'},
+    {value: 'experienced', viewValue: 'profile.component.list.aboutme.experienced'},
+    {value: 'other', viewValue: 'profile.component.list.aboutme.other'}
   ];
 
   /**** Select form select field option data. ****/
   RvLifestyles: RvLifestyle[] = [
     {value: '', viewValue: ''},
-    {value: 'FT', viewValue: 'lifestyle.component.list.rvuse.ft'},
-    {value: 'FS', viewValue: 'lifestyle.component.list.rvuse.fs'},
-    {value: 'FP', viewValue: 'lifestyle.component.list.rvuse.fp'},
-    {value: 'PS', viewValue: 'lifestyle.component.list.rvuse.ps'},
-    {value: 'NY', viewValue: 'lifestyle.component.list.rvuse.ny'},
-    {value: 'other', viewValue: 'lifestyle.component.list.rvuse.other'}
+    {value: 'FT', viewValue: 'profile.component.list.rvuse.ft'},
+    {value: 'FS', viewValue: 'profile.component.list.rvuse.fs'},
+    {value: 'FP', viewValue: 'profile.component.list.rvuse.fp'},
+    {value: 'PS', viewValue: 'profile.component.list.rvuse.ps'},
+    {value: 'NY', viewValue: 'profile.component.list.rvuse.ny'},
+    {value: 'other', viewValue: 'profile.component.list.rvuse.other'}
   ];
 
   Worklives: Worklife[] = [
     {value: '', viewValue: ''},
-    {value: 'retired', viewValue: 'lifestyle.component.list.worklife.retired'},
-    {value: 'military', viewValue: 'lifestyle.component.list.worklife.military'},
-    {value: 'work-travel', viewValue: 'lifestyle.component.list.worklife.work-travel'},
-    {value: 'work-full-time', viewValue: 'lifestyle.component.list.worklife.work-full-time'},
-    {value: 'work-part-time', viewValue: 'lifestyle.component.list.worklife.work-part-time'},
-    {value: 'onleave', viewValue: 'lifestyle.component.list.worklife.onleave'},
-    {value: 'workamp', viewValue: 'lifestyle.component.list.worklife.workamp'},
-    {value: 'other', viewValue: 'lifestyle.component.list.worklife.other'}
+    {value: 'retired', viewValue: 'profile.component.list.worklife.retired'},
+    {value: 'military', viewValue: 'profile.component.list.worklife.military'},
+    {value: 'work-travel', viewValue: 'profile.component.list.worklife.work-travel'},
+    {value: 'work-full-time', viewValue: 'profile.component.list.worklife.work-full-time'},
+    {value: 'work-part-time', viewValue: 'profile.component.list.worklife.work-part-time'},
+    {value: 'onleave', viewValue: 'profile.component.list.worklife.onleave'},
+    {value: 'other', viewValue: 'profile.component.list.worklife.other'}
   ];
 
   CampsWithMes: CampsWithMe[] = [
     {value: '', viewValue: ''},
-    {value: 'single', viewValue: 'lifestyle.component.list.campswithme.single'},
-    {value: 'partner', viewValue: 'lifestyle.component.list.campswithme.partner'},
-    {value: 'children', viewValue: 'lifestyle.component.list.campswithme.children'},
-    {value: 'family', viewValue: 'lifestyle.component.list.campswithme.family'},
-    {value: 'friend', viewValue: 'lifestyle.component.list.campswithme.friend'},
-    {value: 'other', viewValue: 'lifestyle.component.list.campswithme.other'}
+    {value: 'single', viewValue: 'profile.component.list.campswithme.single'},
+    {value: 'partner', viewValue: 'profile.component.list.campswithme.partner'},
+    {value: 'children', viewValue: 'profile.component.list.campswithme.children'},
+    {value: 'family', viewValue: 'profile.component.list.campswithme.family'},
+    {value: 'friend', viewValue: 'profile.component.list.campswithme.friend'},
+    {value: 'other', viewValue: 'profile.component.list.campswithme.other'}
   ];
 
   Boondockings: Boondocking[] = [
     {value: '', viewValue: ''},
-    {value: 'most', viewValue: 'lifestyle.component.list.boondocking.most'},
-    {value: 'alot', viewValue: 'lifestyle.component.list.boondocking.alot'},
-    {value: 'some', viewValue: 'lifestyle.component.list.boondocking.some'},
-    {value: 'while', viewValue: 'lifestyle.component.list.boondocking.while'},
-    {value: 'haveto', viewValue: 'lifestyle.component.list.boondocking.haveto'},
-    {value: 'rarely', viewValue: 'lifestyle.component.list.boondocking.rarely'},
-    {value: 'never', viewValue: 'lifestyle.component.list.boondocking.never'},
-    {value: 'want', viewValue: 'lifestyle.component.list.boondocking.want'}
+    {value: 'most', viewValue: 'profile.component.list.boondocking.most'},
+    {value: 'alot', viewValue: 'profile.component.list.boondocking.alot'},
+    {value: 'some', viewValue: 'profile.component.list.boondocking.some'},
+    {value: 'while', viewValue: 'profile.component.list.boondocking.while'},
+    {value: 'haveto', viewValue: 'profile.component.list.boondocking.haveto'},
+    {value: 'rarely', viewValue: 'profile.component.list.boondocking.rarely'},
+    {value: 'want', viewValue: 'profile.component.list.boondocking.want'}
   ];
 
   Travelings: Traveling[] = [
     {value: '', viewValue: ''},
-    {value: 'countries', viewValue: 'lifestyle.component.list.traveling.countries'},
-    {value: 'country', viewValue: 'lifestyle.component.list.traveling.country'},
-    {value: 'regional', viewValue: 'lifestyle.component.list.traveling.regional'},
-    {value: 'none', viewValue: 'lifestyle.component.list.traveling.none'},
-    {value: 'other', viewValue: 'lifestyle.component.list.traveling.other'},
+    {value: 'countries', viewValue: 'profile.component.list.traveling.countries'},
+    {value: 'country', viewValue: 'profile.component.list.traveling.country'},
+    {value: 'regional', viewValue: 'profile.component.list.traveling.regional'},
+    {value: 'none', viewValue: 'profile.component.list.traveling.none'},
+    {value: 'other', viewValue: 'profile.component.list.traveling.other'},
   ];
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have

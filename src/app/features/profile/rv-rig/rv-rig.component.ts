@@ -76,17 +76,17 @@ export class RvRigComponent implements OnInit {
   /**** Select form select field option data. ****/
   RigTypes: RigType[] = [
     {value: '', viewValue: ''},
-    {value: 'A', viewValue: 'rig.component.list.rigtype.a'},
-    {value: 'B', viewValue: 'rig.component.list.rigtype.b'},
-    {value: 'C', viewValue: 'rig.component.list.rigtype.c'},
-    {value: 'SC', viewValue: 'rig.component.list.rigtype.sc'},
-    {value: 'FW', viewValue: 'rig.component.list.rigtype.fw'},
-    {value: 'TT', viewValue: 'rig.component.list.rigtype.tt'},
-    {value: 'TC', viewValue: 'rig.component.list.rigtype.tc'},
-    {value: 'FT', viewValue: 'rig.component.list.rigtype.ft'},
-    {value: 'V', viewValue: 'rig.component.list.rigtype.v'},
-    {value: 'CB', viewValue: 'rig.component.list.rigtype.cb'},
-    {value: 'other', viewValue: 'rig.component.list.rigtype.other'}
+    {value: 'A', viewValue: 'profile.component.list.rigtype.a'},
+    {value: 'B', viewValue: 'profile.component.list.rigtype.b'},
+    {value: 'C', viewValue: 'profile.component.list.rigtype.c'},
+    {value: 'SC', viewValue: 'profile.component.list.rigtype.sc'},
+    {value: 'FW', viewValue: 'profile.component.list.rigtype.fw'},
+    {value: 'TT', viewValue: 'profile.component.list.rigtype.tt'},
+    {value: 'TC', viewValue: 'profile.component.list.rigtype.tc'},
+    {value: 'FT', viewValue: 'profile.component.list.rigtype.ft'},
+    {value: 'V', viewValue: 'profile.component.list.rigtype.v'},
+    {value: 'CB', viewValue: 'profile.component.list.rigtype.cb'},
+    {value: 'other', viewValue: 'profile.component.list.rigtype.other'}
   ];
 
 

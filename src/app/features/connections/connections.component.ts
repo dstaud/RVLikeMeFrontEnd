@@ -23,10 +23,15 @@ export class ConnectionsComponent implements OnInit {
   showSpinner = false;
 
   private backPath = '';
+  private likeMeCounts = [];
+  private likeMeDesc: string;
+  private likeMeAnswer: string;
   private profileKeys = [];
   private profileValues = [];
-  private likeme: IlikeMeCounts;
-  private likemeProfile: Observable<IlikeMeCounts>;
+  private likeMe: IlikeMeCounts;
+  private likeMeProfile: Observable<IlikeMeCounts>;
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -49,17 +54,56 @@ export class ConnectionsComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.likemeProfile = this.likeMeCountsSvc.likeMeCounts;
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in Profile component=', data);
+      this.profile = data;
+    });
 
-    this.likemeProfile
+    this.likeMeProfile = this.likeMeCountsSvc.likeMeCounts;
+    this.likeMeProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       console.log('in Connections component=', data);
 
       this.profileKeys = Object.keys(data);
       this.profileValues = Object.values(data);
-      console.log('Profile Keys ', this.profileKeys);
-      console.log('Profile Values ', this.profileValues);
+
+      for (let i = 1; i < this.profileKeys.length; i++ ) {
+        if (this.profileValues[i]) {
+          if (this.profile[this.profileKeys[i]] === true) {
+            this.likeMeAnswer = this.translate.instant(
+              'interests.component.' + this.profileKeys[i]
+            );
+            if (this.profileValues[i] === 1) {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.interest1'
+              );
+            } else {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.interest'
+              );
+            }
+            console.log(this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer);
+          } else {
+            if (this.profileValues[i] === 1) {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.' + this.profileKeys[i] + '1'
+                );
+            } else {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.' + this.profileKeys[i]
+                );
+            }
+            this.likeMeAnswer = this.translate.instant(
+              'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
+              );
+            console.log(this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer);
+          }
+        }
+      }
 
 /*       this.form.patchValue ({
         language: data.language,

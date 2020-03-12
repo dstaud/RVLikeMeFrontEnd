@@ -18,7 +18,26 @@
     "header": "Messages"
   },
   "connections.component": {
-    "header": "Like Me"
+    "header": "Like Me",
+    "gender": "others who are",
+    "homeCountry": "others from",
+    "homeState": "others from",
+    "aboutMe": "others are",
+    "aboutMe1": "other is",
+    "rvUse": "others that",
+    "rvUse1": "other that",
+    "worklife": "others are",
+    "worklife1": "other is",
+    "campsWithMe": "others are RVing",
+    "campsWithMe1": "others is RVing",
+    "boondocking": "others bookdock",
+    "boondocking1": "other bookdocks",
+    "traveling": "others travel",
+    "traveling1": "other travels",
+    "rigType": "others whose rig is a",
+    "rigType1": "other whose rig is a",
+    "interest": "others are interested in",
+    "interest1": "other is interested in"
   },
   "forums.component": {
     "header": "Forums"
@@ -65,42 +84,18 @@
     "interests": "My interests",
     "aboutMe": "Describe yourself",
     "list": {
-      "aboutMe": {
-        "dreamer": "Dreaming of RVing",
-        "newbie": "New to RVing",
-        "experienced": "Experienced RVer",
+      "aboutme": {
+        "dreamer": "dreaming of RVing",
+        "newbie": "new to RVing",
+        "experienced": "an experienced RVer",
         "other": "Other"
-      }
-    }
-  },
-  "personal.component": {
-    "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
-    "help": "Click on any help icon for information on how the data point will be used for you.",
-    "addProfilePic": "Add profile pic",
-    "changeProfilePic": "Change profile pic",
-    "firstName": "First name",
-    "lastName": "Last name",
-    "displayName": "Display name",
-    "yearOfBirth": "Year of birth",
-    "gender": "Gender",
-    "homeCountry": "Your home country",
-    "homeState": "Your home state",
-    "myStory": "Your RV lifestyle story",
-    "helpName": "Used for communication between RVLikeMe.com and you",
-    "helpDisplayName": "Your 'name' as shown to other users.  This could be your real name or a 'handle'.",
-    "helpEmail": "Your user name for signing in and for communications from RVLikeMe.com",
-    "helpYearOfBirth": "Used to enable you to find people near your age group and will not be displayed to other users.",
-    "helpGender": "Used to help you find others with the same gender",
-    "helpHomeCountry": "Used to find other users that share your country of origin or domicile",
-    "helpHomeState": "Used to find other users that share your state of origin or domicile",
-    "helpMyStory": "Shown to others who are interested in your story",
-    "list": {
+      },
       "gender": {
-        "male": "Male",
-        "female": "Female"
+        "male": "male",
+        "female": "female"
       },
       "country": {
-        "usa": "United States",
+        "usa": "the United States",
         "can": "Canada",
         "mex": "Mexico"
       },
@@ -155,8 +150,85 @@
         "wv": "West Virginia",
         "wi": "Wisconsin",
         "wy": "Wyoming"
+      },
+      "rvuse": {
+        "ft": "full-time travel RVing",
+        "fs": "full-time stationary RVing",
+        "fp": "full-time with part-time travel RVing",
+        "ps": "part-time travel RVing with a home base",
+        "ny": "want to be an RVer",
+        "other": "Other"
+      },
+      "worklife": {
+        "retired": "retired",
+        "military": "in the military",
+        "work-travel": "working full-time while traveling",
+        "workamping": "workamping",
+        "work-full-time": "working full-time",
+        "work-part-time": "working part-time",
+        "onleave": "on leave or disability",
+        "other": "Other"
+      },
+      "campswithme": {
+        "single": "by myself",
+        "partner": "with a spouse or partner",
+        "children": "with children",
+        "family": "the family",
+        "friend": "a friend(s)",
+        "other": "Other"
+      },
+      "boondocking": {
+        "most": "most of the time",
+        "alot": "a lot of the time",
+        "some": "some of the time",
+        "while": "once in a while",
+        "haveto": "when I have to",
+        "rarely": "rarely or never",
+        "want": "never, but want to"
+      },
+      "traveling": {
+        "countries": "across the US and Canada/Mexico",
+        "country": "across the U.S.A.",
+        "regional": "regionally within my country",
+        "none": "not at all",
+        "other": "Other"
+      },
+      "rigtype": {
+        "a": "class A motorhome",
+        "b": "class B moterhome",
+        "c": "class C motorhome",
+        "sc": "class C (Super C) moterhome",
+        "fw": "fifth wheel trailer",
+        "tt": "travel trailer",
+        "tc": "truck camper",
+        "ft": "folding trailer",
+        "v": "van",
+        "cb": "customized bus",
+        "other": "Other"
       }
     }
+  },
+  "personal.component": {
+    "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
+    "help": "Click on any help icon for information on how the data point will be used for you.",
+    "addProfilePic": "Add profile pic",
+    "changeProfilePic": "Change profile pic",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "displayName": "Display name",
+    "yearOfBirth": "Year of birth",
+    "gender": "Gender",
+    "homeCountry": "Your home country",
+    "homeState": "Your home state",
+    "myStory": "Your RV lifestyle story",
+    "helpName": "Used for communication between RVLikeMe.com and you",
+    "helpDisplayName": "Your 'name' as shown to other users.  This could be your real name or a 'handle'.",
+    "helpEmail": "Your user name for signing in and for communications from RVLikeMe.com",
+    "helpYearOfBirth": "Used to enable you to find people near your age group and will not be displayed to other users.",
+    "helpGender": "Used to help you find others with the same gender",
+    "helpHomeCountry": "Used to find other users that share your country of origin or domicile",
+    "helpHomeState": "Used to find other users that share your state of origin or domicile",
+    "helpMyStory": "Shown to others who are interested in your story"
   },
   "lifestyle.component": {
     "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
@@ -167,92 +239,30 @@
     "aboutMeDesc": "Describe yourself",
     "rvUseDesc": "How I RV",
     "worklifeDesc": "Work life",
-    "campsWithMeDesc": "Camps with me",
+    "campsWithMeDesc": "RVs with me",
     "boondockingDesc": "Boondocking",
-    "travelingDesc": "How I travel in my RV",
-    "list": {
-      "rvuse": {
-        "ft": "Full-time traveling",
-        "fs": "Full-time stationary",
-        "fp": "Full-time with part-time travel",
-        "ps": "Part-time travel with stick/bricks",
-        "ny": "Have not started yet!",
-        "other": "Other"
-      },
-      "worklife": {
-        "retired": "Retired",
-        "military": "Military",
-        "work-travel": "Work full-time while traveling",
-        "workamping": "Workamping",
-        "work-full-time": "Work full-time",
-        "work-part-time": "Work part-time",
-        "onleave": "On leave",
-        "workamp": "Workamp",
-        "other": "Other"
-      },
-      "campswithme": {
-        "single": "Single",
-        "partner": "Spouse or Partner",
-        "children": "Children",
-        "family": "Family",
-        "friend": "Friend(s)",
-        "pet": "Pet(s)",
-        "other": "Other"
-      },
-      "boondocking": {
-        "most": "Most of the time",
-        "alot": "A lot of the time",
-        "some": "Some of the time",
-        "while": "Once in a while",
-        "haveto": "When I have to",
-        "rarely": "Rarely",
-        "never": "Never",
-        "want": "Want to try it"
-      },
-      "traveling": {
-        "countries": "Across the US and Canada/Mexico",
-        "country": "Across the US or Canada",
-        "regional": "Regionally within my country",
-        "none": "I don't travel",
-        "other": "Other"
-      }
-    }
-  },
+    "travelingDesc": "How I travel in my RV"
+ },
   "rig.component": {
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
     "rigTypeDesc": "Type of rig",
     "rigYearDesc": "Rig year",
     "rigManufacturer": "Rig manufacturer",
     "rigBrand": "Rig brand",
-    "rigModel": "rig model",
-    "list": {
-      "rigtype": {
-        "a": "Class A motorhome",
-        "b": "Class B moterhome",
-        "c": "Class C motorhome",
-        "sc": "Class C (Super C) moterhome",
-        "fw": "Fifth wheel trailer",
-        "tt": "Travel Trailer",
-        "tc": "Truck camper",
-        "ft": "Folding trailer",
-        "v": "Van",
-        "cb": "Customized bus",
-        "other": "Other"
-      }
-    }
+    "rigModel": "rig model"
   },
   "interests.component": {
     "explanation": "This information will be used to help find others that share your interests.  Please check all that you are interested in.",
     "atv": "ATV off-roading",
-    "motorcycle": "Motorcycling",
-    "travel": "Traveling",
-    "quilting": "Quilting",
-    "cooking": "Cooking",
-    "painting": "Painting",
-    "blogging": "Blogging",
-    "livingFrugally": "Living frugally",
-    "gaming": "Gaming",
-    "musicalInstrument": "Musical instrument",
+    "motorcycle": "motorcycling",
+    "travel": "traveling",
+    "quilting": "quilting",
+    "cooking": "cooking",
+    "painting": "painting",
+    "blogging": "blogging",
+    "livingFrugally": "living frugally",
+    "gaming": "gaming",
+    "musicalInstrument": "Play a musical instrument",
     "programming": "Computer programming"
   },
   "landing-page.component": {
