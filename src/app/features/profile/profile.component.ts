@@ -14,6 +14,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 export interface AboutMe {
   value: string;
@@ -26,33 +27,22 @@ export interface AboutMe {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  profile: IuserProfile;
-
-  userProfile: Observable<IuserProfile>;
-
+  form: FormGroup;
   showSpinner = false;
   showAboutMeSaveIcon = false;
   showLanguageSaveIcon = false;
-  backPath = '';
   aboutMeOther: string;
-  form: FormGroup;
   aboutMeFormValue = '';
 
-  totalPersonalFieldsWithData = 0;
-  totalPersonalNbrOfFields = 8;
   percentPersonal: number;
   personalProgressBarColor: string;
-
-  totalLifestyleFieldsWithData = 0;
-  totalLifestyleNbrOfFields = 6;
+  personalEnteredMostInfo: boolean = false;
   percentLifestyle: number;
   lifestyleProgressBarColor: string;
-
-  totalRigFieldsWithData = 0;
-  totalRigNbrOfFields = 5;
+  lifestyleEnteredMostInfo: boolean = false;
   percentRig: number;
   rigProgressBarColor: string;
-
+  rigEnteredMostInfo: boolean = false;
   interestsIndicator: string;
   interestsIndClass: string;
 
@@ -67,13 +57,25 @@ export class ProfileComponent implements OnInit {
     {value: 'other', viewValue: 'profile.component.list.aboutMe.other'}
   ];
 
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
+
+  private backPath = '';
+  private totalPersonalFieldsWithData = 0;
+  private totalPersonalNbrOfFields = 8;
+  private totalLifestyleFieldsWithData = 0;
+  private totalLifestyleNbrOfFields = 6;
+
+  private totalRigFieldsWithData = 0;
+  private totalRigNbrOfFields = 5;
+
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
-    @HostListener('window:beforeunload', ['$event'])
-    unloadNotification($event: any) {
-      $event.returnValue = true;
-    }
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    $event.returnValue = true;
+  }
 
 
   constructor(private authSvc: AuthenticationService,
@@ -140,6 +142,9 @@ export class ProfileComponent implements OnInit {
       } else {
         this.personalProgressBarColor = 'primary'
       }
+      if (this.percentPersonal > 74) {
+        this.personalEnteredMostInfo = true;
+      }
 
       if (data.aboutMe) { this.totalLifestyleFieldsWithData++; };
       if (data.rvUse) { this.totalLifestyleFieldsWithData++; };
@@ -154,6 +159,9 @@ export class ProfileComponent implements OnInit {
       } else {
         this.lifestyleProgressBarColor = 'primary'
       }
+      if (this.percentLifestyle> 65) {
+        this.lifestyleEnteredMostInfo = true;
+      }
 
       if (data.rigType) { this.totalRigFieldsWithData++; };
       if (data.rigYear) { this.totalRigFieldsWithData++; };
@@ -166,6 +174,9 @@ export class ProfileComponent implements OnInit {
         this.rigProgressBarColor = 'warn'
       } else {
         this.rigProgressBarColor = 'primary'
+      }
+      if (this.percentRig > 49) {
+        this.rigEnteredMostInfo = true;
       }
 
       if (data.atv || data.motorcycle || data.travel || data.quilting || data.cooking || data.painting ||
@@ -311,6 +322,11 @@ export class ProfileComponent implements OnInit {
         this.totalLifestyleFieldsWithData--;
       }
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+      if (this.percentLifestyle> 65) {
+        this.lifestyleEnteredMostInfo = true;
+      } else {
+        this.lifestyleEnteredMostInfo = false;
+      }
     }, error => {
       this.showAboutMeSaveIcon = false;
     });

@@ -59,9 +59,9 @@ export class LikemeCountsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.allUsersCount = data.allUsersCount;
-      this.aboutMeCount = data.aboutMeCount;
-      this.rigTypeCount = data.rigTypeCount;
-      this.rvUseCount = data.rvUseCount;
+      this.aboutMeCount = data.aboutMe;
+      this.rigTypeCount = data.rigType;
+      this.rvUseCount = data.rvUse;
       console.log('Counts=', data);
       console.log('users=', this.allUsersCount);
       if (this.allUsersCount > 0) {

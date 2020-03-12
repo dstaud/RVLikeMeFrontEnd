@@ -1,9 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { TranslateService } from '@ngx-translate/core';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { Observable } from 'rxjs';
+
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 
 @Component({
@@ -12,14 +19,28 @@ import { ActivateBackArrowService } from './../../core/services/activate-back-ar
   styleUrls: ['./connections.component.scss']
 })
 export class ConnectionsComponent implements OnInit {
-  backPath = '';
+  form: FormGroup;
+  showSpinner = false;
 
-  constructor(public translate: TranslateService,
+  private backPath = '';
+  private profileKeys = [];
+  private profileValues = [];
+  private likeme: IlikeMeCounts;
+  private likemeProfile: Observable<IlikeMeCounts>;
+
+  constructor(private translate: TranslateService,
               private auth: AuthenticationService,
               private location: Location,
+              private profileSvc: ProfileService,
+              private likeMeCountsSvc: LikemeCountsService,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private router: Router) {
-              }
+              private router: Router,
+              fb: FormBuilder) {
+                this.form = fb.group({
+                  language: ['en', Validators.required],
+                  aboutMe: ['']
+                });
+            }
 
   ngOnInit() {
     if (!this.auth.isLoggedIn()) {
@@ -27,6 +48,30 @@ export class ConnectionsComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
+
+    this.likemeProfile = this.likeMeCountsSvc.likeMeCounts;
+
+    this.likemeProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('in Connections component=', data);
+
+      this.profileKeys = Object.keys(data);
+      this.profileValues = Object.values(data);
+      console.log('Profile Keys ', this.profileKeys);
+      console.log('Profile Values ', this.profileValues);
+
+/*       this.form.patchValue ({
+        language: data.language,
+      }); */
+
+      this.showSpinner = false;
+      this.form.enable();
+    }, (error) => {
+      this.showSpinner = false;
+      console.error(error);
+    });;
   }
 
+  ngOnDestroy() {}
 }

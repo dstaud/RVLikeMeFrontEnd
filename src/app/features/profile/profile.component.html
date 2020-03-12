@@ -4,6 +4,7 @@
     <div class="row" (click)="onPersonal()">
       <mat-icon class="icon" fontSet="material-icons-outlined">person</mat-icon>
       <mat-list-item>{{ "profile.component.personal" | translate }}
+        <mat-icon *ngIf="personalEnteredMostInfo" class="thumbs-up-icon">thumb_up</mat-icon>
         <div class="progress-bar">
           <mat-progress-bar
             mode="determinate"
@@ -17,6 +18,7 @@
     <div class="row" (click)="onLifestyle()">
       <mat-icon class="icon" fontSet="material-icons-outlined">tag_faces</mat-icon>
       <mat-list-item>{{ "profile.component.lifestyle" | translate }}
+        <mat-icon *ngIf="lifestyleEnteredMostInfo" class="thumbs-up-icon">thumb_up</mat-icon>
         <div class="progress-bar">
           <mat-progress-bar
             mode="determinate"
@@ -30,6 +32,7 @@
     <div class="row" (click)="onRig()">
       <mat-icon class="icon" fontSet="material-icons-outlined">rv_hookup</mat-icon>
       <mat-list-item>{{ "profile.component.rig" | translate }}
+        <mat-icon *ngIf="rigEnteredMostInfo" class="thumbs-up-icon">thumb_up</mat-icon>
         <div class="progress-bar">
           <mat-progress-bar
             mode="determinate"
