@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -20,10 +20,16 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 })
 export class ConnectionsComponent implements OnInit {
   form: FormGroup;
+  checkArray: FormArray;
+
   showSpinner = false;
+  showSingleMatchForumOffer = false;
+  showMultiMatchQuery = false;
+
+  likeMeMatches = [];
 
   private backPath = '';
-  private likeMeCounts = [];
+  private likeMeItem: string;
   private likeMeDesc: string;
   private likeMeAnswer: string;
   private profileKeys = [];
@@ -40,12 +46,11 @@ export class ConnectionsComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
-              fb: FormBuilder) {
-                this.form = fb.group({
-                  language: ['en', Validators.required],
-                  aboutMe: ['']
+              private fb: FormBuilder) {
+                this.form = this.fb.group({
+                  likeMe: this.fb.array([])
                 });
-            }
+              }
 
   ngOnInit() {
     if (!this.auth.isLoggedIn()) {
@@ -54,6 +59,7 @@ export class ConnectionsComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
+    // Get user's profile
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
@@ -62,15 +68,22 @@ export class ConnectionsComponent implements OnInit {
       this.profile = data;
     });
 
+    // Get object containing counts of all other users that match this user's profile items
     this.likeMeProfile = this.likeMeCountsSvc.likeMeCounts;
     this.likeMeProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       console.log('in Connections component=', data);
 
+      // Get the key/value pairs of returned matches/counts into arrays
       this.profileKeys = Object.keys(data);
       this.profileValues = Object.values(data);
 
+      // Go through the key array.  For each key, get associated value.
+      // If the value is null or false, skip it.  This means there were no matches
+      // for that item with other users at this time.
+      // If have a match, create a new array of nicely worded results that can be displayed
+      // with checkboxes on the template.
       for (let i = 1; i < this.profileKeys.length; i++ ) {
         if (this.profileValues[i]) {
           if (this.profile[this.profileKeys[i]] === true) {
@@ -86,7 +99,6 @@ export class ConnectionsComponent implements OnInit {
                 'connections.component.interest'
               );
             }
-            console.log(this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer);
           } else {
             if (this.profileValues[i] === 1) {
               this.likeMeDesc = this.translate.instant(
@@ -100,15 +112,14 @@ export class ConnectionsComponent implements OnInit {
             this.likeMeAnswer = this.translate.instant(
               'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
               );
-            console.log(this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer);
           }
+          this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+          this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
+          this.likeMeItem = JSON.parse(this.likeMeItem);
+          this.likeMeMatches.push(this.likeMeItem);
+          console.log(this.likeMeItem);
         }
       }
-
-/*       this.form.patchValue ({
-        language: data.language,
-      }); */
-
       this.showSpinner = false;
       this.form.enable();
     }, (error) => {
@@ -118,4 +129,37 @@ export class ConnectionsComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+  // If the user selects a single checkbox, because we already know there are matches,
+  // ask them if they would like to create/join a forum for any questions/discussions with
+  // these users.
+  // If the user selects more than one checkbox, ask them if they would like to do a query
+  // to see if there are users that match multiple.
+  onCheckboxChange(event: any) {
+    this.checkArray = this.form.get('likeMe') as FormArray;
+    console.log(event.checked, event.source.value);
+    if (event.checked) {
+      this.checkArray.push(new FormControl(event.source.value));
+    } else {
+      let i: number = 0;
+      this.checkArray.controls.forEach((item: FormControl) => {
+        if (item.value == event.source.value) {
+          this.checkArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+    if (this.checkArray.length === 1) {
+      this.showSingleMatchForumOffer = true;
+      this.showMultiMatchQuery = false;
+    } else if (this.checkArray.length > 1) {
+      this.showMultiMatchQuery = true;
+      this.showSingleMatchForumOffer = false;
+    } else {
+      this.showSingleMatchForumOffer = false;
+      this.showSingleMatchForumOffer = false;
+    }
+  }
+
 }

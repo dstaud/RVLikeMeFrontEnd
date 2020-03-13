@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -18,6 +19,7 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./likeme-counts.component.scss']
 })
 export class LikemeCountsComponent implements OnInit {
+  form: FormGroup;
   allUsersCount: number;
   aboutMeCount: number;
   rigTypeCount: number;

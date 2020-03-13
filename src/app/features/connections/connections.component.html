@@ -1,3 +1,17 @@
 <div class="mat-app-background background">
-  <h2 class="mat-h2">Connections content</h2>
+  <button *ngIf="showSingleMatchForumOffer" class="mat-button">
+    Connect through forum?
+  </button>
+  <button *ngIf="showMultiMatchQuery" class="mat-button">
+    Query?
+  </button>
+  <form [formGroup]="form" novalidate>
+    <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
+      <mat-label>
+        <mat-checkbox [value]="likeMeMatch.id" (change)="onCheckboxChange($event)">
+        </mat-checkbox>
+        {{likeMeMatch.match}}
+      </mat-label>
+    </div>
+  </form>
 </div>
