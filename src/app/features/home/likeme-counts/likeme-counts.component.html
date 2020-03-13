@@ -1,16 +1,18 @@
-<div class="container" (click)="onClick()">
+<div class="container">
   <button mat-button>
-    <p *ngIf="showAllUsersCount" class="mat-subheading-2 user-count">
+    <p *ngIf="showAllUsersCount" class="mat-subheading-2">
       {{ "home.component.allUserCount1" | translate }} {{ this.allUsersCount }} {{ "home.component.allUserCount2" | translate }}</p>
   </button>
-  <!-- <p *ngIf="showEarlyAdopter" class="mat-subheading-3 early-adopter">{{ "home.component.earlyAdopter" | translate }}</p> -->
-  <button mat-button>
-    <p *ngIf="showAboutMe" class="mat-subheading-2 user-count">{{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}</p>
+  <button mat-button (click)="onClick('aboutMe')">
+    <p *ngIf="showAboutMe" class="mat-subheading-2 user-count">
+      {{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}</p>
   </button>
-  <button mat-button>
-    <p *ngIf="showRigType" class="mat-subheading-2 user-count">{{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}</p>
+  <button mat-button (click)="onClick('rigType')">
+    <p *ngIf="showRigType" class="mat-subheading-2 user-count">
+      {{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}</p>
   </button>
-  <button mat-button>
-    <p *ngIf="showRvUse" class="mat-subheading-2 user-count">{{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}</p>
+  <button mat-button (click)="onClick('rvUse')">
+    <p *ngIf="showRvUse" class="mat-subheading-2 user-count">
+      {{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}</p>
   </button>
 </div>

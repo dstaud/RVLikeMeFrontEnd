@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
@@ -25,6 +25,7 @@ export class ConnectionsComponent implements OnInit {
   showSpinner = false;
   showSingleMatchForumOffer = false;
   showMultiMatchQuery = false;
+  param: string;
 
   likeMeMatches = [];
 
@@ -38,6 +39,7 @@ export class ConnectionsComponent implements OnInit {
   private likeMeProfile: Observable<IlikeMeCounts>;
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private routeSubscription: any;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -46,6 +48,7 @@ export class ConnectionsComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
+              private route: ActivatedRoute,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
@@ -66,6 +69,17 @@ export class ConnectionsComponent implements OnInit {
     .subscribe(data => {
       console.log('in Profile component=', data);
       this.profile = data;
+    });
+
+    // If coming from a link on the home page, will have a param which will be one of the checkbox
+    // items on this page and it should be checked (taken care of in the template based on param below)
+    this.routeSubscription = this.route
+    .queryParams
+    .subscribe(params => {
+      this.param = params.item;
+      this.showSingleMatchForumOffer = true;
+      this.checkArray = this.form.get('likeMe') as FormArray;
+      this.checkArray.push(new FormControl(this.param));
     });
 
     // Get object containing counts of all other users that match this user's profile items
@@ -128,7 +142,10 @@ export class ConnectionsComponent implements OnInit {
     });;
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
+  }
+
 
   // If the user selects a single checkbox, because we already know there are matches,
   // ask them if they would like to create/join a forum for any questions/discussions with
@@ -162,4 +179,11 @@ export class ConnectionsComponent implements OnInit {
     }
   }
 
+  onForum() {
+    console.log('send to forum with context')
+  }
+
+  onQuery() {
+    console.log('query')
+  }
 }

@@ -72,23 +72,23 @@ export class LikemeCountsComponent implements OnInit {
 
       if (this.profile.aboutMe && this.aboutMeCount > 0) {
         this.showAboutMe = true;
-        this.aboutMe = 'profile.component.list.aboutMe.' + this.profile.aboutMe;
+        this.aboutMe = 'profile.component.list.aboutme.' + this.profile.aboutMe;
       }
       if (this.profile.rigType && this.rigTypeCount > 0) {
         this.showRigType = true;
-        this.rigType = 'rig.component.list.rigtype.' + this.profile.rigType.toLowerCase();
+        this.rigType = 'profile.component.list.rigtype.' + this.profile.rigType.toLowerCase();
       }
       if (this.profile.rvUse && this.rvUseCount > 0) {
         this.showRvUse = true;
-        this.rvUse = 'lifestyle.component.list.rvuse.' + this.profile.rvUse.toLowerCase();
+        this.rvUse = 'profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase();
       }
     });
   }
 
   ngOnDestroy() {}
 
-  onClick() {
+  onClick(clickedItem: string) {
     this.activateBackArrowSvc.setBackRoute('home');
-    this.router.navigateByUrl('/connections');
+    this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a but and won't accept queryParams
   }
 }

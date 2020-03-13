@@ -1,17 +1,28 @@
 <div class="mat-app-background background">
-  <button *ngIf="showSingleMatchForumOffer" class="mat-button">
-    Connect through forum?
+  <button
+    *ngIf="showSingleMatchForumOffer"
+    class="mat-raised-button button"
+    (click)="onForum()">
+      Connect through a forum
   </button>
-  <button *ngIf="showMultiMatchQuery" class="mat-button">
-    Query?
+  <button
+    *ngIf="showMultiMatchQuery"
+    class="mat-raised-button button"
+    (click)="onQuery()">
+      Search for combined matches
   </button>
   <form [formGroup]="form" novalidate>
     <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
       <mat-label>
-        <mat-checkbox [value]="likeMeMatch.id" (change)="onCheckboxChange($event)">
+        <mat-checkbox
+          [checked]="likeMeMatch.id === param"
+          class="checkbox"
+          [value]="likeMeMatch.id"
+          (change)="onCheckboxChange($event)">
         </mat-checkbox>
         {{likeMeMatch.match}}
       </mat-label>
     </div>
   </form>
 </div>
+

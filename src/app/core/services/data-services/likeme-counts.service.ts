@@ -84,7 +84,6 @@ export class LikemeCountsService {
               private shared: SharedComponent) { }
 
   getLikeMeCounts() {
-    // console.log('PARAMS=', this.profile.aboutMe, this.profile.rigType);
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
@@ -102,19 +101,12 @@ export class LikemeCountsService {
   }
 
 
-  private handleBackendError(error) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    if (error.status === 401) {
-      return;
-    } else {
-      // return throwError(errorMessage);
-    }
+  getUserQueryCounts(params: JSON) {
+    console.log('PARAMS=', params);
+    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-query`,
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+      params: {'some param': 'some value'}
+    });
   }
 }
