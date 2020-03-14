@@ -102,6 +102,8 @@ export class LikemeCountsService {
 
 
   getUserQueryCounts(query) {
+
+    // Append the user's multiple query profile attributes into name/value delimited strings
     let name = query[0].name;
     let value = query[0].value;
 
@@ -117,6 +119,11 @@ export class LikemeCountsService {
     })
     .subscribe(data => {
       console.log('data=', data);
+    }, (error) => {
+      console.warn('ERROR loading user counts: ', error);
+      if (error.message.includes('Unknown Error')) {
+        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+      }
     });
   }
 }

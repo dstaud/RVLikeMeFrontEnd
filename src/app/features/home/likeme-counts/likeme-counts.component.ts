@@ -70,15 +70,15 @@ export class LikemeCountsComponent implements OnInit {
         this.showAllUsersCount = true;
       }
 
-      if (this.profile.aboutMe && this.aboutMeCount > 0) {
+      if (this.profile.aboutMe && this.aboutMeCount > 0  && this.profile.aboutMe.substring(0, 1) !== '@') {
         this.showAboutMe = true;
         this.aboutMe = 'profile.component.list.aboutme.' + this.profile.aboutMe;
       }
-      if (this.profile.rigType && this.rigTypeCount > 0) {
+      if (this.profile.rigType && this.rigTypeCount > 0  && this.profile.rigType.substring(0, 1) !== '@') {
         this.showRigType = true;
         this.rigType = 'profile.component.list.rigtype.' + this.profile.rigType.toLowerCase();
       }
-      if (this.profile.rvUse && this.rvUseCount > 0) {
+      if (this.profile.rvUse && this.rvUseCount > 0  && this.profile.rvUse.substring(0, 1) !== '@') {
         this.showRvUse = true;
         this.rvUse = 'profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase();
       }
