@@ -76,10 +76,14 @@ export class ConnectionsComponent implements OnInit {
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
-      this.param = params.item;
-      this.showSingleMatchForumOffer = true;
-      this.checkArray = this.form.get('likeMe') as FormArray;
-      this.checkArray.push(new FormControl(this.param));
+      console.log('INITIAL PARAMS=', params.item);
+      if (params.item) {
+        console.log('INITIAL=', params);
+        this.param = params.item;
+        this.showSingleMatchForumOffer = true;
+        this.checkArray = this.form.get('likeMe') as FormArray;
+        this.checkArray.push(new FormControl(this.param));
+      }
     });
 
     // Get object containing counts of all other users that match this user's profile items
@@ -147,6 +151,7 @@ export class ConnectionsComponent implements OnInit {
   }
 
 
+  // Keep an array of checked fields
   // If the user selects a single checkbox, because we already know there are matches,
   // ask them if they would like to create/join a forum for any questions/discussions with
   // these users.
@@ -184,6 +189,22 @@ export class ConnectionsComponent implements OnInit {
   }
 
   onQuery() {
-    console.log('query')
+    console.log('LENGTH=', this.checkArray.length);
+    let matches = [];
+    let name = '';
+    let value = '';
+
+    let i: number = 0;
+    this.checkArray.controls.forEach((item: FormControl) => {
+      console.log('item=', item.value);
+      name = item.value;
+      value = this.profile[item.value];
+      this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
+      this.likeMeItem = JSON.parse(this.likeMeItem);
+      matches.push(this.likeMeItem);
+      i++;
+    });
+    console.log('PARAMS TO SEND=', matches);
+    this.likeMeCountsSvc.getUserQueryCounts(matches);
   }
 }

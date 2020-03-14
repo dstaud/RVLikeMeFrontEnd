@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 
@@ -101,12 +101,22 @@ export class LikemeCountsService {
   }
 
 
-  getUserQueryCounts(params: JSON) {
-    console.log('PARAMS=', params);
-    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-query`,
+  getUserQueryCounts(query) {
+    let name = query[0].name;
+    let value = query[0].value;
+
+    for (let i=1; i < query.length; i++) {
+      name = name + '|' + query[i].name;
+      value = value + '|' + query[i].value;
+    }
+
+    this.likeMeCountsSubscription = this.http.get(`${this.dataSvcURL}/user-query`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: {'some param': 'some value'}
+      params: {name, value}
+    })
+    .subscribe(data => {
+      console.log('data=', data);
     });
   }
 }
