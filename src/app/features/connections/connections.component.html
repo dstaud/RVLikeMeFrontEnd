@@ -1,6 +1,8 @@
 <div class="mat-app-background background">
+  <p class="mat-subheading-2">Select one or more to connect with others through forums</p>
   <button
     *ngIf="showSingleMatchForumOffer"
+    [disabled]="disableSingleMatchForumOffer"
     class="mat-raised-button button"
     (click)="onForum()">
       Connect through a forum
@@ -11,7 +13,13 @@
     (click)="onQuery()">
       Search for combined matches
   </button>
-  <form [formGroup]="form" novalidate>
+  <button
+    *ngIf="showQueryCancel"
+    class="mat-raised-button button"
+    (click)="onCancel()">
+      Cancel
+  </button>
+  <form *ngIf="showAllMatches" [formGroup]="form" novalidate>
     <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
       <mat-label>
         <mat-checkbox
@@ -24,5 +32,16 @@
       </mat-label>
     </div>
   </form>
+  <form *ngIf="showQueryResults" [formGroup]="form" novalidate>
+    <div>
+      <mat-checkbox
+        checked="true"
+        class="checkbox"
+        (change)="onQueryCheckboxChange($event)">
+        {{ queryResultMessage }}
+      </mat-checkbox>
+    </div>
+  </form>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 

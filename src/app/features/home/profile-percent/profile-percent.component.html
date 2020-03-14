@@ -1,10 +1,11 @@
-<div class="container" (click)="onPercentProfile()">
-    <button mat-button>
-      <mat-progress-bar
-        mode="determinate"
-        color="{{ progressBarColor }}"
-        value="{{  percentProfileComplete }}">
-      </mat-progress-bar>
-      <p class="mat-subheading-2 pctCompleteMsg">{{ this.percentCompleteMsg }}</p>
-    </button>
+<div (click)="onPercentProfile()">
+  <button mat-button >
+    <mat-progress-bar
+      mode="determinate"
+      color="{{ progressBarColor }}"
+      value="{{  percentProfileComplete }}">
+    </mat-progress-bar>
+    <p class="pctCompleteMsg">{{ this.percentCompleteMsg }}</p>
+  </button>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

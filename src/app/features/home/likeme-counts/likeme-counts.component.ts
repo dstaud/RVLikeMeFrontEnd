@@ -3,6 +3,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -27,11 +29,12 @@ export class LikemeCountsComponent implements OnInit {
   aboutMe: string;
   rigType: string;
   rvUse: string;
-  showAllUsersCount: boolean = false;
-  showAboutMe: boolean = false;
-  showRigType: boolean = false;
-  showRvUse: boolean = false;
-  // showEarlyAdopter: boolean = false;
+
+  showSpinner = false;
+  showAllUsersCount = false;
+  showAboutMe = false;
+  showRigType = false;
+  showRvUse = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -60,6 +63,7 @@ export class LikemeCountsComponent implements OnInit {
     this.likeMeCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      this.showSpinner = true;
       this.allUsersCount = data.allUsersCount;
       this.aboutMeCount = data.aboutMe;
       this.rigTypeCount = data.rigType;
@@ -68,6 +72,7 @@ export class LikemeCountsComponent implements OnInit {
       console.log('users=', this.allUsersCount);
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
+        this.showSpinner = false;
       }
 
       if (this.profile.aboutMe && this.aboutMeCount > 0  && this.profile.aboutMe.substring(0, 1) !== '@') {
@@ -82,6 +87,9 @@ export class LikemeCountsComponent implements OnInit {
         this.showRvUse = true;
         this.rvUse = 'profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase();
       }
+    }, (error) => {
+      this.showSpinner = false;
+      console.error(error);
     });
   }
 

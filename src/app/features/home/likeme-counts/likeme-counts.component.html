@@ -1,18 +1,19 @@
-<div class="container">
-  <button mat-button>
-    <p *ngIf="showAllUsersCount" class="mat-subheading-2">
-      {{ "home.component.allUserCount1" | translate }} {{ this.allUsersCount }} {{ "home.component.allUserCount2" | translate }}</p>
+<div>
+  <button mat-button
+    *ngIf="showAllUsersCount">
+    {{ "home.component.allUserCount1" | translate }} {{ this.allUsersCount }} {{ "home.component.allUserCount2" | translate }}
   </button>
-  <button mat-button (click)="onClick('aboutMe')">
-    <p *ngIf="showAboutMe" class="mat-subheading-2 user-count">
-      {{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}</p>
+  <button mat-button (click)="onClick('aboutMe')"
+    *ngIf="showAboutMe" class="user-count">
+    {{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}
   </button>
-  <button mat-button (click)="onClick('rigType')">
-    <p *ngIf="showRigType" class="mat-subheading-2 user-count">
-      {{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}</p>
+  <button mat-button (click)="onClick('rigType')"
+    *ngIf="showRigType" class="user-count">
+      {{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}
   </button>
-  <button mat-button (click)="onClick('rvUse')">
-    <p *ngIf="showRvUse" class="mat-subheading-2 user-count">
-      {{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}</p>
+  <button mat-button (click)="onClick('rvUse')"
+    *ngIf="showRvUse" class="user-count">
+      {{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}
   </button>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

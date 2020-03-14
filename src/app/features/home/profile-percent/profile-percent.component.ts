@@ -20,6 +20,8 @@ export class ProfilePercentComponent implements OnInit {
   percentCompleteMsg: string;
   progressBarColor: string;
 
+  showSpinner = false;
+
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private totalProfileFieldsWithData: number;
@@ -32,6 +34,7 @@ export class ProfilePercentComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService) { }
 
   ngOnInit() {
+    this.showSpinner = true;
     this.userProfile = this.profileSvc.profile;
 
     this.userProfile
@@ -41,7 +44,9 @@ export class ProfilePercentComponent implements OnInit {
       this.profile = data;
       this.totalProfileFieldsWithData = 0;
 
-      if (data.firstName) { this.totalProfileFieldsWithData++; }
+      if (data.firstName) {
+        this.totalProfileFieldsWithData++;
+        this.showSpinner = false;}
       if (data.lastName) { this.totalProfileFieldsWithData++; }
       if (data.displayName) { this.totalProfileFieldsWithData++; }
       if (data.yearOfBirth) { this.totalProfileFieldsWithData++; }
@@ -63,8 +68,6 @@ export class ProfilePercentComponent implements OnInit {
       this.percentProfileComplete = Math.round((this.totalProfileFieldsWithData / this.totalPersonalNbrOfFields) * 100);
 
       this.profileMessages();
-
-      // this.form.enable();
     }, (error) => {
       console.error(error);
     });

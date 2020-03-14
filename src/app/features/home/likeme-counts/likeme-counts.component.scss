@@ -1,14 +1,9 @@
 @import './../../../../styles/_variables';
 
-.container {
-  padding: 10px;
-}
-
 .user-count {
   color: $primary-color;
 }
 
-.early-adopter {
-  font-size: 80%;
-  padding-left: 30px;
+.spinner {
+  margin: auto;
 }

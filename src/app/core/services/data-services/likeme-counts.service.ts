@@ -92,6 +92,7 @@ export class LikemeCountsService {
       console.log('data=', data);
       this.dataStore.likeMeCounts = data;
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
+      // this._likeMeCounts.complete();
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
       if (error.message.includes('Unknown Error')) {
@@ -100,8 +101,7 @@ export class LikemeCountsService {
     });
   }
 
-
-  getUserQueryCounts(query) {
+  getUserQueryCounts(query): Observable<any> {
 
     // Append the user's multiple query profile attributes into name/value delimited strings
     let name = query[0].name;
@@ -112,18 +112,10 @@ export class LikemeCountsService {
       value = value + '|' + query[i].value;
     }
 
-    this.likeMeCountsSubscription = this.http.get(`${this.dataSvcURL}/user-query`,
+    return this.likeMeCountsSubscription = this.http.get(`${this.dataSvcURL}/user-query`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
       params: {name, value}
-    })
-    .subscribe(data => {
-      console.log('data=', data);
-    }, (error) => {
-      console.warn('ERROR loading user counts: ', error);
-      if (error.message.includes('Unknown Error')) {
-        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-      }
     });
   }
 }

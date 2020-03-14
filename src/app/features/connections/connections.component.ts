@@ -6,12 +6,14 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-connections',
@@ -23,11 +25,16 @@ export class ConnectionsComponent implements OnInit {
   checkArray: FormArray;
 
   showSpinner = false;
-  showSingleMatchForumOffer = false;
+  showAllMatches = false;
+  showQueryResults = false;
+  showSingleMatchForumOffer = true;
+  disableSingleMatchForumOffer = true;
   showMultiMatchQuery = false;
+  showQueryCancel = false;
   param: string;
-
   likeMeMatches = [];
+  queryResult: number;
+  queryResultMessage: string;
 
   private backPath = '';
   private likeMeItem: string;
@@ -35,11 +42,13 @@ export class ConnectionsComponent implements OnInit {
   private likeMeAnswer: string;
   private profileKeys = [];
   private profileValues = [];
+  private matches = [];
   private likeMe: IlikeMeCounts;
-  private likeMeProfile: Observable<IlikeMeCounts>;
+  private likeMeCounts: Observable<IlikeMeCounts>;
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private routeSubscription: any;
+  private allUsersCount: number;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -49,6 +58,7 @@ export class ConnectionsComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private route: ActivatedRoute,
+              private shared: SharedComponent,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
@@ -61,6 +71,8 @@ export class ConnectionsComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
+
+    this.showSpinner = true;
 
     // Get user's profile
     this.userProfile = this.profileSvc.profile;
@@ -81,17 +93,22 @@ export class ConnectionsComponent implements OnInit {
         console.log('INITIAL=', params);
         this.param = params.item;
         this.showSingleMatchForumOffer = true;
+        this.disableSingleMatchForumOffer = false;
         this.checkArray = this.form.get('likeMe') as FormArray;
         this.checkArray.push(new FormControl(this.param));
       }
     });
 
     // Get object containing counts of all other users that match this user's profile items
-    this.likeMeProfile = this.likeMeCountsSvc.likeMeCounts;
-    this.likeMeProfile
+    this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
+    this.likeMeCounts
+/*     .pipe(finalize(() => {
+      console.log('finalized!');
+      this.showSpinner = false;
+    })) */
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Connections component=', data);
+      this.allUsersCount = data.allUsersCount;
 
       // Get the key/value pairs of returned matches/counts into arrays
       this.profileKeys = Object.keys(data);
@@ -103,7 +120,7 @@ export class ConnectionsComponent implements OnInit {
       // If have a match, create a new array of nicely worded results that can be displayed
       // with checkboxes on the template.
       for (let i = 1; i < this.profileKeys.length; i++ ) {
-        if (this.profileValues[i] && this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
+        if (this.profileValues[i]) {
           if (this.profile[this.profileKeys[i]] === true) {
             this.likeMeAnswer = this.translate.instant(
               'interests.component.' + this.profileKeys[i]
@@ -118,32 +135,36 @@ export class ConnectionsComponent implements OnInit {
               );
             }
           } else {
-            if (this.profileValues[i] === 1) {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.' + this.profileKeys[i] + '1'
-                );
-            } else {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.' + this.profileKeys[i]
+            if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
+              if (this.profileValues[i] === 1) {
+                this.likeMeDesc = this.translate.instant(
+                  'connections.component.' + this.profileKeys[i] + '1'
+                  );
+              } else {
+                this.likeMeDesc = this.translate.instant(
+                  'connections.component.' + this.profileKeys[i]
+                  );
+              }
+              this.likeMeAnswer = this.translate.instant(
+                'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
                 );
             }
-            this.likeMeAnswer = this.translate.instant(
-              'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
-              );
           }
           this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
           this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
           this.likeMeItem = JSON.parse(this.likeMeItem);
           this.likeMeMatches.push(this.likeMeItem);
           console.log(this.likeMeItem);
+          if (this.allUsersCount > 0) {
+            this.showSpinner = false;
+            this.showAllMatches = true;
+          }
         }
       }
-      this.showSpinner = false;
-      this.form.enable();
     }, (error) => {
-      this.showSpinner = false;
+      // this.showSpinner = false;
       console.error(error);
-    });;
+    });
   }
 
   ngOnDestroy() {
@@ -174,25 +195,30 @@ export class ConnectionsComponent implements OnInit {
     }
     if (this.checkArray.length === 1) {
       this.showSingleMatchForumOffer = true;
+      this.disableSingleMatchForumOffer = false;
       this.showMultiMatchQuery = false;
     } else if (this.checkArray.length > 1) {
       this.showMultiMatchQuery = true;
       this.showSingleMatchForumOffer = false;
     } else {
-      this.showSingleMatchForumOffer = false;
-      this.showSingleMatchForumOffer = false;
+      this.showSingleMatchForumOffer = true;
+      this.disableSingleMatchForumOffer = true;
+      this.showMultiMatchQuery = false;
     }
   }
 
   onForum() {
-    console.log('send to forum with context')
+    this.activateBackArrowSvc.setBackRoute('connections');
+    this.router.navigateByUrl('/forums');
   }
 
   onQuery() {
     console.log('LENGTH=', this.checkArray.length);
-    let matches = [];
     let name = '';
     let value = '';
+
+    this.queryResult = 0;
+    this.queryResultMessage = '';
 
     let i: number = 0;
     this.checkArray.controls.forEach((item: FormControl) => {
@@ -201,10 +227,87 @@ export class ConnectionsComponent implements OnInit {
       value = this.profile[item.value];
       this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
       this.likeMeItem = JSON.parse(this.likeMeItem);
-      matches.push(this.likeMeItem);
+      this.matches.push(this.likeMeItem);
       i++;
     });
-    console.log('PARAMS TO SEND=', matches);
-    this.likeMeCountsSvc.getUserQueryCounts(matches);
+    console.log('PARAMS TO SEND=', this.matches);
+    this.likeMeCountsSvc.getUserQueryCounts(this.matches)
+    .subscribe(data => {
+      this.queryResult = data;
+      if (this.queryResult === 0) {
+        this.queryResultMessage = 'No matches found';
+      } else {
+        if (this.queryResult === 1) {
+        this.queryResultMessage = this.queryResult + ' other that';
+          console.log(this.matches[i])
+        } else {
+          this.queryResultMessage = this.queryResult + ' others that';
+        }
+      }
+      for (let i=0; i < this.matches.length; i++) {
+
+        if (i > 0) {
+          this.queryResultMessage = this.queryResultMessage + ' and ';
+        }
+
+        // get original answers for those checked
+        if (this.matches[i].value === true) {
+          this.likeMeAnswer = this.translate.instant(
+            'interests.component.' + this.matches[i].name
+          );
+          if (this.queryResult === 1) {
+            this.likeMeDesc = this.translate.instant(
+              'connections.component.interest1'
+            );
+          } else {
+            this.likeMeDesc = this.translate.instant(
+              'connections.component.interest'
+            );
+          }
+        } else {
+          if (this.matches[i].value.substring(0, 1) !== '@') {
+            if (this.queryResult === 1) {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.' + this.matches[i].name + '1'
+                );
+            } else {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.' + this.matches[i].name
+                );
+            }
+            this.likeMeAnswer = this.translate.instant(
+              'profile.component.list.' + this.matches[i].name.toLowerCase() + '.' + this.matches[i].value.toLowerCase()
+              );
+          }
+        }
+        this.queryResultMessage = this.queryResultMessage + ' ' + this.likeMeAnswer;
+      }
+      this.showAllMatches = false;
+      this.showQueryResults = true;
+      this.showSingleMatchForumOffer = true;
+      this.disableSingleMatchForumOffer = false;
+      this.showMultiMatchQuery = false;
+      this.showQueryCancel = true;
+    }, (error) => {
+      console.warn('ERROR loading user counts: ', error);
+      if (error.message.includes('Unknown Error')) {
+        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+      }
+    });
+  }
+
+  onQueryCheckboxChange(event) {
+    if (event.checked) {
+      this.disableSingleMatchForumOffer = false;
+    } else {
+      this.disableSingleMatchForumOffer = true;
+    }
+  }
+
+  onCancel() {
+    this.showSingleMatchForumOffer = true;
+    this.showMultiMatchQuery = false;
+    this.showQueryResults = false;
+    this.showAllMatches = true;
   }
 }

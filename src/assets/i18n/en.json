@@ -152,10 +152,10 @@
         "wy": "Wyoming"
       },
       "rvuse": {
-        "ft": "full-time travel RVing",
-        "fs": "full-time stationary RVing",
-        "fp": "full-time with part-time travel RVing",
-        "ps": "part-time travel RVing with a home base",
+        "ft": "full-time travel RV",
+        "fs": "full-time stationary RV",
+        "fp": "full-time with part-time travel RV",
+        "ps": "part-time travel RV with a home base",
         "ny": "want to be an RVer",
         "other": "Other"
       },
@@ -262,8 +262,8 @@
     "blogging": "blogging",
     "livingFrugally": "living frugally",
     "gaming": "gaming",
-    "musicalInstrument": "Play a musical instrument",
-    "programming": "Computer programming"
+    "musicalInstrument": "playing a musical instrument",
+    "programming": "computer programming"
   },
   "landing-page.component": {
     "header": "RV Like Me"
