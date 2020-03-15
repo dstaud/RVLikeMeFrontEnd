@@ -35,8 +35,9 @@
   <form *ngIf="showQueryResults" [formGroup]="form" novalidate>
     <div>
       <mat-checkbox
-        checked="true"
+        [checked]="queryMatches"
         class="checkbox"
+        [disabled]="disableCheckbox"
         (change)="onQueryCheckboxChange($event)">
         {{ queryResultMessage }}
       </mat-checkbox>

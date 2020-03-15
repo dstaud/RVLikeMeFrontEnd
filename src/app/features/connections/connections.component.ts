@@ -29,12 +29,14 @@ export class ConnectionsComponent implements OnInit {
   showQueryResults = false;
   showSingleMatchForumOffer = true;
   disableSingleMatchForumOffer = true;
+  disableCheckbox = false;
   showMultiMatchQuery = false;
   showQueryCancel = false;
   param: string;
   likeMeMatches = [];
   queryResult: number;
   queryResultMessage: string;
+  queryMatches = false;
 
   private backPath = '';
   private likeMeItem: string;
@@ -148,16 +150,16 @@ export class ConnectionsComponent implements OnInit {
               this.likeMeAnswer = this.translate.instant(
                 'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
                 );
+              this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+              this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
+              this.likeMeItem = JSON.parse(this.likeMeItem);
+              this.likeMeMatches.push(this.likeMeItem);
+              console.log(this.likeMeItem);
+              if (this.allUsersCount > 0) {
+                this.showSpinner = false;
+                this.showAllMatches = true;
+              }
             }
-          }
-          this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
-          this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
-          this.likeMeItem = JSON.parse(this.likeMeItem);
-          this.likeMeMatches.push(this.likeMeItem);
-          console.log(this.likeMeItem);
-          if (this.allUsersCount > 0) {
-            this.showSpinner = false;
-            this.showAllMatches = true;
           }
         }
       }
@@ -180,8 +182,6 @@ export class ConnectionsComponent implements OnInit {
   // to see if there are users that match multiple.
   onCheckboxChange(event: any) {
     this.checkArray = this.form.get('likeMe') as FormArray;
-    console.log('Check Array Length=', this.checkArray.length);
-    console.log(event.checked, event.source.value);
     if (event.checked) {
       this.checkArray.push(new FormControl(event.source.value));
     } else {
@@ -216,7 +216,6 @@ export class ConnectionsComponent implements OnInit {
 
     this.activateBackArrowSvc.setBackRoute('connections');
     this.checkArray.controls.forEach((item: FormControl) => {
-      console.log('item=', item.value);
       name = item.value;
       value = this.profile[item.value];
       this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
@@ -224,13 +223,11 @@ export class ConnectionsComponent implements OnInit {
       this.matches.push(this.likeMeItem);
       i++;
     });
-    console.log('TO FORUM=', this.matches);
     this.router.navigate(['/forums'], { queryParams: { matches: this.matches }});
   }
 
   onQuery() {
     this.showSpinner = true;
-    console.log('LENGTH=', this.checkArray.length);
     let name = '';
     let value = '';
 
@@ -238,10 +235,7 @@ export class ConnectionsComponent implements OnInit {
     this.queryResultMessage = '';
 
     let i: number = 0;
-    console.log('CHECK ARRAY LENGTH=', this.checkArray.length);
-    console.log('MATCHES LENGTH=', this.matches.length);
     this.checkArray.controls.forEach((item: FormControl) => {
-      console.log('item=', item.value);
       name = item.value;
       value = this.profile[item.value];
       this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
@@ -249,28 +243,31 @@ export class ConnectionsComponent implements OnInit {
       this.matches.push(this.likeMeItem);
       i++;
     });
-    console.log('PARAMS TO SEND=', this.matches);
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
     .subscribe(data => {
       this.queryResult = data;
       if (this.queryResult === 0) {
         this.queryResultMessage = 'No matches found';
+        this.queryMatches = false;
+        this.disableSingleMatchForumOffer = true;
+        this.disableCheckbox = true;
       } else {
+        this.queryMatches = true;
+        this.disableSingleMatchForumOffer = false;
+        this.disableCheckbox = false;
         if (this.queryResult === 1) {
         this.queryResultMessage = this.queryResult + ' other that';
-          console.log(this.matches[i])
         } else {
           this.queryResultMessage = this.queryResult + ' others that';
         }
       }
       for (let i=0; i < this.matches.length; i++) {
-
         if (i > 0) {
           this.queryResultMessage = this.queryResultMessage + ' and ';
         }
 
         // get original answers for those checked
-        if (this.matches[i].value === true) {
+        if (this.matches[i].value === 'true') {
           this.likeMeAnswer = this.translate.instant(
             'interests.component.' + this.matches[i].name
           );
@@ -304,7 +301,6 @@ export class ConnectionsComponent implements OnInit {
       this.showAllMatches = false;
       this.showQueryResults = true;
       this.showSingleMatchForumOffer = true;
-      this.disableSingleMatchForumOffer = false;
       this.showMultiMatchQuery = false;
       this.showQueryCancel = true;
       this.showSpinner = false;
@@ -329,6 +325,8 @@ export class ConnectionsComponent implements OnInit {
     this.showMultiMatchQuery = false;
     this.showQueryResults = false;
     this.showAllMatches = true;
+    this.showQueryCancel = false;
+    this.disableSingleMatchForumOffer = true;
     for (let i = this.checkArray.length; i >= 0; i--) {
       console.log('remove ', i);
       this.checkArray.removeAt(i);

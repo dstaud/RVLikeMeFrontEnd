@@ -20,8 +20,11 @@
   "connections.component": {
     "header": "Like Me",
     "gender": "others who are",
+    "gender1": "other who is",
     "homeCountry": "others from",
+    "homeCountry1": "other from",
     "homeState": "others from",
+    "homeState1": "other from",
     "aboutMe": "others are",
     "aboutMe1": "other is",
     "rvUse": "others that",
@@ -91,15 +94,15 @@
         "other": "Other"
       },
       "gender": {
-        "male": "male",
-        "female": "female"
+        "m": "male",
+        "f": "female"
       },
-      "country": {
+      "homecountry": {
         "usa": "the United States",
         "can": "Canada",
         "mex": "Mexico"
       },
-      "state": {
+      "homestate": {
         "al": "Alabama",
         "ak": "Alaska",
         "az": "Arizona",

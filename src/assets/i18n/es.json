@@ -20,8 +20,11 @@
   "connections.component": {
     "header": "Como yo",
     "gender": "otros que son",
+    "gender1": "otro que son",
     "homeCountry": "otros de",
+    "homeCountry1": "otro de",
     "homeState": "otros de",
+    "homeState1": "otro de",
     "aboutMe": "otros son",
     "aboutMe1": "otro es",
     "rvUse": "otros que",
@@ -91,15 +94,15 @@
         "other": "Otro"
       },
       "gender": {
-        "male": "masculino",
-        "female": "hembra"
+        "m": "masculino",
+        "f": "hembra"
       },
-      "country": {
+      "homecountry": {
         "usa": "os Estados Unidos",
         "can": "Canadá",
         "mex": "México"
       },
-      "state": {
+      "homestate": {
         "al": "Alabama",
         "ak": "Alaska",
         "az": "Arizona",
