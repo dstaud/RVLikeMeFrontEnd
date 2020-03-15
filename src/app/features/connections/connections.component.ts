@@ -180,6 +180,7 @@ export class ConnectionsComponent implements OnInit {
   // to see if there are users that match multiple.
   onCheckboxChange(event: any) {
     this.checkArray = this.form.get('likeMe') as FormArray;
+    console.log('Check Array Length=', this.checkArray.length);
     console.log(event.checked, event.source.value);
     if (event.checked) {
       this.checkArray.push(new FormControl(event.source.value));
@@ -208,11 +209,27 @@ export class ConnectionsComponent implements OnInit {
   }
 
   onForum() {
+    let name;
+    let value;
+    let i: number = 0;
+    this.matches = [];
+
     this.activateBackArrowSvc.setBackRoute('connections');
-    this.router.navigateByUrl('/forums');
+    this.checkArray.controls.forEach((item: FormControl) => {
+      console.log('item=', item.value);
+      name = item.value;
+      value = this.profile[item.value];
+      this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
+      this.likeMeItem = JSON.parse(this.likeMeItem);
+      this.matches.push(this.likeMeItem);
+      i++;
+    });
+    console.log('TO FORUM=', this.matches);
+    this.router.navigate(['/forums'], { queryParams: { matches: this.matches }});
   }
 
   onQuery() {
+    this.showSpinner = true;
     console.log('LENGTH=', this.checkArray.length);
     let name = '';
     let value = '';
@@ -221,6 +238,8 @@ export class ConnectionsComponent implements OnInit {
     this.queryResultMessage = '';
 
     let i: number = 0;
+    console.log('CHECK ARRAY LENGTH=', this.checkArray.length);
+    console.log('MATCHES LENGTH=', this.matches.length);
     this.checkArray.controls.forEach((item: FormControl) => {
       console.log('item=', item.value);
       name = item.value;
@@ -288,6 +307,7 @@ export class ConnectionsComponent implements OnInit {
       this.disableSingleMatchForumOffer = false;
       this.showMultiMatchQuery = false;
       this.showQueryCancel = true;
+      this.showSpinner = false;
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
       if (error.message.includes('Unknown Error')) {
@@ -309,5 +329,10 @@ export class ConnectionsComponent implements OnInit {
     this.showMultiMatchQuery = false;
     this.showQueryResults = false;
     this.showAllMatches = true;
+    for (let i = this.checkArray.length; i >= 0; i--) {
+      console.log('remove ', i);
+      this.checkArray.removeAt(i);
+    };
+    this.matches = [];
   }
 }
