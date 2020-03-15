@@ -1,3 +1,4 @@
+import { isNumber } from 'util';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -32,6 +33,8 @@ export class ConnectionsComponent implements OnInit {
   disableCheckbox = false;
   showMultiMatchQuery = false;
   showQueryCancel = false;
+  showNoConnections = false;
+  foundMatch = false;
   param: string;
   likeMeMatches = [];
   queryResult: number;
@@ -98,6 +101,8 @@ export class ConnectionsComponent implements OnInit {
         this.disableSingleMatchForumOffer = false;
         this.checkArray = this.form.get('likeMe') as FormArray;
         this.checkArray.push(new FormControl(this.param));
+      } else {
+        this.showSpinner = false;
       }
     });
 
@@ -124,6 +129,7 @@ export class ConnectionsComponent implements OnInit {
       for (let i = 1; i < this.profileKeys.length; i++ ) {
         if (this.profileValues[i]) {
           if (this.profile[this.profileKeys[i]] === true) {
+            this.foundMatch = true;
             this.likeMeAnswer = this.translate.instant(
               'interests.component.' + this.profileKeys[i]
             );
@@ -137,31 +143,37 @@ export class ConnectionsComponent implements OnInit {
               );
             }
           } else {
-            if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
-              if (this.profileValues[i] === 1) {
-                this.likeMeDesc = this.translate.instant(
-                  'connections.component.' + this.profileKeys[i] + '1'
+            if (!isNumber(this.profile[this.profileKeys[i]])) {
+              if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
+                if (this.profileValues[i] === 1) {
+                  this.likeMeDesc = this.translate.instant(
+                    'connections.component.' + this.profileKeys[i] + '1'
+                    );
+                } else {
+                  this.likeMeDesc = this.translate.instant(
+                    'connections.component.' + this.profileKeys[i]
+                    );
+                }
+                this.likeMeAnswer = this.translate.instant(
+                  'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
                   );
-              } else {
-                this.likeMeDesc = this.translate.instant(
-                  'connections.component.' + this.profileKeys[i]
-                  );
-              }
-              this.likeMeAnswer = this.translate.instant(
-                'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
-                );
-              this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
-              this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
-              this.likeMeItem = JSON.parse(this.likeMeItem);
-              this.likeMeMatches.push(this.likeMeItem);
-              console.log(this.likeMeItem);
-              if (this.allUsersCount > 0) {
-                this.showSpinner = false;
-                this.showAllMatches = true;
+                this.foundMatch = true;
+                this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+                this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
+                this.likeMeItem = JSON.parse(this.likeMeItem);
+                this.likeMeMatches.push(this.likeMeItem);
+                console.log(this.likeMeItem);
+                if (this.allUsersCount > 0) {
+                  this.showSpinner = false;
+                  this.showAllMatches = true;
+                }
               }
             }
           }
         }
+      }
+      if (!this.foundMatch) {
+        this.showNoConnections = true;
       }
     }, (error) => {
       // this.showSpinner = false;

@@ -27,8 +27,8 @@
     "homeState1": "other from",
     "aboutMe": "others are",
     "aboutMe1": "other is",
-    "rvUse": "others that",
-    "rvUse1": "other that",
+    "rvUse": "others that are",
+    "rvUse1": "other that is",
     "worklife": "others are",
     "worklife1": "other is",
     "campsWithMe": "others are RVing",
@@ -37,10 +37,10 @@
     "boondocking1": "other bookdocks",
     "traveling": "others travel",
     "traveling1": "other travels",
-    "rigType": "others whose rig is a",
-    "rigType1": "other whose rig is a",
-    "interest": "others are interested in",
-    "interest1": "other is interested in"
+    "rigType": "others with a",
+    "rigType1": "other with a",
+    "interest": "others interested in",
+    "interest1": "other interested in"
   },
   "forums.component": {
     "header": "Forums"
@@ -156,10 +156,10 @@
       },
       "rvuse": {
         "ft": "full-time travel RV",
-        "fs": "full-time stationary RV",
+        "fs": "full-time stationary",
         "fp": "full-time with part-time travel RV",
         "ps": "part-time travel RV with a home base",
-        "ny": "want to be an RVer",
+        "ny": "an RVer wanna-be!",
         "other": "Other"
       },
       "worklife": {

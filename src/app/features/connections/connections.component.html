@@ -43,6 +43,11 @@
       </mat-checkbox>
     </div>
   </form>
+  <div *ngIf="showNoConnections">
+    <p>Sorry, no RVers Like you found yet.  Be sure to fill out your profile as completely
+      as possible because this is what is used to locate others like you.  Also, check back and
+      try again because as other users join, you will find others like you.</p>
+  </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 
