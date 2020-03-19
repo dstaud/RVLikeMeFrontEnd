@@ -3,12 +3,12 @@
     [disabled]="disableSingleMatchForumOffer"
     class="mat-raised-button button mat-primary"
     (click)="onForum()">
-      Connect through a forum
+      {{ "connections.component.forumButton" | translate }}
   </button>
   <button
     class="mat-raised-button button"
     (click)="onCancel()">
-      Cancel
+    {{ "connections.component.cancelButton" | translate }}
   </button>
   <p>{{ queryResultMessagePrefix }}</p>
   <ul class="results">

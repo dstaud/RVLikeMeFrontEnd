@@ -75,16 +75,19 @@ export class UserQueryComponent implements OnInit {
     .subscribe(data => {
       this.queryResult = data;
       if (this.queryResult === 0) {
-        this.queryResultMessagePrefix = 'No others found for combo of:';
+        this.queryResultMessagePrefix = this.translate.instant(
+          'connections.component.resultPrefix0') + ':';
         this.queryMatches = false;
         this.disableSingleMatchForumOffer = true;
       } else {
         this.queryMatches = true;
         this.disableSingleMatchForumOffer = false;
         if (this.queryResult === 1) {
-        this.queryResultMessagePrefix = this.queryResult + ' other found for combo of:';
+        this.queryResultMessagePrefix = this.queryResult + ' ' + this.translate.instant(
+          'connections.component.resultPrefix1') + ':';
         } else {
-          this.queryResultMessagePrefix = this.queryResult + ' others found for combo of:';
+          this.queryResultMessagePrefix = this.queryResult + ' ' + this.translate.instant(
+          'connections.component.resultPrefix2') + ':';
         }
       }
       for (let i=0; i < this.matches.length; i++) {

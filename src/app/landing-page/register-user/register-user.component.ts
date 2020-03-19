@@ -155,7 +155,6 @@ export class RegisterUserComponent implements OnInit {
           this.profile.firstName = this.form.controls.firstName.value;
           this.profile.language = 'en';
           this.profile.colorThemePreference = 'light-theme';
-          console.log('calling add profile:', this.profile);
           this.profileSvc.addProfile(this.profile)
           .pipe(untilComponentDestroyed(this))
           .subscribe((data) => {

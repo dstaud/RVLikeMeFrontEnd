@@ -40,7 +40,6 @@ export class ProfilePercentComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Profile component=', data);
       this.profile = data;
       this.totalProfileFieldsWithData = 0;
 

@@ -107,7 +107,6 @@ export class ProfileComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Profile component=', data);
       this.profile = data;
       this.totalPersonalFieldsWithData = 0;
       this.totalLifestyleFieldsWithData = 0;
@@ -136,7 +135,6 @@ export class ProfileComponent implements OnInit {
       if (data.gender) { this.totalPersonalFieldsWithData++; };
       if (data.myStory) { this.totalPersonalFieldsWithData++; };
       this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
-      console.log('% Personal = ', this.percentPersonal);
       if (this.percentPersonal < 13) {
         this.personalProgressBarColor = 'warn'
       } else {
@@ -153,7 +151,6 @@ export class ProfileComponent implements OnInit {
       if (data.boondocking) { this.totalLifestyleFieldsWithData++; };
       if (data.traveling) { this.totalLifestyleFieldsWithData++; };
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
-      console.log('% Lifestyle = ', this.percentLifestyle);
       if (this.percentLifestyle < 5) {
         this.lifestyleProgressBarColor = 'warn'
       } else {
@@ -169,7 +166,6 @@ export class ProfileComponent implements OnInit {
       if (data.rigBrand) { this.totalRigFieldsWithData++; };
       if (data.rigModel) { this.totalRigFieldsWithData++; };
       this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
-      console.log('% Rig = ', this.percentRig);
       if (this.percentRig < 13) {
         this.rigProgressBarColor = 'warn'
       } else {
@@ -299,7 +295,6 @@ export class ProfileComponent implements OnInit {
 
   // Auto-update aboutMe selection to server
   updateAboutMe(event: string) {
-    console.log('updating profile ', this.profile);
     if (this.form.controls.aboutMe.value === '') {
       this.profile.aboutMe = null;
       this.form.patchValue({
@@ -311,7 +306,6 @@ export class ProfileComponent implements OnInit {
       }
     }
     this.showAboutMeSaveIcon = true;
-    console.log('calling updateProfile:', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {

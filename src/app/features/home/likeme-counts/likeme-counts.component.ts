@@ -54,7 +54,6 @@ export class LikemeCountsComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in like me component=', data);
       this.profile = data;
     });
 
@@ -68,8 +67,6 @@ export class LikemeCountsComponent implements OnInit {
       this.aboutMeCount = data.aboutMe;
       this.rigTypeCount = data.rigType;
       this.rvUseCount = data.rvUse;
-      console.log('Counts=', data);
-      console.log('users=', this.allUsersCount);
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
         this.showSpinner = false;

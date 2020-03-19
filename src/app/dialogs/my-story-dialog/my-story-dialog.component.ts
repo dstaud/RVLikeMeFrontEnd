@@ -28,7 +28,6 @@ export class MyStoryDialogComponent implements OnInit {
 
     this.containerHeight = Math.round((this.windowHeight *.8) * .8);
     this.fieldHeight = this.containerHeight.toString() + 'px';
-    console.log('height=', this.fieldHeight);
   }
 
   constructor(public dialogRef: MatDialogRef<MyStoryDialogComponent>,
@@ -44,12 +43,9 @@ export class MyStoryDialogComponent implements OnInit {
     this.windowHeight = window.innerHeight;
 
     let winH = this.windowHeight * .8;
-    console.log('80% of height=', winH);
     let fieldH = winH * .8;
-    console.log('field=', fieldH);
     this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 80;
     this.fieldHeight = this.containerHeight.toString() + 'px';
-    console.log('height=', this.fieldHeight, this.containerHeight);
   }
 
   onOK() {

@@ -91,7 +91,6 @@ ngOnInit() {
   .pipe(untilComponentDestroyed(this))
   .subscribe(data => {
     this.profile = data;
-    console.log('in interests component=', this.profile);
 
     this.form.patchValue ({
       atv: this.profile.atv,
@@ -124,12 +123,10 @@ ngOnInit() {
     this.httpError = false;
     this.httpErrorText = '';
     this.profile[control] = event.checked;
-    console.log('control=', this.profile[control]);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showSaveIcon = false;
-      console.log('update response = ', responseData);
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this.showSaveIcon = false;

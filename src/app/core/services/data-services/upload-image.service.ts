@@ -32,7 +32,6 @@ export class UploadImageService {
     .subscribe(event => {
       if (event.type === HttpEventType.Response) {
           imageFileUrl = event.body['imageUrl'];
-          console.log('url=', imageFileUrl);
           cb(imageFileUrl);
       }
     }, error => {
@@ -67,7 +66,6 @@ export class UploadImageService {
 
     // Compress file before uploading to server
     reader.onload = (event: any) => {
-      console.log('in reader');
       this.compressFile(event.target.result, fileName, (imageFile: File) => {
         cb(imageFile);
       });
@@ -86,7 +84,6 @@ export class UploadImageService {
         // Creates a blob from dataUri
         const imageBlob = this.dataURItoBlob(result.split(',')[1]);
         compressedImageFile = new File([imageBlob], fileName, { type: 'image/jpeg' });
-        console.log("File size after:",compressedImageFile['size']/(1024*1024));
         cb(compressedImageFile);
       }
     );

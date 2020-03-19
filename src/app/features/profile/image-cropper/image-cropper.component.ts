@@ -36,7 +36,6 @@ export class ImageCropperComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log('STARTING', this.showDestination)
     this.cropper = new Cropper(this.imageElement.nativeElement, {
       zoomable: false,
       scalable: false,
@@ -49,7 +48,6 @@ export class ImageCropperComponent implements OnInit {
       },
       ready: function(event) {
         this.showDestination = true;
-        console.log('READY!', this.showDestination);
       }
     });
   }

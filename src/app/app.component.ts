@@ -120,8 +120,10 @@ export class AppComponent implements OnInit {
       .subscribe(data => {
         console.log('in app component=', data);
         if (data.language) {
+          console.log('Setting Language to ', data.language);
           this.language.setLanguage(data.language);
         } else {
+          console.log('Setting Language to default');
           this.language.setLanguage('en');
         }
         if (data.colorThemePreference) {
@@ -136,6 +138,7 @@ export class AppComponent implements OnInit {
         }
       }, (error) => {
         console.error(error);
+        console.log('error, setting language to default');
         this.language.setLanguage('en');
         this.themeSvc.setGlobalColorTheme('light-theme');
       });

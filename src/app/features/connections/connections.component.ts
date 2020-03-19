@@ -159,7 +159,6 @@ export class ConnectionsComponent implements OnInit {
                 this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
                 this.likeMeItem = JSON.parse(this.likeMeItem);
                 this.likeMeMatches.push(this.likeMeItem);
-                console.log(this.likeMeItem);
                 if (this.allUsersCount > 0) {
                   this.showAllMatches = true;
                 }

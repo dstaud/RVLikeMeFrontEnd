@@ -7,13 +7,13 @@
     *ngIf="showAboutMe" class="user-count">
     {{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}
   </button>
-  <button mat-button (click)="onClick('rigType')"
-    *ngIf="showRigType" class="user-count">
-      {{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}
-  </button>
   <button mat-button (click)="onClick('rvUse')"
     *ngIf="showRvUse" class="user-count">
       {{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}
   </button>
+  <button mat-button (click)="onClick('rigType')"
+  *ngIf="showRigType" class="user-count">
+    {{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}
+</button>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

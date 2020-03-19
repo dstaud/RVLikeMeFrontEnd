@@ -67,7 +67,6 @@ export class SigninComponent implements OnInit {
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Signin return=', data);
       this.returnRoute = data.valueOf();
       if (this.returnRoute) {
         if (this.returnRoute.substring(0, 1) === '*') {
@@ -97,15 +96,15 @@ export class SigninComponent implements OnInit {
     .subscribe ((responseData) => {
       // Get user profile
       this.userProfile = this.profileSvc.profile;
-      console.log('get profile')
       this.profileSvc.getProfile();
       this.userProfile
       .pipe(untilComponentDestroyed(this))
       .subscribe(data => {
-        console.log('in login component=', data);
         if (data.language) {
+          console.log('Signin, set language to ', data.language);
           this.language.setLanguage(data.language);
         } else {
+          console.log('Signin, set language to default');
           this.language.setLanguage('en');
         }
         if (data.colorThemePreference) {
@@ -134,6 +133,7 @@ export class SigninComponent implements OnInit {
         this.showSpinner = false;
         this.httpError = true;
         this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        console.log('Signin error, set language to default');
         this.language.setLanguage('en');
         this.themeSvc.setGlobalColorTheme('light-theme')
         console.log('error ', error);

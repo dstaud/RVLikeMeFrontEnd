@@ -91,7 +91,6 @@ export class LikemeCountsService {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
     })
     .subscribe(data => {
-      console.log('data=', data);
       this.dataStore.likeMeCounts = data;
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
       // this._likeMeCounts.complete();

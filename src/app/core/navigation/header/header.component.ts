@@ -51,7 +51,6 @@ export class HeaderComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in header component=', data);
       this.profile = data;
       if (this.profile.colorThemePreference === 'light-theme') {
         this.lightTheme = true;

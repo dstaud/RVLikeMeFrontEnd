@@ -233,7 +233,6 @@ export class PersonalComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in personal component=', data);
       this.profile = data;
       if (data) {
         if (!data.displayName) { this.profile.displayName = this.profile.firstName }
@@ -277,9 +276,7 @@ export class PersonalComponent implements OnInit {
   // Compress Image and offer up for user to crop
   onProfileImageSelected(event: any) {
     this.showSpinner = true;
-    console.log('compress image file');
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      console.log('returned to original, file=', compressedFile);
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
         this.openImageCropperDialog(uploadedFileUrl);
       });
@@ -311,11 +308,9 @@ export class PersonalComponent implements OnInit {
             this.profileSvc.distributeProfileUpdate(this.profile);
           })
         } else {
-          console.log('no image');
           this.showSpinner = false;
         }
       } else {
-        console.log('no image');
         this.showSpinner = false;
       }
     });
@@ -324,7 +319,6 @@ export class PersonalComponent implements OnInit {
 
   // Let user update their story in a dialog with a lot more space to comfortably enter
   openMyStoryDialog(myStory: string): void {
-    console.log('dialogwidth=', this.dialogWidthDisplay);
     const dialogRef = this.dialog.open(MyStoryDialogComponent, {
       width: this.dialogWidthDisplay,
       height: '80%',
@@ -335,13 +329,11 @@ export class PersonalComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      console.log('back from dialog, result=', result);
       if (result) {
         if (result !== 'canceled') {
           this.form.patchValue({'myStory': result});
           this.updateDataPoint('myStory');
         } else {
-          console.log('no story change');
           this.showSpinner = false;
         }
       } else {

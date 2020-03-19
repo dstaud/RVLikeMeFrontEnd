@@ -149,25 +149,21 @@ export class ProfileService {
   }
 
   addProfile(userProfile: IuserProfile): Observable<any> {
-    console.log('http add profile=', userProfile);
     return this.http.post(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
   distributeProfileUpdate(userProfile: IuserProfile) {
-    console.log('distribute profile=', userProfile);
     this.dataStore.profile = userProfile;
     this._profile.next(Object.assign({}, this.dataStore).profile);
   }
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
-    console.log('http update profile=', userProfile, this.dataStore.profile);
     return this.http.put(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
   uploadProfileImage(fd: FormData) {
-    console.log('http upload image=', fd);
     return this.http.post(`${this.dataSvcURL}/upload-image`, fd,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
     reportProgress: true,
@@ -177,7 +173,6 @@ export class ProfileService {
 
   uploadProfileImageBase64(image: string) {
     let imagePackage = {'image': image}
-    console.log('http upload base64 image=', imagePackage);
     return this.http.post(`${this.dataSvcURL}/upload-image`, imagePackage,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
     reportProgress: true,
@@ -186,7 +181,6 @@ export class ProfileService {
   }
 
   public dispose() {
-    console.log('dispose of subscription');
     this.profileSubscription.unsubscribe();
   }
 }

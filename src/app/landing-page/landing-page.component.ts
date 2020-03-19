@@ -95,7 +95,6 @@ export class LandingPageComponent implements OnInit {
   }
 
   registerUser() {
-    console.log(this.windowWidth);
     if (this.windowWidth > 600) {
       this.openDialog('register', (result: string) => {
         if (result === 'complete') {

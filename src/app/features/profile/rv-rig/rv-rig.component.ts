@@ -136,7 +136,6 @@ export class RvRigComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in rig component=', data);
       this.profile = data;
 
       // If user selected other on a form field, need to get the data they entered
@@ -189,16 +188,11 @@ export class RvRigComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      console.log('result and profile ', result, this.profile);
       if (result) {
         if (result !== 'canceled') {
-          console.log('other=', this[control]);
           if (this[control] !== result ) {
             this[control] = result;
-            console.log('before ', this.profile, this.profile.rvUse);
             this.profile[control] = '@' + result;
-            console.log('after ', this.profile, this.profile.rvUse);
-            console.log('calling update select ', this.profile, control, this.profile[control]);
             this.updateRig(control);
           }
         }
@@ -259,7 +253,6 @@ export class RvRigComponent implements OnInit {
 
   updateSelectItem(control: string, event) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    console.log('in select item', this.profile);
     this[SaveIcon] = true;
     if (event === '') {
       this.profile[control] = null;
@@ -274,7 +267,6 @@ export class RvRigComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;
     this.httpErrorText = '';
-    console.log('update profile=', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {

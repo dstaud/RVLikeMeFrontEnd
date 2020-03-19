@@ -197,12 +197,10 @@ export class LifestyleComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in lifestyle component=', data);
       this.profile = data;
 
       // If user selected other on a form field, need to get the data they entered
       // and set the form field to display 'other'
-      console.log('set others');
       if (this.otherData('aboutMe')) {
         this.aboutMeFormValue = 'other';
       } else {
@@ -284,12 +282,9 @@ export class LifestyleComponent implements OnInit {
     .subscribe(result => {
       if (result) {
         if (result !== 'canceled') {
-          console.log('other and result ', this[control], result);
           if (this[control] !== result ) {
             this[control] = result;
-            console.log('lifestyle before ', this.profile);
             this.profile[control] = '@' + result;
-            console.log('lifestyle after', this.profile);
             this.updateDataPoint(event, control);
           }
         }
@@ -347,7 +342,6 @@ export class LifestyleComponent implements OnInit {
       this.form.patchValue({ [control]: null });
     } else {
       if (this.form.controls[control].value !== 'other') {
-        console.log('updatedatapoint ', event);
         this.profile[control] = event;
       }
     }
@@ -358,12 +352,10 @@ export class LifestyleComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.httpError = false;
     this.httpErrorText = '';
-    console.log('updating lifestyle=', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
-      console.log('update response = ', responseData);
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
