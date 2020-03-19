@@ -11,6 +11,7 @@ import { PersonalComponent } from './features/profile/personal/personal.componen
 import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
 import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
 import { InterestsComponent } from './features/profile/interests/interests.component';
+import { UserQueryComponent } from './features/connections/user-query/user-query.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -75,6 +76,10 @@ const routes: Routes = [
   {
     path: 'profile-interests',
     component: InterestsComponent
+  },
+  {
+    path: 'user-query',
+    component: UserQueryComponent
   },
   {
     path: '',

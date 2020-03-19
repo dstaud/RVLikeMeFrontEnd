@@ -5,10 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ConnectionsRoutingModule } from './connections-routing.module';
 import { ConnectionsComponent } from './connections.component';
 import { SharedModule } from '../../shared/shared.module';
+import { UserQueryComponent } from './user-query/user-query.component';
 
 
 @NgModule({
-  declarations: [ConnectionsComponent],
+  declarations: [ConnectionsComponent, UserQueryComponent],
   imports: [
     CommonModule,
     ConnectionsRoutingModule,

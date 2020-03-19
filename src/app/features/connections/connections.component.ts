@@ -1,4 +1,3 @@
-import { isNumber } from 'util';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -6,8 +5,9 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { isNumber } from 'util';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+// import { finalize } from 'rxjs/operators';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
@@ -30,16 +30,12 @@ export class ConnectionsComponent implements OnInit {
   showQueryResults = false;
   showSingleMatchForumOffer = true;
   disableSingleMatchForumOffer = true;
-  disableCheckbox = false;
   showMultiMatchQuery = false;
-  showQueryCancel = false;
   showNoConnections = false;
   foundMatch = false;
   param: string;
   likeMeMatches = [];
-  queryResult: number;
-  queryResultMessage: string;
-  queryMatches = false;
+  matches = [];
 
   private backPath = '';
   private likeMeItem: string;
@@ -47,7 +43,6 @@ export class ConnectionsComponent implements OnInit {
   private likeMeAnswer: string;
   private profileKeys = [];
   private profileValues = [];
-  private matches = [];
   private likeMe: IlikeMeCounts;
   private likeMeCounts: Observable<IlikeMeCounts>;
   private profile: IuserProfile;
@@ -101,8 +96,6 @@ export class ConnectionsComponent implements OnInit {
         this.disableSingleMatchForumOffer = false;
         this.checkArray = this.form.get('likeMe') as FormArray;
         this.checkArray.push(new FormControl(this.param));
-      } else {
-        this.showSpinner = false;
       }
     });
 
@@ -164,7 +157,6 @@ export class ConnectionsComponent implements OnInit {
                 this.likeMeMatches.push(this.likeMeItem);
                 console.log(this.likeMeItem);
                 if (this.allUsersCount > 0) {
-                  this.showSpinner = false;
                   this.showAllMatches = true;
                 }
               }
@@ -172,11 +164,16 @@ export class ConnectionsComponent implements OnInit {
           }
         }
       }
-      if (!this.foundMatch) {
-        this.showNoConnections = true;
+      // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
+      // If it is real data, but no data found (i.e. !this.foundMatch) then show no results text
+      if (this.allUsersCount > 0) {
+        this.showSpinner = false;
+        if (!this.foundMatch) {
+          this.showNoConnections = true;
+        }
       }
     }, (error) => {
-      // this.showSpinner = false;
+      this.showSpinner = false;
       console.error(error);
     });
   }
@@ -220,6 +217,7 @@ export class ConnectionsComponent implements OnInit {
     }
   }
 
+  // If user clicks button to go to forum, collect data needed by forum about the matches and send as params
   onForum() {
     let name;
     let value;
@@ -238,13 +236,11 @@ export class ConnectionsComponent implements OnInit {
     this.router.navigate(['/forums'], { queryParams: { matches: this.matches }});
   }
 
+  // If user wants to query on more than one match point then set up an array of data from
+  // user selection and switch to child query component by setting showQueryResults = true.
   onQuery() {
-    this.showSpinner = true;
     let name = '';
     let value = '';
-
-    this.queryResult = 0;
-    this.queryResultMessage = '';
 
     let i: number = 0;
     this.checkArray.controls.forEach((item: FormControl) => {
@@ -255,75 +251,10 @@ export class ConnectionsComponent implements OnInit {
       this.matches.push(this.likeMeItem);
       i++;
     });
-    this.likeMeCountsSvc.getUserQueryCounts(this.matches)
-    .subscribe(data => {
-      this.queryResult = data;
-      if (this.queryResult === 0) {
-        this.queryResultMessage = 'No matches found';
-        this.queryMatches = false;
-        this.disableSingleMatchForumOffer = true;
-        this.disableCheckbox = true;
-      } else {
-        this.queryMatches = true;
-        this.disableSingleMatchForumOffer = false;
-        this.disableCheckbox = false;
-        if (this.queryResult === 1) {
-        this.queryResultMessage = this.queryResult + ' other that';
-        } else {
-          this.queryResultMessage = this.queryResult + ' others that';
-        }
-      }
-      for (let i=0; i < this.matches.length; i++) {
-        if (i > 0) {
-          this.queryResultMessage = this.queryResultMessage + ' and ';
-        }
-
-        // get original answers for those checked
-        if (this.matches[i].value === 'true') {
-          this.likeMeAnswer = this.translate.instant(
-            'interests.component.' + this.matches[i].name
-          );
-          if (this.queryResult === 1) {
-            this.likeMeDesc = this.translate.instant(
-              'connections.component.interest1'
-            );
-          } else {
-            this.likeMeDesc = this.translate.instant(
-              'connections.component.interest'
-            );
-          }
-        } else {
-          if (this.matches[i].value.substring(0, 1) !== '@') {
-            if (this.queryResult === 1) {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.' + this.matches[i].name + '1'
-                );
-            } else {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.' + this.matches[i].name
-                );
-            }
-            this.likeMeAnswer = this.translate.instant(
-              'profile.component.list.' + this.matches[i].name.toLowerCase() + '.' + this.matches[i].value.toLowerCase()
-              );
-          }
-        }
-        this.queryResultMessage = this.queryResultMessage + ' ' + this.likeMeAnswer;
-      }
-      this.showAllMatches = false;
-      this.showQueryResults = true;
-      this.showSingleMatchForumOffer = true;
-      this.showMultiMatchQuery = false;
-      this.showQueryCancel = true;
-      this.showSpinner = false;
-    }, (error) => {
-      console.warn('ERROR loading user counts: ', error);
-      if (error.message.includes('Unknown Error')) {
-        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-      }
-    });
+    this.showQueryResults = true;
   }
 
+  // If there is a checkbox checked, allow user to go to forums
   onQueryCheckboxChange(event) {
     if (event.checked) {
       this.disableSingleMatchForumOffer = false;
@@ -332,17 +263,9 @@ export class ConnectionsComponent implements OnInit {
     }
   }
 
-  onCancel() {
-    this.showSingleMatchForumOffer = true;
-    this.showMultiMatchQuery = false;
+  // Called from child component if user clicks on the cancel button there.
+  // In this case, hide query child component.
+  onCancelQuery(event: boolean) {
     this.showQueryResults = false;
-    this.showAllMatches = true;
-    this.showQueryCancel = false;
-    this.disableSingleMatchForumOffer = true;
-    for (let i = this.checkArray.length; i >= 0; i--) {
-      console.log('remove ', i);
-      this.checkArray.removeAt(i);
-    };
-    this.matches = [];
   }
 }

@@ -1,0 +1,17 @@
+<div class="mat-app-background background">
+  <button
+    [disabled]="disableSingleMatchForumOffer"
+    class="mat-raised-button button"
+    (click)="onForum()">
+      Connect through a forum
+  </button>
+  <button
+    class="mat-raised-button button"
+    (click)="onCancel()">
+      Cancel
+  </button>
+  <p>{{ queryResultMessage }}</p>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>
+
+

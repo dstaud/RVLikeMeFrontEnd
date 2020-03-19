@@ -87,7 +87,6 @@ export class PersonalComponent implements OnInit {
   showgenderSaveIcon = false;
   showmyStorySaveIcon = false;
   showprofileImageSaveIcon = true;
-  showCropper = false;
 
 
   /**** Select form select field option data. ****/
