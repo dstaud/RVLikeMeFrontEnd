@@ -4,13 +4,13 @@
     <button
       *ngIf="showSingleMatchForumOffer"
       [disabled]="disableSingleMatchForumOffer"
-      class="mat-raised-button button"
+      class="mat-raised-button button mat-primary"
       (click)="onForum()">
         Connect through a forum
     </button>
     <button
       *ngIf="showMultiMatchQuery"
-      class="mat-raised-button button"
+      class="mat-raised-button button mat-primary"
       (click)="onQuery()">
         Search for combined matches
     </button>

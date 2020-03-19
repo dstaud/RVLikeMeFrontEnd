@@ -79,7 +79,6 @@ export class ConnectionsComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Profile component=', data);
       this.profile = data;
     });
 
@@ -88,9 +87,7 @@ export class ConnectionsComponent implements OnInit {
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
-      console.log('INITIAL PARAMS=', params.item);
       if (params.item) {
-        console.log('INITIAL=', params);
         this.param = params.item;
         this.showSingleMatchForumOffer = true;
         this.disableSingleMatchForumOffer = false;
@@ -103,7 +100,6 @@ export class ConnectionsComponent implements OnInit {
     this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
     this.likeMeCounts
 /*     .pipe(finalize(() => {
-      console.log('finalized!');
       this.showSpinner = false;
     })) */
     .pipe(untilComponentDestroyed(this))
@@ -140,7 +136,6 @@ export class ConnectionsComponent implements OnInit {
             this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
             this.likeMeItem = JSON.parse(this.likeMeItem);
             this.likeMeMatches.push(this.likeMeItem);
-            console.log(this.likeMeItem);
             if (this.allUsersCount > 0) {
               this.showAllMatches = true;
             }
@@ -275,9 +270,8 @@ export class ConnectionsComponent implements OnInit {
   }
 
   // Called from child component if user clicks on the cancel button there.
-  // In this case, hide query child component.
+  // In this case, clear the array of checked items and hide query child component.
   onCancelQuery(event: boolean) {
-    // Clear array of checked items
     for (let i = this.checkArray.length; i >= 0; i--) {
       this.checkArray.removeAt(i);
     }

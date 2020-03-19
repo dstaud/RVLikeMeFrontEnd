@@ -71,7 +71,6 @@ export class UserQueryComponent implements OnInit {
 
     this.queryResult = 0;
     this.queryResultMessage = '';
-    console.log('MATCHES CHILD=', this.matches)
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
     .subscribe(data => {
       this.queryResult = data;
@@ -106,7 +105,6 @@ export class UserQueryComponent implements OnInit {
         }
         this.results.push(this.likeMeAnswer);
       }
-      this.disableSingleMatchForumOffer = false;
       this.showSpinner = false;
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
@@ -122,7 +120,6 @@ export class UserQueryComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('in Profile component=', data);
       this.profile = data;
     });
   }
@@ -130,7 +127,6 @@ export class UserQueryComponent implements OnInit {
   ngOnDestroy() {}
 
   onCancel() {
-    console.log('cancel!');
     this.onCancelQuery.emit();
   }
 
