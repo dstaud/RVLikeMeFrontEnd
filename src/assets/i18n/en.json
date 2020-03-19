@@ -266,7 +266,8 @@
     "livingFrugally": "living frugally",
     "gaming": "gaming",
     "musicalInstrument": "playing a musical instrument",
-    "programming": "computer programming"
+    "programming": "computer programming",
+    "mobileInternet": "mobile internet"
   },
   "landing-page.component": {
     "header": "RV Like Me"

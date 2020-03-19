@@ -180,7 +180,8 @@ export class ProfileComponent implements OnInit {
       }
 
       if (data.atv || data.motorcycle || data.travel || data.quilting || data.cooking || data.painting ||
-          data.blogging || data.livingFrugally || data.gaming || data.musicalInstrument || data.programming) {
+          data.blogging || data.livingFrugally || data.gaming || data.musicalInstrument || data.programming ||
+          data.mobileInternet) {
         this.interestsIndicator = 'sentiment_very_satisfied';
         this.interestsIndClass = 'has-interests';
       } else {

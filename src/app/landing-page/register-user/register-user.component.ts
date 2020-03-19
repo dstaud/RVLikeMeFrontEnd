@@ -82,7 +82,8 @@ export class RegisterUserComponent implements OnInit {
     livingFrugally: null,
     gaming: null,
     musicalInstrument: null,
-    programming: null
+    programming: null,
+    mobileInternet: null
   };
 
   constructor(private authSvc: AuthenticationService,

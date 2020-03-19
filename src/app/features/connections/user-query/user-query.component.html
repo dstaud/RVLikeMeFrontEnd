@@ -1,4 +1,4 @@
-<div class="mat-app-background background">
+<div>
   <button
     [disabled]="disableSingleMatchForumOffer"
     class="mat-raised-button button"
@@ -10,7 +10,12 @@
     (click)="onCancel()">
       Cancel
   </button>
-  <p>{{ queryResultMessage }}</p>
+  <p>{{ queryResultMessagePrefix }}</p>
+  <ul class="results">
+    <li *ngFor="let result of results">
+      {{ result }}
+    </li>
+  </ul>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 

@@ -266,7 +266,8 @@
     "livingFrugally": "viviendo frugalmente",
     "gaming": "juego de azar",
     "musicalInstrument": "instrumento musical",
-    "programming": "programación de computadoras"
+    "programming": "programación de computadoras",
+    "mobileInternet": "internet móvil"
   },
   "landing-page.component": {
     "header": "RV como yo"

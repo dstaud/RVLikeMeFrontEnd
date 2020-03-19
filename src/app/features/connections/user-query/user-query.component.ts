@@ -38,6 +38,8 @@ export class UserQueryComponent implements OnInit {
   showNoConnections = false;
   queryMatches = false;
   queryResultMessage: string;
+  queryResultMessagePrefix: string;
+  results = [];
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -74,44 +76,26 @@ export class UserQueryComponent implements OnInit {
     .subscribe(data => {
       this.queryResult = data;
       if (this.queryResult === 0) {
-        this.queryResultMessage = 'No matches found';
+        this.queryResultMessagePrefix = 'No others found for combo of:';
         this.queryMatches = false;
         this.disableSingleMatchForumOffer = true;
       } else {
         this.queryMatches = true;
         this.disableSingleMatchForumOffer = false;
         if (this.queryResult === 1) {
-        this.queryResultMessage = this.queryResult + ' other that';
+        this.queryResultMessagePrefix = this.queryResult + ' other found for combo of:';
         } else {
-          this.queryResultMessage = this.queryResult + ' others that';
+          this.queryResultMessagePrefix = this.queryResult + ' others found for combo of:';
         }
       }
       for (let i=0; i < this.matches.length; i++) {
-        if (i > 0) {
-          this.queryResultMessage = this.queryResultMessage + ' and ';
-        }
-
         // get original answers for those checked
         if (this.matches[i].value === 'true') {
           this.likeMeAnswer = this.translate.instant(
             'interests.component.' + this.matches[i].name
           );
-          if (this.queryResult === 1) {
-            this.likeMeDesc = this.translate.instant(
-              'connections.component.interest1'
-            );
-          } else {
-            this.likeMeDesc = this.translate.instant(
-              'connections.component.interest'
-            );
-          }
         } else {
           if (this.matches[i].value.substring(0, 1) !== '@') {
-            if (this.queryResult === 1) {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.' + this.matches[i].name + '1'
-                );
-            } else {
               this.likeMeDesc = this.translate.instant(
                 'connections.component.' + this.matches[i].name
                 );
@@ -119,9 +103,8 @@ export class UserQueryComponent implements OnInit {
             this.likeMeAnswer = this.translate.instant(
               'profile.component.list.' + this.matches[i].name.toLowerCase() + '.' + this.matches[i].value.toLowerCase()
               );
-          }
         }
-        this.queryResultMessage = this.queryResultMessage + ' ' + this.likeMeAnswer;
+        this.results.push(this.likeMeAnswer);
       }
       this.disableSingleMatchForumOffer = false;
       this.showSpinner = false;

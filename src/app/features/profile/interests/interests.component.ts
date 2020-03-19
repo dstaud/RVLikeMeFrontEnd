@@ -39,6 +39,8 @@ export class InterestsComponent implements OnInit {
   gaming: boolean = false;
   musicalInstrument: boolean = false;
   programming: boolean = false;
+  mobileInternet: boolean = false;
+
 
   // Spinner is for initial load from the database only.
   // The SaveIcon us shown whenever the user clicks on an interest.
@@ -66,7 +68,8 @@ export class InterestsComponent implements OnInit {
                 livingFrugally: new FormControl(''),
                 gaming: new FormControl(''),
                 musicalInstrument: new FormControl(''),
-                programming: new FormControl('')
+                programming: new FormControl(''),
+                mobileInternet: new FormControl('')
               });
 }
 
@@ -101,7 +104,8 @@ ngOnInit() {
       livingFrugally: this.profile.livingFrugally,
       gaming: this.profile.gaming,
       musicalInstrument: this.profile.musicalInstrument,
-      programming: this.profile.programming
+      programming: this.profile.programming,
+      mobileInternet: this.profile.mobileInternet
     });
 
     this.showSpinner = false;

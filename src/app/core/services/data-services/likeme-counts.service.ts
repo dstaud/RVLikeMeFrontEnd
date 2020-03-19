@@ -35,6 +35,7 @@ export interface IlikeMeCounts {
   gaming: number;
   musicalInstrument: number;
   programming: number;
+  mobileInternet: number;
 }
 
 @Injectable({
@@ -67,7 +68,8 @@ export class LikemeCountsService {
     livingFrugally: 0,
     gaming: 0,
     musicalInstrument: 0,
-    programming: 0
+    programming: 0,
+    mobileInternet: 0
   };
 
   private profile: IuserProfile;

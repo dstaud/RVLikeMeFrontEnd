@@ -40,6 +40,7 @@ export interface IuserProfile {
   gaming: boolean;
   musicalInstrument: boolean;
   programming: boolean;
+  mobileInternet: boolean;
 }
 
 @Injectable({
@@ -81,6 +82,7 @@ export class ProfileService {
     gaming: null,
     musicalInstrument: null,
     programming: null,
+    mobileInternet: null
   };
   private profileSubscription: any;
 
@@ -129,6 +131,7 @@ export class ProfileService {
       this.dataStore.profile.gaming = null;
       this.dataStore.profile.musicalInstrument = null;
       this.dataStore.profile.programming = null;
+      this.dataStore.profile.mobileInternet = null;
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,

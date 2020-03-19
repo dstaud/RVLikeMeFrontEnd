@@ -135,6 +135,15 @@ export class ConnectionsComponent implements OnInit {
                 'connections.component.interest'
               );
             }
+            this.foundMatch = true;
+            this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+            this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
+            this.likeMeItem = JSON.parse(this.likeMeItem);
+            this.likeMeMatches.push(this.likeMeItem);
+            console.log(this.likeMeItem);
+            if (this.allUsersCount > 0) {
+              this.showAllMatches = true;
+            }
           } else {
             if (!isNumber(this.profile[this.profileKeys[i]])) {
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
@@ -242,6 +251,8 @@ export class ConnectionsComponent implements OnInit {
     let name = '';
     let value = '';
 
+    this.matches = [];
+
     let i: number = 0;
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
@@ -266,6 +277,10 @@ export class ConnectionsComponent implements OnInit {
   // Called from child component if user clicks on the cancel button there.
   // In this case, hide query child component.
   onCancelQuery(event: boolean) {
+    // Clear array of checked items
+    for (let i = this.checkArray.length; i >= 0; i--) {
+      this.checkArray.removeAt(i);
+    }
     this.showQueryResults = false;
   }
 }

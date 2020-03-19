@@ -27,6 +27,11 @@
                   (change)="updateLifestyle('programming', $event)">
               {{ "interests.component.programming" | translate }}
       </mat-checkbox>
+      <mat-checkbox formControlName="mobileInternet"
+                  class="checkbox"
+                  (change)="updateLifestyle('mobileInternet', $event)">
+              {{ "interests.component.mobileInternet" | translate }}
+      </mat-checkbox>
       <mat-checkbox formControlName="cooking"
                   class="checkbox"
                   (change)="updateLifestyle('cooking', $event)">
