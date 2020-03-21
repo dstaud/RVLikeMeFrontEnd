@@ -36,6 +36,8 @@ export class LikemeCountsComponent implements OnInit {
   showRigType = false;
   showRvUse = false;
 
+  private likeMeDesc: string;
+  private likeMeAnswer: string;
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
 
@@ -74,15 +76,33 @@ export class LikemeCountsComponent implements OnInit {
 
       if (this.profile.aboutMe && this.aboutMeCount > 0  && this.profile.aboutMe.substring(0, 1) !== '@') {
         this.showAboutMe = true;
-        this.aboutMe = 'profile.component.list.aboutme.' + this.profile.aboutMe;
+        if (this.aboutMeCount === 1) {
+          this.likeMeDesc = this.translate.instant('connections.component.aboutMe1');
+        } else {
+          this.likeMeDesc = this.translate.instant('connections.component.aboutMe');
+        }
+        this.likeMeAnswer = this.translate.instant('profile.component.list.aboutme.' + this.profile.aboutMe.toLowerCase());
+        this.aboutMe = this.aboutMeCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
       if (this.profile.rigType && this.rigTypeCount > 0  && this.profile.rigType.substring(0, 1) !== '@') {
         this.showRigType = true;
-        this.rigType = 'profile.component.list.rigtype.' + this.profile.rigType.toLowerCase();
+        if (this.rigTypeCount === 1) {
+          this.likeMeDesc = this.translate.instant('connections.component.rigType1');
+        } else {
+          this.likeMeDesc = this.translate.instant('connections.component.rigType');
+        }
+        this.likeMeAnswer = this.translate.instant('profile.component.list.rigtype.' + this.profile.rigType.toLowerCase());
+        this.rigType = this.rigTypeCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
       if (this.profile.rvUse && this.rvUseCount > 0  && this.profile.rvUse.substring(0, 1) !== '@') {
         this.showRvUse = true;
-        this.rvUse = 'profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase();
+        if (this.rvUseCount === 1) {
+          this.likeMeDesc = this.translate.instant('connections.component.rvUse1');
+        } else {
+          this.likeMeDesc = this.translate.instant('connections.component.rvUse');
+        }
+        this.likeMeAnswer = this.translate.instant('profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase());
+        this.rvUse = this.rvUseCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
     }, (error) => {
       this.showSpinner = false;

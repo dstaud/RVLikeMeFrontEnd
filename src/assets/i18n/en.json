@@ -168,25 +168,25 @@
       "rvuse": {
         "ft": "full-time travel RV",
         "fs": "full-time stationary",
-        "fp": "full-time with part-time travel RV",
-        "ps": "part-time travel RV with a home base",
+        "fp": "F.T. with P.T. travel",
+        "ps": "P.T. travel w home-base",
         "ny": "an RVer wanna-be!",
         "other": "Other"
       },
       "worklife": {
         "retired": "retired",
         "military": "in the military",
-        "work-travel": "working full-time while traveling",
+        "work-travel": "working F.T./traveling",
         "workamping": "workamping",
         "work-full-time": "working full-time",
         "work-part-time": "working part-time",
-        "onleave": "on leave or disability",
+        "onleave": "on leave/disability",
         "other": "Other"
       },
       "campswithme": {
         "single": "by myself",
-        "partner": "with a spouse or partner",
-        "children": "with children",
+        "partner": "with spouse/partner",
+        "children": "with my children",
         "family": "the family",
         "friend": "a friend(s)",
         "other": "Other"
@@ -201,9 +201,9 @@
         "want": "never, but want to"
       },
       "traveling": {
-        "countries": "across the US and Canada/Mexico",
+        "countries": "across the US/Canada/Mexico",
         "country": "across the U.S.A.",
-        "regional": "regionally within my country",
+        "regional": "regionally within country",
         "none": "not at all",
         "other": "Other"
       },
@@ -211,7 +211,7 @@
         "a": "class A motorhome",
         "b": "class B moterhome",
         "c": "class C motorhome",
-        "sc": "class C (Super C) moterhome",
+        "sc": "Super C moterhome",
         "fw": "fifth wheel trailer",
         "tt": "travel trailer",
         "tc": "truck camper",

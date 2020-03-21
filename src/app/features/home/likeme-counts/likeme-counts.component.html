@@ -5,15 +5,15 @@
   </button>
   <button mat-button (click)="onClick('aboutMe')"
     *ngIf="showAboutMe" class="user-count">
-    {{ "home.component.aboutMePrefix" | translate}} {{ aboutMe | translate }}: {{ this.aboutMeCount }}
+    {{ aboutMe }}
   </button>
   <button mat-button (click)="onClick('rvUse')"
     *ngIf="showRvUse" class="user-count">
-      {{ "home.component.rvUsePrefix" | translate}} {{ rvUse | translate }}: {{ this.rvUseCount }}
+      {{ rvUse }}
   </button>
   <button mat-button (click)="onClick('rigType')"
   *ngIf="showRigType" class="user-count">
-    {{ "home.component.rigTypePrefix" | translate}} {{ rigType | translate }}: {{ this.rigTypeCount }}
+    {{ rigType }}
 </button>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

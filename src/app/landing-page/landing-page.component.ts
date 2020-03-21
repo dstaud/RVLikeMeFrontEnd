@@ -57,7 +57,7 @@ export class LandingPageComponent implements OnInit {
     this.windowHeight = window.innerHeight;
 
     // Randomly pick one of 2 landing page RV images
-    this.landingImageNbr = Math.floor(Math.random() * 2) + 1;
+    this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
 
     if (this.windowWidth > 600) {
       this.landingImage = 'landing-image' + this.landingImageNbr + '.jpeg';
