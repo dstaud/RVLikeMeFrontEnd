@@ -114,6 +114,6 @@ export class LikemeCountsComponent implements OnInit {
 
   onClick(clickedItem: string) {
     this.activateBackArrowSvc.setBackRoute('home');
-    this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a but and won't accept queryParams
+    this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a bug and won't accept queryParams
   }
 }

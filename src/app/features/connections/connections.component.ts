@@ -131,14 +131,7 @@ export class ConnectionsComponent implements OnInit {
                 'connections.component.interest'
               );
             }
-            this.foundMatch = true;
-            this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
-            this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
-            this.likeMeItem = JSON.parse(this.likeMeItem);
-            this.likeMeMatches.push(this.likeMeItem);
-            if (this.allUsersCount > 0) {
-              this.showAllMatches = true;
-            }
+            this.processMatch(this.profileKeys[i], this.profileValues[i]);
           } else {
             if (!isNumber(this.profile[this.profileKeys[i]])) {
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
@@ -154,14 +147,7 @@ export class ConnectionsComponent implements OnInit {
                 this.likeMeAnswer = this.translate.instant(
                   'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
                   );
-                this.foundMatch = true;
-                this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
-                this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
-                this.likeMeItem = JSON.parse(this.likeMeItem);
-                this.likeMeMatches.push(this.likeMeItem);
-                if (this.allUsersCount > 0) {
-                  this.showAllMatches = true;
-                }
+                  this.processMatch(this.profileKeys[i], this.profileValues[i]);
               }
             } else {
               if (this.profileValues[i] === 1) {
@@ -176,20 +162,13 @@ export class ConnectionsComponent implements OnInit {
               this.likeMeAnswer = this.translate.instant(
                 'profile.component.' + this.profileKeys[i]
                 );
-              this.foundMatch = true;
-              this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
-              this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
-              this.likeMeItem = JSON.parse(this.likeMeItem);
-              this.likeMeMatches.push(this.likeMeItem);
-              if (this.allUsersCount > 0) {
-                this.showAllMatches = true;
-              }
+                this.processMatch(this.profileKeys[i], this.profileValues[i]);
             }
           }
         }
       }
       // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
-      // If it is real data, but no data found (i.e. !this.foundMatch) then show no results text
+      // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
       if (this.allUsersCount > 0) {
         this.showSpinner = false;
         if (!this.foundMatch) {
@@ -204,6 +183,15 @@ export class ConnectionsComponent implements OnInit {
 
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
+  }
+
+  // Called from child component if user clicks on the cancel button there.
+  // In this case, clear the array of checked items and hide query child component.
+  onCancelQuery(event: boolean) {
+    for (let i = this.checkArray.length; i >= 0; i--) {
+      this.checkArray.removeAt(i);
+    }
+    this.showQueryResults = false;
   }
 
 
@@ -289,12 +277,14 @@ export class ConnectionsComponent implements OnInit {
     }
   }
 
-  // Called from child component if user clicks on the cancel button there.
-  // In this case, clear the array of checked items and hide query child component.
-  onCancelQuery(event: boolean) {
-    for (let i = this.checkArray.length; i >= 0; i--) {
-      this.checkArray.removeAt(i);
+  private processMatch(key: string, value: string) {
+    this.foundMatch = true;
+    this.likeMeItem = value + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+    this.likeMeItem = '{"id":"' + key + '", "match":"' + this.likeMeItem + '"}';
+    this.likeMeItem = JSON.parse(this.likeMeItem);
+    this.likeMeMatches.push(this.likeMeItem);
+    if (this.allUsersCount > 0) {
+      this.showAllMatches = true;
     }
-    this.showQueryResults = false;
   }
 }
