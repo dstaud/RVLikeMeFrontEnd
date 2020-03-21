@@ -29,6 +29,8 @@
     "resultPrefix2": "Otros encontrados para combo de",
     "gender": "otros que son",
     "gender1": "otro que son",
+    "yearOfBirth": "Otros",
+    "yearOfBirth1": "Otro",
     "homeCountry": "otros de",
     "homeCountry1": "otro de",
     "homeState": "otros de",
@@ -94,6 +96,7 @@
     "rig": "Mi RV",
     "interests": "Mi intereses",
     "aboutMe": "Describete",
+    "yearOfBirth": "alrededor de tu edad (+/- 5años)",
     "list": {
       "aboutme": {
         "dreamer": "soñando con RVing",

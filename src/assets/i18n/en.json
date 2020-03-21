@@ -29,6 +29,8 @@
     "resultPrefix2": "others found for combo of",
     "gender": "others who are",
     "gender1": "other who is",
+    "yearOfBirth": "others",
+    "yearOfBirth1": "other",
     "homeCountry": "others from",
     "homeCountry1": "other from",
     "homeState": "others from",
@@ -94,6 +96,7 @@
     "rig": "My rig",
     "interests": "My interests",
     "aboutMe": "Describe yourself",
+    "yearOfBirth": "around your age (+/- 5yrs)",
     "list": {
       "aboutme": {
         "dreamer": "dreaming of RVing",

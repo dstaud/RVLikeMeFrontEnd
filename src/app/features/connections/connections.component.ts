@@ -163,6 +163,27 @@ export class ConnectionsComponent implements OnInit {
                   this.showAllMatches = true;
                 }
               }
+            } else {
+              if (this.profileValues[i] === 1) {
+                this.likeMeDesc = this.translate.instant(
+                  'connections.component.' + this.profileKeys[i] + '1'
+                  );
+              } else {
+                this.likeMeDesc = this.translate.instant(
+                  'connections.component.' + this.profileKeys[i]
+                  );
+              }
+              this.likeMeAnswer = this.translate.instant(
+                'profile.component.' + this.profileKeys[i]
+                );
+              this.foundMatch = true;
+              this.likeMeItem = this.profileValues[i] + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+              this.likeMeItem = '{"id":"' + this.profileKeys[i] + '", "match":"' + this.likeMeItem + '"}';
+              this.likeMeItem = JSON.parse(this.likeMeItem);
+              this.likeMeMatches.push(this.likeMeItem);
+              if (this.allUsersCount > 0) {
+                this.showAllMatches = true;
+              }
             }
           }
         }

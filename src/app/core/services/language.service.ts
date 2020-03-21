@@ -12,6 +12,7 @@ export class LanguageService {
   constructor(private translate: TranslateService) { }
 
   public setLanguage(preferredLanguage: string): void {
+    console.log('LANGUAGE - set default to ', preferredLanguage);
     this.translate.setDefaultLang(preferredLanguage);
     this.language.next(preferredLanguage);
   }

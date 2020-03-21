@@ -63,10 +63,7 @@ export class AppComponent implements OnInit {
         if (this.authSvc.isLoggedIn()) {
           if (event.url === '/') {
             this.router.navigateByUrl('/home');
-            // this.getPreferredLanguage();
           } else {
-            // TODO: Race condition where title of page not set.
-            // this.getPreferredLanguage();
           }
         }
       }

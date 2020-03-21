@@ -102,9 +102,15 @@ export class UserQueryComponent implements OnInit {
                 'connections.component.' + this.matches[i].name
                 );
             }
-            this.likeMeAnswer = this.translate.instant(
-              'profile.component.list.' + this.matches[i].name.toLowerCase() + '.' + this.matches[i].value.toLowerCase()
-              );
+            if (this.matches[i].name === 'yearOfBirth') {
+              this.likeMeAnswer = this.translate.instant(
+                'profile.component.' + this.matches[i].name
+                );
+            } else {
+              this.likeMeAnswer = this.translate.instant(
+                'profile.component.list.' + this.matches[i].name.toLowerCase() + '.' + this.matches[i].value.toLowerCase()
+                );
+            }
         }
         this.results.push(this.likeMeAnswer);
       }

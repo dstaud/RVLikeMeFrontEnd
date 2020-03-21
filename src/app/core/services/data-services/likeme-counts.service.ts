@@ -11,6 +11,7 @@ import { SharedComponent } from '@shared/shared.component';
 export interface IlikeMeCounts {
   allUsersCount: number;
   gender: number;
+  yearOfBirth: number;
   homeCountry: number;
   homeState: number;
   aboutMe: number;
@@ -45,6 +46,7 @@ export class LikemeCountsService {
   private likeMeUserCounts: IlikeMeCounts = {
     allUsersCount: 0,
     gender: 0,
+    yearOfBirth: 0,
     homeCountry: 0,
     homeState: 0,
     aboutMe: 0,
@@ -93,6 +95,7 @@ export class LikemeCountsService {
     .subscribe(data => {
       this.dataStore.likeMeCounts = data;
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
+      console.log('COUNTS=', this.dataStore.likeMeCounts);
       // this._likeMeCounts.complete();
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
