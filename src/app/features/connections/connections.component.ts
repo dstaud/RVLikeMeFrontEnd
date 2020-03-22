@@ -49,6 +49,7 @@ export class ConnectionsComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
   private routeSubscription: any;
   private allUsersCount: number;
+  private queryParams: string;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -234,18 +235,17 @@ export class ConnectionsComponent implements OnInit {
     let name;
     let value;
     let i: number = 0;
-    this.matches = [];
 
+    this.queryParams = '{';
     this.activateBackArrowSvc.setBackRoute('connections');
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
       value = this.profile[item.value];
-      this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
-      this.likeMeItem = JSON.parse(this.likeMeItem);
-      this.matches.push(this.likeMeItem);
+      this.queryParams = this.queryParams + '"' + name + '":"' + value + '"';
       i++;
     });
-    this.router.navigate(['/forums'], { queryParams: { matches: this.matches }});
+    this.queryParams = this.queryParams + '}';
+    this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParams }});
   }
 
   // If user wants to query on more than one match point then set up an array of data from

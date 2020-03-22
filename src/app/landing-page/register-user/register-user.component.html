@@ -81,10 +81,10 @@
       </mat-form-field>
     </div>
     <div class="button">
-      <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
     </div>
     <div class="button">
-      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
+      <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
     </div>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

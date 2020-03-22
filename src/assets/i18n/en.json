@@ -53,7 +53,138 @@
     "interest1": "other interested in"
   },
   "forums.component": {
-    "header": "Forums"
+    "header": "Forums",
+    "yearOfBirth": "your age (+/- 5yrs)",
+    "atv": "interested in ATV off-roading",
+    "motorcycle": "interested in motorcycling",
+    "travel": "interested in traveling",
+    "quilting": "interested in quilting",
+    "cooking": "interested in cooking",
+    "painting": "interested in painting",
+    "blogging": "interested in blogging",
+    "livingFrugally": "interested in living frugally",
+    "gaming": "interested in gaming",
+    "musicalInstrument": "who play a musical instrument",
+    "programming": "interested in computer programming",
+    "mobileInternet": "interested in mobile internet",
+    "list": {
+      "aboutme": {
+        "dreamer": "dreaming of RVing",
+        "newbie": "new to RVing",
+        "experienced": "that are experienced RVers"
+      },
+      "gender": {
+        "m": "that are male",
+        "f": "that are female"
+      },
+      "homecountry": {
+        "usa": "from the United States",
+        "can": "from Canada",
+        "mex": "from Mexico"
+      },
+      "homestate": {
+        "al": "from Alabama",
+        "ak": "from Alaska",
+        "az": "from Arizona",
+        "ar": "from Arkansas",
+        "ca": "from California",
+        "co": "from Colorado",
+        "ct": "from Connecticut",
+        "de": "from Delaware",
+        "dc": "from District of Columbia",
+        "fl": "from Forida",
+        "ga": "from Georgia",
+        "hi": "from Hawaii",
+        "id": "from Idaho",
+        "il": "from Illinois",
+        "in": "from Indiana",
+        "ia": "from Iowa",
+        "ks": "from Kansas",
+        "ky": "from Kentucky",
+        "la": "from Louisiana",
+        "me": "from Maine",
+        "md": "from Maryland",
+        "ma": "from Massachusetts",
+        "mi": "from Michigan",
+        "mn": "from Minnesota",
+        "ms": "from Mississippi",
+        "mo": "from Missouri",
+        "mt": "from Montana",
+        "ne": "from Nebraska",
+        "nv": "from Nevada",
+        "nh": "from New Hampshire",
+        "nj": "from New Jersey",
+        "nm": "from New Mexico",
+        "ny": "from New York",
+        "nc": "from North Carolina",
+        "nd": "from North Dakota",
+        "oh": "from Ohio",
+        "ok": "from Oklahoma",
+        "or": "from Oregon",
+        "pa": "from Pennsylvania",
+        "sc": "from South Carolina",
+        "sd": "from South Dakota",
+        "tn": "from Tennessee",
+        "tx": "from Texas",
+        "ut": "from Utah",
+        "vt": "from Vermont",
+        "va": "from Virginia",
+        "wa": "from Washington",
+        "wv": "from West Virginia",
+        "wi": "from Wisconsin",
+        "wy": "from Wyoming"
+      },
+      "rvuse": {
+        "ft": "full-time travel RVing",
+        "fs": "that are full-time stationary",
+        "fp": "that F.T. with P.T. traveling",
+        "ps": "that P.T. travel w home-base",
+        "ny": "want to be RVers!"
+      },
+      "worklife": {
+        "retired": "that are retired",
+        "military": "that are in the military",
+        "work-travel": "that are working F.T./traveling",
+        "workamping": "that are workamping",
+        "work-full-time": "that are working full-time",
+        "work-part-time": "that are working part-time",
+        "onleave": "on leave/disability"
+      },
+      "campswithme": {
+        "single": "that RV by themselves",
+        "partner": "that RV with spouse/partner",
+        "children": "that RV with their children",
+        "family": "that RV with their family",
+        "friend": "that RV with a friend(s)"
+      },
+      "boondocking": {
+        "most": "that boondock most of the time",
+        "alot": "that boondock a lot of the time",
+        "some": "that boondock some of the time",
+        "while": "that boondock once in a while",
+        "haveto": "that boondock when they have to",
+        "rarely": "rarely or never boondock",
+        "want": "never boondock, but want to"
+      },
+      "traveling": {
+        "countries": "traveling across the US/Canada/Mexico",
+        "country": "traveling across the U.S.A.",
+        "regional": "traveling regionally within country",
+        "none": "do not travel"
+      },
+      "rigtype": {
+        "a": "with a class A motorhome",
+        "b": "with a class B moterhome",
+        "c": "with a class C motorhome",
+        "sc": "with a Super C moterhome",
+        "fw": "with a fifth wheel trailer",
+        "tt": "with a travel trailer",
+        "tc": "with a truck camper",
+        "ft": "with a folding trailer",
+        "v": "with a van",
+        "cb": "with a customized bus"
+      }
+    }
   },
   "home.component": {
     "header": "Home",

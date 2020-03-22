@@ -10,12 +10,14 @@
     (click)="onCancel()">
     {{ "connections.component.cancelButton" | translate }}
   </button>
-  <p>{{ queryResultMessagePrefix }}</p>
-  <ul class="results">
-    <li *ngFor="let result of results">
-      {{ result }}
-    </li>
-  </ul>
+  <h3 matsubheader>{{ queryResultMessagePrefix }}</h3>
+  <mat-list>
+    <mat-list-item
+      *ngFor="let result of results"
+      class="list-item">
+      <mat-icon class="list-item">fiber_manual_record</mat-icon>{{ result }}
+    </mat-list-item>
+  </mat-list>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 

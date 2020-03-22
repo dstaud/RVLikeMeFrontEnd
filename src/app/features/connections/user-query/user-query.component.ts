@@ -48,6 +48,8 @@ export class UserQueryComponent implements OnInit {
   private likeMeItem: string;
   private likeMeAnswer: string;
   private likeMeDesc: string;
+  private queryParam: string;
+  private totalLength = 0;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -90,6 +92,7 @@ export class UserQueryComponent implements OnInit {
           'connections.component.resultPrefix2') + ':';
         }
       }
+      this.queryParam = '{';
       for (let i=0; i < this.matches.length; i++) {
         // get original answers for those checked
         if (this.matches[i].value === 'true') {
@@ -97,11 +100,9 @@ export class UserQueryComponent implements OnInit {
             'interests.component.' + this.matches[i].name
           );
         } else {
-          if (this.matches[i].value.substring(0, 1) !== '@') {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.' + this.matches[i].name
-                );
-            }
+            this.likeMeDesc = this.translate.instant(
+              'connections.component.' + this.matches[i].name
+            );
             if (this.matches[i].name === 'yearOfBirth') {
               this.likeMeAnswer = this.translate.instant(
                 'profile.component.' + this.matches[i].name
@@ -113,7 +114,10 @@ export class UserQueryComponent implements OnInit {
             }
         }
         this.results.push(this.likeMeAnswer);
+        this.queryParam = this.queryParam + '"' + this.matches[i].name + '":"' + this.matches[i].value + '"';
+        if (i !== this.matches.length - 1) { this.queryParam = this.queryParam + ','}
       }
+      this.queryParam = this.queryParam + '}';
       this.showSpinner = false;
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
@@ -146,6 +150,6 @@ export class UserQueryComponent implements OnInit {
     this.matches = [];
 
     this.activateBackArrowSvc.setBackRoute('connections');
-    this.router.navigate(['/forums'], { queryParams: { matches: this.matches }});
+    this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParam }});
   }
 }

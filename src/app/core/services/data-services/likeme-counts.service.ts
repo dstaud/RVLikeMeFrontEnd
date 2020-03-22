@@ -116,7 +116,7 @@ export class LikemeCountsService {
       value = value + '|' + query[i].value;
     }
 
-    return this.likeMeCountsSubscription = this.http.get(`${this.dataSvcURL}/user-query`,
+    return this.http.get(`${this.dataSvcURL}/user-query`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
       params: {name, value}
