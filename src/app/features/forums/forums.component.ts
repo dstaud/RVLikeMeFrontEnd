@@ -59,6 +59,8 @@ export class ForumsComponent implements OnInit {
     let likeMe: string;
     let name: string;
     let value: string;
+    let names = '';
+    let values = '';
     let likeMeJson: string;
     let forumItem: string;
 
@@ -77,30 +79,31 @@ export class ForumsComponent implements OnInit {
         }
       }
       this.matchesDisplay.push(this.translate.instant(forumItem));
-      likeMeJson = JSON.parse('{"name":"' + name + '","value":"' + value + '"}');
-      if (this.forumKey) {
-        this.forumKey = this.forumKey + '|';
+      if (names) {
+        names = names + '|';
+        values = values + '|';
       }
-      this.forumKey = this.forumKey + name + ':' + value;
+      names = names + name;
+      values = values + value;
     }
-    console.log(this.forumKey);
+    console.log(names, values);
     console.log(this.matchesDisplay);
 
-    this.forumSvc.getGroup(this.forumKey)
+    this.forumSvc.getGroup(names, values)
     .subscribe(data => {
       this.showSpinner = false;
       console.log('GROUP ', data);
     }, error => {
-      if (error.status === 401) {
-        this.createForum();
+      if (error.status === 404) {
+        this.createForum(names, values);
       } else {
         console.log(error);
       }
     });
   }
 
-  private createForum() {
-    this.forumSvc.addGroup(this.forumKey)
+  private createForum(names: string, values: string) {
+    this.forumSvc.addGroup(names, values)
     .subscribe(data => {
       this.showSpinner = false;
       console.log('GROUP ADD ', data);
