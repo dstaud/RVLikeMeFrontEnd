@@ -17,7 +17,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
   styleUrls: ['./forums.component.scss']
 })
 export class ForumsComponent implements OnInit {
-  matchesDisplay = [];
+  matches = [];
   forumKey: string;
   showSpinner = false;
 
@@ -105,7 +105,7 @@ export class ForumsComponent implements OnInit {
           forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
         }
       }
-      this.matchesDisplay.push(this.translate.instant(forumItem));
+      this.matches.push(this.translate.instant(forumItem));
       if (names) {
         names = names + '|';
         values = values + '|';
@@ -114,7 +114,7 @@ export class ForumsComponent implements OnInit {
       values = values + value;
     }
     console.log(names, values);
-    console.log(this.matchesDisplay);
+    console.log(this.matches);
 
     // Check if group already exists
     this.forumSvc.getGroup(names, values)
@@ -171,8 +171,13 @@ export class ForumsComponent implements OnInit {
       }
       this.showSpinner = false;
     }, error => {
+      if (error.status === 404) {
+        console.log('404');
+        this.showSpinner = false;
+      } else {
       console.log(error);
       this.showSpinner = false;
+      }
     });
   }
 
@@ -186,25 +191,12 @@ export class ForumsComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
         console.log('updated profile = ', responseData);
-        // this.getPosts(this.forumID);
+        this.getPosts(this.forumID);
+        this.showSpinner = false;
       }, error => {
         console.log(error);
+        this.showSpinner = false;
       });
-    }, error => {
-      console.log(error);
-      this.showSpinner = false;
-    });
-  }
-
-  private getPosts(forumID: string): void {
-    this.forumSvc.getPosts(forumID)
-    .subscribe(posts => {
-      if (posts.length === 0) {
-        console.log('no posts found!');
-      } else {
-        console.log('posts found!', posts);
-      }
-      this.showSpinner = false;
     }, error => {
       console.log(error);
       this.showSpinner = false;

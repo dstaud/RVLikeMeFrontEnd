@@ -3,6 +3,22 @@
   margin-top: 50px;
 }
 
+mat-icon {
+  font-size: 80%;
+}
+
+.matches {
+  margin-left: 5px;
+  font-size: 90%;
+}
+
+.list-item {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  padding-left: 5px;
+}
+
 .spinner {
   position: fixed;
   margin: auto;

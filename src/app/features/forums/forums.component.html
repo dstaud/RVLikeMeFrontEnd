@@ -1,5 +1,11 @@
 <div class="mat-app-background background">
-  <h2 class="mat-h2">Forums content</h2>
+  <span>Group forum for people</span>
+  <span class="matches">
+    <span *ngFor="let match of matches" class="matches"><br>- {{ match }}</span>
+  </span>
+  <mat-divider></mat-divider>
+  <app-rvlm-posts
+    >
+  </app-rvlm-posts>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
-
