@@ -37,6 +37,14 @@ export class ForumService {
     });
   }
 
+  getGroups(groups: Array<string>): Observable<any> {
+    return this.http.get(`${this.dataSvcURL}/forum-group`,
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+      params: { "groups": groups }
+    });
+  }
+
   addGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');
     let kValues = values.split('|');
@@ -47,9 +55,17 @@ export class ForumService {
     }
     keyValues = keyValues + '}';
     keyValues = JSON.parse(keyValues);
-    console.log('KEY VALUES=', keyValues);
+    console.log('KEY VALUES ADD=', keyValues);
 
     return this.http.post(`${this.dataSvcURL}/forum-group`, keyValues,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
+  getPosts(forumID: string): Observable<any> {
+    return this.http.get(`${this.dataSvcURL}/forum-posts`,
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+      params: { "forumID": forumID }
+    });
   }
 }

@@ -114,23 +114,23 @@ export class AppComponent implements OnInit {
 
       this.userProfile
       .pipe(untilComponentDestroyed(this))
-      .subscribe(data => {
-        console.log('in app component=', data);
-        if (data.language) {
-          console.log('Setting Language to ', data.language);
-          this.language.setLanguage(data.language);
+      .subscribe(profile => {
+        console.log('in app component=', profile);
+        if (profile.language) {
+          console.log('Setting Language to ', profile.language);
+          this.language.setLanguage(profile.language);
         } else {
           console.log('Setting Language to default');
           this.language.setLanguage('en');
         }
-        if (data.colorThemePreference) {
-          this.themeSvc.setGlobalColorTheme(data.colorThemePreference);
+        if (profile.colorThemePreference) {
+          this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
         } else {
           this.themeSvc.setGlobalColorTheme('light-theme');
         }
 
         // When we have actual profile data from the database, then go get the counts that will be used on the home page
-        if (data.firstName) {
+        if (profile.firstName) {
           this.likeMeCountsSvc.getLikeMeCounts();
         }
       }, (error) => {

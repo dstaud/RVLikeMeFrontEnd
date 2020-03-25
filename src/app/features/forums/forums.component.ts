@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TranslateService } from '@ngx-translate/core';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { Observable } from 'rxjs';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ForumService } from '@services/data-services/forum.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 @Component({
   selector: 'app-rvlm-forums',
@@ -21,11 +24,17 @@ export class ForumsComponent implements OnInit {
   private backPath = '';
   private routeSubscription: any;
   private queryParams: any;
-  private forumName: string;
+  private forumID: string;
+
+  // Interface for profile data
+  profile: IuserProfile;
+
+  userProfile: Observable<IuserProfile>;
 
   constructor(public translate: TranslateService,
               private auth: AuthenticationService,
               private location: Location,
+              private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private route: ActivatedRoute,
@@ -39,6 +48,16 @@ export class ForumsComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
+    this.userProfile = this.profileSvc.profile;
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      this.profile = data;
+    }, (error) => {
+      console.error(error);
+    });
+
     // If coming from the connections page or user-query page, will get parameters that can be converted to JSON
     // Since the actual keys of the JSON object will be unknown, we iterate through to determine the keys and then
     // can use that to get the value from the original object as well.
@@ -49,25 +68,33 @@ export class ForumsComponent implements OnInit {
       if (params.queryParam) {
         this.queryParams = JSON.parse(params.queryParam);
         console.log('FORUM PARAMS=', this.queryParams);
+        this.getGroup();
+      } else {
+        this.getGroups();
+        this.showSpinner = false;
       }
-      this.getGroup();
     });
   }
 
-  private getGroup() {
+  ngOnDestroy() {}
+
+
+  private getGroup(): void {
     let param: string;
-    let likeMe: string;
     let name: string;
     let value: string;
     let names = '';
     let values = '';
-    let likeMeJson: string;
     let forumItem: string;
+    let nameArray = [];
+    let docNotAMatch = false;
+    let matchFound = false;
 
     this.showSpinner = true;
     this.forumKey = '';
     for (param in this.queryParams) {
       name = param;
+      nameArray.push(name);
       value = this.queryParams[param];
       if (value === 'true') {
         forumItem = 'forums.component.' + name;
@@ -89,27 +116,98 @@ export class ForumsComponent implements OnInit {
     console.log(names, values);
     console.log(this.matchesDisplay);
 
+    // Check if group already exists
     this.forumSvc.getGroup(names, values)
-    .subscribe(data => {
-      this.showSpinner = false;
-      console.log('GROUP ', data);
+    .subscribe(group => {
+      console.log('GROUP ', group, group.length);
+
+      // Query may return multiple because may be super-sets but want an exact match so check if extraneous fields returned.
+      for (let i = 0; i < group.length; i++) {
+        let rec = Object.keys(group[i]);
+        console.log('REC=', rec);
+        docNotAMatch = false;
+        for (let j = 0; j < rec.length; j++) {
+          if (!nameArray.includes(rec[j])) {
+            if (rec[j] !== 'createdBy' && rec[j] !== 'createdAt' && rec[j] !== 'updatedAt' && rec[j] !== '_id' && rec[j] !== '__v') {
+              console.log('EXTRA FIELD=', rec[j]);
+              docNotAMatch = true;
+            }
+          }
+        }
+        if (!docNotAMatch) {
+          matchFound = true;
+          this.forumID = group[i]._id;
+          console.log('MATCH FOUND!', this.forumID);
+          break;
+        }
+      }
+
+      // if no exact match, create the forum group
+      if (matchFound) {
+        this.getPosts(this.forumID);
+      } else {
+        this.createForum(names, values);
+      }
     }, error => {
+      // if no match at all, create the forum group
       if (error.status === 404) {
+        console.log('404');
         this.createForum(names, values);
       } else {
         console.log(error);
+        this.showSpinner = false;
       }
     });
   }
 
-  private createForum(names: string, values: string) {
-    this.forumSvc.addGroup(names, values)
-    .subscribe(data => {
+  private getGroups() {
+    console.log('FORUMS=', this.profile.forums);
+    this.forumSvc.getGroups(this.profile.forums)
+    .subscribe(groups => {
+      if (groups.length === 0) {
+        console.log('groups not found!');
+      } else {
+        console.log('groups found!', groups);
+      }
       this.showSpinner = false;
-      console.log('GROUP ADD ', data);
     }, error => {
-      this.showSpinner = false;
       console.log(error);
-    })
+      this.showSpinner = false;
+    });
+  }
+
+  private createForum(names: string, values: string): void {
+    this.forumSvc.addGroup(names, values)
+    .subscribe(group => {
+      this.forumID = group._id;
+      console.log('GROUP ADD ', this.forumID);
+      this.profile.forums.push(this.forumID);
+      this.profileSvc.updateProfile(this.profile)
+      .pipe(untilComponentDestroyed(this))
+      .subscribe ((responseData) => {
+        console.log('updated profile = ', responseData);
+        // this.getPosts(this.forumID);
+      }, error => {
+        console.log(error);
+      });
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
+  }
+
+  private getPosts(forumID: string): void {
+    this.forumSvc.getPosts(forumID)
+    .subscribe(posts => {
+      if (posts.length === 0) {
+        console.log('no posts found!');
+      } else {
+        console.log('posts found!', posts);
+      }
+      this.showSpinner = false;
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
   }
 }
