@@ -25,7 +25,8 @@
         "@navigation/*": ["app/core/navigation/*"],
         "@interfaces/*": ["app/interfaces/*"],
         "@shared/*": ["app/shared/*"],
-        "@dialogs/*": ["app/dialogs/*"]
+        "@dialogs/*": ["app/dialogs/*"],
+        "@assets/*": ["assets/*"]
     }
   },
   "angularCompilerOptions": {

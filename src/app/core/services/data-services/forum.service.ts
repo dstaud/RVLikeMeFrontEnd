@@ -38,7 +38,7 @@ export class ForumService {
   }
 
   getGroups(groups: Array<string>): Observable<any> {
-    return this.http.get(`${this.dataSvcURL}/forum-group`,
+    return this.http.get(`${this.dataSvcURL}/forum-groups`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
       params: { "groups": groups }
@@ -61,11 +61,36 @@ export class ForumService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
-  getPosts(forumID: string): Observable<any> {
+  getPosts(groupID: string): Observable<any> {
     return this.http.get(`${this.dataSvcURL}/forum-posts`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: { "forumID": forumID }
+      params: { "groupID": groupID }
     });
+  }
+
+  addPost(groupID: string, title: string, post:string, displayName: string, profileImageUrl: string): Observable<any> {
+    let titleEscaped = this.escapeJsonReservedCharacters(title);
+    let postEscaped = this.escapeJsonReservedCharacters(post);
+    let body = '{"groupID":"' + groupID +
+    '","title":"' + titleEscaped +
+    '","body":"' + postEscaped +
+    '","displayName":"' + displayName +
+    '","profileImageUrl":"' + profileImageUrl +
+    '"}'
+    console.log('BODY=', body)
+    let bodyJSON = JSON.parse(body);
+    console.log('BODYJSON=', body);
+    return this.http.post(`${this.dataSvcURL}/forum-post`, bodyJSON,
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
+  private escapeJsonReservedCharacters(string: string): string {
+    let newString = string;
+    newString = newString.replace(/"/g, "'").trim();
+    newString = newString.replace(/\\/g, "|");
+    newString = newString.replace(/\n/g, "\\n");
+    console.log(string, newString);
+    return newString;
   }
 }

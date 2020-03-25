@@ -1,0 +1,33 @@
+.container {
+  padding: 10px;
+}
+
+.profile-image {
+  float: left;
+}
+
+.profile-image-post {
+  float: left;
+  border-style: solid;
+  border-width: 1;
+  border-color: black;
+  width: 100%;
+  background-color: grey;
+}
+
+.image {
+  border-radius: 50%;
+}
+
+.postsContainer {
+  clear: left;
+  // opacity: 1;
+}
+
+.posts {
+  margin-top: 10px;
+}
+
+.body {
+  white-space: pre-line; // Convert JSON escaped \n back to new lines for display
+}

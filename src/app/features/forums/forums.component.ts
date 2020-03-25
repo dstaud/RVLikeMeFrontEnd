@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -10,6 +10,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { PostsComponent } from './posts/posts.component';
 
 @Component({
   selector: 'app-rvlm-forums',
@@ -17,14 +18,20 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
   styleUrls: ['./forums.component.scss']
 })
 export class ForumsComponent implements OnInit {
+
+  @ViewChild(PostsComponent) posts: PostsComponent;
+
   matches = [];
   forumKey: string;
   showSpinner = false;
+  groupID: string;
+  lessMatches = true;
+  showMoreOption = false;
 
   private backPath = '';
   private routeSubscription: any;
   private queryParams: any;
-  private forumID: string;
+
 
   // Interface for profile data
   profile: IuserProfile;
@@ -78,6 +85,13 @@ export class ForumsComponent implements OnInit {
 
   ngOnDestroy() {}
 
+  onLess() {
+    this.lessMatches = true;
+  }
+
+  onMore() {
+    this.lessMatches = false;
+  }
 
   private getGroup(): void {
     let param: string;
@@ -113,6 +127,11 @@ export class ForumsComponent implements OnInit {
       names = names + name;
       values = values + value;
     }
+    if (this.matches.length > 3) {
+      this.showMoreOption = true;
+    } else {
+      this.showMoreOption = false;
+    }
     console.log(names, values);
     console.log(this.matches);
 
@@ -136,15 +155,16 @@ export class ForumsComponent implements OnInit {
         }
         if (!docNotAMatch) {
           matchFound = true;
-          this.forumID = group[i]._id;
-          console.log('MATCH FOUND!', this.forumID);
+          this.groupID = group[i]._id;
+          console.log('MATCH FOUND!', this.groupID);
           break;
         }
       }
 
       // if no exact match, create the forum group
       if (matchFound) {
-        this.getPosts(this.forumID);
+        this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+        this.showSpinner = false;
       } else {
         this.createForum(names, values);
       }
@@ -182,16 +202,17 @@ export class ForumsComponent implements OnInit {
   }
 
   private createForum(names: string, values: string): void {
+    let profileImageUrl
     this.forumSvc.addGroup(names, values)
     .subscribe(group => {
-      this.forumID = group._id;
-      console.log('GROUP ADD ', this.forumID);
-      this.profile.forums.push(this.forumID);
+      this.groupID = group._id;
+      console.log('GROUP ADD ', this.groupID);
+      this.profile.forums.push(this.groupID);
       this.profileSvc.updateProfile(this.profile)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
         console.log('updated profile = ', responseData);
-        this.getPosts(this.forumID);
+        this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
       }, error => {
         console.log(error);

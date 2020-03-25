@@ -1,12 +1,21 @@
+@import './../../../styles/_variables';
+
 .background {
-  padding: 10px;
   margin-top: 50px;
+}
+
+.groupHeading {
+  background-color: #e0e0e0;
+  padding: 10px;
 }
 
 mat-icon {
   font-size: 80%;
 }
 
+.moreLess {
+  color: $primary-color;
+}
 .matches {
   margin-left: 5px;
   font-size: 90%;

@@ -1,1 +1,46 @@
-<p>posts works!</p>
+<div class="container">
+  <div class="addPostContainer">
+    <div id="profileImage" class="profile-image">
+      <img class="image"
+        [src]="profileImageUrl"
+        style="width:50px;height:50px;">
+    </div>
+    <div>
+      <button mat-button (click)="addPost()">
+        <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
+        <span>Add post as {{ displayName }}</span>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="showAddPost"
+    class="postsContainer">
+    <app-rvlm-add-post
+      [groupID]="groupID"
+      [displayName]="displayName"
+      [profileImageUrl]="profileImageUrl">
+    </app-rvlm-add-post>
+  </div>
+  <div class="postsContainer">
+    <mat-divider></mat-divider>
+    <div *ngIf="showFirstPost" class="posts">
+      Be the first to add a post for this group!
+    </div>
+    <div *ngIf="showPosts" class="posts">
+      <div *ngFor="let post of posts; let i=index">
+        <div>
+          <span class="mat-h2">{{ posts[i].title }}</span>
+        </div>
+        <div id="profileImage" class="profile-image-post">
+          <img class="image"
+            [src]="posts[i].profileImageUrl"
+            style="width:40px;height:40px;">
+          {{ posts[i].displayName }}
+        </div>
+        <div class="body">
+          {{ posts[i].body }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>
