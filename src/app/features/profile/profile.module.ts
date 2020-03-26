@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ImageCropperComponent } from './image-cropper/image-cropper.component';
-
+import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { ProfileComponent } from './profile.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProfileRoutingModule } from './profile-routing.module';
@@ -21,7 +21,8 @@ import { InterestsComponent } from './interests/interests.component';
     RvRigComponent,
     LifestyleComponent,
     ImageCropperComponent,
-    InterestsComponent
+    InterestsComponent,
+    ImageDialogComponent
   ],
   imports: [
     CommonModule,

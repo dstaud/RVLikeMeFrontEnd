@@ -15,6 +15,7 @@ import * as Sentry from '@sentry/browser';
 import {NgxImageCompressService} from 'ngx-image-compress';
 
 import { AppRoutingModule } from './app-routing.module';
+// import { ForumsModule } from './features/forums/forums.module'
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { SigninComponent } from './landing-page/signin/signin.component';
@@ -32,12 +33,11 @@ import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found
 import { ThemeService } from '@services/theme.service';
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
-import { ImageCropperComponent } from './features/profile/image-cropper/image-cropper.component';
-import { AddPostComponent } from './features/forums/posts/add-post/add-post.component';
+// import { ImageCropperComponent } from './features/profile/image-cropper/image-cropper.component';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
-import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
+// import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { MyStoryDialogComponent } from './dialogs/my-story-dialog/my-story-dialog.component';
 import { DesktopDialogComponent } from './dialogs/desktop-dialog/desktop-dialog.component';
 
@@ -79,11 +79,10 @@ export function getErrorHandler(): ErrorHandler {
     LearnMoreComponent,
     OtherDialogComponent,
     InstallDialogComponent,
-    ImageDialogComponent,
-    ImageCropperComponent,
+    // ImageDialogComponent,
+    // ImageCropperComponent,
     MyStoryDialogComponent,
-    DesktopDialogComponent,
-    AddPostComponent
+    DesktopDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
