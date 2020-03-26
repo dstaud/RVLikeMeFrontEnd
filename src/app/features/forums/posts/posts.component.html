@@ -27,9 +27,9 @@
       Be the first to add a post for this group!
     </div>
     <div *ngIf="showPosts">
-      <cdk-virtual-scroll-viewport autosize>
-        <div class="item" *cdkVirtualFor="let post of posts; let i=index">
-        <!-- <div *ngFor="let post of posts; let i=index"> -->
+      <!-- <cdk-virtual-scroll-viewport autosize> -->
+        <!-- <div class="item" *cdkVirtualFor="let post of posts; let i=index"> -->
+        <div *ngFor="let post of posts; let i=index">
           <div class="posts">
             <span class="mat-h2">{{ posts[i].title }}</span>
           </div>
@@ -53,7 +53,7 @@
           </div>
           <mat-divider></mat-divider>
         </div>
-      </cdk-virtual-scroll-viewport>
+      <!-- </cdk-virtual-scroll-viewport> -->
     </div>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

@@ -18,9 +18,9 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
 @Component({
   selector: 'app-rvlm-posts',
   templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}]
+  styleUrls: ['./posts.component.scss']
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  // providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}]
 /*   animations: [
     trigger('state', [
       state(
