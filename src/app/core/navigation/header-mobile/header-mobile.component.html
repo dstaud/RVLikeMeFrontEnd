@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" [className]="device === 'iPhone' ? 'toolbar' : 'toolbar mat-elevation-z4'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
+<mat-toolbar color="primary" [ngClass]="device === 'iPhone' ? 'toolbar' : 'toolbar mat-elevation-z4'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
   <div class="toolbar-image">
     <mat-icon
       *ngIf="showBackArrow"

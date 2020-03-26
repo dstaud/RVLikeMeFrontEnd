@@ -1,5 +1,5 @@
 <footer class="footer" fxFlexOffset="auto">
-  <mat-toolbar color="primary" class="toolbar" [className]="iPhoneXPlus ? 'footer-height-plus' : 'footer-height'" role="toolbar">
+  <mat-toolbar color="primary" class="toolbar" [ngClass]="iPhoneXPlus ? 'footer-height-plus' : 'footer-height'" role="toolbar">
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
       <button mat-button routerLink="/home" routerLinkActive="active-menu-item">
         <div class="menu-icon">

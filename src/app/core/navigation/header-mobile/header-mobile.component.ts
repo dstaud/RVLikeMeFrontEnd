@@ -78,6 +78,7 @@ export class HeaderMobileComponent implements OnInit {
     });
 
     this.device = this.deviceSvc.device;
+    console.log('DEVICE=', this.device)
 
     if (this.device === 'iPhone') {
       // arrow_back_ios icon not coming up at all regardless of this if
