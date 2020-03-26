@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ScrollingModule} from '@angular/cdk/scrolling';
 
 import { ForumsRoutingModule } from './forums-routing.module';
 import { ForumsComponent } from './forums.component';
@@ -13,7 +14,8 @@ import { AddPostComponent } from './posts/add-post/add-post.component';
   imports: [
     CommonModule,
     ForumsRoutingModule,
-    SharedModule
+    SharedModule,
+    ScrollingModule
   ]
 })
 export class ForumsModule { }

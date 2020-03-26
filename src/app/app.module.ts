@@ -8,6 +8,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+// import { ScrollingModule} from '@angular/cdk/scrolling';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import * as Sentry from '@sentry/browser';
@@ -102,6 +103,7 @@ export function getErrorHandler(): ErrorHandler {
     FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
+    // ScrollingModule
   ],
   providers: [
     WindowService,

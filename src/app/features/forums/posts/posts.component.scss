@@ -2,17 +2,34 @@
   padding: 10px;
 }
 
+cdk-virtual-scroll-viewport {
+  height: 400px;
+  width: 300px;
+}
+
+.item {
+  box-sizing: border-box;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* &:first-child {
+  border: none;
+}
+
+&:nth-child(2n) {
+  height: 100px;
+} */
+
 .profile-image {
   float: left;
 }
 
 .profile-image-post {
   float: left;
-  border-style: solid;
-  border-width: 1;
-  border-color: black;
-  width: 100%;
-  background-color: grey;
+  // width: 100%;
 }
 
 .image {
@@ -26,8 +43,31 @@
 
 .posts {
   margin-top: 10px;
+  // height: 30px;
 }
 
 .body {
-  white-space: pre-line; // Convert JSON escaped \n back to new lines for display
+  white-space: pre-line; // Convert JSON escaped \n back to new lines for display'
+  clear: left;
+  margin-top: 10px;
+}
+
+.nameAndDate {
+  margin-left: 50px;
+  font-size: 80%;
+  line-height: 1.5;
+}
+
+mat-divider {
+  border-top-width: 3px;
+  margin-top: 5px;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

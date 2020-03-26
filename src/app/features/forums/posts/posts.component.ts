@@ -1,5 +1,6 @@
-import { Component, OnInit} from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/core';
+import {FixedSizeVirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
+// import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -9,10 +10,17 @@ import { ForumService } from '@services/data-services/forum.service';
 
 export type FadeState = 'visible' | 'hidden';
 
+export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
+  constructor() {
+    super(50, 250, 500);
+  }
+}
 @Component({
   selector: 'app-rvlm-posts',
   templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.scss']
+  styleUrls: ['./posts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}]
 /*   animations: [
     trigger('state', [
       state(
@@ -60,6 +68,8 @@ export class PostsComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {}
+
 /*   animationDone(event: AnimationEvent) {
     console.log('EVENT=', event)
     if (event.fromState === 'visible' && event.toState === 'hidden') {
@@ -67,11 +77,11 @@ export class PostsComponent implements OnInit {
     }
   } */
 
-  addPost() {
+  addPost(): void {
     this.showAddPost = true;
   }
 
-  getPosts(groupID, profileImageUrl, displayName): void {
+  getPosts(groupID: string, profileImageUrl: string, displayName: string): void {
     let post: string;
     let postJSON: JSON;
 
@@ -80,8 +90,10 @@ export class PostsComponent implements OnInit {
     if (profileImageUrl) {
       this.profileImageUrl = profileImageUrl;
     }
-    this.displayName = displayName
+    this.displayName = displayName;
+    this.posts = [];
     this.forumSvc.getPosts(groupID)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
       console.log('RESULT=', postResult);
       if (postResult.length === 0) {
@@ -93,10 +105,11 @@ export class PostsComponent implements OnInit {
         let titleEscaped = this.escapeJsonReservedCharacters(postResult[0].title);
         let bodyEscaped = this.escapeJsonReservedCharacters(postResult[0].body);
         post = '{"title":"' + titleEscaped +
-                    '","body":"' + bodyEscaped +
-                    '","displayName":"' + postResult[0].userDisplayName +
-                    '","profileImageUrl":"' + postResult[0].userProfileUrl +
-                    '"}';
+                '","body":"' + bodyEscaped +
+                '","displayName":"' + postResult[0].userDisplayName +
+                '","profileImageUrl":"' + postResult[0].userProfileUrl +
+                '","createdAt":"' + postResult[0].createdAt +
+                '"}';
         postJSON = JSON.parse(post);
         this.posts.push(postJSON);
         for (let i=1; i < postResult.length; i++) {
@@ -106,6 +119,7 @@ export class PostsComponent implements OnInit {
                     '","body":"' + bodyEscaped +
                     '","displayName":"' + postResult[i].userDisplayName +
                     '","profileImageUrl":"' + postResult[i].userProfileUrl +
+                    '","createdAt":"' + postResult[i].createdAt +
                     '"}';
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);
@@ -119,6 +133,15 @@ export class PostsComponent implements OnInit {
       console.log(error);
       this.showSpinner = false;
     });
+  }
+
+  postAddComplete(event: string): void {
+    console.log('back in posts', event);
+    if (event ==='saved') {
+      console.log('getting posts');
+      this.getPosts(this.groupID, this.profileImageUrl, this.displayName);
+    }
+    this.showAddPost = false;
   }
 
   private escapeJsonReservedCharacters(string: string): string {

@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="addPostContainer">
+  <div>
     <div id="profileImage" class="profile-image">
       <img class="image"
         [src]="profileImageUrl"
@@ -17,7 +17,8 @@
     <app-rvlm-add-post
       [groupID]="groupID"
       [displayName]="displayName"
-      [profileImageUrl]="profileImageUrl">
+      [profileImageUrl]="profileImageUrl"
+      (postAddComplete)="postAddComplete($event)">
     </app-rvlm-add-post>
   </div>
   <div class="postsContainer">
@@ -25,21 +26,34 @@
     <div *ngIf="showFirstPost" class="posts">
       Be the first to add a post for this group!
     </div>
-    <div *ngIf="showPosts" class="posts">
-      <div *ngFor="let post of posts; let i=index">
-        <div>
-          <span class="mat-h2">{{ posts[i].title }}</span>
+    <div *ngIf="showPosts">
+      <cdk-virtual-scroll-viewport autosize>
+        <div class="item" *cdkVirtualFor="let post of posts; let i=index">
+        <!-- <div *ngFor="let post of posts; let i=index"> -->
+          <div class="posts">
+            <span class="mat-h2">{{ posts[i].title }}</span>
+          </div>
+          <div class="posts">
+            <div>
+              <img class="image profile-image-post"
+              [src]="posts[i].profileImageUrl"
+              style="width:40px;height:40px;">
+            </div>
+            <div class="nameAndDate">
+              <div>
+                {{ posts[i].displayName }}
+              </div>
+              <div>
+                {{ posts[i].createdAt | date:'short'}}
+              </div>
+            </div>
+          </div>
+          <div class="body">
+            {{ posts[i].body }}
+          </div>
+          <mat-divider></mat-divider>
         </div>
-        <div id="profileImage" class="profile-image-post">
-          <img class="image"
-            [src]="posts[i].profileImageUrl"
-            style="width:40px;height:40px;">
-          {{ posts[i].displayName }}
-        </div>
-        <div class="body">
-          {{ posts[i].body }}
-        </div>
-      </div>
+      </cdk-virtual-scroll-viewport>
     </div>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

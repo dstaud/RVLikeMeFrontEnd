@@ -25,9 +25,10 @@
         <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onPost()">Post</button>
       </div>
       <div class="button">
-        <button class="mat-raised-button" (click)="onCancel()">Cancel</button>
+        <button class="mat-raised-button" (click)="doneWithAdd('canceled')">Cancel</button>
       </div>
     </form>
+    <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
   </div>
   <br>
 </div>

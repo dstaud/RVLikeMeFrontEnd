@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ForumService } from '@services/data-services/forum.service';
@@ -17,6 +17,10 @@ export class AddPostComponent implements OnInit {
   @Input('profileImageUrl')
   public profileImageUrl: string;
 
+  @Output() postAddComplete = new EventEmitter<string>();
+
+  showSpinner = false;
+
   form: FormGroup;
 
   constructor(private forumSvc: ForumService,
@@ -30,18 +34,23 @@ export class AddPostComponent implements OnInit {
   ngOnInit() {
   }
 
-  onCancel() {
-    console.log('cancel');
+  doneWithAdd(event: string) {
+    console.log('done with add event=', event);
+    this.postAddComplete.emit(event);
   }
 
   onPost() {
+    this.showSpinner = true;
     let postTitle = this.form.controls.title.value;
     let postText = this.form.controls.post.value;
     this.forumSvc.addPost(this.groupID, postTitle, postText, this.displayName, this.profileImageUrl)
     .subscribe(post => {
       console.log('POST RESULT=', post);
+      this.doneWithAdd('saved');
+      this.showSpinner = false;
     }, error => {
       console.log(error);
+      this.showSpinner = false;
     });
   }
 }
