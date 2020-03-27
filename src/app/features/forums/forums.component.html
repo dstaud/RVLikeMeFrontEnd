@@ -1,16 +1,30 @@
 <div class="mat-app-background background">
-  <div class="groupHeading">
-    <span>Group forum for people:</span>
-    <span *ngIf="lessMatches" class="matches">
-      <span *ngFor="let match of matches | slice:0:3" class="matches"><br>- {{ match }}</span>
-      <div *ngIf="showMoreOption" (click)="onMore()" class="moreLess">...More</div>
-    </span>
-    <span *ngIf="!lessMatches" class="matches">
-      <span *ngFor="let match of matches" class="matches"><br>- {{ match }}</span>
-      <div (click)="onLess()" class="moreLess">...Less</div>
-    </span>
+  <div *ngIf="showForumList">
+    <div *ngFor="let group of groupsAttributes; let i=index" (click)="onGroupSelect(i)">
+      <span class="group-header"><br>Group forum for people:</span>
+      <span *ngFor="let match of group" class="matches"><br>- {{ match }}</span>
+      <mat-divider></mat-divider>
+    </div>
   </div>
-  <!-- <mat-divider></mat-divider> -->
-  <app-rvlm-posts></app-rvlm-posts>
+
+  <div *ngIf="showForumPosts">
+    <div>
+      <div class="groupHeading">
+        <span>Group forum for people:</span>
+        <mat-icon class="search" fontSet="material-icons-outlined" (click)="onSearch()">search</mat-icon>
+        <span *ngIf="lessMatches" class="matches">
+          <span *ngFor="let match of matches | slice:0:3" class="matches"><br>- {{ match }}</span>
+          <div *ngIf="showMoreOption" (click)="onMore()" class="moreLess">...More</div>
+        </span>
+        <span *ngIf="!lessMatches" class="matches">
+          <span *ngFor="let match of matches" class="matches"><br>- {{ match }}</span>
+          <div (click)="onLess()" class="moreLess">...Less</div>
+        </span>
+      </div>
+    </div>
+    <div class="posts">
+      <app-rvlm-posts></app-rvlm-posts>
+    </div>
+  </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

@@ -104,12 +104,13 @@ export class ConnectionsComponent implements OnInit {
       this.showSpinner = false;
     })) */
     .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      this.allUsersCount = data.allUsersCount;
+    .subscribe(counts => {
+      this.allUsersCount = counts.allUsersCount;
+      this.likeMeMatches = [];
 
       // Get the key/value pairs of returned matches/counts into arrays
-      this.profileKeys = Object.keys(data);
-      this.profileValues = Object.values(data);
+      this.profileKeys = Object.keys(counts);
+      this.profileValues = Object.values(counts);
 
       // Go through the key array.  For each key, get associated value.
       // If the value is null or false, skip it.  This means there were no matches

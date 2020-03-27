@@ -69,6 +69,7 @@ export class LikemeCountsComponent implements OnInit {
       this.aboutMeCount = data.aboutMe;
       this.rigTypeCount = data.rigType;
       this.rvUseCount = data.rvUse;
+      console.log('ALL USER COUNT=', this.allUsersCount);
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
         this.showSpinner = false;

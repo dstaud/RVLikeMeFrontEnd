@@ -144,6 +144,14 @@ export class PostsComponent implements OnInit {
     this.showAddPost = false;
   }
 
+  like(row: number): void {
+    console.log('row=', row);
+  }
+
+  comment(row: number) {
+    console.log('row=', row);
+  }
+
   private escapeJsonReservedCharacters(string: string): string {
     let newString = string;
     newString = newString.replace(/"/g, "'").trim();

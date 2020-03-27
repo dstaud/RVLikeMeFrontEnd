@@ -5,12 +5,28 @@
 }
 
 .groupHeading {
+  float: left;
   background-color: #e0e0e0;
   padding: 10px;
+  width: 100%;
 }
 
-mat-icon {
+.group-header {
+  color: $primary-color;
+}
+
+.search {
+  float: right;
+  padding-right: 20px;
+  color: $primary-color;
+}
+
+/* mat-icon {
   font-size: 80%;
+} */
+
+.posts {
+  clear: left;
 }
 
 .moreLess {

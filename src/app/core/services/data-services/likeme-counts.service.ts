@@ -10,21 +10,17 @@ import { SharedComponent } from '@shared/shared.component';
 
 export interface IlikeMeCounts {
   allUsersCount: number;
-  gender: number;
-  yearOfBirth: number;
-  homeCountry: number;
-  homeState: number;
   aboutMe: number;
   rvUse: number;
-  worklife: number;
-  campsWithMe: number;
-  boondocking: number;
-  traveling: number;
   rigType: number;
+  worklife: number;
+  yearOfBirth: number;
   rigManufacturer: number;
   rigBrand: number;
   rigModel: number;
-  rigYear: number;
+  campsWithMe: number;
+  boondocking: number;
+  traveling: number;
   atv: number;
   motorcycle: number;
   travel: number;
@@ -37,6 +33,10 @@ export interface IlikeMeCounts {
   musicalInstrument: number;
   programming: number;
   mobileInternet: number;
+  homeCountry: number;
+  homeState: number;
+  gender: number;
+  rigYear: number;
 }
 
 @Injectable({
@@ -45,21 +45,17 @@ export interface IlikeMeCounts {
 export class LikemeCountsService {
   private likeMeUserCounts: IlikeMeCounts = {
     allUsersCount: 0,
-    gender: 0,
-    yearOfBirth: 0,
-    homeCountry: 0,
-    homeState: 0,
     aboutMe: 0,
     rvUse: 0,
-    worklife: 0,
-    campsWithMe: 0,
-    boondocking: 0,
-    traveling: 0,
     rigType: 0,
+    worklife: 0,
+    yearOfBirth: 0,
     rigManufacturer: 0,
     rigBrand: 0,
     rigModel: 0,
-    rigYear: 0,
+    campsWithMe: 0,
+    boondocking: 0,
+    traveling: 0,
     atv: 0,
     motorcycle: 0,
     travel: 0,
@@ -71,7 +67,11 @@ export class LikemeCountsService {
     gaming: 0,
     musicalInstrument: 0,
     programming: 0,
-    mobileInternet: 0
+    mobileInternet: 0,
+    homeCountry: 0,
+    homeState: 0,
+    gender: 0,
+    rigYear: 0
   };
 
   private profile: IuserProfile;
@@ -87,15 +87,64 @@ export class LikemeCountsService {
               private profileSvc: ProfileService,
               private shared: SharedComponent) { }
 
-  getLikeMeCounts() {
-    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts`,
+  getLikeMeCountsPriority() {
+    console.log('IN LIKEMECOUNTSPriority SERVICE');
+    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts-priority`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
     })
-    .subscribe(data => {
-      this.dataStore.likeMeCounts = data;
-      this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
+    .subscribe(counts => {
+      this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
+      this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
+      this.dataStore.likeMeCounts.rvUse = counts.rvUse;
+      this.dataStore.likeMeCounts.rigType = counts.rigType;
       console.log('COUNTS=', this.dataStore.likeMeCounts);
+
+      this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
+      this.getLikeMeCountsSecondary();
+      // this._likeMeCounts.complete();
+    }, (error) => {
+      console.warn('ERROR loading user counts: ', error);
+      if (error.message.includes('Unknown Error')) {
+        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+      }
+    });
+  }
+
+  getLikeMeCountsSecondary() {
+    console.log('IN LIKEMECOUNTSSecondary SERVICE');
+    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts-secondary`,
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
+    })
+    .subscribe(counts => {
+      this.dataStore.likeMeCounts.atv = counts.atv;
+      this.dataStore.likeMeCounts.blogging = counts.blogging;
+      this.dataStore.likeMeCounts.boondocking = counts.boondocking;
+      this.dataStore.likeMeCounts.campsWithMe = counts.campsWithMe;
+      this.dataStore.likeMeCounts.cooking = counts.cooking;
+      this.dataStore.likeMeCounts.gaming = counts.gaming;
+      this.dataStore.likeMeCounts.gender = counts.gender;
+      this.dataStore.likeMeCounts.homeCountry = counts.homeCountry;
+      this.dataStore.likeMeCounts.homeState = counts.homeState;
+      this.dataStore.likeMeCounts.livingFrugally = counts.livingFrugally;
+      this.dataStore.likeMeCounts.mobileInternet = counts.mobileInternet;
+      this.dataStore.likeMeCounts.motorcycle = counts.motorcycle;
+      this.dataStore.likeMeCounts.musicalInstrument = counts.musicalInstrument;
+      this.dataStore.likeMeCounts.painting = counts.painting;
+      this.dataStore.likeMeCounts.programming = counts.programming;
+      this.dataStore.likeMeCounts.quilting = counts.quilting;
+      this.dataStore.likeMeCounts.rigBrand = counts.rigBrand;
+      this.dataStore.likeMeCounts.rigManufacturer = counts.rigManufacturer;
+      this.dataStore.likeMeCounts.rigModel = counts.rigModel;
+      this.dataStore.likeMeCounts.rigYear = counts.rigYear;
+      this.dataStore.likeMeCounts.travel = counts.travel;
+      this.dataStore.likeMeCounts.traveling = counts.traveling;
+      this.dataStore.likeMeCounts.worklife = counts.worklife;
+      this.dataStore.likeMeCounts.yearOfBirth = counts.yearOfBirth;
+
+      console.log('COUNTS=', this.dataStore.likeMeCounts);
+      this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
       // this._likeMeCounts.complete();
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);

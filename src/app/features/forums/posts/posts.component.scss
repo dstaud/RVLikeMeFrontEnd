@@ -1,5 +1,11 @@
+@import './../../../../styles/_variables';
+
 .container {
   padding: 10px;
+}
+
+.add-post {
+  color: $primary-color;
 }
 
 cdk-virtual-scroll-viewport {
@@ -61,6 +67,24 @@ cdk-virtual-scroll-viewport {
 mat-divider {
   border-top-width: 3px;
   margin-top: 5px;
+}
+
+.response {
+  margin-top: 10px;
+}
+
+.reaction {
+  font-size: 90%;
+  color: $primary-color;
+}
+
+.like {
+  float: left;
+  margin-right: 20px;
+}
+
+.comment {
+  padding-left: 20px;
 }
 
 .spinner {

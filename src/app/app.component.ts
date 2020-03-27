@@ -131,7 +131,8 @@ export class AppComponent implements OnInit {
 
         // When we have actual profile data from the database, then go get the counts that will be used on the home page
         if (profile.firstName) {
-          this.likeMeCountsSvc.getLikeMeCounts();
+          console.log('getting counts!');
+          this.likeMeCountsSvc.getLikeMeCountsPriority();
         }
       }, (error) => {
         console.error(error);

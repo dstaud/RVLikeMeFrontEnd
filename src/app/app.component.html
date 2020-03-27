@@ -5,7 +5,7 @@
     <mat-sidenav-content fxLayout="column">
       <app-rvlm-header *ngIf="headerDesktopVisible || userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.gt-sm></app-rvlm-header>
       <app-rvlm-header-mobile *ngIf="headerVisible || userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-header-mobile>
-      <mat-divider></mat-divider>
+      <!-- <mat-divider></mat-divider> -->
       <main
         class="container mat-app-background"
         [ngClass]="{

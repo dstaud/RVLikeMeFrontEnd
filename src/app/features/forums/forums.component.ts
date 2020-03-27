@@ -19,18 +19,25 @@ import { PostsComponent } from './posts/posts.component';
 })
 export class ForumsComponent implements OnInit {
 
-  @ViewChild(PostsComponent) posts: PostsComponent;
+  //  Provide access to methods on the Posts component
+  @ViewChild(PostsComponent)
+  public posts: PostsComponent;
 
   matches = [];
-  forumKey: string;
+  groups = [];
+  groupsAttributes = [];
+  nameArray = [];
   showSpinner = false;
   groupID: string;
   lessMatches = true;
   showMoreOption = false;
+  showForumList = true;
+  showForumPosts = false;
+  names: string;
+  values: string;
 
   private backPath = '';
   private routeSubscription: any;
-  private queryParams: any;
 
 
   // Interface for profile data
@@ -73,10 +80,14 @@ export class ForumsComponent implements OnInit {
     .subscribe(params => {
       this.showSpinner = true;
       if (params.queryParam) {
-        this.queryParams = JSON.parse(params.queryParam);
-        console.log('FORUM PARAMS=', this.queryParams);
-        this.getGroup();
+        this.showForumList = false;
+        this.showForumPosts = true;
+        let queryParams = JSON.parse(params.queryParam);
+        console.log('FORUM PARAMS=', queryParams);
+        this.getGroup(queryParams);
       } else {
+        this.showForumList = true;
+        this.showForumPosts = false;
         this.getGroups();
         this.showSpinner = false;
       }
@@ -93,60 +104,34 @@ export class ForumsComponent implements OnInit {
     this.lessMatches = false;
   }
 
-  private getGroup(): void {
-    let param: string;
-    let name: string;
-    let value: string;
-    let names = '';
-    let values = '';
-    let forumItem: string;
-    let nameArray = [];
+  private getGroup(queryParams: any): void {
     let docNotAMatch = false;
     let matchFound = false;
 
+    console.log('In GetGroup, query Params=', queryParams)
     this.showSpinner = true;
-    this.forumKey = '';
-    for (param in this.queryParams) {
-      name = param;
-      nameArray.push(name);
-      value = this.queryParams[param];
-      if (value === 'true') {
-        forumItem = 'forums.component.' + name;
-      } else {
-        if (name === 'yearOfBirth') {
-          forumItem = 'forums.component.' + name;
-        } else {
-          forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
-        }
-      }
-      this.matches.push(this.translate.instant(forumItem));
-      if (names) {
-        names = names + '|';
-        values = values + '|';
-      }
-      names = names + name;
-      values = values + value;
-    }
+    this.getGroupAttributes(true, queryParams);
+
     if (this.matches.length > 3) {
       this.showMoreOption = true;
     } else {
       this.showMoreOption = false;
     }
-    console.log(names, values);
+
+    console.log(this.names, this.values);
     console.log(this.matches);
 
     // Check if group already exists
-    this.forumSvc.getGroup(names, values)
+    this.forumSvc.getGroup(this.names, this.values)
     .subscribe(group => {
       console.log('GROUP ', group, group.length);
 
       // Query may return multiple because may be super-sets but want an exact match so check if extraneous fields returned.
       for (let i = 0; i < group.length; i++) {
         let rec = Object.keys(group[i]);
-        console.log('REC=', rec);
         docNotAMatch = false;
         for (let j = 0; j < rec.length; j++) {
-          if (!nameArray.includes(rec[j])) {
+          if (!this.nameArray.includes(rec[j])) {
             if (rec[j] !== 'createdBy' && rec[j] !== 'createdAt' && rec[j] !== 'updatedAt' && rec[j] !== '_id' && rec[j] !== '__v') {
               console.log('EXTRA FIELD=', rec[j]);
               docNotAMatch = true;
@@ -161,23 +146,74 @@ export class ForumsComponent implements OnInit {
         }
       }
 
-      // if no exact match, create the forum group
+      // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
         this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
       } else {
-        this.createForum(names, values);
+        this.createForum(this.names, this.values);
       }
     }, error => {
       // if no match at all, create the forum group
       if (error.status === 404) {
         console.log('404');
-        this.createForum(names, values);
+        this.createForum(this.names, this.values);
       } else {
         console.log(error);
         this.showSpinner = false;
       }
     });
+  }
+
+  onSearch() {
+    console.log('search');
+  }
+
+  onGroupSelect(groupItem: number) {
+    let group = this.groups[groupItem];
+
+    this.groupID = group._id;
+    console.log('GROUPID=', this.groupID, group, groupItem);
+    this.getGroupAttributes(false, group);
+    console.log('GET POSTS=', this.groupID, this.profile.profileImageUrl, this.profile.displayName)
+    this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+    this.showForumList = false;
+    this.showForumPosts = true;
+  }
+
+  private getGroupAttributes(param: boolean, group: any) {
+    let name;
+    let value;
+    let forumItem;
+
+    this.names = '';
+    this.values = '';
+    this.matches = [];
+    for (name in group) {
+      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
+        if (param) {
+          this.nameArray.push(name);
+        }
+        value = group[name];
+        console.log('NAME=',name, 'VALUE=', value);
+        if (value === true) {
+          forumItem = 'forums.component.' + name;
+        } else {
+          if (name === 'yearOfBirth') {
+            forumItem = 'forums.component.' + name;
+          } else {
+            forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
+          }
+        }
+        this.matches.push(this.translate.instant(forumItem));
+        if (this.names) {
+          this.names = this.names + '|';
+          this.values = this.values + '|';
+        }
+        this.names = this.names + name;
+        this.values = this.values + value;
+      }
+    }
   }
 
   private getGroups() {
@@ -188,6 +224,14 @@ export class ForumsComponent implements OnInit {
         console.log('groups not found!');
       } else {
         console.log('groups found!', groups);
+        this.groups = groups;
+        this.groupsAttributes = [];
+        for (let i=0; i < groups.length; i++) {
+          this.getGroupAttributes(false,groups[i]);
+          console.log('MATCHES=', this.matches, i);
+          this.groupsAttributes.push(this.matches);
+        }
+        console.log('GROUPS=', this.groupsAttributes);
       }
       this.showSpinner = false;
     }, error => {

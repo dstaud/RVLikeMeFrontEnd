@@ -6,7 +6,7 @@
         style="width:50px;height:50px;">
     </div>
     <div>
-      <button mat-button (click)="addPost()">
+      <button mat-button (click)="addPost()" class="add-post">
         <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
         <span>Add post as {{ displayName }}</span>
       </button>
@@ -50,6 +50,16 @@
           </div>
           <div class="body">
             {{ posts[i].body }}
+          </div>
+          <div class="response">
+            <div (click)="like(i)" class="like">
+              <mat-icon class="reaction" fontSet="material-icons-outlined">thumb_up</mat-icon>
+              <span class="reaction">like</span>
+            </div>
+            <div (click)="comment(i)" class="comment">
+              <mat-icon class="reaction" fontSet="material-icons-outlined">comment</mat-icon>
+              <span class="reaction">comment</span>
+            </div>
           </div>
           <mat-divider></mat-divider>
         </div>
