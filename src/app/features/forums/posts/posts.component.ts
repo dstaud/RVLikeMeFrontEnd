@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Input, Output} from '@angular/core';
 import {FixedSizeVirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 // import { trigger, state, style, animate, transition } from '@angular/animations';
 
@@ -10,11 +10,11 @@ import { ForumService } from '@services/data-services/forum.service';
 
 export type FadeState = 'visible' | 'hidden';
 
-export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
+/* export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
   constructor() {
     super(50, 250, 500);
   }
-}
+} */
 @Component({
   selector: 'app-rvlm-posts',
   templateUrl: './posts.component.html',
@@ -45,7 +45,7 @@ export class PostsComponent implements OnInit {
   showSpinner = false;
   postsResult: string;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
-  displayName: string;
+  displayName: string
   showAddPost = false;
   showPosts = false;
   showFirstPost = false;
@@ -92,7 +92,8 @@ export class PostsComponent implements OnInit {
     }
     this.displayName = displayName;
     this.posts = [];
-    this.forumSvc.getPosts(groupID)
+    console.log('GETTING POSTS=', this.groupID);
+    this.forumSvc.getPosts(this.groupID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
       console.log('RESULT=', postResult);

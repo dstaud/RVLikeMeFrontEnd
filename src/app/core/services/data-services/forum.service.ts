@@ -73,11 +73,11 @@ export class ForumService {
     let titleEscaped = this.escapeJsonReservedCharacters(title);
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"groupID":"' + groupID +
-    '","title":"' + titleEscaped +
-    '","body":"' + postEscaped +
-    '","displayName":"' + displayName +
-    '","profileImageUrl":"' + profileImageUrl +
-    '"}'
+                '","title":"' + titleEscaped +
+                '","body":"' + postEscaped +
+                '","displayName":"' + displayName +
+                '","profileImageUrl":"' + profileImageUrl +
+                '"}'
     console.log('BODY=', body)
     let bodyJSON = JSON.parse(body);
     console.log('BODYJSON=', body);

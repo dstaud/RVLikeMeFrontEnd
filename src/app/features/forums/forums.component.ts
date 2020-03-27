@@ -31,7 +31,7 @@ export class ForumsComponent implements OnInit {
   groupID: string;
   lessMatches = true;
   showMoreOption = false;
-  showForumList = true;
+  showForumList = false;
   showForumPosts = false;
   names: string;
   values: string;
@@ -80,11 +80,12 @@ export class ForumsComponent implements OnInit {
     .subscribe(params => {
       this.showSpinner = true;
       if (params.queryParam) {
-        this.showForumList = false;
-        this.showForumPosts = true;
         let queryParams = JSON.parse(params.queryParam);
         console.log('FORUM PARAMS=', queryParams);
         this.getGroup(queryParams);
+        this.showForumList = false;
+        console.log('SHOWING POSTS');
+        this.showForumPosts = true;
       } else {
         this.showForumList = true;
         this.showForumPosts = false;
@@ -142,12 +143,15 @@ export class ForumsComponent implements OnInit {
           matchFound = true;
           this.groupID = group[i]._id;
           console.log('MATCH FOUND!', this.groupID);
+          this.updateProfileGroups();
           break;
         }
       }
 
       // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
+        console.log('GET POSTS=', this.groupID, this.profile.profileImageUrl, this.profile.displayName)
+        this.showForumPosts;
         this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
       } else {
@@ -173,12 +177,15 @@ export class ForumsComponent implements OnInit {
     let group = this.groups[groupItem];
 
     this.groupID = group._id;
+    console.log('original', this.groups);
+    console.log('new', this.groupsAttributes);
     console.log('GROUPID=', this.groupID, group, groupItem);
     this.getGroupAttributes(false, group);
     console.log('GET POSTS=', this.groupID, this.profile.profileImageUrl, this.profile.displayName)
-    this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
     this.showForumList = false;
+    console.log('SHOWING POSTS');
     this.showForumPosts = true;
+    this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
   }
 
   private getGroupAttributes(param: boolean, group: any) {
@@ -250,21 +257,28 @@ export class ForumsComponent implements OnInit {
     this.forumSvc.addGroup(names, values)
     .subscribe(group => {
       this.groupID = group._id;
+      this.updateProfileGroups();
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
+  }
+
+  private updateProfileGroups() {
+    console.log('GROUP=', this.groupID);
+    console.log('GROUPS=', this.profile.forums);
+    if (this.profile.forums.indexOf(this.groupID) === -1) {
       console.log('GROUP ADD ', this.groupID);
       this.profile.forums.push(this.groupID);
       this.profileSvc.updateProfile(this.profile)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
         console.log('updated profile = ', responseData);
-        this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
       }, error => {
         console.log(error);
         this.showSpinner = false;
       });
-    }, error => {
-      console.log(error);
-      this.showSpinner = false;
-    });
+    }
   }
 }

@@ -1,5 +1,5 @@
 <div class="mat-app-background background">
-  <div *ngIf="showForumList">
+  <div [hidden]="!showForumList">
     <div *ngFor="let group of groupsAttributes; let i=index" (click)="onGroupSelect(i)">
       <span class="group-header"><br>Group forum for people:</span>
       <span *ngFor="let match of group" class="matches"><br>- {{ match }}</span>
@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div *ngIf="showForumPosts">
+  <div [hidden]="!showForumPosts">
     <div>
       <div class="groupHeading">
         <span>Group forum for people:</span>
