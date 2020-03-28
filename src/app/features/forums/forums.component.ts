@@ -33,6 +33,7 @@ export class ForumsComponent implements OnInit {
   showMoreOption = false;
   showForumList = false;
   showForumPosts = false;
+  titlesOnly = false;
   names: string;
   values: string;
 
@@ -171,6 +172,10 @@ export class ForumsComponent implements OnInit {
 
   onSearch() {
     console.log('search');
+  }
+
+  onTitles() {
+    this.titlesOnly = !this.titlesOnly;
   }
 
   onGroupSelect(groupItem: number) {

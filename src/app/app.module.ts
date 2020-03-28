@@ -39,6 +39,7 @@ import { MyStoryDialogComponent } from './dialogs/my-story-dialog/my-story-dialo
 import { DesktopDialogComponent } from './dialogs/desktop-dialog/desktop-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
+import { CommentDialogComponent } from './dialogs/comment-dialog/comment-dialog.component';
 
 
 Sentry.init({
@@ -77,7 +78,8 @@ export function getErrorHandler(): ErrorHandler {
     OtherDialogComponent,
     InstallDialogComponent,
     MyStoryDialogComponent,
-    DesktopDialogComponent
+    DesktopDialogComponent,
+    CommentDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

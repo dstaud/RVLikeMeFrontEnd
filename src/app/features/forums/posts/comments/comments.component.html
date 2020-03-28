@@ -1,0 +1,23 @@
+<div>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ data.title }}</mat-label>
+      <textarea matInput
+          type="text"
+          placeholder="comment"
+          [style.height]="fieldHeight"
+          formControlName="comment"
+          cdkFocusInitial
+          [(ngModel)]="comment">
+      </textarea>
+    </mat-form-field>
+    <div class="button">
+      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
+    </div>
+    <div class="button">
+      <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+    </div>
+  </form>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>
+

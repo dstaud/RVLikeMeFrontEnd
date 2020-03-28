@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Input, Output} from '@angular/core';
-import {FixedSizeVirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
+import { MatDialog } from '@angular/material/dialog';
+// import {FixedSizeVirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 // import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { Observable } from 'rxjs';
@@ -7,6 +8,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ForumService } from '@services/data-services/forum.service';
+
+import { CommentDialogComponent } from '@dialogs/comment-dialog/comment-dialog.component';
 
 export type FadeState = 'visible' | 'hidden';
 
@@ -42,6 +45,10 @@ export type FadeState = 'visible' | 'hidden';
 })
 
 export class PostsComponent implements OnInit {
+
+  @Input('titlesOnly')
+  public titlesOnly: boolean;
+
   showSpinner = false;
   postsResult: string;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
@@ -49,7 +56,6 @@ export class PostsComponent implements OnInit {
   showAddPost = false;
   showPosts = false;
   showFirstPost = false;
-  titlesOnly = true;
   groupID: string;
   posts = [];
 /*   state: FadeState;
@@ -64,7 +70,8 @@ export class PostsComponent implements OnInit {
 
   private _show: boolean;
 
-  constructor(private forumSvc: ForumService) { }
+  constructor(private forumSvc: ForumService,
+              private dialog: MatDialog,) { }
 
   ngOnInit() {
   }
@@ -106,23 +113,23 @@ export class PostsComponent implements OnInit {
       } else {
         let titleEscaped = this.escapeJsonReservedCharacters(postResult[0].title);
         let bodyEscaped = this.escapeJsonReservedCharacters(postResult[0].body);
-        post = '{"title":"' + titleEscaped +
-                '","body":"' + bodyEscaped +
-                '","displayName":"' + postResult[0].userDisplayName +
-                '","profileImageUrl":"' + postResult[0].userProfileUrl +
-                '","createdAt":"' + postResult[0].createdAt +
-                '"}';
+        post = '{"_id":"' + postResult[0]._id + '",' +
+                '"title":"' + titleEscaped + '",' +
+                '"body":"' + bodyEscaped + '",' +
+                '"displayName":"' + postResult[0].userDisplayName + '",' +
+                '"profileImageUrl":"' + postResult[0].userProfileUrl + '",' +
+                '"createdAt":"' + postResult[0].createdAt + '"}';
         postJSON = JSON.parse(post);
         this.posts.push(postJSON);
         for (let i=1; i < postResult.length; i++) {
           let titleEscaped = this.escapeJsonReservedCharacters(postResult[i].title);
           let bodyEscaped = this.escapeJsonReservedCharacters(postResult[i].body);
-          post = '{"title":"' + titleEscaped +
-                    '","body":"' + bodyEscaped +
-                    '","displayName":"' + postResult[i].userDisplayName +
-                    '","profileImageUrl":"' + postResult[i].userProfileUrl +
-                    '","createdAt":"' + postResult[i].createdAt +
-                    '"}';
+          post = '{"_id":"' + postResult[i]._id + '",' +
+                  '"title":"' + titleEscaped + '",' +
+                  '"body":"' + bodyEscaped + '",' +
+                  '"displayName":"' + postResult[i].userDisplayName + '",' +
+                  '"profileImageUrl":"' + postResult[i].userProfileUrl + '",' +
+                  '"createdAt":"' + postResult[i].createdAt + '"}';
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);
         }
@@ -137,6 +144,45 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  openDialog(postID: string, title: string): void {
+    let other = '';
+    let selection = null;
+    const dialogRef = this.dialog.open(CommentDialogComponent, {
+      width: '250px',
+      disableClose: true,
+      data: {postID: postID, title: title }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      console.log('back from dialog');
+/*       if (result) {
+        if (this.aboutMeOther !== result && result !== 'canceled') {
+          this.aboutMeOther = result;
+          this.profile.aboutMe = '@' + result;
+          this.updateAboutMe(event);
+        }
+      } else {
+        if (this.aboutMeOther) {
+          this.profile.aboutMe = null;
+          this.updateAboutMe('');
+          this.aboutMeOther = '';
+          this.form.patchValue({
+            aboutMe: null
+          });
+        } else {
+          if (this.profile.aboutMe) {
+            selection = this.profile.aboutMe;
+          }
+          this.form.patchValue({
+            aboutMe: selection
+          });
+        }
+      } */
+    });
+  }
+
   postAddComplete(event: string): void {
     console.log('back in posts', event);
     if (event ==='saved') {
@@ -146,12 +192,13 @@ export class PostsComponent implements OnInit {
     this.showAddPost = false;
   }
 
-  like(row: number): void {
+  onLike(row: number): void {
     console.log('row=', row);
   }
 
-  comment(row: number) {
-    console.log('row=', row);
+  onComment(row: number) {
+    console.log('row=', this.posts[row]._id);
+    this.openDialog(this.posts[row].postID, this.posts[row].title);
   }
 
   private escapeJsonReservedCharacters(string: string): string {

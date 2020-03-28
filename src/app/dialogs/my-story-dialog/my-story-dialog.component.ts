@@ -36,7 +36,7 @@ export class MyStoryDialogComponent implements OnInit {
                         this.form = fb.group({
                           myStory: new FormControl('')
                         });
-                       }
+  }
 
   ngOnInit() {
     this.windowWidth = window.innerWidth;

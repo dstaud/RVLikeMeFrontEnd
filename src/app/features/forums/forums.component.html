@@ -12,7 +12,10 @@
     <div>
       <div class="groupHeading">
         <span>Group forum for people:</span>
-        <mat-icon class="search" fontSet="material-icons-outlined" (click)="onSearch()">search</mat-icon>
+        <div class="options">
+          <mat-icon class="options-icons" fontSet="material-icons-outlined" (click)="onTitles()">subject</mat-icon>
+          <mat-icon class="options-icons" fontSet="material-icons-outlined" (click)="onSearch()">search</mat-icon>
+        </div>
         <span *ngIf="lessMatches" class="matches">
           <span *ngFor="let match of matches | slice:0:3" class="matches"><br>- {{ match }}</span>
           <div *ngIf="showMoreOption" (click)="onMore()" class="moreLess">...More</div>
@@ -24,7 +27,9 @@
       </div>
     </div>
     <div class="posts">
-      <app-rvlm-posts></app-rvlm-posts>
+      <app-rvlm-posts
+        [titlesOnly]="titlesOnly">
+      </app-rvlm-posts>
     </div>
   </div>
 
