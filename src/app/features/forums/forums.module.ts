@@ -10,13 +10,16 @@ import { PostsComponent } from './posts/posts.component';
 import { AddPostComponent } from './posts/add-post/add-post.component';
 import { CommentsComponent } from './posts/comments/comments.component';
 
+import { CommentDialogComponent } from '@dialogs/comment-dialog/comment-dialog.component';
+
 
 @NgModule({
   declarations: [
     ForumsComponent,
     PostsComponent,
     AddPostComponent,
-    CommentsComponent],
+    CommentsComponent,
+    CommentDialogComponent],
   imports: [
     CommonModule,
     ForumsRoutingModule,
@@ -25,7 +28,8 @@ import { CommentsComponent } from './posts/comments/comments.component';
     ReactiveFormsModule
   ],
   exports: [
-    AddPostComponent
+    AddPostComponent,
+    CommentsComponent
   ]
 })
 export class ForumsModule { }

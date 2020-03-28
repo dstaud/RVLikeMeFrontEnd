@@ -197,8 +197,8 @@ export class PostsComponent implements OnInit {
   }
 
   onComment(row: number) {
-    console.log('row=', this.posts[row]._id);
-    this.openDialog(this.posts[row].postID, this.posts[row].title);
+    console.log('row=', this.posts[row]);
+    this.openDialog(this.posts[row]._id, this.posts[row].title);
   }
 
   private escapeJsonReservedCharacters(string: string): string {

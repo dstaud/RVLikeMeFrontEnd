@@ -19,6 +19,7 @@ export class CommentDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit(): void {
+    console.log('in dialog', this.data.postID, this.data.title);
   }
 
   formComplete(event: string) {

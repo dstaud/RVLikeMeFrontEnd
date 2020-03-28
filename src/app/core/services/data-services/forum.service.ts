@@ -85,6 +85,17 @@ export class ForumService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
+  addComment(postID: string, comment: string): Observable<any> {
+    let commentEscaped = this.escapeJsonReservedCharacters(comment);
+    let body = '{"postID":"' + postID + '",' +
+                '"comment":"' + commentEscaped + '"}'
+    console.log('COMMENT BODY=', body)
+    let bodyJSON = JSON.parse(body);
+    console.log('COMMENT BODYJSON=', body);
+    return this.http.post(`${this.dataSvcURL}/forum-post-comment`, bodyJSON,
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
   private escapeJsonReservedCharacters(string: string): string {
     let newString = string;
     newString = newString.replace(/"/g, "'").trim();

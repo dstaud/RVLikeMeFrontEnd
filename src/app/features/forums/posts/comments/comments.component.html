@@ -1,18 +1,18 @@
 <div>
+  <span class="mat-h3">{{ title }}</span>
   <form [formGroup]="form">
     <mat-form-field appearance="outline">
-      <mat-label>{{ data.title }}</mat-label>
+      <mat-label>Comment</mat-label>
       <textarea matInput
           type="text"
-          placeholder="comment"
+          placeholder="Comment"
           [style.height]="fieldHeight"
           formControlName="comment"
-          cdkFocusInitial
-          [(ngModel)]="comment">
+          cdkFocusInitial>
       </textarea>
     </mat-form-field>
     <div class="button">
-      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
+      <button class="mat-raised-button" (click)="onCancel()">Cancel</button>
     </div>
     <div class="button">
       <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
