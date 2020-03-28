@@ -1,4 +1,5 @@
 <div class="mat-app-background background">
+
   <div [hidden]="!showForumList">
     <div *ngFor="let group of groupsAttributes; let i=index" (click)="onGroupSelect(i)">
       <span class="group-header"><br>Group forum for people:</span>
@@ -26,5 +27,7 @@
       <app-rvlm-posts></app-rvlm-posts>
     </div>
   </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+
 </div>

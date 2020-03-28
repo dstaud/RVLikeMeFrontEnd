@@ -49,6 +49,7 @@ export class PostsComponent implements OnInit {
   showAddPost = false;
   showPosts = false;
   showFirstPost = false;
+  titlesOnly = true;
   groupID: string;
   posts = [];
 /*   state: FadeState;

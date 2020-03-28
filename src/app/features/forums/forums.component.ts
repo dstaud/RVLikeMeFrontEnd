@@ -258,6 +258,7 @@ export class ForumsComponent implements OnInit {
     .subscribe(group => {
       this.groupID = group._id;
       this.updateProfileGroups();
+      this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
     }, error => {
       console.log(error);
       this.showSpinner = false;

@@ -48,7 +48,7 @@
               </div>
             </div>
           </div>
-          <div class="body">
+          <div *ngIf="!titlesOnly" class="body">
             {{ posts[i].body }}
           </div>
           <div class="response">
