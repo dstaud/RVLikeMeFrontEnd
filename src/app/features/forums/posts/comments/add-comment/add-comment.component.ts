@@ -67,13 +67,15 @@ export class AddCommentComponent implements OnInit {
     this.formComplete.emit(this.formCompleted);
   }
 
+
   onSubmit() {
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
     .subscribe(commentResult => {
       console.log('COMMENT RESULT=', commentResult);
-      // this.doneWithAdd('saved');
+      this.formCompleted = 'canceled';
+      this.formComplete.emit(this.formCompleted);
       this.showSpinner = false;
     }, error => {
       console.log(error);

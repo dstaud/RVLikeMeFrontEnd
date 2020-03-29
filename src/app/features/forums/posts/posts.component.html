@@ -76,7 +76,10 @@
 
           <div class="comments" *ngIf="showComments[i]">
             <div (click)="onAddComment(i)">
-              Add comment
+              <button mat-button class="add-comment">
+                <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
+                <span>Add comment as {{ displayName }}</span>
+              </button>
             </div>
             <app-rvlm-comments
               [postCommentsIndex]="posts[i].comments"
