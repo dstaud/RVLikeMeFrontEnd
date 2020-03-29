@@ -141,6 +141,7 @@ export class ProfileService {
       { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
       .subscribe(data => {
         this.dataStore.profile = data;
+        console.log('PROFILE=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, (error) => {
         console.warn('ERROR loading profile: ', error);

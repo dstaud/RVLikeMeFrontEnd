@@ -113,22 +113,40 @@ export class PostsComponent implements OnInit {
       } else {
         let titleEscaped = this.escapeJsonReservedCharacters(postResult[0].title);
         let bodyEscaped = this.escapeJsonReservedCharacters(postResult[0].body);
+        let comments= [];
+        let comment;
+        for (let i=0; i < postResult[0].comments.length; i++) {
+          comment = '{"comment":"' +postResult[0].comments[0].comment + '"}';
+          comments.push(comment);
+        }
+        console.log('COMMENTS=', comments);
         post = '{"_id":"' + postResult[0]._id + '",' +
                 '"title":"' + titleEscaped + '",' +
                 '"body":"' + bodyEscaped + '",' +
                 '"displayName":"' + postResult[0].userDisplayName + '",' +
                 '"profileImageUrl":"' + postResult[0].userProfileUrl + '",' +
+                '"commentCount":"' + postResult[0].comments.length + '",' +
+                '"comments":[' + comments + '],' +
                 '"createdAt":"' + postResult[0].createdAt + '"}';
+        console.log('POST=', post)
         postJSON = JSON.parse(post);
         this.posts.push(postJSON);
         for (let i=1; i < postResult.length; i++) {
           let titleEscaped = this.escapeJsonReservedCharacters(postResult[i].title);
           let bodyEscaped = this.escapeJsonReservedCharacters(postResult[i].body);
+          let comments= [];
+          let comment;
+          for (let j=0; j < postResult[i].comments.length; j++) {
+            comment = '{"comment":"' +postResult[i].comments[j].comment + '"}';
+            comments.push(comment);
+          }
           post = '{"_id":"' + postResult[i]._id + '",' +
                   '"title":"' + titleEscaped + '",' +
                   '"body":"' + bodyEscaped + '",' +
                   '"displayName":"' + postResult[i].userDisplayName + '",' +
                   '"profileImageUrl":"' + postResult[i].userProfileUrl + '",' +
+                  '"commentCount":"' + postResult[i].comments.length + '",' +
+                  '"comments":[' + comments + '],' +
                   '"createdAt":"' + postResult[i].createdAt + '"}';
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);

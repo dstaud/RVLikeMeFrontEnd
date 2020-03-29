@@ -230,31 +230,19 @@ export class ForumsComponent implements OnInit {
 
   private getGroups() {
     console.log('FORUMS=', this.profile.forums);
-    this.forumSvc.getGroups(this.profile.forums)
-    .subscribe(groups => {
-      if (groups.length === 0) {
-        console.log('groups not found!');
-      } else {
-        console.log('groups found!', groups);
-        this.groups = groups;
-        this.groupsAttributes = [];
-        for (let i=0; i < groups.length; i++) {
-          this.getGroupAttributes(false,groups[i]);
-          console.log('MATCHES=', this.matches, i);
-          this.groupsAttributes.push(this.matches);
-        }
-        console.log('GROUPS=', this.groupsAttributes);
+    console.log('GROUPS FROM PROFILE=', this.profile.forums);
+    if (this.profile.forums.length === 0) {
+      console.log('groups not found!');
+    } else {
+      this.groups = this.profile.forums;
+      this.groupsAttributes = []
+      for (let i=0; i < this.groups.length; i++) {
+        this.getGroupAttributes(false,this.groups[i]);
+        console.log('MATCHES=', this.matches, i);
+        this.groupsAttributes.push(this.matches);
       }
-      this.showSpinner = false;
-    }, error => {
-      if (error.status === 404) {
-        console.log('404');
-        this.showSpinner = false;
-      } else {
-      console.log(error);
-      this.showSpinner = false;
-      }
-    });
+      console.log('GROUPS=', this.groupsAttributes);
+    }
   }
 
   private createForum(names: string, values: string): void {
