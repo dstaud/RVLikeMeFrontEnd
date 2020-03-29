@@ -12,8 +12,10 @@ import { ForumService } from '@services/data-services/forum.service';
 export class AddPostComponent implements OnInit {
   @Input('groupID')
   public groupID: string;
+
   @Input('displayName')
   public displayName: string;
+
   @Input('profileImageUrl')
   public profileImageUrl: string;
 

@@ -3,17 +3,40 @@ mat-form-field {
   width: 100%;
 }
 
-.button {
-  float: left;
-  margin-right: 10px;
-  margin-bottom: 10px;
+.image {
+  border-radius: 50%;
 }
 
-.spinner {
-  position: fixed;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+.profile-image {
+  float: left;
+}
+
+.profile-image-post {
+  float: left;
+}
+
+.nameAndDate {
+  margin-left: 50px;
+  font-size: 80%;
+  line-height: 1.5;
+  background-color:#e0e0e0;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.date {
+  margin-left: 5px;
+}
+
+.comment {
+  margin-top: 20px;
+}
+
+.display-name {
+  font-weight: bold;
+}
+
+.container {
+  margin-top: 50px;
+  margin-left: 10px;
 }

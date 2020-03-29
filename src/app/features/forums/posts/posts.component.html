@@ -54,7 +54,7 @@
           <div class="response">
             <div (click)="onLike(i)" class="like">
               <mat-icon class="reaction" fontSet="material-icons-outlined">thumb_up</mat-icon>
-              <span class="reaction">like</span>
+              <span class="reaction-text">like</span>
             </div>
             <div (click)="onComment(i)" class="comment">
               <mat-icon
@@ -64,9 +64,17 @@
                 matBadgeSize="small"
                 matBadgePosition="above after"
                 fontSet="material-icons-outlined">comment</mat-icon>
-              <span class="reaction">comment</span>
+              <span class="reaction-text">comments</span>
             </div>
           </div>
+
+          <div class="comments" *ngIf="showComments">
+            <app-rvlm-comments
+              [postCommentsIndex]="posts[i].comments"
+              [comments]="comments[i+1]">
+            </app-rvlm-comments>
+          </div>
+
           <mat-divider></mat-divider>
         </div>
       <!-- </cdk-virtual-scroll-viewport> -->

@@ -65,26 +65,46 @@ cdk-virtual-scroll-viewport {
 }
 
 mat-divider {
+  clear: left;
+  clear: right;
   border-top-width: 3px;
-  margin-top: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.comments {
+  clear: left;
+  clear: right;
+  margin-top: 20px;
 }
 
 .response {
   margin-top: 10px;
+  margin-bottom: 40px;
 }
 
 .reaction {
-  font-size: 90%;
   color: $primary-color;
+}
+
+.reaction-text {
+  color: $primary-color;
+  padding-left: 5px;
 }
 
 .like {
   float: left;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
   margin-right: 20px;
 }
 
 .comment {
-  padding-left: 20px;
+  float: right;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
 }
 
 .spinner {

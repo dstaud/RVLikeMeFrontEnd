@@ -85,13 +85,15 @@ export class ForumService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
-  addComment(postID: string, comment: string): Observable<any> {
+  addComment(postID: string, displayName: string, profileImageUrl: string, comment: string): Observable<any> {
     let commentEscaped = this.escapeJsonReservedCharacters(comment);
     let body = '{"postID":"' + postID + '",' +
+                '"displayName":"' + displayName + '",' +
+                '"profileImageUrl":"' + profileImageUrl + '",' +
                 '"comment":"' + commentEscaped + '"}'
     console.log('COMMENT BODY=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('COMMENT BODYJSON=', body);
+    console.log('COMMENT BODYJSON=', bodyJSON);
     return this.http.post(`${this.dataSvcURL}/forum-post-comment`, bodyJSON,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }

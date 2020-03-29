@@ -1,11 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { CommentsComponent } from './../../features/forums/posts/comments/comments.component';
+import { AddCommentComponent } from './../../features/forums/posts/comments/add-comment/add-comment.component';
 
 export interface DialogData {
   postID: string;
-  title: string
+  title: string;
+  displayName: string;
+  profileImageUrl: string;
 }
 
 @Component({
@@ -15,11 +17,11 @@ export interface DialogData {
 })
 export class CommentDialogComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<CommentsComponent>,
+  constructor(public dialogRef: MatDialogRef<AddCommentComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit(): void {
-    console.log('in dialog', this.data.postID, this.data.title);
+    console.log('in dialog', this.data.postID, this.data.title, this.data.displayName, this.data.profileImageUrl);
   }
 
   formComplete(event: string) {
