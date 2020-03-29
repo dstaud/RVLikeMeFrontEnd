@@ -40,7 +40,6 @@ import { DesktopDialogComponent } from './dialogs/desktop-dialog/desktop-dialog.
 
 import { SharedModule } from '@shared/shared.module';
 
-
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
   environment: environment.name

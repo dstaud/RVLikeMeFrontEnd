@@ -98,6 +98,18 @@ export class ForumService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
+  addReaction(postID: string, displayName: string, profileImageUrl: string, reaction: string): Observable<any> {
+    let body = '{"postID":"' + postID + '",' +
+                '"displayName":"' + displayName + '",' +
+                '"profileImageUrl":"' + profileImageUrl + '",' +
+                '"reaction":"' + reaction + '"}'
+    console.log('REACTION BODY=', body)
+    let bodyJSON = JSON.parse(body);
+    console.log('REACTION BODYJSON=', bodyJSON);
+    return this.http.post(`${this.dataSvcURL}/forum-post-reaction`, bodyJSON,
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
   private escapeJsonReservedCharacters(string: string): string {
     let newString = string;
     newString = newString.replace(/"/g, "'").trim();
@@ -106,4 +118,5 @@ export class ForumService {
     console.log(string, newString);
     return newString;
   }
+
 }

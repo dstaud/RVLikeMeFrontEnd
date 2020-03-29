@@ -56,10 +56,10 @@ export class PostsComponent implements OnInit {
   showAddPost = false;
   showPosts = false;
   showFirstPost = false;
-  showComments = false;
+  showComments: Array<boolean> = [];
   groupID: string;
-  posts = [];
-  comments = [[]];
+  posts: Array<any> = [];
+  comments: Array<Array<JSON>> = [];
 
 /*   state: FadeState;
   set showAddPost(value: boolean) {
@@ -77,6 +77,7 @@ export class PostsComponent implements OnInit {
               private dialog: MatDialog,) { }
 
   ngOnInit() {
+    console.log('INITIAL ARRAY=', this.comments);
   }
 
   ngOnDestroy() {}
@@ -95,6 +96,8 @@ export class PostsComponent implements OnInit {
   getPosts(groupID: string, profileImageUrl: string, displayName: string): void {
     let post: string;
     let postJSON: JSON;
+    let comment: string;
+    let postComments: Array<JSON> = [];
 
     this.showSpinner = true;
     this.groupID = groupID;
@@ -116,15 +119,15 @@ export class PostsComponent implements OnInit {
       } else {
         let titleEscaped = this.escapeJsonReservedCharacters(postResult[0].title);
         let bodyEscaped = this.escapeJsonReservedCharacters(postResult[0].body);
-        this.comments= [[]];
-        let comment;
-        let postComments = [];
-        for (let j=0; j < postResult[0].comments.length; j++) {
+        this.comments= [];
+        console.log('COMMENTS BEFORE = ', this.comments);
+        for (let j=postResult[0].comments.length - 1; j >= 0; j--) {
           comment = '{"comment":"' + postResult[0].comments[j].comment + '",' +
           '"displayName":"' + postResult[0].comments[j].displayName + '",' +
           '"profileImageUrl":"' + postResult[0].comments[j].profileImageUrl + '",' +
           '"createdAt":"' + postResult[0].comments[j].createdAt + '"}';
           postComments.push(JSON.parse(comment));
+          this.showComments.push(false);
         }
         console.log('COMMENTS=', postComments);
         post = '{"_id":"' + postResult[0]._id + '",' +
@@ -134,11 +137,11 @@ export class PostsComponent implements OnInit {
                 '"profileImageUrl":"' + postResult[0].userProfileUrl + '",' +
                 '"commentCount":"' + postResult[0].comments.length + '",' +
                 '"comments":"0",' +
+                '"reactionCount":"' + postResult[0].reactions.length + '",' +
                 '"createdAt":"' + postResult[0].createdAt + '"}';
         console.log('POST=', post)
         postJSON = JSON.parse(post);
         this.posts.push(postJSON);
-        console.log('COMMENTS BEFORE = ', this.comments);
         console.log('PUSH TO COMMENTS ', postComments);
         this.comments.push(postComments);
         console.log('COMMENTS = ', this.comments);
@@ -146,13 +149,14 @@ export class PostsComponent implements OnInit {
           let titleEscaped = this.escapeJsonReservedCharacters(postResult[i].title);
           let bodyEscaped = this.escapeJsonReservedCharacters(postResult[i].body);
           let comment;
-          let postComments = [];
-          for (let j=0; j < postResult[i].comments.length; j++) {
+          postComments = [];
+          for (let j=postResult[0].comments.length - 1; j >= 0; j--) {
             comment = '{"comment":"' + postResult[i].comments[j].comment + '",' +
                       '"displayName":"' + postResult[i].comments[j].displayName + '",' +
                       '"profileImageUrl":"' + postResult[i].comments[j].profileImageUrl + '",' +
                       '"createdAt":"' + postResult[i].comments[j].createdAt + '"}';
             postComments.push(JSON.parse(comment));
+            this.showComments.push(false);
           }
           post = '{"_id":"' + postResult[i]._id + '",' +
                   '"title":"' + titleEscaped + '",' +
@@ -161,6 +165,7 @@ export class PostsComponent implements OnInit {
                   '"profileImageUrl":"' + postResult[i].userProfileUrl + '",' +
                   '"commentCount":"' + postResult[i].comments.length + '",' +
                   '"comments":"' + i + '",' +
+                  '"reactionCount":"' + postResult[i].reactions.length + '",' +
                   '"createdAt":"' + postResult[i].createdAt + '"}';
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);
@@ -180,10 +185,17 @@ export class PostsComponent implements OnInit {
   openDialog(postID: string, title: string): void {
     let other = '';
     let selection = null;
-    const dialogRef = this.dialog.open(CommentDialogComponent, {
+    let dialogRef: any;
+
+    dialogRef = this.dialog.open(CommentDialogComponent, {
       width: '250px',
       disableClose: true,
-      data: {postID: postID, title: title, displayName: this.displayName, profileImageUrl: this.profileImageUrl }
+      data: {
+        postID: postID,
+        title: title,
+        displayName: this.displayName,
+        profileImageUrl: this.profileImageUrl
+      }
     });
 
     dialogRef.afterClosed()
@@ -227,6 +239,15 @@ export class PostsComponent implements OnInit {
 
   onLike(row: number): void {
     console.log('row=', row);
+    let reaction = 'like';
+    this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
+    .subscribe(reactionResult => {
+      console.log('REACTION RESULT=', reactionResult);
+      this.showSpinner = false;
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
   }
 
   onAddComment(row: number) {
@@ -236,7 +257,7 @@ export class PostsComponent implements OnInit {
 
   onComment(row: number) {
     console.log('row=', this.posts[row]);
-    this.showComments = !this.showComments;
+    this.showComments[row] = !this.showComments[row];
   }
 
   private escapeJsonReservedCharacters(string: string): string {

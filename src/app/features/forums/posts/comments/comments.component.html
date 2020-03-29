@@ -1,17 +1,17 @@
 <div class="container">
-  <div *ngFor="let comment of comments; let i=index">
+  <div *ngFor="let comment of comments">
     <div class="comment">
       <div>
         <img class="image profile-image-post"
-        [src]="comments[i].profileImageUrl"
+        [src]="comment.profileImageUrl"
         style="width:40px;height:40px;">
       </div>
       <div class="nameAndDate">
         <div>
-          <span class="display-name">{{ comments[i].displayName }}</span><span class="date">{{ comments[i].createdAt | date:'short'}}</span>
+          <span class="display-name">{{ comment.displayName }}</span><span class="date">{{ comment.createdAt | date:'short'}}</span>
         </div>
         <div>
-          {{ comments[i].comment }}
+          {{ comment.comment }}
         </div>
       </div>
     </div>
