@@ -1,7 +1,5 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Input, Output} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Input, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-// import {FixedSizeVirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
-// import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -9,45 +7,23 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ForumService } from '@services/data-services/forum.service';
 
-import { CommentDialogComponent } from '@dialogs/comment-dialog/comment-dialog.component';
+import { CommentsComponent } from './comments/comments.component';
 
 export type FadeState = 'visible' | 'hidden';
-
-/* export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
-  constructor() {
-    super(50, 250, 500);
-  }
-} */
 @Component({
   selector: 'app-rvlm-posts',
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.scss']
-  // changeDetection: ChangeDetectionStrategy.OnPush,
-  // providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}]
-/*   animations: [
-    trigger('state', [
-      state(
-        'visible',
-        style({
-          opacity: '1'
-        })
-      ),
-      state(
-        'hidden',
-        style({
-          opacity: '0'
-        })
-      ),
-      transition('* => visible', [animate('500ms ease-out')]),
-      transition('visible => hidden', [animate('500ms ease-out')])
-    ])
-  ] */
 })
 
 export class PostsComponent implements OnInit {
 
   @Input('titlesOnly')
   public titlesOnly: boolean;
+
+  @ViewChild(CommentsComponent)
+  public commentsComponent: CommentsComponent;
+
 
   showSpinner = false;
   postsResult: string;
@@ -60,16 +36,7 @@ export class PostsComponent implements OnInit {
   groupID: string;
   posts: Array<any> = [];
   comments: Array<Array<JSON>> = [];
-
-/*   state: FadeState;
-  set showAddPost(value: boolean) {
-    if (value) {
-      this._show = value;
-      this.state = 'visible';
-    } else {
-      this.state = 'hidden';
-    }
-  } */
+  currentPostRow: number;
 
   private _show: boolean;
 
@@ -82,12 +49,6 @@ export class PostsComponent implements OnInit {
 
   ngOnDestroy() {}
 
-/*   animationDone(event: AnimationEvent) {
-    console.log('EVENT=', event)
-    if (event.fromState === 'visible' && event.toState === 'hidden') {
-      this._show = false;
-    }
-  } */
 
   addPost(): void {
     this.showAddPost = true;
@@ -185,39 +146,21 @@ export class PostsComponent implements OnInit {
     });
   }
 
-  OpenAddCommentDialog(postID: string, title: string, post: number): void {
-    let other = '';
-    let selection = null;
-    let dialogRef: any;
-
-    dialogRef = this.dialog.open(CommentDialogComponent, {
-      width: '250px',
-      disableClose: true,
-      data: {
-        postID: postID,
-        title: title,
-        displayName: this.displayName,
-        profileImageUrl: this.profileImageUrl
-      }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(commentResult => {
-      console.log('back from dialog', commentResult);
-      if (commentResult !== 'canceled') {
-          console.log('PUSHING NEW COMMENT=', commentResult);
-          this.comments[post].push(commentResult);
-          this.showComments.push(false);
-          console.log('UPDATED COMMENTS ARRAY=', this.comments);
-      }
-    });
-  }
 
   postAddComplete(newPost: any): void {
     console.log('back in posts', newPost);
-    this.posts.unshift(newPost);
+    if (newPost !== 'canceled') {
+      this.posts.unshift(newPost);
+    }
     this.showAddPost = false;
+  }
+
+  postCommentComplete(comment: any) {
+    console.log('PUSHING NEW COMMENT=', comment);
+    this.comments[this.currentPostRow].push(comment);
+    this.showComments.push(false);
+    console.log('UPDATED COMMENTS ARRAY=', this.comments);
+    this.commentsComponent.setStartCommentsIndex();
   }
 
   onLike(row: number): void {
@@ -233,14 +176,10 @@ export class PostsComponent implements OnInit {
     });
   }
 
-  onAddComment(row: number) {
-    console.log('row=', this.posts[row]);
-    this.OpenAddCommentDialog(this.posts[row]._id, this.posts[row].title, row);
-  }
-
   onComment(row: number) {
     console.log('row=', this.posts[row]);
     this.showComments[row] = !this.showComments[row];
+    this.currentPostRow = row;
   }
 
   private escapeJsonReservedCharacters(string: string): string {

@@ -11,8 +11,6 @@ import { AddPostComponent } from './posts/add-post/add-post.component';
 import { CommentsComponent } from './posts/comments/comments.component';
 import { AddCommentComponent } from './posts/comments/add-comment/add-comment.component';
 
-import { CommentDialogComponent } from '@dialogs/comment-dialog/comment-dialog.component';
-
 
 @NgModule({
   declarations: [
@@ -20,7 +18,6 @@ import { CommentDialogComponent } from '@dialogs/comment-dialog/comment-dialog.c
     PostsComponent,
     AddPostComponent,
     CommentsComponent,
-    CommentDialogComponent,
     AddCommentComponent],
   imports: [
     CommonModule,

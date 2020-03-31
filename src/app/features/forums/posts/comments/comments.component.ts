@@ -19,6 +19,10 @@ export class CommentsComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('in comments', this.commentsIndex, this.comments);
+    this.setStartCommentsIndex();
+  }
+
+  setStartCommentsIndex() {
     if (this.comments.length > 4) {
       this.startCommentsIndex = this.comments.length - 4;
     }

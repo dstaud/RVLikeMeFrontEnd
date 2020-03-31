@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ForumService } from '@services/data-services/forum.service';
 
@@ -24,19 +24,10 @@ export class AddCommentComponent implements OnInit {
 
   @Output() postCommentComplete = new EventEmitter()
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.windowWidth = window.innerWidth;
-    this.windowHeight = window.innerHeight;
-
-    this.containerHeight = Math.round((this.windowHeight *.8) * .8);
-    this.fieldHeight = this.containerHeight.toString() + 'px';
-  }
-
-
   form: FormGroup;
   showSpinner = false;
-  fieldHeight: string;
+  postButtonActive = false;
+  showSmallFieldInitial = true;
 
   private containerHeight: number
   private windowWidth: number;
@@ -52,18 +43,17 @@ export class AddCommentComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('in comments', this.postID, this.title, this.displayName, this.profileImageUrl)
-    this.windowWidth = window.innerWidth;
-    this.windowHeight = window.innerHeight;
-
-    let winH = this.windowHeight * .8;
-    let fieldH = winH * .8;
-    this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 80;
-    this.fieldHeight = this.containerHeight.toString() + 'px';
-
-    console.log('ngInit=', this.displayName)
+    console.log('ngInit=', this.displayName);
+    this.form.get('comment').valueChanges
+    .subscribe(selectedValue => {
+      this.postButtonActive = true;
+    })
   }
 
   doneWithAdd(post: any) {
+    this.form.reset('comment');
+    this.showSmallFieldInitial = true;
+    this.postButtonActive = false;
     if (post !== 'canceled') {
       let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
       '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
@@ -79,6 +69,7 @@ export class AddCommentComponent implements OnInit {
 
 
   onSubmit() {
+    this.postButtonActive = false;
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
     console.log('displayName before Add=', this.displayName)

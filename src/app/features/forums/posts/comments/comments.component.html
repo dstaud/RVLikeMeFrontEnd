@@ -1,8 +1,8 @@
 <div class="container">
-  <div *ngFor="let comment of comments | slice:startCommentsIndex:comments.length">
-    <div [hidden]="startCommentsIndex === 0">
-      <span class="show-all-comments" (click)="startCommentsIndex = 0">show all comments</span>
-    </div>
+  <div [hidden]="startCommentsIndex === 0">
+    <span class="show-all-comments" (click)="startCommentsIndex = 0">...show all comments</span>
+  </div>
+  <div *ngFor="let comment of comments | slice: startCommentsIndex : comments.length">
     <div class="comment-container">
       <div>
         <img class="image profile-image-post"

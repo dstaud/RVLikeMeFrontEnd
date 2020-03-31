@@ -1,22 +1,29 @@
 <div>
-  <span class="mat-h3">{{ title }}</span>
   <form [formGroup]="form">
     <mat-form-field appearance="outline">
       <mat-label>Comment</mat-label>
-      <textarea matInput
-          type="text"
-          placeholder="Comment"
-          [style.height]="fieldHeight"
-          formControlName="comment"
-          cdkFocusInitial>
+
+      <input
+        *ngIf="showSmallFieldInitial"
+        matInput
+        type="text"
+        placeholder="Comment"
+        formControlName="comment"
+        cdkFocusInitial
+        (click)="showSmallFieldInitial=false">
+
+      <textarea
+        class="text"
+        *ngIf="!showSmallFieldInitial"
+        matInput
+        type="text"
+        placeholder="Comment"
+        formControlName="comment"
+        cdkFocusInitial>
       </textarea>
+
     </mat-form-field>
-    <div class="button">
-      <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
-    </div>
-    <div class="button">
-      <button class="mat-raised-button" (click)="doneWithAdd('canceled')">Cancel</button>
-    </div>
+    <button [disabled]="!postButtonActive" class="mat-raised-button mat-primary button" (click)="onSubmit()">Post</button>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

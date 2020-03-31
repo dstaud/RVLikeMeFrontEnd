@@ -27,8 +27,6 @@
       Be the first to add a post for this group!
     </div>
     <div *ngIf="showPosts">
-      <!-- <cdk-virtual-scroll-viewport autosize> -->
-        <!-- <div class="item" *cdkVirtualFor="let post of posts; let i=index"> -->
         <div *ngFor="let post of posts; let i=index">
           <div class="posts">
             <span class="mat-h2">{{ posts[i].title }}</span>
@@ -75,21 +73,26 @@
           </div>
 
           <div class="comments" [hidden]="!showComments[i]">
-            <div (click)="onAddComment(i)">
-              <button mat-button class="add-comment">
-                <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
-                <span>Add comment as {{ displayName }}</span>
-              </button>
+
+            <app-rvlm-add-comment
+              [postID]="posts[i]._id"
+              [postTitle]="posts[i].title"
+              [displayName]="displayName"
+              [profileImageUrl]="profileImageUrl"
+              (postCommentComplete)="postCommentComplete($event)">
+            </app-rvlm-add-comment>
+
+            <div class="comments-container">
+              <app-rvlm-comments
+                [postCommentsIndex]="posts[i].comments"
+                [comments]="comments[i]">
+              </app-rvlm-comments>
             </div>
-            <app-rvlm-comments
-              [postCommentsIndex]="posts[i].comments"
-              [comments]="comments[i]">
-            </app-rvlm-comments>
+
           </div>
 
           <mat-divider></mat-divider>
         </div>
-      <!-- </cdk-virtual-scroll-viewport> -->
     </div>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
