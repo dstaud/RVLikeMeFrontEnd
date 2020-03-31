@@ -217,7 +217,6 @@ export class PostsComponent implements OnInit {
   postAddComplete(newPost: any): void {
     console.log('back in posts', newPost);
     this.posts.unshift(newPost);
-    // this.getPosts(this.groupID, this.profileImageUrl, this.displayName);
     this.showAddPost = false;
   }
 

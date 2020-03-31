@@ -59,24 +59,32 @@ export class AddCommentComponent implements OnInit {
     let fieldH = winH * .8;
     this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 80;
     this.fieldHeight = this.containerHeight.toString() + 'px';
+
+    console.log('ngInit=', this.displayName)
   }
 
   doneWithAdd(post: any) {
-    let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
-              '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
-              '"profileImageUrl":"' + post.comments[post.comments.length-1].profileImageUrl + '",' +
-              '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '"}';
-    console.log('NEW COMMENT=', comment);
-    let JSONComment = JSON.parse(comment);
-    this.postCommentComplete.emit(JSONComment);
+    if (post !== 'canceled') {
+      let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
+      '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
+      '"profileImageUrl":"' + post.comments[post.comments.length-1].profileImageUrl + '",' +
+      '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '"}';
+      console.log('NEW COMMENT=', comment);
+      let JSONComment = JSON.parse(comment);
+      this.postCommentComplete.emit(JSONComment);
+    } else {
+      this.postCommentComplete.emit(post);
+    }
   }
 
 
   onSubmit() {
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
+    console.log('displayName before Add=', this.displayName)
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
     .subscribe(postResult => {
+      console.log('POST RESULT=', postResult)
       this.doneWithAdd(postResult);
       this.showSpinner = false;
     }, error => {

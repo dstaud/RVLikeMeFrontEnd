@@ -1,3 +1,5 @@
+@import './../../../../../styles/_variables';
+
 mat-form-field {
   line-height: 1.4;
   width: 100%;
@@ -15,7 +17,7 @@ mat-form-field {
   float: left;
 }
 
-.nameAndDate {
+.comment {
   margin-left: 50px;
   font-size: 80%;
   line-height: 1.5;
@@ -28,7 +30,7 @@ mat-form-field {
   margin-left: 5px;
 }
 
-.comment {
+.comment-container {
   margin-top: 20px;
 }
 
@@ -40,3 +42,7 @@ mat-form-field {
   margin-left: 10px;
 }
 
+.show-all-comments {
+  margin-top: 10px;
+  color: $primary-color;
+}

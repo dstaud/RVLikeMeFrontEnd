@@ -1,12 +1,15 @@
 <div class="container">
-  <div *ngFor="let comment of comments">
-    <div class="comment">
+  <div *ngFor="let comment of comments | slice:startCommentsIndex:comments.length">
+    <div [hidden]="startCommentsIndex === 0">
+      <span class="show-all-comments" (click)="startCommentsIndex = 0">show all comments</span>
+    </div>
+    <div class="comment-container">
       <div>
         <img class="image profile-image-post"
         [src]="comment.profileImageUrl"
         style="width:40px;height:40px;">
       </div>
-      <div class="nameAndDate">
+      <div class="comment">
         <div>
           <span class="display-name">{{ comment.displayName }}</span><span class="date">{{ comment.createdAt | date:'short'}}</span>
         </div>
