@@ -28,67 +28,90 @@
     </div>
     <div *ngIf="showPosts">
         <div *ngFor="let post of posts; let i=index">
-          <div class="posts">
-            <span class="mat-h2">{{ posts[i].title }}</span>
-          </div>
-          <div class="posts">
+          <app-rvlm-update-post
+            [hidden]="!showUpdatePost[i]"
+            [postID]="posts[i]._id"
+            [postTitle]="posts[i].title"
+            [postBody]="posts[i].body"
+            (postUpdateComplete)="postUpdateComplete($event)">
+          </app-rvlm-update-post>
+          <div [hidden]="showUpdatePost[i]">
+            <div *ngIf="posts[i].createdBy === userID" class="posts">
+              <span class="mat-h2">{{ posts[i].title }}</span>
+              <mat-icon
+                class="menu"
+                matPrefix
+                [matMenuTriggerFor]="beforeMenu">more_horiz</mat-icon>
+            </div>
             <div>
-              <img class="image profile-image-post"
-              [src]="posts[i].profileImageUrl"
-              style="width:40px;height:40px;">
+              <mat-menu
+                #beforeMenu="matMenu"
+                xPosition="before">
+                <button mat-menu-item (click)="updatePost(i)">
+                  <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
+                  Update post
+                </button>
+              </mat-menu>
             </div>
-            <div class="nameAndDate">
+
+            <div class="posts">
               <div>
-                {{ posts[i].displayName }}
+                <img class="image profile-image-post"
+                [src]="posts[i].profileImageUrl"
+                style="width:40px;height:40px;">
               </div>
-              <div>
-                {{ posts[i].createdAt | date:'short'}}
+              <div class="nameAndDate">
+                <div>
+                  {{ posts[i].displayName }}
+                </div>
+                <div>
+                  {{ posts[i].createdAt | date:'short'}}
+                </div>
               </div>
             </div>
-          </div>
-          <div *ngIf="!titlesOnly" class="body">
-            {{ posts[i].body }}
-          </div>
-          <div class="response">
-            <div (click)="onLike(i)" class="like">
-              <mat-icon
-                class="reaction"
-                matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
-                matBadgeColor="warn"
-                matBadgeSize="small"
-                matBadgePosition="above after"
-                fontSet="material-icons-outlined">thumb_up</mat-icon>
-              <span class="reaction-text">like</span>
+            <div *ngIf="!titlesOnly" class="body">
+              {{ posts[i].body }}
             </div>
-            <div (click)="onComment(i)" class="comment">
-              <mat-icon
-                class="reaction"
-                matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"
-                matBadgeColor="warn"
-                matBadgeSize="small"
-                matBadgePosition="above after"
-                fontSet="material-icons-outlined">comment</mat-icon>
-              <span class="reaction-text">comments</span>
-            </div>
-          </div>
-
-          <div class="comments" [hidden]="!showComments[i]">
-
-            <app-rvlm-add-comment
-              [postID]="posts[i]._id"
-              [postTitle]="posts[i].title"
-              [displayName]="displayName"
-              [profileImageUrl]="profileImageUrl"
-              (postCommentComplete)="postCommentComplete($event)">
-            </app-rvlm-add-comment>
-
-            <div class="comments-container">
-              <app-rvlm-comments
-                [postCommentsIndex]="posts[i].comments"
-                [comments]="comments[i]">
-              </app-rvlm-comments>
+            <div class="response">
+              <div (click)="onLike(i)" class="like">
+                <mat-icon
+                  class="reaction"
+                  matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
+                  matBadgeColor="warn"
+                  matBadgeSize="small"
+                  matBadgePosition="above after"
+                  fontSet="material-icons-outlined">thumb_up</mat-icon>
+                <span class="reaction-text">like</span>
+              </div>
+              <div (click)="onComment(i)" class="comment">
+                <mat-icon
+                  class="reaction"
+                  matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"
+                  matBadgeColor="warn"
+                  matBadgeSize="small"
+                  matBadgePosition="above after"
+                  fontSet="material-icons-outlined">comment</mat-icon>
+                <span class="reaction-text">comments</span>
+              </div>
             </div>
 
+            <div class="comments" [hidden]="!showComments[i]">
+
+              <app-rvlm-add-comment
+                [postID]="posts[i]._id"
+                [postTitle]="posts[i].title"
+                [displayName]="displayName"
+                [profileImageUrl]="profileImageUrl"
+                (postCommentComplete)="postCommentComplete($event)">
+              </app-rvlm-add-comment>
+
+              <div class="comments-container">
+                <app-rvlm-comments
+                  [postCommentsIndex]="posts[i].comments"
+                  [comments]="comments[i]">
+                </app-rvlm-comments>
+              </div>
+            </div>
           </div>
 
           <mat-divider></mat-divider>

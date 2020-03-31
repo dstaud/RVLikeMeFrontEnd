@@ -136,7 +136,6 @@ export class ConnectionsComponent implements OnInit {
             this.processMatch(this.profileKeys[i], this.profileValues[i]);
           } else {
             if (!isNumber(this.profile[this.profileKeys[i]])) {
-              console.log('CHECK=', this.profile[this.profileKeys[i]])
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
                 if (this.profileValues[i] === 1) {
                   this.likeMeDesc = this.translate.instant(

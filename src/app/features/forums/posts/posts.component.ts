@@ -1,13 +1,14 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Input, ViewChild} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, OnDestroy, Input, ViewChild} from '@angular/core';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ForumService } from '@services/data-services/forum.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { CommentsComponent } from './comments/comments.component';
+import { UpdatePostComponent } from './update-post/update-post.component';
 
 export type FadeState = 'visible' | 'hidden';
 @Component({
@@ -24,6 +25,8 @@ export class PostsComponent implements OnInit {
   @ViewChild(CommentsComponent)
   public commentsComponent: CommentsComponent;
 
+  @ViewChild(UpdatePostComponent)
+  public updatePostComponent: UpdatePostComponent;
 
   showSpinner = false;
   postsResult: string;
@@ -33,18 +36,34 @@ export class PostsComponent implements OnInit {
   showPosts = false;
   showFirstPost = false;
   showComments: Array<boolean> = [];
+  showUpdatePost: Array<boolean> = [];
+  currentRowUpdatePost: number;
   groupID: string;
   posts: Array<any> = [];
   comments: Array<Array<JSON>> = [];
   currentPostRow: number;
+  userProfile: Observable<IuserProfile>;
+  userID: string;
 
   private _show: boolean;
 
   constructor(private forumSvc: ForumService,
-              private dialog: MatDialog,) { }
+              private profileSvc: ProfileService) { }
 
   ngOnInit() {
-    console.log('INITIAL ARRAY=', this.comments);
+    // Get user profile
+    this.userProfile = this.profileSvc.profile;
+    this.profileSvc.getProfile();
+
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profile => {
+      console.log('in post component=', profile);
+      this.userID = profile.userID;
+    }, (error) => {
+      console.error(error);
+      console.log('error');
+    });
   }
 
   ngOnDestroy() {}
@@ -92,6 +111,7 @@ export class PostsComponent implements OnInit {
           this.showComments.push(false);
         }
         post = '{"_id":"' + postResult[0]._id + '",' +
+                '"createdBy":"' + postResult[0].createdBy + '",' +
                 '"title":"' + titleEscaped + '",' +
                 '"body":"' + bodyEscaped + '",' +
                 '"displayName":"' + postResult[0].userDisplayName + '",' +
@@ -121,6 +141,7 @@ export class PostsComponent implements OnInit {
             this.showComments.push(false);
           }
           post = '{"_id":"' + postResult[i]._id + '",' +
+                  '"createdBy":"' + postResult[i].createdBy + '",' +
                   '"title":"' + titleEscaped + '",' +
                   '"body":"' + bodyEscaped + '",' +
                   '"displayName":"' + postResult[i].userDisplayName + '",' +
@@ -131,6 +152,7 @@ export class PostsComponent implements OnInit {
                   '"createdAt":"' + postResult[i].createdAt + '"}';
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);
+          this.showUpdatePost.push(false);
           console.log('PUSH TO COMMENTS ', postComments);
           this.comments.push(postComments);
           console.log('COMMENTS = ', this.comments);
@@ -151,8 +173,16 @@ export class PostsComponent implements OnInit {
     console.log('back in posts', newPost);
     if (newPost !== 'canceled') {
       this.posts.unshift(newPost);
+      this.showUpdatePost.unshift(false);
     }
     this.showAddPost = false;
+  }
+
+  postUpdateComplete(post: any): void {
+    console.log('back in posts', post.title, post.body);
+    this.posts[this.currentRowUpdatePost].title = post.title;
+    this.posts[this.currentRowUpdatePost].body = post.body;
+    this.showUpdatePost[this.currentRowUpdatePost] = false;
   }
 
   postCommentComplete(comment: any) {
@@ -180,6 +210,13 @@ export class PostsComponent implements OnInit {
     console.log('row=', this.posts[row]);
     this.showComments[row] = !this.showComments[row];
     this.currentPostRow = row;
+  }
+
+  updatePost(row: number) {
+    console.log('update post', row);
+    this.currentRowUpdatePost = row;
+    this.showUpdatePost[row] = true;
+    this.updatePostComponent.populatePost();
   }
 
   private escapeJsonReservedCharacters(string: string): string {

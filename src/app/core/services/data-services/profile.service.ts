@@ -7,6 +7,7 @@ import { CommonDataService } from './common-data.service';
 import { SharedComponent } from '@shared/shared.component';
 
 export interface IuserProfile {
+  userID: string;
   firstName: string;
   lastName: string;
   displayName: string;
@@ -50,6 +51,7 @@ export interface IuserProfile {
 export class ProfileService {
   // private user: IuserProfile;
   private userProfile: IuserProfile = {
+    userID: null,
     firstName: null,
     lastName: null,
     displayName: null,
@@ -100,6 +102,7 @@ export class ProfileService {
 
   getProfile(reset?: boolean) {
     if (reset) {
+      this.dataStore.profile.userID = null;
       this.dataStore.profile.firstName = null;
       this.dataStore.profile.lastName = null;
       this.dataStore.profile.displayName =null;

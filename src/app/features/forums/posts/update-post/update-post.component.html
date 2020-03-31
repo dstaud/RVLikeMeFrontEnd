@@ -1,0 +1,34 @@
+<div class="background">
+  <div class="form-fields">
+    <form [formGroup]="form">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput
+                type="text"
+                placeholder="Post Title"
+                formControlName="title"
+                cdkFocusInitial>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Post</mat-label>
+          <textarea matInput
+                type="text"
+                placeholder="What do you want to say?"
+                formControlName="body">
+          </textarea>
+        </mat-form-field>
+      </div>
+      <div class="button">
+        <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onPost()">Post</button>
+      </div>
+      <div class="button">
+        <button class="mat-raised-button" (click)="doneWithUpdate('canceled')">Cancel</button>
+      </div>
+    </form>
+    <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+  </div>
+  <br>
+</div>
