@@ -22,8 +22,7 @@ export class AddCommentComponent implements OnInit {
   @Input('profileImageUrl')
   public profileImageUrl: string;
 
-  @Output() formComplete = new EventEmitter()
-  public formCompleted: string;
+  @Output() postCommentComplete = new EventEmitter()
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -62,9 +61,14 @@ export class AddCommentComponent implements OnInit {
     this.fieldHeight = this.containerHeight.toString() + 'px';
   }
 
-  onCancel() {
-    this.formCompleted = 'canceled';
-    this.formComplete.emit(this.formCompleted);
+  doneWithAdd(post: any) {
+    let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
+              '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
+              '"profileImageUrl":"' + post.comments[post.comments.length-1].profileImageUrl + '",' +
+              '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '"}';
+    console.log('NEW COMMENT=', comment);
+    let JSONComment = JSON.parse(comment);
+    this.postCommentComplete.emit(JSONComment);
   }
 
 
@@ -72,10 +76,8 @@ export class AddCommentComponent implements OnInit {
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
-    .subscribe(commentResult => {
-      console.log('COMMENT RESULT=', commentResult);
-      this.formCompleted = 'canceled';
-      this.formComplete.emit(this.formCompleted);
+    .subscribe(postResult => {
+      this.doneWithAdd(postResult);
       this.showSpinner = false;
     }, error => {
       console.log(error);

@@ -36,9 +36,9 @@ export class AddPostComponent implements OnInit {
   ngOnInit() {
   }
 
-  doneWithAdd(event: string) {
-    console.log('done with add event=', event);
-    this.postAddComplete.emit(event);
+  doneWithAdd(post: any) {
+    console.log('done with add event=', post);
+    this.postAddComplete.emit(post);
   }
 
   onPost() {
@@ -48,7 +48,7 @@ export class AddPostComponent implements OnInit {
     this.forumSvc.addPost(this.groupID, postTitle, postText, this.displayName, this.profileImageUrl)
     .subscribe(post => {
       console.log('POST RESULT=', post);
-      this.doneWithAdd('saved');
+      this.doneWithAdd(post);
       this.showSpinner = false;
     }, error => {
       console.log(error);

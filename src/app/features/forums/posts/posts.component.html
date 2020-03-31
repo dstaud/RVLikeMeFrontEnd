@@ -55,7 +55,7 @@
             <div (click)="onLike(i)" class="like">
               <mat-icon
                 class="reaction"
-                matBadge="{{ posts[i].reactionCount }}"
+                matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
                 matBadgeColor="warn"
                 matBadgeSize="small"
                 matBadgePosition="above after"
@@ -65,7 +65,7 @@
             <div (click)="onComment(i)" class="comment">
               <mat-icon
                 class="reaction"
-                matBadge="{{ posts[i].commentCount }}"
+                matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"
                 matBadgeColor="warn"
                 matBadgeSize="small"
                 matBadgePosition="above after"
@@ -74,7 +74,7 @@
             </div>
           </div>
 
-          <div class="comments" *ngIf="showComments[i]">
+          <div class="comments" [hidden]="!showComments[i]">
             <div (click)="onAddComment(i)">
               <button mat-button class="add-comment">
                 <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>

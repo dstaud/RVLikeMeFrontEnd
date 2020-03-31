@@ -24,7 +24,7 @@ export class CommentDialogComponent implements OnInit {
     console.log('in dialog', this.data.postID, this.data.title, this.data.displayName, this.data.profileImageUrl);
   }
 
-  formComplete(event: string) {
+  postCommentComplete(event: string) {
     this.dialogRef.close(event);
   }
 
