@@ -88,7 +88,7 @@ export class LikemeCountsService {
               private shared: SharedComponent) { }
 
   getLikeMeCountsPriority() {
-    console.log('IN LIKEMECOUNTSPriority SERVICE');
+    console.log('getLikeMeCountsPriority:');
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts-priority`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
@@ -98,7 +98,7 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
       this.dataStore.likeMeCounts.rvUse = counts.rvUse;
       this.dataStore.likeMeCounts.rigType = counts.rigType;
-      console.log('COUNTS=', this.dataStore.likeMeCounts);
+      console.log('getLikeMeCountsPriority:, counts returned=', this.dataStore.likeMeCounts);
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
       this.getLikeMeCountsSecondary();
@@ -112,7 +112,7 @@ export class LikemeCountsService {
   }
 
   getLikeMeCountsSecondary() {
-    console.log('IN LIKEMECOUNTSSecondary SERVICE');
+    console.log('getLikeMeCountsSecondary:');
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts-secondary`,
     {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
@@ -143,7 +143,7 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.worklife = counts.worklife;
       this.dataStore.likeMeCounts.yearOfBirth = counts.yearOfBirth;
 
-      console.log('COUNTS=', this.dataStore.likeMeCounts);
+      console.log('getLikeMeCountsSecondary: counts returned=', this.dataStore.likeMeCounts);
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
       // this._likeMeCounts.complete();
     }, (error) => {

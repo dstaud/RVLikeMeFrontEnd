@@ -107,6 +107,7 @@ export class ProfileComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('ProfileComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       this.totalPersonalFieldsWithData = 0;
       this.totalLifestyleFieldsWithData = 0;

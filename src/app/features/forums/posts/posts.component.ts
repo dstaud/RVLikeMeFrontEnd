@@ -58,7 +58,7 @@ export class PostsComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
-      console.log('in post component=', profile);
+      console.log('PostsComponent:ngOnInit: got new profile data=', profile);
       this.userID = profile.userID;
     }, (error) => {
       console.error(error);
@@ -86,11 +86,11 @@ export class PostsComponent implements OnInit {
     }
     this.displayName = displayName;
     this.posts = [];
-    console.log('GETTING POSTS=', this.groupID);
+    console.log('PostsComponent:getPosts: Get posts for group=', this.groupID);
     this.forumSvc.getPosts(this.groupID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
-      console.log('RESULT=', postResult);
+      console.log('PostsComponent:getPosts: Got posts=', postResult);
       if (postResult.length === 0) {
         this.showPosts = false;
         this.showFirstPost = true;
@@ -100,13 +100,13 @@ export class PostsComponent implements OnInit {
         let titleEscaped = this.escapeJsonReservedCharacters(postResult[0].title);
         let bodyEscaped = this.escapeJsonReservedCharacters(postResult[0].body);
         this.comments= [];
-        console.log('COMMENTS BEFORE = ', this.comments);
+        console.log('PostsComponent:getPosts: Comments array before=', this.comments);
         for (let j=0; j < postResult[0].comments.length; j++) {
           comment = '{"comment":"' + postResult[0].comments[j].comment + '",' +
           '"displayName":"' + postResult[0].comments[j].displayName + '",' +
           '"profileImageUrl":"' + postResult[0].comments[j].profileImageUrl + '",' +
           '"createdAt":"' + postResult[0].comments[j].createdAt + '"}';
-          console.log('HAVE A COMMENT! ', comment);
+          console.log('PostsComponent:getPosts: Comments array adding new comment=', comment);
           postComments.push(JSON.parse(comment));
           this.showComments.push(false);
         }
@@ -120,12 +120,11 @@ export class PostsComponent implements OnInit {
                 '"comments":"0",' +
                 '"reactionCount":"' + postResult[0].reactions.length + '",' +
                 '"createdAt":"' + postResult[0].createdAt + '"}';
-        console.log('POST=', post)
+        console.log('PostsComponent:getPosts: Adding new post to array=', post)
         postJSON = JSON.parse(post);
         this.posts.push(postJSON);
-        console.log('PUSH TO COMMENTS ', postComments);
         this.comments.push(postComments);
-        console.log('COMMENTS = ', this.comments);
+        console.log('PostsComponent:getPosts: Comments array added new comment=', this.comments);
         for (let i=1; i < postResult.length; i++) {
           let titleEscaped = this.escapeJsonReservedCharacters(postResult[i].title);
           let bodyEscaped = this.escapeJsonReservedCharacters(postResult[i].body);
@@ -136,7 +135,7 @@ export class PostsComponent implements OnInit {
                       '"displayName":"' + postResult[i].comments[j].displayName + '",' +
                       '"profileImageUrl":"' + postResult[i].comments[j].profileImageUrl + '",' +
                       '"createdAt":"' + postResult[i].comments[j].createdAt + '"}';
-            console.log('HAVE A COMMENT! ', comment);
+            console.log('PostsComponent:getPosts: PostComments Array, adding new comment=', comment);
             postComments.push(JSON.parse(comment));
             this.showComments.push(false);
           }
@@ -153,9 +152,9 @@ export class PostsComponent implements OnInit {
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);
           this.showUpdatePost.push(false);
-          console.log('PUSH TO COMMENTS ', postComments);
+          console.log('PostsComponent:getPosts: Post Comments array adding new comment=', postComments);
           this.comments.push(postComments);
-          console.log('COMMENTS = ', this.comments);
+          console.log('PostsComponent:getPosts: Comments array adding new comment=', this.comments);
         }
         console.log('POSTS=', this.posts);
         this.showPosts = true;

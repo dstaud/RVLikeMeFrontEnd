@@ -197,6 +197,7 @@ export class LifestyleComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('LifestyleComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
 
       // If user selected other on a form field, need to get the data they entered

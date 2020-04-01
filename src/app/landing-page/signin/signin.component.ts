@@ -100,6 +100,7 @@ export class SigninComponent implements OnInit {
       this.userProfile
       .pipe(untilComponentDestroyed(this))
       .subscribe(data => {
+        console.log('SignInComponent:ngOnInit: got new profile data=', data);
         if (data.language) {
           console.log('Signin, set language to ', data.language);
           this.language.setLanguage(data.language);

@@ -233,6 +233,7 @@ export class PersonalComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('PersonalComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       if (data) {
         if (!data.displayName) { this.profile.displayName = this.profile.firstName }

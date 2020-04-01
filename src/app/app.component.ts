@@ -115,12 +115,12 @@ export class AppComponent implements OnInit {
       this.userProfile
       .pipe(untilComponentDestroyed(this))
       .subscribe(profile => {
-        console.log('in app component=', profile);
+        console.log('AppComponent:ngOnInit: got new profile=', profile);
         if (profile.language) {
-          console.log('Setting Language to ', profile.language);
+          console.log('AppComponent:ngOnInit: Setting Language to ', profile.language);
           this.language.setLanguage(profile.language);
         } else {
-          console.log('Setting Language to default');
+          console.log('AppComponent:ngOnInit: Setting Language to default');
           this.language.setLanguage('en');
         }
         if (profile.colorThemePreference) {
@@ -130,8 +130,8 @@ export class AppComponent implements OnInit {
         }
 
         // When we have actual profile data from the database, then go get the counts that will be used on the home page
-        if (profile.firstName) {
-          console.log('getting counts!');
+        if (profile._id) {
+          console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
           this.likeMeCountsSvc.getLikeMeCountsPriority();
         }
       }, (error) => {

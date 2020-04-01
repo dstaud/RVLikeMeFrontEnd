@@ -7,6 +7,7 @@ import { CommonDataService } from './common-data.service';
 import { SharedComponent } from '@shared/shared.component';
 
 export interface IuserProfile {
+  _id: string;
   userID: string;
   firstName: string;
   lastName: string;
@@ -51,6 +52,7 @@ export interface IuserProfile {
 export class ProfileService {
   // private user: IuserProfile;
   private userProfile: IuserProfile = {
+    _id: null,
     userID: null,
     firstName: null,
     lastName: null,
@@ -102,6 +104,7 @@ export class ProfileService {
 
   getProfile(reset?: boolean) {
     if (reset) {
+      this.dataStore.profile._id = null;
       this.dataStore.profile.userID = null;
       this.dataStore.profile.firstName = null;
       this.dataStore.profile.lastName = null;
@@ -144,7 +147,7 @@ export class ProfileService {
       { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
       .subscribe(data => {
         this.dataStore.profile = data;
-        console.log('PROFILE=', this.dataStore.profile);
+        console.log('ProfileService:getProfile: Profile=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, (error) => {
         console.warn('ERROR loading profile: ', error);
@@ -166,7 +169,16 @@ export class ProfileService {
   }
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
+    console.log('updateProfile: for profile ', userProfile)
     return this.http.put(`${this.dataSvcURL}/profile`, userProfile,
+    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+  }
+
+  addGroupToProfile(profileID: string, groupID: string): Observable<any> {
+    let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
+    let groupJSON = JSON.parse(group);
+    console.log('updateProfile: params=', groupJSON)
+    return this.http.put(`${this.dataSvcURL}/profile-forums`, groupJSON,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 

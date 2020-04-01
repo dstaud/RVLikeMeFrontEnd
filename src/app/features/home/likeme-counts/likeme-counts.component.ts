@@ -57,6 +57,7 @@ export class LikemeCountsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.profile = data;
+      console.log('LikeMeCountsComponent:ngOnInit: got new profile data=', data);
     });
 
     this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
@@ -64,12 +65,12 @@ export class LikemeCountsComponent implements OnInit {
     this.likeMeCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('LikeMeCountsComponent:ngOnInit: got new counts=', data);
       this.showSpinner = true;
       this.allUsersCount = data.allUsersCount;
       this.aboutMeCount = data.aboutMe;
       this.rigTypeCount = data.rigType;
       this.rvUseCount = data.rvUse;
-      console.log('ALL USER COUNT=', this.allUsersCount);
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
         this.showSpinner = false;
@@ -115,6 +116,7 @@ export class LikemeCountsComponent implements OnInit {
 
   onClick(clickedItem: string) {
     this.activateBackArrowSvc.setBackRoute('home');
+    console.log('NAVIGATING FROM HOME TO CONNECTIONS');
     this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a bug and won't accept queryParams
   }
 }

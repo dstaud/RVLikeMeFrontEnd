@@ -80,6 +80,7 @@ export class ConnectionsComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('ConnectionsComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
     });
 
@@ -105,6 +106,7 @@ export class ConnectionsComponent implements OnInit {
     })) */
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
+      console.log('ConnectionsComponent:ngOnInit: got new counts=', counts);
       this.allUsersCount = counts.allUsersCount;
       this.likeMeMatches = [];
 
@@ -172,6 +174,7 @@ export class ConnectionsComponent implements OnInit {
       // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
       // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
       if (this.allUsersCount > 0) {
+        console.log('ConnectionsComponent:ngOnInit: got real counts.  allUsersCount=', this.allUsersCount);
         this.showSpinner = false;
         if (!this.foundMatch) {
           this.showNoConnections = true;

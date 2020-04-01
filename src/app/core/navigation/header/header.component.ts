@@ -52,6 +52,7 @@ export class HeaderComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.profile = data;
+      console.log('HeaderComponent:ngOnInit: got new profile data=', data);
       if (this.profile.colorThemePreference === 'light-theme') {
         this.lightTheme = true;
       } else {

@@ -134,6 +134,7 @@ export class UserQueryComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.profile = data;
+      console.log('User-QueryComponent:ngOnInit: got new profile data=', data);
     });
   }
 

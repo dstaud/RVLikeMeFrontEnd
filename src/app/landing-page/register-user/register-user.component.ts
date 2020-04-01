@@ -50,6 +50,7 @@ export class RegisterUserComponent implements OnInit {
     tokenExpire: 0
   };
   private profile: IuserProfile = {
+    _id: null,
     userID: null,
     firstName: null,
     lastName: null,

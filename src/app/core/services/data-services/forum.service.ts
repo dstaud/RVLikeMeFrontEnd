@@ -28,7 +28,7 @@ export class ForumService {
     keyValues = keyValues + '}';
 
     let param = JSON.parse(keyValues);
-    console.log('KEY VALUES=', keyValues);
+    console.log('ForumService:getGroup: Key values=', keyValues);
 
     return this.http.get(`${this.dataSvcURL}/forum-group`,
     {
