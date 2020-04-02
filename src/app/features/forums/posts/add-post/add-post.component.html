@@ -3,29 +3,36 @@
     <form [formGroup]="form">
       <div>
         <mat-form-field appearance="outline">
-          <mat-label>Title</mat-label>
+          <mat-label>{{ 'add-post.component.title' | translate }}</mat-label>
           <input matInput
                 type="text"
-                placeholder="Post Title"
+                placeholder="{{ 'add-post.component.postTitle' | translate }}"
                 formControlName="title"
                 cdkFocusInitial>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="outline">
-          <mat-label>Post</mat-label>
+          <mat-label>{{ 'add-post.component.body' | translate }}</mat-label>
           <textarea matInput
                 type="text"
-                placeholder="What do you want to say?"
+                placeholder="{{ 'add-post.component.whatToSay' | translate }}"
                 formControlName="post">
           </textarea>
         </mat-form-field>
       </div>
       <div class="button">
-        <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onPost()">Post</button>
+        <button [disabled]="!form.valid"
+                class="mat-raised-button mat-primary"
+                (click)="onPost()">
+                {{ 'add-post.component.post' | translate }}
+        </button>
       </div>
       <div class="button">
-        <button class="mat-raised-button" (click)="doneWithAdd('canceled')">Cancel</button>
+        <button class="mat-raised-button"
+                (click)="doneWithAdd('canceled')">
+                {{ 'add-post.component.cancel' | translate }}
+        </button>
       </div>
     </form>
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

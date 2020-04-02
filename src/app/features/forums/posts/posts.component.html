@@ -6,9 +6,9 @@
         style="width:50px;height:50px;">
     </div>
     <div>
-      <button mat-button (click)="addPost()" class="add-post">
+      <button mat-button (click)="showAddPost = true" class="add-post">
         <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
-        <span>Add post as {{ displayName }}</span>
+        <span>{{ 'posts.component.addHeader' | translate }} {{ displayName }}</span>
       </button>
     </div>
   </div>
@@ -24,7 +24,7 @@
   <div class="postsContainer">
     <mat-divider></mat-divider>
     <div *ngIf="showFirstPost" class="posts">
-      Be the first to add a post for this group!
+      {{ 'posts.component.firstPost' | translate }}
     </div>
     <div *ngIf="showPosts">
         <div *ngFor="let post of posts; let i=index">
@@ -73,17 +73,21 @@
               {{ posts[i].body }}
             </div>
             <div class="response">
-              <div (click)="onLike(i)" class="like">
+              <button (click)="onLike(i)"
+                      class="mat-button mat-primary like"
+                      [disabled]="liked[i]">
                 <mat-icon
-                  class="reaction"
                   matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
                   matBadgeColor="warn"
                   matBadgeSize="small"
                   matBadgePosition="above after"
                   fontSet="material-icons-outlined">thumb_up</mat-icon>
-                <span class="reaction-text">like</span>
-              </div>
-              <div (click)="onComment(i)" class="comment">
+                <span class="reaction-text">
+                      {{ "posts.component.like" | translate }}
+                </span>
+              </button>
+              <button (click)="onComment(i)"
+                      class="mat-button mat-primary comment">
                 <mat-icon
                   class="reaction"
                   matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"
@@ -91,8 +95,8 @@
                   matBadgeSize="small"
                   matBadgePosition="above after"
                   fontSet="material-icons-outlined">comment</mat-icon>
-                <span class="reaction-text">comments</span>
-              </div>
+                <span class="reaction-text">{{ "posts.component.comments" | translate }}</span>
+              </button>
             </div>
 
             <div class="comments" [hidden]="!showComments[i]">

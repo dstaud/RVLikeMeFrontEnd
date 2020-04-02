@@ -1,9 +1,9 @@
 <div class="mat-app-background background">
 
-  <div [hidden]="!showForumList">
-    <div *ngFor="let group of groupsAttributes; let i=index" (click)="onGroupSelect(i)">
-      <span class="group-header"><br>Group forum for people:</span>
-      <span *ngFor="let match of group" class="matches"><br>- {{ match }}</span>
+  <div [hidden]="!showForumList" class="group-list">
+    <div *ngFor="let group of groupListDisplayAttributes; let i=index" (click)="onGroupSelect(i)">
+      <span class="group-header"><br>{{ 'forums.component.heading' | translate}}:</span>
+      <span *ngFor="let attribute of group" class="matches"><br>- {{ attribute | translate }}</span>
       <mat-divider></mat-divider>
     </div>
   </div>
@@ -11,24 +11,38 @@
   <div [hidden]="!showForumPosts">
     <div>
       <div class="groupHeading">
-        <span>Group forum for people:</span>
+        <span>{{ 'forums.component.heading' | translate}}:</span>
         <div class="options">
-          <mat-icon class="options-icons" fontSet="material-icons-outlined" (click)="onTitles()">subject</mat-icon>
-          <mat-icon class="options-icons" fontSet="material-icons-outlined" (click)="onSearch()">search</mat-icon>
+          <mat-icon class="options-icons"
+                    fontSet="material-icons-outlined"
+                    (click)="showTitlesOnly = !showTitlesOnly">
+                    subject
+          </mat-icon>
+          <mat-icon class="options-icons"
+                    fontSet="material-icons-outlined"
+                    (click)="onSearch()">
+                    search
+          </mat-icon>
         </div>
-        <span *ngIf="lessMatches" class="matches">
-          <span *ngFor="let match of matches | slice:0:3" class="matches"><br>- {{ match }}</span>
-          <div *ngIf="showMoreOption" (click)="onMore()" class="moreLess">...More</div>
+        <span *ngIf="showLessMatches" class="matches">
+          <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup | slice:0:3" class="matches"><br>- {{ profileAttribute }}</span>
+          <div *ngIf="showMoreOption"
+                (click)="showLessMatches=false"
+                class="moreLess">
+                ...{{ 'forums.component.more' | translate }}
+          </div>
         </span>
-        <span *ngIf="!lessMatches" class="matches">
-          <span *ngFor="let match of matches" class="matches"><br>- {{ match }}</span>
-          <div (click)="onLess()" class="moreLess">...Less</div>
+        <span *ngIf="!showLessMatches" class="matches">
+          <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup" class="matches"><br>- {{ profileAttribute }}</span>
+          <div (click)="showLessMatches=true"
+                class="moreLess">
+                ...{{ 'forums.component.less' | translate }}</div>
         </span>
       </div>
     </div>
     <div class="posts">
       <app-rvlm-posts
-        [titlesOnly]="titlesOnly">
+        [titlesOnly]="showTitlesOnly">
       </app-rvlm-posts>
     </div>
   </div>

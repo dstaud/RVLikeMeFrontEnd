@@ -1,13 +1,13 @@
 <div>
   <form [formGroup]="form">
     <mat-form-field appearance="outline">
-      <mat-label>Comment</mat-label>
+      <mat-label>{{ "add-comment.component.comment" | translate }}</mat-label>
 
       <input
         *ngIf="showSmallFieldInitial"
         matInput
         type="text"
-        placeholder="Comment"
+        placeholder="{{ 'add-comment.component.comment' | translate }}"
         formControlName="comment"
         cdkFocusInitial
         (click)="showSmallFieldInitial=false">
@@ -17,13 +17,17 @@
         *ngIf="!showSmallFieldInitial"
         matInput
         type="text"
-        placeholder="Comment"
+        placeholder="{{ 'add-comment.component.comment' | translate }}"
         formControlName="comment"
         cdkFocusInitial>
       </textarea>
 
     </mat-form-field>
-    <button [disabled]="!postButtonActive" class="mat-raised-button mat-primary button" (click)="onSubmit()">Post</button>
+    <button [disabled]="!postButtonActive"
+            class="mat-raised-button mat-primary button"
+            (click)="onSubmit()">
+            {{ "add-comment.component.post" | translate }}
+    </button>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

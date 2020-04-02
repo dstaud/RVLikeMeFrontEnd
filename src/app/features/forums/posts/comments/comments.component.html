@@ -1,8 +1,11 @@
 <div class="container">
   <div [hidden]="startCommentsIndex === 0">
-    <span class="show-all-comments" (click)="startCommentsIndex = 0">...show all comments</span>
+    <span class="show-all-comments"
+          (click)="startCommentsIndex = 0">
+          ...{{ "comments.component.showAll" | translate }}
+    </span>
   </div>
-  <div *ngFor="let comment of comments | slice: startCommentsIndex : comments.length">
+  <div *ngFor="let comment of comments | slice: startCommentsIndex : commentsLength">
     <div class="comment-container">
       <div>
         <img class="image profile-image-post"
@@ -11,7 +14,12 @@
       </div>
       <div class="comment">
         <div>
-          <span class="display-name">{{ comment.displayName }}</span><span class="date">{{ comment.createdAt | date:'short'}}</span>
+          <span class="display-name">
+              {{ comment.displayName }}
+          </span>
+          <span class="date">
+              {{ comment.createdAt | date:'short'}}
+          </span>
         </div>
         <div>
           {{ comment.comment }}

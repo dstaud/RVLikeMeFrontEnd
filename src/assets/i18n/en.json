@@ -54,6 +54,9 @@
   },
   "forums.component": {
     "header": "Forums",
+    "heading": "Group forum for people",
+    "more": "More",
+    "less": "less",
     "yearOfBirth": "your age (+/- 5yrs)",
     "atv": "interested in ATV off-roading",
     "motorcycle": "interested in motorcycling",
@@ -426,5 +429,26 @@
     "darkTheme": "Dark mode",
     "lightTheme": "Light mode",
     "logout": "Logout"
+  },
+  "posts.component": {
+    "addHeader": "Add post as",
+    "firstPost": "Be the first to add a post for this group!",
+    "comments": "comments",
+    "like": "like"
+  },
+  "add-post.component": {
+    "post": "Post",
+    "whatToSay": "What do you want to say?",
+    "postTitle": "Post Title",
+    "title": "Title",
+    "body": "Post",
+    "cancel": "Cancel"
+  },
+  "comments.component": {
+    "showAll": "show all comments"
+  },
+  "add-comment.component": {
+    "comment": "Comment",
+    "post": "Post"
   }
 }

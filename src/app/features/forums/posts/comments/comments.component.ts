@@ -14,17 +14,23 @@ export class CommentsComponent implements OnInit {
   public comments: [];
 
   startCommentsIndex: number = 0;
+  commentsLength: number = 0;
 
   constructor() {}
 
   ngOnInit(): void {
-    console.log('in comments', this.commentsIndex, this.comments);
+    console.log('CommentsComponent:ngOnInit: comments index=', this.commentsIndex, ' comments=', this.comments);
     this.setStartCommentsIndex();
   }
 
   setStartCommentsIndex() {
-    if (this.comments.length > 4) {
-      this.startCommentsIndex = this.comments.length - 4;
+    if (!this.comments) {
+      this.commentsLength = 0;
+    } else {
+      this.commentsLength = this.comments.length;
+      if (this.comments.length > 4) {
+        this.startCommentsIndex = this.comments.length - 4;
+      }
     }
   }
 }

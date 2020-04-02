@@ -37,13 +37,6 @@ export class ForumService {
     });
   }
 
-/*   getGroups(groups: Array<string>): Observable<any> {
-    return this.http.get(`${this.dataSvcURL}/forum-groups`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: { "groups": groups }
-    });
-  } */
 
   addGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');

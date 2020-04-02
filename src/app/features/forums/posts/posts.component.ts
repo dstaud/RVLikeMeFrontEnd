@@ -19,31 +19,35 @@ export type FadeState = 'visible' | 'hidden';
 
 export class PostsComponent implements OnInit {
 
+  // If titlesOnly is true, then only display titles of posts
   @Input('titlesOnly')
   public titlesOnly: boolean;
 
+  // Provide access to methods on comments component and update post component
   @ViewChild(CommentsComponent)
   public commentsComponent: CommentsComponent;
 
   @ViewChild(UpdatePostComponent)
   public updatePostComponent: UpdatePostComponent;
 
-  showSpinner = false;
-  postsResult: string;
+  groupID: string;
+  userID: string;
+  displayName: string;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
-  displayName: string
+  postsResult: string;
+  currentRowUpdatePost: number;
+  posts: Array<any> = [];
+  comments: Array<Array<JSON>> = [];
+  currentPostRow: number;
+  userProfile: Observable<IuserProfile>;
+  liked: Array<boolean> = [];
+
+  showSpinner = false;
   showAddPost = false;
   showPosts = false;
   showFirstPost = false;
   showComments: Array<boolean> = [];
   showUpdatePost: Array<boolean> = [];
-  currentRowUpdatePost: number;
-  groupID: string;
-  posts: Array<any> = [];
-  comments: Array<Array<JSON>> = [];
-  currentPostRow: number;
-  userProfile: Observable<IuserProfile>;
-  userID: string;
 
   private _show: boolean;
 
@@ -55,6 +59,7 @@ export class PostsComponent implements OnInit {
     this.userProfile = this.profileSvc.profile;
     this.profileSvc.getProfile();
 
+    // Get user's ID and store for use in determining what posts or comments can edit
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
@@ -69,10 +74,7 @@ export class PostsComponent implements OnInit {
   ngOnDestroy() {}
 
 
-  addPost(): void {
-    this.showAddPost = true;
-  }
-
+  // Get all posts for group passed from forums component.
   getPosts(groupID: string, profileImageUrl: string, displayName: string): void {
     let post: string;
     let postJSON: JSON;
@@ -85,6 +87,7 @@ export class PostsComponent implements OnInit {
       this.profileImageUrl = profileImageUrl;
     }
     this.displayName = displayName;
+
     this.posts = [];
     console.log('PostsComponent:getPosts: Get posts for group=', this.groupID);
     this.forumSvc.getPosts(this.groupID)
@@ -109,6 +112,7 @@ export class PostsComponent implements OnInit {
           console.log('PostsComponent:getPosts: Comments array adding new comment=', comment);
           postComments.push(JSON.parse(comment));
           this.showComments.push(false);
+          this.liked.push(this.checkIfLiked(postResult[0].reactions));
         }
         post = '{"_id":"' + postResult[0]._id + '",' +
                 '"createdBy":"' + postResult[0].createdBy + '",' +
@@ -152,11 +156,13 @@ export class PostsComponent implements OnInit {
           postJSON = JSON.parse(post);
           this.posts.push(postJSON);
           this.showUpdatePost.push(false);
+          this.liked.push(this.checkIfLiked(postResult[i].reactions));
           console.log('PostsComponent:getPosts: Post Comments array adding new comment=', postComments);
           this.comments.push(postComments);
           console.log('PostsComponent:getPosts: Comments array adding new comment=', this.comments);
         }
-        console.log('POSTS=', this.posts);
+        console.log('PostsComponent:getPosts: Posts=', this.posts);
+        console.log('PostsComponent:getPosts: Reactions=', this.liked);
         this.showPosts = true;
         this.showFirstPost = false;
         this.showSpinner = false;
@@ -171,9 +177,11 @@ export class PostsComponent implements OnInit {
   postAddComplete(newPost: any): void {
     console.log('back in posts', newPost);
     if (newPost !== 'canceled') {
-      console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);
       this.posts.unshift(newPost);
+      console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);
       this.showUpdatePost.unshift(false);
+      this.showFirstPost = false;
+      this.showPosts = true;
     }
     this.showAddPost = false;
   }
@@ -186,19 +194,23 @@ export class PostsComponent implements OnInit {
   }
 
   postCommentComplete(comment: any) {
-    console.log('PUSHING NEW COMMENT=', comment);
+    console.log('PostsComponent:postCommentComplete: push new comment=', comment);
     this.comments[this.currentPostRow].push(comment);
     this.showComments.push(false);
-    console.log('UPDATED COMMENTS ARRAY=', this.comments);
+    console.log('PostsComponent:postCommentComplete: row=', this.currentPostRow, ' before count=', this.posts[this.currentPostRow].commentCount);
+    this.posts[this.currentPostRow].commentCount++;
     this.commentsComponent.setStartCommentsIndex();
   }
 
   onLike(row: number): void {
     console.log('row=', row);
     let reaction = 'like';
+
     this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
     .subscribe(reactionResult => {
       console.log('REACTION RESULT=', reactionResult);
+      this.posts[row].reactionCount++;
+      this.liked[row] = true;
       this.showSpinner = false;
     }, error => {
       console.log(error);
@@ -217,6 +229,19 @@ export class PostsComponent implements OnInit {
     this.currentRowUpdatePost = row;
     this.showUpdatePost[row] = true;
     this.updatePostComponent.populatePost();
+  }
+
+  private checkIfLiked(reactions: any): boolean {
+    let reactionMatch = false;
+
+    console.log('PostsComponent:checkIfLiked: reactions=', reactions);
+    for (let i=0; i < reactions.length; i++) {
+      if (reactions[i].createdBy === this.userID) {
+        reactionMatch = true;
+        break;
+      }
+    }
+    return reactionMatch;
   }
 
   private escapeJsonReservedCharacters(string: string): string {

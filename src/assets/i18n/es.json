@@ -53,7 +53,141 @@
     "interest1": "otro está interesado en"
   },
   "forums.component": {
-    "header": "Foros"
+    "header": "Foros",
+    "heading": "Foro grupal para personas",
+    "more": "Más",
+    "less": "Menos",
+    "yearOfBirth": "tu edad (+/- 5anos)",
+    "atv": "interesado en todoterreno",
+    "motorcycle": "interesado en motociclismo",
+    "travel": "interesado en viajar",
+    "quilting": "interesado en acolchar",
+    "cooking": "interesado en cocinar",
+    "painting": "interesado en pintar",
+    "blogging": "interesado en los blogs",
+    "livingFrugally": "interesado en vivir frugalmente",
+    "gaming": "Interesado en juegos",
+    "musicalInstrument": "quien toca un instrumento musical",
+    "programming": "interesado en la programación de computadoras",
+    "mobileInternet": "interesado en internet móvil",
+    "list": {
+      "aboutme": {
+        "dreamer": "soñando con RVing",
+        "newbie": "Nuevo en RVing",
+        "experienced": "que son RVers experimentados"
+      },
+      "gender": {
+        "m": "que son hombres",
+        "f": "que son mujeres"
+      },
+      "homecountry": {
+        "usa": "de los Estados Unidos",
+        "can": "de Canadá",
+        "mex": "de Mexico"
+      },
+      "homestate": {
+        "al": "de Alabama",
+        "ak": "de Alaska",
+        "az": "de Arizona",
+        "ar": "de Arkansas",
+        "ca": "de California",
+        "co": "de Colorado",
+        "ct": "de Connecticut",
+        "de": "de Delaware",
+        "dc": "de District of Columbia",
+        "fl": "de Forida",
+        "ga": "de Georgia",
+        "hi": "de Hawaii",
+        "id": "de Idaho",
+        "il": "de Illinois",
+        "in": "de Indiana",
+        "ia": "de Iowa",
+        "ks": "de Kansas",
+        "ky": "de Kentucky",
+        "la": "de Louisiana",
+        "me": "de Maine",
+        "md": "de Maryland",
+        "ma": "de Massachusetts",
+        "mi": "de Michigan",
+        "mn": "de Minnesota",
+        "ms": "de Mississippi",
+        "mo": "de Missouri",
+        "mt": "de Montana",
+        "ne": "de Nebraska",
+        "nv": "de Nevada",
+        "nh": "de New Hampshire",
+        "nj": "de New Jersey",
+        "nm": "de New Mexico",
+        "ny": "de New York",
+        "nc": "de North Carolina",
+        "nd": "de North Dakota",
+        "oh": "de Ohio",
+        "ok": "de Oklahoma",
+        "or": "de Oregon",
+        "pa": "de Pennsylvania",
+        "sc": "de South Carolina",
+        "sd": "de South Dakota",
+        "tn": "de Tennessee",
+        "tx": "de Texas",
+        "ut": "de Utah",
+        "vt": "de Vermont",
+        "va": "de Virginia",
+        "wa": "de Washington",
+        "wv": "de West Virginia",
+        "wi": "de Wisconsin",
+        "wy": "de Wyoming"
+      },
+      "rvuse": {
+        "ft": "viajes de tiempo completo RVing",
+        "fs": "que son estacionarias a tiempo completo",
+        "fp": "que F.T. con P.T. de viaje",
+        "ps": "que P.T. viajar con base de operaciones",
+        "ny": "quiero ser RVers!"
+      },
+      "worklife": {
+        "retired": "que están retirados",
+        "military": "que estan en el ejercito",
+        "work-travel": "que están trabajando F.T./traveling",
+        "workamping": "que son de trabajo",
+        "work-full-time": "que trabajan a tiempo completo",
+        "work-part-time": "que trabajan a tiempo parcial",
+        "onleave": "en licencia / discapacidad"
+      },
+      "campswithme": {
+        "single": "que RV por sí mismos",
+        "partner": "que RV con cónyuge / pareja",
+        "children": "Ese RV con sus hijos",
+        "family": "esa casa rodante con su familia",
+        "friend": "Ese RV con un amigo(s)"
+      },
+      "boondocking": {
+        "most": "Ese boondock la mayor parte del tiempo",
+        "alot": "Ese boondock la mayor parte del tiempo",
+        "some": "ese boondock algunas veces",
+        "while": "ese boondock de vez en cuando",
+        "haveto": "Ese boondock cuando tienen que",
+        "rarely": "rara vez o nunca boondock",
+        "want": "nunca boondock, pero quiero"
+      },
+      "traveling": {
+        "countries": "viajando a través de los Estados Unidos / Canadá / México",
+        "country": "viajando a través de los U.S.A.",
+        "regional": "viajar regionalmente dentro del país",
+        "none": "no viaje"
+      },
+      "rigtype": {
+        "a": "con una autocaravana clase A",
+        "b": "con una autocaravana clase B",
+        "c":"con una autocaravana clase C",
+        "sc": "con una autocaravana Super C",
+        "fw": "con un remolque de quinta rueda",
+        "tt": "con un trailer de viaje",
+        "tc": "con una camioneta",
+        "ft": "con un remolque plegable",
+        "v": "con una furgoneta",
+        "cb": "con un bus personalizado"
+      }
+    }
   },
   "home.component": {
     "header": "Casa",
@@ -295,5 +429,26 @@
     "darkTheme": "Modo oscuro",
     "lightTheme": "Modo de luz",
     "logout": "Cerrar sesión"
+  },
+  "posts.component": {
+    "addHeader": "Agregar publicación como",
+    "firstPost": "¡Sé el primero en añadir una publicación para este grupo!",
+    "comments": "Comentarios",
+    "like": "me gusta"
+  },
+  "add-post.component": {
+    "post": "Enviar",
+    "whatToSay": "¿Qué quieres decir?",
+    "postTitle": "Título de la entrada",
+    "title": "Título",
+    "body": "Enviar",
+    "cancel": "Cancelar"
+  },
+  "comments.component": {
+    "showAll": "mostrar todos los comentarios"
+  },
+  "add-component.component": {
+    "comment": "Comentario",
+    "post": "Enviar"
   }
 }
