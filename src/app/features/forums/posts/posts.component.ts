@@ -194,7 +194,11 @@ export class PostsComponent implements OnInit {
   }
 
   postCommentComplete(comment: any) {
-    console.log('PostsComponent:postCommentComplete: push new comment=', comment);
+    console.log('PostsComponent:postCommentComplete: push on to ' , this.comments, ' current row=', this.currentPostRow);
+    if (this.comments.length === 0) {
+      console.log('PostsComponent:postCommentComplete: initialize comments array');
+      this.comments = [[]];
+    }
     this.comments[this.currentPostRow].push(comment);
     this.showComments.push(false);
     console.log('PostsComponent:postCommentComplete: row=', this.currentPostRow, ' before count=', this.posts[this.currentPostRow].commentCount);
