@@ -132,8 +132,12 @@ export class ForumsComponent implements OnInit {
     this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
   }
 
+  onLikeMe() {
+    this.router.navigateByUrl('connections');
+  }
 
-  // queryParams sent fron connections page may contain one or more profile attributes that will define a group forum.
+
+  // queryParams sent from connections page may contain one or more profile attributes that will define a group forum.
   // getGroup extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
   // If the group does exist, it asks the server for all posts for the group forum for display in the template.
   // If the group does not exist, it asks the server to create the group forum.
@@ -163,6 +167,7 @@ export class ForumsComponent implements OnInit {
     keyValue = this.getGroupKeyValueAttributes(queryParams).split('~');
     names = keyValue[0];
     values = keyValue[1];
+    console.log('ForumsComponent:getGroup: queryParams=', queryParams, ' keyvalue=', keyValue, ' names=', names, ' values=', values);
 
     // Check if group already exists
     this.forumSvc.getGroup(names, values)
@@ -274,6 +279,8 @@ export class ForumsComponent implements OnInit {
     let names;
     let values;
 
+    names = '';
+    values = '';
     console.log('ForumsComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
       if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
@@ -287,6 +294,7 @@ export class ForumsComponent implements OnInit {
         values = values + value;
       }
     }
+    console.log('ForumsComponent:getGroupDisplayAttributes: names=', names, ' values=', values);
     return names + '~' + values;
   }
 
@@ -337,9 +345,8 @@ export class ForumsComponent implements OnInit {
         break;
       }
     }
-    if (!groupFound) { // TODO: Is update coming back from server to update local groups array?
+    if (!groupFound) {
       console.log('ForumsComponent:updateProfileGroups: Group not found in Profile.  Adding this Group ID to Profile ', this.groupID);
-      // this.profile.forums.push(this.groupID);
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {

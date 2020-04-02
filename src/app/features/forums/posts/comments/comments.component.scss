@@ -1,5 +1,13 @@
 @import './../../../../../styles/_variables';
 
+.container {
+  margin-left: 10px;
+}
+
+.hyperlink {
+  color: $primary-color;
+}
+
 mat-form-field {
   line-height: 1.4;
   width: 100%;
@@ -7,10 +15,6 @@ mat-form-field {
 
 .image {
   border-radius: 50%;
-}
-
-.profile-image {
-  float: left;
 }
 
 .profile-image-post {
@@ -38,11 +42,6 @@ mat-form-field {
   font-weight: bold;
 }
 
-.container {
-  margin-left: 10px;
-}
-
 .show-all-comments {
   margin-top: 10px;
-  color: $primary-color;
 }

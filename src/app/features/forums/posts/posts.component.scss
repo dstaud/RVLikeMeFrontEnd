@@ -4,34 +4,9 @@
   padding: 10px;
 }
 
-.add-post {
+.hyperlink {
   color: $primary-color;
 }
-
-.add-comment {
-  color: $primary-color;
-}
-
-cdk-virtual-scroll-viewport {
-  height: 400px;
-  width: 300px;
-}
-
-.item {
-  box-sizing: border-box;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* &:first-child {
-  border: none;
-}
-
-&:nth-child(2n) {
-  height: 100px;
-} */
 
 .profile-image {
   float: left;
@@ -39,16 +14,14 @@ cdk-virtual-scroll-viewport {
 
 .profile-image-post {
   float: left;
-  // width: 100%;
 }
 
 .image {
   border-radius: 50%;
 }
 
-.postsContainer {
+.posts-container {
   clear: left;
-  // opacity: 1;
 }
 
 .menu {
@@ -57,7 +30,6 @@ cdk-virtual-scroll-viewport {
 
 .posts {
   margin-top: 10px;
-  // height: 30px;
 }
 
 .body {
@@ -66,7 +38,7 @@ cdk-virtual-scroll-viewport {
   margin-top: 10px;
 }
 
-.nameAndDate {
+.name-and-date {
   margin-left: 50px;
   font-size: 80%;
   line-height: 1.5;

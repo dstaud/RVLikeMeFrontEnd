@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mat-body-1">
   <div>
     <div id="profileImage" class="profile-image">
       <img class="image"
@@ -6,14 +6,14 @@
         style="width:50px;height:50px;">
     </div>
     <div>
-      <button mat-button (click)="showAddPost = true" class="add-post">
+      <button mat-button (click)="showAddPost = true" class="hyperlink">
         <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
         <span>{{ 'posts.component.addHeader' | translate }} {{ displayName }}</span>
       </button>
     </div>
   </div>
   <div *ngIf="showAddPost"
-    class="postsContainer">
+    class="posts-container">
     <app-rvlm-add-post
       [groupID]="groupID"
       [displayName]="displayName"
@@ -21,7 +21,7 @@
       (postAddComplete)="postAddComplete($event)">
     </app-rvlm-add-post>
   </div>
-  <div class="postsContainer">
+  <div class="posts-container">
     <mat-divider></mat-divider>
     <div *ngIf="showFirstPost" class="posts">
       {{ 'posts.component.firstPost' | translate }}
@@ -60,7 +60,7 @@
                 [src]="posts[i].profileImageUrl"
                 style="width:40px;height:40px;">
               </div>
-              <div class="nameAndDate">
+              <div class="name-and-date">
                 <div>
                   {{ posts[i].displayName }}
                 </div>

@@ -175,7 +175,7 @@ export class PostsComponent implements OnInit {
 
 
   postAddComplete(newPost: any): void {
-    console.log('back in posts', newPost);
+    console.log('PostsComponent:postAddComplete: new post=', newPost);
     if (newPost !== 'canceled') {
       this.posts.unshift(newPost);
       console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);

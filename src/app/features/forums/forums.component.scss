@@ -1,7 +1,11 @@
 @import './../../../styles/_variables';
 
-.background {
+.container {
   margin-top: 50px;
+}
+
+.hyperlink {
+  color: $primary-color;
 }
 
 .group-list {
@@ -9,15 +13,11 @@
   padding-right: 10px;
 }
 
-.groupHeading {
+.group-heading {
   float: left;
   background-color: #e0e0e0;
   padding: 10px;
   width: 100%;
-}
-
-.group-header {
-  color: $primary-color;
 }
 
 .options {
@@ -27,30 +27,15 @@
 
 .options-icons {
   padding-left: 10px;
-  color: $primary-color;
 }
-
-/* mat-icon {
-  font-size: 80%;
-} */
 
 .posts {
   clear: left;
 }
 
-.moreLess {
-  color: $primary-color;
-}
-.matches {
+.group-attributes {
   margin-left: 5px;
   font-size: 90%;
-}
-
-.list-item {
-  display: inline-flex;
-  vertical-align: middle;
-  align-items: center;
-  padding-left: 5px;
 }
 
 .spinner {

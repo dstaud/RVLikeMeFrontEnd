@@ -1,4 +1,4 @@
-<div>
+<div class="mat-app-background background mat-body-1">
   <button
     [disabled]="disableSingleMatchForumOffer"
     class="mat-raised-button button mat-primary"
@@ -10,7 +10,7 @@
     (click)="onCancel()">
     {{ "connections.component.cancelButton" | translate }}
   </button>
-  <h3 matsubheader>{{ queryResultMessagePrefix }}</h3>
+  <div><span class="mat-title">{{ queryResultMessagePrefix }}</span></div>
   <mat-list>
     <mat-list-item
       *ngFor="let result of results"
