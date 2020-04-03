@@ -1,9 +1,10 @@
 <div ngClass="background background-desktop mat-body-1"
     [ngClass.xs]="{'background': true, 'background-desktop': false}"
     [ngClass.md]="{'background': false, 'background-desktop': true}">
-  <div *ngIf="containerDialog">
+<!--   <div *ngIf="containerDialog">
     <p class="mat-h2">Please sign in</p>
-  </div>
+  </div> -->
+  <div><span class="mat-title">{{ 'signin.component.header' | translate }}</span></div>
   <div *ngIf="httpError">
     <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
   </div>

@@ -8,7 +8,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-// import { ScrollingModule} from '@angular/cdk/scrolling';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import * as Sentry from '@sentry/browser';
@@ -20,20 +19,25 @@ import { environment } from '../environments/environment';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-
-import { WindowService } from '@services/window.service';
-
 import { HeaderComponent } from '@navigation/header/header.component';
 import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
 import { FooterComponent } from '@navigation/footer/footer.component';
 import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found.component';
+import { ForumsComponent } from './features/forums/forums.component';
 import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 
-import { ThemeService } from '@services/theme.service';
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
+import { PostsComponent } from './features/forums/posts/posts.component';
+import { AddPostComponent } from './features/forums/posts/add-post/add-post.component';
+import { CommentsComponent } from './features/forums/posts/comments/comments.component';
+import { AddCommentComponent } from './features/forums/posts/comments/add-comment/add-comment.component';
+import { UpdatePostComponent } from './features/forums/posts/update-post/update-post.component';
+
+import { ThemeService } from '@services/theme.service';
 import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
 import { ProfileService } from '@services/data-services/profile.service';
+import { WindowService } from '@services/window.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
@@ -79,7 +83,13 @@ export function getErrorHandler(): ErrorHandler {
     InstallDialogComponent,
     MyStoryDialogComponent,
     DesktopDialogComponent,
-    ForumsListComponent
+    ForumsListComponent,
+    PostsComponent,
+    AddPostComponent,
+    CommentsComponent,
+    AddCommentComponent,
+    UpdatePostComponent,
+    ForumsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

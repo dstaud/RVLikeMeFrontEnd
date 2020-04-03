@@ -1,7 +1,7 @@
 import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { PageNotFoundComponent } from './core/navigation/page-not-found/page-not-found.component';
@@ -13,6 +13,7 @@ import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
 import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
 import { InterestsComponent } from './features/profile/interests/interests.component';
 import { UserQueryComponent } from './features/connections/user-query/user-query.component';
+import { ForumsComponent } from './features/forums/forums.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -20,11 +21,11 @@ const routes: Routes = [
     import('./features/connections/connections.module')
     .then(m => m.ConnectionsModule)
   },
-  { path: 'forums',
+/*   { path: 'forums',
     loadChildren: () =>
     import('./features/forums/forums.module')
     .then(m => m.ForumsModule)
-  },
+  }, */
   { path: 'messages',
     loadChildren: () =>
     import('./features/messages/messages.module')
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'profile-interests', component: InterestsComponent },
   { path: 'user-query', component: UserQueryComponent },
   { path: 'forums-list', component: ForumsListComponent },
+  { path: 'forums', component: ForumsComponent },
   { path: '', component: LandingPageComponent },
   { path: '**', component: PageNotFoundComponent }
 ];

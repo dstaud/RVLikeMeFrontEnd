@@ -37,6 +37,17 @@ export class ForumService {
     });
   }
 
+  getGroupByID(groupID: string): Observable<any> {
+    let param = JSON.parse('{"groupID":"' + groupID + '"}');
+
+    console.log('ForumService:getGroup: param =', param);
+
+    return this.http.get(`${this.dataSvcURL}/forum-group-id`,
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+      params: param
+    });
+  }
 
   addGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');

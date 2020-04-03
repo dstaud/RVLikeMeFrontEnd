@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -88,39 +87,11 @@ export class ForumsListComponent implements OnInit {
 
   onGroupSelect(groupItem: number) {
     let group = this.groupsListFromUserProfile[groupItem];
-    let backParam: string;
     let queryParams: string;
-    let name: string;
-    let value: any;
-    let groupKeys = Object.keys(group);
-    let groupValues = Object.values(group);
-    let groups: Array<string> = [];
 
     this.activateBackArrowSvc.setBackRoute('forums-list');
     console.log('ForumsListComponent:onGroupSelect: navigating', group);
-    for (let i=0; i < groupKeys.length; i++) {
-      if (groupKeys[i] !== 'createdBy' && groupKeys[i] !== 'createdAt' && groupKeys[i] !== 'updatedAt' && groupKeys[i] !== '_id' && groupKeys[i] !== '__v') {
-        console.log('ForumsListComponent:onGroupSelect: keyvalues=', groupKeys[i], ':', groupValues[i]);
-        name = groupKeys[i];
-        if (groupValues[i] === true) {
-          value = 'true';
-        } else {
-          value = groupValues[i];
-        }
-        groups.push('"' + name + '":"' + value + '"');
-      }
-    }
-
-    // Because it is not known how many groupKeys there are and because they are mixed in with keys we don't need, have to separate what we need
-    // into an Array so can add commas for the right rows.
-    queryParams = '{'
-    for (let i=0; i < groups.length; i++) {
-      queryParams = queryParams + groups[i];
-      if (i !== groups.length - 1) {
-        queryParams = queryParams + ',';
-      }
-    }
-    queryParams = queryParams + '}';
+    queryParams = '{"_id":"' + group._id + '"}';
     console.log('ForumsListComponent:onGroupSelect: query params=', queryParams);
     this.router.navigate(['/forums'], { queryParams: { queryParam: queryParams }});
   }
