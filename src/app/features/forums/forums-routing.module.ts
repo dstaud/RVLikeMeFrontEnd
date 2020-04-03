@@ -1,6 +1,8 @@
-import { ForumsComponent } from './forums.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
+import { ForumsComponent } from './forums.component';
+import { ForumsListComponent } from './forums-list/forums-list.component';
 
 
 const routes: Routes = [

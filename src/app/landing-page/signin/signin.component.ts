@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
@@ -96,7 +96,9 @@ export class SigninComponent implements OnInit {
     .subscribe ((responseData) => {
       // Get user profile
       this.userProfile = this.profileSvc.profile;
+      console.log('SigninComponent:onSubmit: get profile');
       this.profileSvc.getProfile();
+
       this.userProfile
       .pipe(untilComponentDestroyed(this))
       .subscribe(data => {

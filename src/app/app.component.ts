@@ -107,13 +107,16 @@ export class AppComponent implements OnInit {
       });
 
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
-    if (this.authSvc.isLoggedIn()) {
+    console.log('AppComponent:ngOnInit: checking if user is logged in');
+    // if (this.authSvc.isLoggedIn()) {
       // Get user profile
       this.userProfile = this.profileSvc.profile;
+      console.log('AppComponent:ngOnInit: call get profile');
       this.profileSvc.getProfile();
+      console.log('AppComponent:ngOnInit: subscribe to userProfile');
 
       this.userProfile
-      .pipe(untilComponentDestroyed(this))
+      // .pipe(untilComponentDestroyed(this))
       .subscribe(profile => {
         console.log('AppComponent:ngOnInit: got new profile=', profile);
         if (profile.language) {
@@ -130,6 +133,7 @@ export class AppComponent implements OnInit {
         }
 
         // When we have actual profile data from the database, then go get the counts that will be used on the home page
+        console.log('AppComponent:ngOnInit: Before counts.  Profile=', profile);
         if (profile._id) {
           console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
           this.likeMeCountsSvc.getLikeMeCountsPriority();
@@ -142,7 +146,7 @@ export class AppComponent implements OnInit {
       });
 
       this.authSvc.setUserToAuthorized(true);
-    }
+    // }
 
     // Listen for Chrome event that indicates we can offer the user option to install the app
     window.addEventListener('beforeinstallprompt', (event) => {

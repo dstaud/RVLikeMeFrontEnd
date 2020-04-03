@@ -103,6 +103,7 @@ export class ProfileService {
               private http: HttpClient) { }
 
   getProfile(reset?: boolean) {
+    console.log('ProfileService:getProfile:');
     if (reset) {
       this.dataStore.profile._id = null;
       this.dataStore.profile.userID = null;
@@ -143,6 +144,7 @@ export class ProfileService {
       this.dataStore.profile.forums = [];
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
+      console.log('ProfileService:getProfile: Getting Profile');
       this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
       { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
       .subscribe(data => {

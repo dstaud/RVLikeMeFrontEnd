@@ -1,0 +1,21 @@
+<div class="mat-app-background container mat-body-1">
+  <div *ngIf="groupListDisplayAttributes.length > 0" class="group-list">
+    <div><span class="mat-title">{{ 'forums.component.myGroups' | translate }}</span></div>
+    <div *ngFor="let group of groupListDisplayAttributes; let i=index" (click)="onGroupSelect(i)">
+      <span class="hyperlink"><br>{{ 'forums.component.heading' | translate}}:</span>
+      <span *ngFor="let attribute of group" class="group-attributes"><br>- {{ attribute | translate }}</span>
+      <mat-divider [hidden]="groupListDisplayAttributes.length > 1"></mat-divider>
+    </div>
+  </div>
+
+  <div *ngIf="groupListDisplayAttributes.length === 0" class="group-list">
+    <div><span class="mat-title">{{ 'forums.component.myGroups' | translate }}</span></div>
+      <p>{{ 'forums.component.noGroups1' | translate }}.
+        {{ 'forums.component.noGroups2' | translate }}
+        <span class="hyperlink" (click)='onLikeMe()'>{{ 'forums.component.noGroups3' | translate }}</span> {{ 'forums.component.noGroups4' | translate }}.
+      </p>
+  </div>
+
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+
+</div>

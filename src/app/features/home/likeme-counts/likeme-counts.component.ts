@@ -51,6 +51,7 @@ export class LikemeCountsComponent implements OnInit {
               private shared: SharedComponent) { }
 
   ngOnInit() {
+    // this.profileSvc.getProfile();
     this.userProfile = this.profileSvc.profile;
 
     this.userProfile

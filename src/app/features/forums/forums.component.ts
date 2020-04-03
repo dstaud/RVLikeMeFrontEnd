@@ -33,8 +33,6 @@ export class ForumsComponent implements OnInit {
   showSpinner = false;
   showLessMatches = true;
   showMoreOption = false;
-  showForumList = false;
-  showForumPosts = false;
   showTitlesOnly = false;
 
   private backPath = '';
@@ -43,7 +41,6 @@ export class ForumsComponent implements OnInit {
 
   // Interface for profile data
   profile: IuserProfile;
-
   userProfile: Observable<IuserProfile>;
 
   constructor(public translate: TranslateService,
@@ -72,9 +69,6 @@ export class ForumsComponent implements OnInit {
       this.profile = data;
       if (this.profile._id) {
         this.groupsListFromUserProfile = this.profile.forums;
-        console.log('ForumsComponent:ngOnInit: got Profile Data, so get all groups for user');
-        this.groupListDisplayAttributes = this.getGroups();
-        console.log('ForumsComponent:ngOnInit: got groups and attributes for display ', this.groupListDisplayAttributes);
       }
     }, (error) => {
       console.error(error);
@@ -88,22 +82,17 @@ export class ForumsComponent implements OnInit {
     .subscribe(params => {
       this.showSpinner = true;
       if (params.queryParam) {
-        if (params.queryParam.includes('groups')) {
+/*         if (params.queryParam.includes('groups')) {
           console.log('ForumsComponent:ngOnInit: back arrow groups. param=', params.queryParam);
           this.showForumList = true;
           this.showForumPosts = false;
           this.showSpinner = false;
-        } else {
-          let queryParams = JSON.parse(params.queryParam);
-          console.log('ForumsComponent:ngOnInit: queryParams=', queryParams);
-          this.getGroup(queryParams);
-          this.showForumList = false;
-          this.showForumPosts = true;
-        }
+        } else { */
+        let queryParams = JSON.parse(params.queryParam);
+        console.log('ForumsComponent:ngOnInit: queryParams=', queryParams);
+        this.getGroup(queryParams);
       } else {
         console.log('ForumsComponent:ngOnInit: wait for groups');
-        this.showForumList = true;
-        this.showForumPosts = false;
         this.showSpinner = false;
       }
     });
@@ -114,26 +103,6 @@ export class ForumsComponent implements OnInit {
 
   onSearch() {
     console.log('search');
-  }
-
-
-  onGroupSelect(groupItem: number) {
-    let group = this.groupsListFromUserProfile[groupItem];
-    let backParam;
-
-    this.groupID = group._id;
-    backParam = this.groupID + Math.floor(Math.random() * 10000);
-    console.log('ForumsComponent:onGroupSelect: selected group ', group._id, '. Setting back to ', backParam);
-    this.activateBackArrowSvc.setBackRoute('forums?groups=' + backParam);
-    this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(group);
-    console.log('ForumsComponent:onGroupSelect: get posts', this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-    this.showForumList = false;
-    this.showForumPosts = true;
-    this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-  }
-
-  onLikeMe() {
-    this.router.navigateByUrl('connections');
   }
 
 
@@ -210,12 +179,11 @@ export class ForumsComponent implements OnInit {
 
       // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
-        console.log('ForumsComponent:getGroups: group already exists so get posts for the group');
-        this.showForumPosts;
+        console.log('ForumsComponent:getGroup: group already exists so get posts for the group');
         this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
       } else {
-        console.log('ForumsComponent:getGroups: group does not exist so create it')
+        console.log('ForumsComponent:getGroup: group does not exist so create it')
         this.createGroupForum(names, values);
       }
     }, error => {
@@ -298,25 +266,6 @@ export class ForumsComponent implements OnInit {
     return names + '~' + values;
   }
 
-  // Get groups associated with a user in their profile
-  private getGroups(): Array<Array<string>> {
-    let groupsAttributes = [];
-
-    console.log('ForumsComponent:getGroups: Groups for profile=', this.profile.forums);
-    if (this.profile.forums.length === 0) {
-      console.log('ForumsComponent:getGroups: Groups not found!');
-    } else {
-      this.groupsListFromUserProfile = this.profile.forums;
-
-      for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
-        console.log('ForumsComponent:getGroups: Getting attributes for ', this.groupsListFromUserProfile[i]);
-        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(this.groupsListFromUserProfile[i]);
-        groupsAttributes.push(this.groupProfileDisplayAttributesFromGroup);
-      }
-      console.log('ForumsComponent:getGroups: Group found, Attributes=', groupsAttributes);
-    }
-    return groupsAttributes;
-  }
 
   // Create new group forum based on user's attribute match selections
   private createGroupForum(names: string, values: string): void {

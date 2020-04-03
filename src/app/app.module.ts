@@ -22,16 +22,18 @@ import { LearnMoreComponent } from './landing-page/learn-more/learn-more.compone
 import { LandingPageComponent } from './landing-page/landing-page.component';
 
 import { WindowService } from '@services/window.service';
-import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
-import { ProfileService } from '@services/data-services/profile.service';
 
 import { HeaderComponent } from '@navigation/header/header.component';
 import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
 import { FooterComponent } from '@navigation/footer/footer.component';
 import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found.component';
+import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
+
 import { ThemeService } from '@services/theme.service';
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
+import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
+import { ProfileService } from '@services/data-services/profile.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
@@ -76,7 +78,8 @@ export function getErrorHandler(): ErrorHandler {
     OtherDialogComponent,
     InstallDialogComponent,
     MyStoryDialogComponent,
-    DesktopDialogComponent
+    DesktopDialogComponent,
+    ForumsListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

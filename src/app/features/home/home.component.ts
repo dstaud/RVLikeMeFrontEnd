@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+// import { ProfileService } from '@services/data-services/profile.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class HomeComponent implements OnInit {
               private auth: AuthenticationService,
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
+              // private profileSvc: ProfileService,
               private router: Router) { }
 
   ngOnInit() {
@@ -27,6 +29,8 @@ export class HomeComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
+    // console.log('HomeComponent:ngOnInit: get profile')
+    // this.profileSvc.getProfile();
   }
 
   setBackRoute() {
