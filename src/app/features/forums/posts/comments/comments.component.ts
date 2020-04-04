@@ -7,8 +7,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class CommentsComponent implements OnInit {
 
-  @Input('postCommentsIndex')
-  public commentsIndex: number;
+  @Input('postIndex')
+  public postIndex: number;
 
   @Input('comments')
   public comments: [[]];
@@ -24,7 +24,7 @@ export class CommentsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('CommentsComponent:ngOnInit: comments index=', this.commentsIndex, ' comments=', this.comments);
+    console.log('CommentsComponent:ngOnInit: comments index=', this.postIndex, ' comments=', this.comments);
   }
 
   onShowAll() {

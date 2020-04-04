@@ -35,7 +35,6 @@ export class PostsComponent implements OnInit {
   userID: string;
   displayName: string;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
-  currentRowUpdatePost: number;
   posts: Array<any> = [];
   comments: Array<Array<JSON>> = [];
   currentPostRow: number;
@@ -76,9 +75,8 @@ export class PostsComponent implements OnInit {
 
   // Get all posts for group passed from forums component.
   getPosts(groupID: string, profileImageUrl: string, displayName: string): void {
-    let post: string;
-    let postJSON: JSON;
-    let comment: string;
+    let post: JSON;
+    let comment: JSON;
     let postComments: Array<JSON> = [];
 
     this.showSpinner = true;
@@ -99,32 +97,16 @@ export class PostsComponent implements OnInit {
         this.showFirstPost = true;
         this.showSpinner = false;
       } else {
-        let titleEscaped = this.escapeJsonReservedCharacters(postResult[0].title);
-        let bodyEscaped = this.escapeJsonReservedCharacters(postResult[0].body);
         this.comments= [];
         console.log('PostsComponent:getPosts: Comments array before=', this.comments);
         for (let j=0; j < postResult[0].comments.length; j++) {
-          comment = '{"comment":"' + postResult[0].comments[j].comment + '",' +
-          '"displayName":"' + postResult[0].comments[j].displayName + '",' +
-          '"profileImageUrl":"' + postResult[0].comments[j].profileImageUrl + '",' +
-          '"createdAt":"' + postResult[0].comments[j].createdAt + '"}';
+          comment = this.createCommentsArrayEntry(postResult[0].comments[j]);
           console.log('PostsComponent:getPosts: Comments array adding new comment=', comment);
-          postComments.push(JSON.parse(comment));
+          postComments.push(comment);
           this.liked.push(this.checkIfLiked(postResult[0].reactions));
         }
-        post = '{"_id":"' + postResult[0]._id + '",' +
-                '"createdBy":"' + postResult[0].createdBy + '",' +
-                '"title":"' + titleEscaped + '",' +
-                '"body":"' + bodyEscaped + '",' +
-                '"displayName":"' + postResult[0].userDisplayName + '",' +
-                '"profileImageUrl":"' + postResult[0].userProfileUrl + '",' +
-                '"commentCount":"' + postResult[0].comments.length + '",' +
-                '"comments":"0",' +
-                '"reactionCount":"' + postResult[0].reactions.length + '",' +
-                '"createdAt":"' + postResult[0].createdAt + '"}';
-        console.log('PostsComponent:getPosts: Adding new post to array=', post)
-        postJSON = JSON.parse(post);
-        this.posts.push(postJSON);
+        post = this.createPostsArrayEntry(postResult[0]);
+        this.posts.push(post);
         this.comments.push(postComments);
         this.showPostComments.push(false);
 
@@ -135,30 +117,14 @@ export class PostsComponent implements OnInit {
         }
         console.log('PostsComponent:getPosts: Comments array added new comment=', this.comments);
         for (let i=1; i < postResult.length; i++) {
-          let titleEscaped = this.escapeJsonReservedCharacters(postResult[i].title);
-          let bodyEscaped = this.escapeJsonReservedCharacters(postResult[i].body);
-          let comment;
           postComments = [];
           for (let j=0; j < postResult[i].comments.length; j++) {
-            comment = '{"comment":"' + postResult[i].comments[j].comment + '",' +
-                      '"displayName":"' + postResult[i].comments[j].displayName + '",' +
-                      '"profileImageUrl":"' + postResult[i].comments[j].profileImageUrl + '",' +
-                      '"createdAt":"' + postResult[i].comments[j].createdAt + '"}';
+            comment = this.createCommentsArrayEntry(postResult[i].comments[j]);
             console.log('PostsComponent:getPosts: PostComments Array, adding new comment=', comment);
-            postComments.push(JSON.parse(comment));
+            postComments.push(comment);
           }
-          post = '{"_id":"' + postResult[i]._id + '",' +
-                  '"createdBy":"' + postResult[i].createdBy + '",' +
-                  '"title":"' + titleEscaped + '",' +
-                  '"body":"' + bodyEscaped + '",' +
-                  '"displayName":"' + postResult[i].userDisplayName + '",' +
-                  '"profileImageUrl":"' + postResult[i].userProfileUrl + '",' +
-                  '"commentCount":"' + postResult[i].comments.length + '",' +
-                  '"comments":"' + i + '",' +
-                  '"reactionCount":"' + postResult[i].reactions.length + '",' +
-                  '"createdAt":"' + postResult[i].createdAt + '"}';
-          postJSON = JSON.parse(post);
-          this.posts.push(postJSON);
+          post = this.createPostsArrayEntry(postResult[i]);
+          this.posts.push(post);
           this.showUpdatePost.push(false);
           this.showPostComments.push(false);
 
@@ -189,40 +155,45 @@ export class PostsComponent implements OnInit {
   postAddComplete(newPost: any): void {
     console.log('PostsComponent:postAddComplete: new post=', newPost);
     if (newPost !== 'canceled') {
-      this.posts.unshift(newPost);
+      let post = this.createPostsArrayEntry(newPost);
+      this.posts.unshift(post);
       console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);
       this.showUpdatePost.unshift(false);
       this.showPostComments.push(false);
       this.startCommentsIndex.push(0);
       console.log('PostsComponent:postAddComplete after push to showPostComments=', this.showPostComments);
-      this.showFirstPost = false;
       this.showPosts = true;
+      this.currentPostRow = 0;
     }
     this.showAddPost = false;
   }
 
   postUpdateComplete(post: any): void {
-    console.log('back in posts', post.title, post.body);
+/*     console.log('back in posts', post.title, post.body);
     this.posts[this.currentRowUpdatePost].title = post.title;
     this.posts[this.currentRowUpdatePost].body = post.body;
-    this.showUpdatePost[this.currentRowUpdatePost] = false;
+    this.showUpdatePost[this.currentRowUpdatePost] = false; */
   }
 
   postCommentComplete(comment: any) {
-   if (this.comments.length === 0) {
-      console.log('PostsComponent:postCommentComplete: initialize comments array');
-      this.comments = [[]];
+    let currentRow = comment.postIndex;
+    let newComment = this.createCommentsArrayEntry(comment);
+    console.log('PostsComponent:postCommentComplete: new comment=', newComment);
+    console.log('PostsComponent:postCommentComplete: currentPostRow=', currentRow, ' posts=', this.posts);
+    if (this.posts[currentRow].commentCount == 0) {
+        console.log('PostsComponent:postCommentComplete: initialize comments array.');
+        this.comments[currentRow] = [];
     }
 
-    console.log('PostsComponent:postCommentComplete: push on to ', this.comments[this.currentPostRow], '=',comment, ' index=' + this.currentPostRow);
-    this.comments[this.currentPostRow].push(comment);
+    console.log('PostsComponent:postCommentComplete: push on to ', this.comments[currentRow], '=',comment, ' index=' + currentRow);
+    this.comments[currentRow].push(newComment);
     console.log('PostsComponent:postCommentComplete: pushed. comments=', this.comments);
-    this.posts[this.currentPostRow].commentCount++;
-    console.log('PostsComponent:postCommentComplete: comments length=', this.comments[this.currentPostRow].length), ' index before=', this.startCommentsIndex[this.currentPostRow];
-    if (this.comments[this.currentPostRow].length > 4) {
-      this.startCommentsIndex[this.currentPostRow]++
+    this.posts[currentRow].commentCount++;
+    console.log('PostsComponent:postCommentComplete: comments length=', this.comments[currentRow].length), ' index before=', this.startCommentsIndex[currentRow];
+    if (this.comments[currentRow].length > 4) {
+      this.startCommentsIndex[currentRow]++
     }
-    console.log('PostsComponent:postCommentComplete: index after=', this.startCommentsIndex[this.currentPostRow]);
+    console.log('PostsComponent:postCommentComplete: index after=', this.startCommentsIndex[currentRow]);
   }
 
   onLike(row: number): void {
@@ -242,32 +213,7 @@ export class PostsComponent implements OnInit {
   }
 
   onComment(row: number) {
-    console.log('PostsComponent:onComment: before showPostComments array=', this.showPostComments);
-    console.log('PostsComponent:onComment: Before check. row=', row, ' currentPostRow=', this.currentPostRow);
-    if (this.currentPostRow != undefined) {
-      console.log('PostsComponent:onComment: currentPostRow is defined=', this.currentPostRow);
-      if (row !== this.currentPostRow) {
-        console.log('PostsComponent:onComment: row and current <>.  row=', row, ' currentPostRow=', this.currentPostRow);
-        console.log('PostsComponent:onComment: row and current <> current before =', this.showPostComments[this.currentPostRow]);
-        this.showPostComments[this.currentPostRow] = !this.showPostComments[this.currentPostRow];
-        console.log('PostsComponent:onComment: row and current <> current after =', this.showPostComments[this.currentPostRow]);
-      }
-    }
-    console.log('PostsComponent:onComment: row=', row, ', before=', this.showPostComments[row]);
     this.showPostComments[row] = !this.showPostComments[row];
-    console.log('PostsComponent:onComment: row=', row, ', after=', this.showPostComments[row]);
-    this.currentPostRow = row;
-    console.log('PostsComponent:onComment: updated showPostComments array=', this.showPostComments);
-    console.log('PostsComponent:onComment: startCommentsIndex=', this.startCommentsIndex);
-    console.log('PostsComponent:onComment: commentsLength=', this.posts[row].commentCount);
-
-    console.log('PostsComponent:onComment: current row=', this.currentPostRow, ' before start index=', this.startCommentsIndex);
-    if (this.posts[this.currentPostRow].commentCount > 4) {
-      this.startCommentsIndex[this.currentPostRow] = this.posts[this.currentPostRow].commentCount - 4;
-    } else {
-      this.startCommentsIndex[this.currentPostRow] = 0;
-    }
-    console.log('PostsComponent:onComment: current row=', this.currentPostRow, ' after start index=', this.startCommentsIndex);
   }
 
   onShowAllComments() {
@@ -276,11 +222,16 @@ export class PostsComponent implements OnInit {
     console.log('PostsComponent:onShowAllComments: current row=', this.currentPostRow, ' after start index=', this.startCommentsIndex);
   }
 
+  onAddPost() {
+    this.showAddPost = true;
+    this.showFirstPost = false;
+  }
+
   updatePost(row: number) {
-    console.log('update post', row);
+/*     console.log('update post', row);
     this.currentRowUpdatePost = row;
     this.showUpdatePost[row] = true;
-    this.updatePostComponent.populatePost();
+    this.updatePostComponent.populatePost(); */
   }
 
   private checkIfLiked(reactions: any): boolean {
@@ -303,5 +254,29 @@ export class PostsComponent implements OnInit {
     newString = newString.replace(/\n/g, "\\n");
     console.log(string, newString);
     return newString;
+  }
+
+  private createPostsArrayEntry(post): JSON {
+    let titleEscaped = this.escapeJsonReservedCharacters(post.title);
+    let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
+
+    let newPost = '{"_id":"' + post._id + '",' +
+    '"createdBy":"' + post.createdBy + '",' +
+    '"title":"' + titleEscaped + '",' +
+    '"body":"' + bodyEscaped + '",' +
+    '"displayName":"' + post.userDisplayName + '",' +
+    '"profileImageUrl":"' + post.userProfileUrl + '",' +
+    '"commentCount":"' + post.comments.length + '",' +
+    '"reactionCount":"' + post.reactions.length + '",' +
+    '"createdAt":"' + post.createdAt + '"}';
+    return JSON.parse(newPost);
+  }
+
+  private createCommentsArrayEntry(comment): JSON {
+    let newComment = '{"comment":"' + comment.comment + '",' +
+    '"displayName":"' + comment.displayName + '",' +
+    '"profileImageUrl":"' + comment.profileImageUrl + '",' +
+    '"createdAt":"' + comment.createdAt + '"}';
+    return JSON.parse(newComment);
   }
 }

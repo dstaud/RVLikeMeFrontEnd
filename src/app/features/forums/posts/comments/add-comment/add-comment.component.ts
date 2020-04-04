@@ -10,6 +10,9 @@ import { ForumService } from '@services/data-services/forum.service';
 })
 export class AddCommentComponent implements OnInit {
 
+  @Input('postIndex')
+  public postIndex: number;
+
   @Input('postID')
   public postID: string;
 
@@ -42,8 +45,8 @@ export class AddCommentComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    console.log('in comments', this.postID, this.title, this.displayName, this.profileImageUrl)
-    console.log('ngInit=', this.displayName);
+    console.log('add-comment:ngOnInit: in comments', this.postID, this.title, this.displayName, this.profileImageUrl)
+    console.log('add-comment:ngOnInit: displayName=', this.displayName);
     this.form.get('comment').valueChanges
     .subscribe(selectedValue => {
       this.postButtonActive = true;
@@ -58,8 +61,9 @@ export class AddCommentComponent implements OnInit {
       let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
       '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
       '"profileImageUrl":"' + post.comments[post.comments.length-1].profileImageUrl + '",' +
-      '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '"}';
-      console.log('NEW COMMENT=', comment);
+      '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '",' +
+      '"postIndex":"' + this.postIndex + '"}';
+      console.log('add-comment:doneWithAdd: new comment=', comment);
       let JSONComment = JSON.parse(comment);
       this.postCommentComplete.emit(JSONComment);
     } else {
@@ -72,10 +76,10 @@ export class AddCommentComponent implements OnInit {
     this.postButtonActive = false;
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
-    console.log('displayName before Add=', this.displayName)
+    console.log('add-comment:onSubmit: displayName before Add=', this.displayName)
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
     .subscribe(postResult => {
-      console.log('POST RESULT=', postResult)
+      console.log('add-comment:onSubmit postResult=', postResult)
       this.doneWithAdd(postResult);
       this.showSpinner = false;
     }, error => {

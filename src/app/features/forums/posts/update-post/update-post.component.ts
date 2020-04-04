@@ -10,6 +10,9 @@ import { ForumService } from '@services/data-services/forum.service';
 })
 export class UpdatePostComponent implements OnInit {
 
+  @Input('postIndex')
+  public postIndex: number;
+
   @Input('postID')
   public postID: string;
 

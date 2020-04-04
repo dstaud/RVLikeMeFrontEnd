@@ -29,7 +29,8 @@
 }
 
 .posts {
-  margin-top: 10px;
+  clear: left;
+  margin-top: 5px;
 }
 
 .body {
@@ -45,11 +46,8 @@
 }
 
 mat-divider {
-  clear: left;
-  clear: right;
   border-top-width: 3px;
   margin-top: 20px;
-  margin-bottom: 20px;
 }
 
 .comments {

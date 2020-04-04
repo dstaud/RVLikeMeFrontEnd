@@ -10,6 +10,7 @@ import { ForumService } from '@services/data-services/forum.service';
   styleUrls: ['./add-post.component.scss']
 })
 export class AddPostComponent implements OnInit {
+
   @Input('groupID')
   public groupID: string;
 
@@ -37,7 +38,7 @@ export class AddPostComponent implements OnInit {
   }
 
   doneWithAdd(post: any) {
-    console.log('done with add event=', post);
+    console.log('add-postComponent:doneWithAdd: post=', post);
     this.postAddComplete.emit(post);
   }
 
@@ -47,7 +48,7 @@ export class AddPostComponent implements OnInit {
     let postText = this.form.controls.post.value;
     this.forumSvc.addPost(this.groupID, postTitle, postText, this.displayName, this.profileImageUrl)
     .subscribe(post => {
-      console.log('POST RESULT=', post);
+      console.log('add-postComponent:onPost: post result=', post);
       this.doneWithAdd(post);
       this.showSpinner = false;
     }, error => {
