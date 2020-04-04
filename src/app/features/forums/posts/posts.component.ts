@@ -158,6 +158,7 @@ export class PostsComponent implements OnInit {
       let post = this.createPostsArrayEntry(newPost);
       this.posts.unshift(post);
       console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);
+      this.comments.unshift([]);
       this.showUpdatePost.unshift(false);
       this.showPostComments.push(false);
       this.startCommentsIndex.push(0);
