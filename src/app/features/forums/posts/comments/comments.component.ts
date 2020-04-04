@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-rvlm-comments',
@@ -11,28 +11,23 @@ export class CommentsComponent implements OnInit {
   public commentsIndex: number;
 
   @Input('comments')
-  public comments: Array<Array<JSON>>;
+  public comments: [[]];
 
-  startCommentsIndex: number = 0;
-  commentsLength: number = 0;
+  @Input('startCommentsIndex')
+  public startCommentsIndex: number;
+
+  @Input('commentsLength')
+  public commentsLength: number;
+
+  @Output() showAllComments = new EventEmitter();
 
   constructor() {}
 
   ngOnInit(): void {
     console.log('CommentsComponent:ngOnInit: comments index=', this.commentsIndex, ' comments=', this.comments);
-    this.setStartCommentsIndex();
   }
 
-  setStartCommentsIndex() {
-    console.log('CommentsComponent:setStartCommentsIndex: comments now ', this.comments);
-    console.log('CommentsComponent:setStartCommentsIndex: commentsIndex now ', this.commentsIndex);
-    if (!this.comments) {
-      this.commentsLength = 0;
-    } else {
-      this.commentsLength = this.comments.length;
-      if (this.comments.length > 4) {
-        this.startCommentsIndex = this.comments.length - 4;
-      }
-    }
+  onShowAll() {
+    this.showAllComments.emit();
   }
 }

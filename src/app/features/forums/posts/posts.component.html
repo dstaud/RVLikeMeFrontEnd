@@ -99,7 +99,7 @@
               </button>
             </div>
 
-            <div class="comments" [hidden]="!showComments[i]">
+            <div class="comments" [hidden]="!showPostComments[i]">
 
               <app-rvlm-add-comment
                 [postID]="posts[i]._id"
@@ -112,7 +112,10 @@
               <div class="comments-container">
                 <app-rvlm-comments
                   [postCommentsIndex]="i"
-                  [comments]="comments[i]">
+                  [comments]="comments[i]"
+                  [startCommentsIndex]="startCommentsIndex[i]"
+                  [commentsLength]="posts[i].commentCount"
+                  (showAllComments)="onShowAllComments()">
                 </app-rvlm-comments>
               </div>
             </div>
