@@ -23,16 +23,10 @@ import { HeaderComponent } from '@navigation/header/header.component';
 import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
 import { FooterComponent } from '@navigation/footer/footer.component';
 import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found.component';
-import { ForumsComponent } from './features/forums/forums.component';
 import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
-import { PostsComponent } from './features/forums/posts/posts.component';
-import { AddPostComponent } from './features/forums/posts/add-post/add-post.component';
-import { CommentsComponent } from './features/forums/posts/comments/comments.component';
-import { AddCommentComponent } from './features/forums/posts/comments/add-comment/add-comment.component';
-import { UpdatePostComponent } from './features/forums/posts/update-post/update-post.component';
 
 import { ThemeService } from '@services/theme.service';
 import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
@@ -83,13 +77,7 @@ export function getErrorHandler(): ErrorHandler {
     InstallDialogComponent,
     MyStoryDialogComponent,
     DesktopDialogComponent,
-    ForumsListComponent,
-    PostsComponent,
-    AddPostComponent,
-    CommentsComponent,
-    AddCommentComponent,
-    UpdatePostComponent,
-    ForumsComponent
+    ForumsListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

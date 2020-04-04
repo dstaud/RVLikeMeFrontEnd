@@ -57,7 +57,7 @@ export class PostsComponent implements OnInit {
   ngOnInit() {
     // Get user profile
     this.userProfile = this.profileSvc.profile;
-    this.profileSvc.getProfile();
+    // this.profileSvc.getProfile();
 
     // Get user's ID and store for use in determining what posts or comments can edit
     this.userProfile
@@ -194,12 +194,14 @@ export class PostsComponent implements OnInit {
   }
 
   postCommentComplete(comment: any) {
-    console.log('PostsComponent:postCommentComplete: push on to ' , this.comments, ' current row=', this.currentPostRow);
-    if (this.comments.length === 0) {
+   if (this.comments.length === 0) {
       console.log('PostsComponent:postCommentComplete: initialize comments array');
       this.comments = [[]];
     }
+
+    console.log('PostsComponent:postCommentComplete: push on to ', this.comments[this.currentPostRow], '=',comment, ' index=' + this.currentPostRow);
     this.comments[this.currentPostRow].push(comment);
+    console.log('PostsComponent:postCommentComplete: pushed. comments=', this.comments[this.currentPostRow]);
     this.showComments.push(false);
     console.log('PostsComponent:postCommentComplete: row=', this.currentPostRow, ' before count=', this.posts[this.currentPostRow].commentCount);
     this.posts[this.currentPostRow].commentCount++;

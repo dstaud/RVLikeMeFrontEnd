@@ -11,7 +11,7 @@ export class CommentsComponent implements OnInit {
   public commentsIndex: number;
 
   @Input('comments')
-  public comments: [];
+  public comments: Array<Array<JSON>>;
 
   startCommentsIndex: number = 0;
   commentsLength: number = 0;
@@ -24,6 +24,8 @@ export class CommentsComponent implements OnInit {
   }
 
   setStartCommentsIndex() {
+    console.log('CommentsComponent:setStartCommentsIndex: comments now ', this.comments);
+    console.log('CommentsComponent:setStartCommentsIndex: commentsIndex now ', this.commentsIndex);
     if (!this.comments) {
       this.commentsLength = 0;
     } else {

@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-// import { ProfileService } from '@services/data-services/profile.service';
+import { ProfileService } from '@services/data-services/profile.service';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
               private auth: AuthenticationService,
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
-              // private profileSvc: ProfileService,
+              private profileSvc: ProfileService,
               private router: Router) { }
 
   ngOnInit() {
@@ -33,9 +33,9 @@ export class HomeComponent implements OnInit {
     // this.profileSvc.getProfile();
   }
 
-  setBackRoute() {
-    this.activateBackArrowSvc.setBackRoute('home');
-  }
+  // setBackRoute() {
+  //   this.activateBackArrowSvc.setBackRoute('home');
+  // }
 
   throwError() {
     throw new Error('test Sentry error handling');

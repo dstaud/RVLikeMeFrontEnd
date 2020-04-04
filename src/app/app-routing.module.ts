@@ -21,11 +21,11 @@ const routes: Routes = [
     import('./features/connections/connections.module')
     .then(m => m.ConnectionsModule)
   },
-/*   { path: 'forums',
+  { path: 'forums',
     loadChildren: () =>
     import('./features/forums/forums.module')
     .then(m => m.ForumsModule)
-  }, */
+  },
   { path: 'messages',
     loadChildren: () =>
     import('./features/messages/messages.module')
@@ -60,7 +60,7 @@ const routes: Routes = [
   { path: 'profile-interests', component: InterestsComponent },
   { path: 'user-query', component: UserQueryComponent },
   { path: 'forums-list', component: ForumsListComponent },
-  { path: 'forums', component: ForumsComponent },
+  // { path: 'forums', component: ForumsComponent },
   { path: '', component: LandingPageComponent },
   { path: '**', component: PageNotFoundComponent }
 ];

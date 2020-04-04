@@ -108,45 +108,46 @@ export class AppComponent implements OnInit {
 
     // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
     console.log('AppComponent:ngOnInit: checking if user is logged in');
-    // if (this.authSvc.isLoggedIn()) {
-      // Get user profile
-      this.userProfile = this.profileSvc.profile;
-      console.log('AppComponent:ngOnInit: call get profile');
-      this.profileSvc.getProfile();
-      console.log('AppComponent:ngOnInit: subscribe to userProfile');
-
-      this.userProfile
-      // .pipe(untilComponentDestroyed(this))
-      .subscribe(profile => {
-        console.log('AppComponent:ngOnInit: got new profile=', profile);
-        if (profile.language) {
-          console.log('AppComponent:ngOnInit: Setting Language to ', profile.language);
-          this.language.setLanguage(profile.language);
-        } else {
-          console.log('AppComponent:ngOnInit: Setting Language to default');
-          this.language.setLanguage('en');
-        }
-        if (profile.colorThemePreference) {
-          this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
-        } else {
-          this.themeSvc.setGlobalColorTheme('light-theme');
-        }
-
-        // When we have actual profile data from the database, then go get the counts that will be used on the home page
-        console.log('AppComponent:ngOnInit: Before counts.  Profile=', profile);
-        if (profile._id) {
-          console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
-          this.likeMeCountsSvc.getLikeMeCountsPriority();
-        }
-      }, (error) => {
-        console.error(error);
-        console.log('error, setting language to default');
-        this.language.setLanguage('en');
-        this.themeSvc.setGlobalColorTheme('light-theme');
-      });
-
+    if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
-    // }
+      this.profileSvc.getProfile();
+    }
+
+    // Get user profile
+    this.userProfile = this.profileSvc.profile;
+    // console.log('AppComponent:ngOnInit: call get profile');
+    // this.profileSvc.getProfile();
+    console.log('AppComponent:ngOnInit: subscribe to userProfile');
+
+    this.userProfile
+    // .pipe(untilComponentDestroyed(this))
+    .subscribe(profile => {
+      console.log('AppComponent:ngOnInit: got new profile=', profile);
+      if (profile.language) {
+        console.log('AppComponent:ngOnInit: Setting Language to ', profile.language);
+        this.language.setLanguage(profile.language);
+      } else {
+        console.log('AppComponent:ngOnInit: Setting Language to default');
+        this.language.setLanguage('en');
+      }
+      if (profile.colorThemePreference) {
+        this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
+      } else {
+        this.themeSvc.setGlobalColorTheme('light-theme');
+      }
+
+      // When we have actual profile data from the database, then go get the counts that will be used on the home page
+      console.log('AppComponent:ngOnInit: Before counts.  Profile=', profile);
+      if (profile._id) {
+        console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
+        this.likeMeCountsSvc.getLikeMeCountsPriority();
+      }
+    }, (error) => {
+      console.error(error);
+      console.log('error, setting language to default');
+      this.language.setLanguage('en');
+      this.themeSvc.setGlobalColorTheme('light-theme');
+    });
 
     // Listen for Chrome event that indicates we can offer the user option to install the app
     window.addEventListener('beforeinstallprompt', (event) => {
