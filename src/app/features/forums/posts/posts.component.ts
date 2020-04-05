@@ -109,7 +109,7 @@ export class PostsComponent implements OnInit {
         this.posts.push(post);
         this.comments.push(postComments);
         this.showPostComments.push(false);
-
+        console.log('PostsComponent:getPosts: post=', post);
         if (postComments.length > 4) {
           this.startCommentsIndex.push(postComments.length - 4);
         } else {
@@ -160,8 +160,8 @@ export class PostsComponent implements OnInit {
       console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);
       this.comments.unshift([]);
       this.showUpdatePost.unshift(false);
-      this.showPostComments.push(false);
-      this.startCommentsIndex.push(0);
+      this.showPostComments.unshift(false);
+      this.startCommentsIndex.unshift(0);
       console.log('PostsComponent:postAddComplete after push to showPostComments=', this.showPostComments);
       this.showPosts = true;
       this.currentPostRow = 0;
@@ -169,16 +169,22 @@ export class PostsComponent implements OnInit {
     this.showAddPost = false;
   }
 
-  postUpdateComplete(post: any): void {
-/*     console.log('back in posts', post.title, post.body);
-    this.posts[this.currentRowUpdatePost].title = post.title;
-    this.posts[this.currentRowUpdatePost].body = post.body;
-    this.showUpdatePost[this.currentRowUpdatePost] = false; */
+  postUpdateComplete(postResult: any): void {
+    let postIndex = postResult[0].postIndex;
+    let post = postResult[1];
+    console.log('PostsComponent:postUpdateComplete: post=', post.title, post.body);
+    this.posts[postIndex].title = post.title;
+    this.posts[postIndex].body = post.body;
+    this.showUpdatePost[postIndex] = false;
   }
 
-  postCommentComplete(comment: any) {
-    let currentRow = comment.postIndex;
-    let newComment = this.createCommentsArrayEntry(comment);
+  postCommentComplete(post: any) {
+    console.log('PostsComponent:postCommentComplete: post=', post);
+    let currentRow = post[0].postIndex;
+    console.log('PostsComponent:postCommentComplete: post1=', post[1]);
+    let newComment = this.createCommentsArrayEntry(post[1].comments[post[1].comments.length-1]);
+    console.log('PostsComponent:postCommentComplete: new comment=', newComment);
+
     console.log('PostsComponent:postCommentComplete: new comment=', newComment);
     console.log('PostsComponent:postCommentComplete: currentPostRow=', currentRow, ' posts=', this.posts);
     if (this.posts[currentRow].commentCount == 0) {
@@ -186,7 +192,7 @@ export class PostsComponent implements OnInit {
         this.comments[currentRow] = [];
     }
 
-    console.log('PostsComponent:postCommentComplete: push on to ', this.comments[currentRow], '=',comment, ' index=' + currentRow);
+    console.log('PostsComponent:postCommentComplete: push on to ', this.comments[currentRow], '=',newComment, ' index=' + currentRow);
     this.comments[currentRow].push(newComment);
     console.log('PostsComponent:postCommentComplete: pushed. comments=', this.comments);
     this.posts[currentRow].commentCount++;
@@ -229,10 +235,9 @@ export class PostsComponent implements OnInit {
   }
 
   updatePost(row: number) {
-/*     console.log('update post', row);
-    this.currentRowUpdatePost = row;
+    console.log('update post', row);
     this.showUpdatePost[row] = true;
-    this.updatePostComponent.populatePost(); */
+    this.updatePostComponent.populatePost();
   }
 
   private checkIfLiked(reactions: any): boolean {

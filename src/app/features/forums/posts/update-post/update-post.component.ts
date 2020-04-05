@@ -23,7 +23,7 @@ export class UpdatePostComponent implements OnInit {
   public postBody: string;
 
 
-  @Output() postUpdateComplete = new EventEmitter<string>();
+  @Output() postUpdateComplete = new EventEmitter<any>();
 
   form: FormGroup;
   showSpinner = false;
@@ -46,8 +46,12 @@ export class UpdatePostComponent implements OnInit {
   }
 
   doneWithUpdate(post: any) {
-    console.log('done with update event=', post);
-    this.postUpdateComplete.emit(post);
+    let result = [];
+    let postIndex = JSON.parse('{"postIndex":"' + this.postIndex + '"}');
+    result.push(postIndex);
+    result.push(post);
+    console.log('update-post:doneWithUpdate: result=', result);
+    this.postUpdateComplete.emit(result);
   }
 
   onPost() {
@@ -55,9 +59,9 @@ export class UpdatePostComponent implements OnInit {
     let postTitle = this.form.controls.title.value;
     let postBody = this.form.controls.body.value;
     this.forumSvc.updatePost(this.postID, postTitle, postBody)
-    .subscribe(post => {
-      console.log('POST UPDATE RESULT=', post);
-      this.doneWithUpdate(post);
+    .subscribe(postResult => {
+      console.log('update-post:onPost post result=', postResult);
+      this.doneWithUpdate(postResult);
       this.showSpinner = false;
     }, error => {
       console.log(error);

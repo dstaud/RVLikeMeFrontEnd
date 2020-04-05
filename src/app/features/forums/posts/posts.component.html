@@ -36,13 +36,16 @@
             [postBody]="posts[i].body"
             (postUpdateComplete)="postUpdateComplete($event)">
           </app-rvlm-update-post>
-          <div [hidden]="showUpdatePost[i]" class="posts">
-            <div *ngIf="posts[i].createdBy === userID">
-              <span class="mat-h2">{{ posts[i].title }}</span>
-              <mat-icon
-                class="menu"
-                matPrefix
-                [matMenuTriggerFor]="beforeMenu">more_horiz</mat-icon>
+          <div class="posts">
+            <div>
+              <!-- <span class="mat-h2">{{ posts[i].title }}</span> -->
+              <div *ngIf="posts[i].createdBy === userID">
+                <mat-icon
+                  class="menu"
+                  matPrefix
+                  [matMenuTriggerFor]="beforeMenu">more_horiz
+                </mat-icon>
+              </div>
             </div>
             <div>
               <mat-menu
@@ -70,7 +73,7 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="!titlesOnly" class="body">
+            <div class="body">
               {{ posts[i].body }}
             </div>
             <div class="response">

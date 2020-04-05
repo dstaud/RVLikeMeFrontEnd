@@ -54,21 +54,26 @@ export class AddCommentComponent implements OnInit {
   }
 
   doneWithAdd(post: any) {
+    let result = [];
+    let postIndex = JSON.parse('{"postIndex":"' + this.postIndex + '"}');
+    result.push(postIndex);
+    result.push(post);
     this.form.reset('comment');
     this.showSmallFieldInitial = true;
     this.postButtonActive = false;
-    if (post !== 'canceled') {
+    console.log('add-comment:doneWithAdd: sending back ', result);
+    this.postCommentComplete.emit(result);
+/*     if (post !== 'canceled') {
       let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
       '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
       '"profileImageUrl":"' + post.comments[post.comments.length-1].profileImageUrl + '",' +
-      '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '",' +
-      '"postIndex":"' + this.postIndex + '"}';
+      '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '"}';
       console.log('add-comment:doneWithAdd: new comment=', comment);
       let JSONComment = JSON.parse(comment);
-      this.postCommentComplete.emit(JSONComment);
+      this.postCommentComplete.emit(post.comments[post.comments.length-1]);
     } else {
       this.postCommentComplete.emit(post);
-    }
+    } */
   }
 
 
@@ -78,9 +83,9 @@ export class AddCommentComponent implements OnInit {
     let comment = this.form.controls.comment.value;
     console.log('add-comment:onSubmit: displayName before Add=', this.displayName)
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
-    .subscribe(postResult => {
-      console.log('add-comment:onSubmit postResult=', postResult)
-      this.doneWithAdd(postResult);
+    .subscribe(result => {
+      console.log('add-comment:onSubmit postResult=', result)
+      this.doneWithAdd(result);
       this.showSpinner = false;
     }, error => {
       console.log(error);
