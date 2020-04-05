@@ -23,7 +23,7 @@
   </div>
   <div class="posts-container">
     <mat-divider></mat-divider>
-    <div *ngIf="showFirstPost">
+    <div *ngIf="showFirstPost" class="first-post">
       {{ 'posts.component.firstPost' | translate }}
     </div>
     <div [hidden]="!showPosts">
@@ -65,7 +65,7 @@
                 style="width:40px;height:40px;">
               </div>
               <div class="name-and-date">
-                <div>
+                <div class="display-name">
                   {{ posts[i].displayName }}
                 </div>
                 <div>
@@ -76,9 +76,9 @@
             <div class="body">
               {{ posts[i].body }}
             </div>
-            <div class="response">
+            <div class="response hyperlink">
               <button (click)="onLike(i)"
-                      class="mat-button mat-primary like"
+                      class="mat-button like"
                       [disabled]="liked[i]">
                 <mat-icon
                   matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
@@ -91,7 +91,7 @@
                 </span>
               </button>
               <button (click)="onComment(i)"
-                      class="mat-button mat-primary comment">
+                      class="mat-button comment">
                 <mat-icon
                   class="reaction"
                   matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"

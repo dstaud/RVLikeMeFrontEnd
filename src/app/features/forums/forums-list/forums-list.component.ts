@@ -9,6 +9,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ThemeService } from '@services/theme.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class ForumsListComponent implements OnInit {
   groupListDisplayAttributes = [];
   groupsListFromUserProfile = [];
   groupProfileDisplayAttributesFromGroup = [];
+  theme: string;
 
   showSpinner: boolean = false;
 
@@ -32,7 +34,8 @@ export class ForumsListComponent implements OnInit {
               private location: Location,
               private profileSvc: ProfileService,
               public translate: TranslateService,
-              private activateBackArrowSvc: ActivateBackArrowService) { }
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private themeSvc: ThemeService) { }
 
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
@@ -41,18 +44,27 @@ export class ForumsListComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
+    // Listen for changes in color theme;
+    console.log('ForumsListComponent:ngOnInit: getting theme');
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    });
+
     console.log('ForumsListComponent:ngOnInit: getting profile');
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('ForumListComponent:ngOnInit: got new profile data=', data);
+      console.log('ForumsListComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       if (this.profile._id) {
-        this.groupsListFromUserProfile = this.profile.forums;
-        console.log('ForumListComponent:ngOnInit: got Profile Data, so get all groups for user');
+        // this.groupsListFromUserProfile = this.profile.forums;
+        console.log('ForumsListComponent:ngOnInit: got Profile Data, so get all groups for user');
         this.groupListDisplayAttributes = this.getGroups();
-        console.log('ForumListComponent:ngOnInit: got groups and attributes for display ', this.groupListDisplayAttributes);
+        console.log('ForumsListComponent:ngOnInit: got groups and attributes for display ', this.groupListDisplayAttributes);
       }
     }, (error) => {
       console.error(error);
@@ -68,18 +80,18 @@ export class ForumsListComponent implements OnInit {
   private getGroups(): Array<Array<string>> {
     let groupsAttributes = [];
 
-    console.log('ForumListComponent:getGroups: Groups for profile=', this.profile.forums);
+    console.log('ForumsListComponent:getGroups: Groups for profile=', this.profile.forums);
     if (this.profile.forums.length === 0) {
-      console.log('ForumListComponent:getGroups: Groups not found!');
+      console.log('ForumsListComponent:getGroups: Groups not found!');
     } else {
       this.groupsListFromUserProfile = this.profile.forums;
 
       for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
-        console.log('ForumListComponent:getGroups: Getting attributes for ', this.groupsListFromUserProfile[i]);
+        console.log('ForumsListComponent:getGroups: Getting attributes for ', this.groupsListFromUserProfile[i]);
         this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(this.groupsListFromUserProfile[i]);
         groupsAttributes.push(this.groupProfileDisplayAttributesFromGroup);
       }
-      console.log('ForumListComponent:getGroups: Group found, Attributes=', groupsAttributes);
+      console.log('ForumsListComponent:getGroups: Group found, Attributes=', groupsAttributes);
     }
     return groupsAttributes;
   }
@@ -91,7 +103,8 @@ export class ForumsListComponent implements OnInit {
 
     this.activateBackArrowSvc.setBackRoute('forums-list');
     console.log('ForumsListComponent:onGroupSelect: navigating', group);
-    queryParams = '{"_id":"' + group._id + '"}';
+    queryParams = '{"_id":"' + group._id + '",' +
+                  '"theme":"' + this.theme + '"}';
     console.log('ForumsListComponent:onGroupSelect: query params=', queryParams);
     this.router.navigate(['/forums'], { queryParams: { queryParam: queryParams }});
   }

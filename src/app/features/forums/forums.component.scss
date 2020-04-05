@@ -15,9 +15,16 @@
 
 .group-heading {
   float: left;
-  background-color: #e0e0e0;
   padding: 10px;
   width: 100%;
+}
+
+.group-heading-light {
+  background-color: #e0e0e0;
+}
+
+.group-heading-dark {
+  background-color: #616161;
 }
 
 .options {

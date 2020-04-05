@@ -46,6 +46,7 @@ export class AppComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private router: Router) {
+    console.log('AppComponent:constructor: get color theme');
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.router.events
     .pipe(
@@ -76,7 +77,7 @@ export class AppComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe(fontData => {
         this.font = fontData.valueOf();
-        console.log('Font=', this.font);
+        console.log('AppComponent:ngOnInit: Font=', this.font);
       });
 
     // Listen for changes in color theme;
@@ -84,7 +85,7 @@ export class AppComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe(themeData => {
         this.theme = themeData.valueOf();
-        console.log('Theme=', this.theme);
+        console.log('AppComponent:ngOnInit: Theme=', this.theme);
       });
 
     // Listen for changes in user authorization state

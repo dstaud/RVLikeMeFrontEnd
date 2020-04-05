@@ -1,6 +1,7 @@
 <div class="mat-app-background container mat-body-1">
   <div>
-    <div class="group-heading">
+    <div class="group-heading" [ngClass]="theme === 'light-theme' ? 'group-heading-light' : 'group-heading-dark'">
+      theme={{ theme }}
       <span>{{ 'forums.component.heading' | translate}}:</span>
       <div class="options">
 <!--         <mat-icon class="options-icons hyperlink"
@@ -17,14 +18,14 @@
       <span *ngIf="showLessMatches">
         <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup | slice:0:3" class="group-attributes"><br>- {{ profileAttribute }}</span>
         <div *ngIf="showMoreOption"
-              (click)="!showLessMatches"
+              (click)="showLessMatches = !showLessMatches"
               class="hyperlink">
               ...{{ 'forums.component.more' | translate }}
         </div>
       </span>
       <span *ngIf="!showLessMatches">
         <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup" class="group-attributes"><br>- {{ profileAttribute }}</span>
-        <div (click)="showLessMatches"
+        <div (click)="showLessMatches = !showLessMatches"
               class="hyperlink">
               ...{{ 'forums.component.less' | translate }}</div>
       </span>

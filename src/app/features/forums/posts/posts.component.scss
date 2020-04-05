@@ -45,6 +45,10 @@
   line-height: 1.5;
 }
 
+.display-name {
+  font-weight: bold;
+}
+
 mat-divider {
   border-top-width: 3px;
   // margin-top: 50px;
@@ -78,6 +82,10 @@ mat-divider {
   display: inline-flex;
   vertical-align: middle;
   align-items: center;
+}
+
+.first-post {
+  margin-top: 10px;
 }
 
 .spinner {

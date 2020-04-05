@@ -6,11 +6,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { Observable } from 'rxjs';
 
+import { PostsComponent } from './posts/posts.component';
+
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { PostsComponent } from './posts/posts.component';
+import { ThemeService } from '@services/theme.service';
 
 
 @Component({
@@ -29,6 +31,7 @@ export class ForumsComponent implements OnInit {
   groupListDisplayAttributes = [];
   groupProfileCodeAttributesFromGroup = [];
   groupsListFromUserProfile = [];
+  theme: string;
 
   showSpinner = false;
   showLessMatches = true;
@@ -50,7 +53,8 @@ export class ForumsComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private route: ActivatedRoute,
-              private forumSvc: ForumService) {
+              private forumSvc: ForumService,
+              private themeSvc: ThemeService) {
               }
 
   ngOnInit() {
@@ -61,8 +65,16 @@ export class ForumsComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.userProfile = this.profileSvc.profile;
+    // Listen for changes in color theme;
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsComponent:ngOnInit: Theme=', this.theme);
+    });
 
+    // Listen for Profile changes
+    this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
@@ -75,11 +87,13 @@ export class ForumsComponent implements OnInit {
       console.error(error);
     });
 
+    // Get parameters
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
       this.showSpinner = true;
       let queryParams = JSON.parse(params.queryParam);
+      this.theme = queryParams.theme;
       console.log('ForumsComponent:ngOnInit: queryParams=', queryParams);
       this.getGroup(queryParams);
     });
