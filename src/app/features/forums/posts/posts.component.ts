@@ -113,21 +113,17 @@ export class PostsComponent implements OnInit {
     this.displayName = displayName;
 
     this.posts = [];
-    console.log('PostsComponent:getPosts: Get posts for group=', this.groupID);
     this.forumSvc.getPosts(this.groupID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
-      console.log('PostsComponent:getPosts: Got posts=', postResult);
       if (postResult.length === 0) {
         this.showPosts = false;
         this.showFirstPost = true;
         this.showSpinner = false;
       } else {
         this.comments= [];
-        console.log('PostsComponent:getPosts: Comments array before=', this.comments);
         for (let j=0; j < postResult[0].comments.length; j++) {
           comment = this.createCommentsArrayEntry(postResult[0].comments[j]);
-          console.log('PostsComponent:getPosts: Comments array adding new comment=', comment);
           postComments.push(comment);
           this.liked.push(this.checkIfLiked(postResult[0].reactions));
         }
@@ -135,18 +131,15 @@ export class PostsComponent implements OnInit {
         this.posts.push(post);
         this.comments.push(postComments);
         this.showPostComments.push(false);
-        console.log('PostsComponent:getPosts: post=', post);
         if (postComments.length > 4) {
           this.startCommentsIndex.push(postComments.length - 4);
         } else {
           this.startCommentsIndex.push(0);
         }
-        console.log('PostsComponent:getPosts: Comments array added new comment=', this.comments);
         for (let i=1; i < postResult.length; i++) {
           postComments = [];
           for (let j=0; j < postResult[i].comments.length; j++) {
             comment = this.createCommentsArrayEntry(postResult[i].comments[j]);
-            console.log('PostsComponent:getPosts: PostComments Array, adding new comment=', comment);
             postComments.push(comment);
           }
           post = this.createPostsArrayEntry(postResult[i]);
@@ -160,13 +153,8 @@ export class PostsComponent implements OnInit {
             this.startCommentsIndex.push(0);
           }
           this.liked.push(this.checkIfLiked(postResult[i].reactions));
-          console.log('PostsComponent:getPosts: Post Comments array adding new comment=', postComments);
           this.comments.push(postComments);
-          console.log('PostsComponent:getPosts: Comments array adding new comment=', this.comments);
         }
-        console.log('PostsComponent:getPosts: Posts=', this.posts);
-        console.log('PostsComponent:getPosts: Reactions=', this.liked);
-        console.log('PostsComponent:getPosts: showPostComments array=', this.showPostComments);
         this.showPosts = true;
         this.showFirstPost = false;
         this.showSpinner = false;
@@ -178,7 +166,44 @@ export class PostsComponent implements OnInit {
   }
 
 
-  private openUpdatePostDialog(row: number): void {
+  // When user clicks like, send update to server and turn off their ability to like again
+  onLike(row: number): void {
+    console.log('row=', row);
+    let reaction = 'like';
+
+    this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
+    .subscribe(reactionResult => {
+      this.posts[row].reactionCount++;
+      this.liked[row] = true;
+      this.showSpinner = false;
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
+  }
+
+
+  // When user clicks comment, open up the comments for viewing
+  onComment(row: number) {
+    this.showPostComments[row] = !this.showPostComments[row];
+  }
+
+
+  // When user clicks to show all comments, set the start index to zero
+  onShowAllComments() {
+    this.startCommentsIndex[this.currentPostRow] = 0;
+  }
+
+
+  // When user clicks to add a post, show the form
+  onAddPost() {
+    this.showAddPost = true;
+    this.showFirstPost = false;
+  }
+
+
+  // Open dialog for user to update their post
+  openUpdatePostDialog(row: number): void {
     const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
       width: this.dialogWidthDisplay,
       height: '80%',
@@ -205,97 +230,49 @@ export class PostsComponent implements OnInit {
   }
 
 
+  // After submits their post, this is called from child component
   postAddComplete(newPost: any): void {
-    console.log('PostsComponent:postAddComplete: new post=', newPost);
     if (newPost !== 'canceled') {
       let post = this.createPostsArrayEntry(newPost);
       this.posts.unshift(post);
-      console.log('PostsComponent:postAddComplete: new post added.  Current posts array=', this.posts);
       this.comments.unshift([]);
       this.showUpdatePost.unshift(false);
       this.showPostComments.unshift(false);
       this.startCommentsIndex.unshift(0);
-      console.log('PostsComponent:postAddComplete after push to showPostComments=', this.showPostComments);
       this.showPosts = true;
       this.currentPostRow = 0;
     }
     this.showAddPost = false;
   }
 
+
+  // After submits their post, this is called from child component
   postUpdateComplete(postResult: any): void {
     let postIndex = postResult[0].postIndex;
     let post = postResult[1];
 
-    console.log('PostsComponent:postUpdateComplete: post=', post);
     if (post !== 'canceled') {
-      console.log('PostsComponent:postUpdateComplete: post=', post.body);
-      console.log('PostsComponent:postUpdateComplete: posts array=', this.posts);
       // this.posts[postIndex].title = post.title;
       this.posts[postIndex].body = post.body;
     }
     this.showUpdatePost[postIndex] = false;
   }
 
-  postCommentComplete(post: any) {
-    console.log('PostsComponent:postCommentComplete: post=', post);
-    let currentRow = post[0].postIndex;
-    console.log('PostsComponent:postCommentComplete: post1=', post[1]);
-    let newComment = this.createCommentsArrayEntry(post[1].comments[post[1].comments.length-1]);
-    console.log('PostsComponent:postCommentComplete: new comment=', newComment);
 
-    console.log('PostsComponent:postCommentComplete: new comment=', newComment);
-    console.log('PostsComponent:postCommentComplete: currentPostRow=', currentRow, ' posts=', this.posts);
+  // After user posts a comment, update the appropriate arrays
+  postCommentComplete(post: any) {
+    let currentRow = post[0].postIndex;
+    let newComment = this.createCommentsArrayEntry(post[1].comments[post[1].comments.length-1]);
+
     if (this.posts[currentRow].commentCount == 0) {
-        console.log('PostsComponent:postCommentComplete: initialize comments array.');
         this.comments[currentRow] = [];
     }
 
-    console.log('PostsComponent:postCommentComplete: push on to ', this.comments[currentRow], '=',newComment, ' index=' + currentRow);
     this.comments[currentRow].push(newComment);
-    console.log('PostsComponent:postCommentComplete: pushed. comments=', this.comments);
     this.posts[currentRow].commentCount++;
-    console.log('PostsComponent:postCommentComplete: comments length=', this.comments[currentRow].length), ' index before=', this.startCommentsIndex[currentRow];
     if (this.comments[currentRow].length > 4) {
       this.startCommentsIndex[currentRow]++
     }
-    console.log('PostsComponent:postCommentComplete: index after=', this.startCommentsIndex[currentRow]);
-  }
-
-  onLike(row: number): void {
-    console.log('row=', row);
-    let reaction = 'like';
-
-    this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
-    .subscribe(reactionResult => {
-      console.log('REACTION RESULT=', reactionResult);
-      this.posts[row].reactionCount++;
-      this.liked[row] = true;
-      this.showSpinner = false;
-    }, error => {
-      console.log(error);
-      this.showSpinner = false;
-    });
-  }
-
-  onComment(row: number) {
-    this.showPostComments[row] = !this.showPostComments[row];
-  }
-
-  onShowAllComments() {
-    this.startCommentsIndex[this.currentPostRow] = 0;
-  }
-
-  onAddPost() {
-    this.showAddPost = true;
-    this.showFirstPost = false;
-  }
-
-  onUpdatePost(row: number) {
-    console.log('PostsComponent:onUpdatePost: update post', row, ' posts=', this.posts[row].body);
-    this.openUpdatePostDialog(row);
-    // this.showUpdatePost[row] = true;
-
-    // this.updatePostComponent.populatePost(this.posts[row].body);
   }
 
 

@@ -36,7 +36,6 @@ export class ForumsComponent implements OnInit {
   showSpinner = false;
   showLessMatches = true;
   showMoreOption = false;
-  showTitlesOnly = false;
 
   private backPath = '';
   private routeSubscription: any;
@@ -58,7 +57,6 @@ export class ForumsComponent implements OnInit {
               }
 
   ngOnInit() {
-    console.log('ForumsComponent:ngOnInit: in Forums Component!');
     if (!this.auth.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
@@ -70,7 +68,6 @@ export class ForumsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('ForumsComponent:ngOnInit: Theme=', this.theme);
     });
 
     // Listen for Profile changes
@@ -78,7 +75,6 @@ export class ForumsComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('ForumsComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       if (this.profile._id) {
         this.groupsListFromUserProfile = this.profile.forums;
@@ -94,7 +90,6 @@ export class ForumsComponent implements OnInit {
       this.showSpinner = true;
       let queryParams = JSON.parse(params.queryParam);
       this.theme = queryParams.theme;
-      console.log('ForumsComponent:ngOnInit: queryParams=', queryParams);
       this.getGroup(queryParams);
     });
   }
@@ -121,15 +116,11 @@ export class ForumsComponent implements OnInit {
     this.showSpinner = true;
 
     if (queryParams._id) {
-      console.log('ForumsComponent:getGroup: Have group ID ', queryParams._id);
       this.groupID = queryParams._id;
       this.forumSvc.getGroupByID(queryParams._id)
       .subscribe(groupFromServer => {
-        console.log('ForumsComponent:getGroup: got group by ID ', groupFromServer);
         this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
-        console.log('ForumsComponent:getGroup: group attributes ', this.groupProfileDisplayAttributesFromGroup);
         this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
-        console.log('ForumsComponent:getGroup: group DISPLAY attributes ',  this.groupProfileDisplayAttributesFromGroup);
 
         // If there are more than 3 attributes, show only three with ...more on the template.
         if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -138,19 +129,13 @@ export class ForumsComponent implements OnInit {
           this.showMoreOption = false;
         }
 
-        console.log('ForumsComponent:getGroup: Get posts for the group');
         this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
 
       });
     } else {
-      console.log('ForumsComponent:getGroup:: Do not have group id ', queryParams);
-      console.log('ForumsComponent:getGroup: have query params and getting group attributes.  params=', queryParams);
       this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(queryParams);
-      console.log('ForumsComponent:getGroup: group attributes ', this.groupProfileDisplayAttributesFromGroup);
       this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(queryParams);
-      console.log('ForumsComponent:getGroup: group DISPLAY attributes ',  this.groupProfileDisplayAttributesFromGroup);
-
 
       // If there are more than 3 attributes, show only three with ...more on the template.
       if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -162,19 +147,16 @@ export class ForumsComponent implements OnInit {
       keyValue = this.getGroupKeyValueAttributes(queryParams).split('~');
       names = keyValue[0];
       values = keyValue[1];
-      console.log('ForumsComponent:getGroup: queryParams=', queryParams, ' keyvalue=', keyValue, ' names=', names, ' values=', values);
 
       // Check if group already exists
       this.forumSvc.getGroup(names, values)
       .subscribe(groupsFromServer => {
-        console.log('ForumsComponent:getGroup: return from server, groupsFromServer=', groupsFromServer, ' groupsFromServer length=', groupsFromServer.length, ' groupProfileCodeAttributesFromGroup=', this.groupProfileCodeAttributesFromGroup);
 
         // Query may return multiple group forums that include the specific name/value pairs user is looking for.
         // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
         // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
         for (let i = 0; i < groupsFromServer.length; i++) {
           let groupDocKeys = Object.keys(groupsFromServer[i]);
-          console.log('ForumsComponent:getGroup: groupDocKeys=', groupDocKeys);
           docNotAMatch = false;
 
           // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
@@ -184,7 +166,6 @@ export class ForumsComponent implements OnInit {
             // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
             // this group because it is not an exact match.
             if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
-              console.log('ForumsComponent:getGroup: groupProfileCodeAttributesFromGroup=', this.groupProfileCodeAttributesFromGroup, ' looking for groupDocKey=', groupDocKeys[j])
 
               if (!this.reservedField(groupDocKeys[j])) {
                 docNotAMatch = true;
@@ -195,7 +176,6 @@ export class ForumsComponent implements OnInit {
           // If no group forum documents found with additional keys the user did not target, then the group already exists
           // and all we have to do is make sure that the group is already in the user's profile group forum list.
           if (!docNotAMatch) {
-            console.log('ForumsComponent:getGroup: group already exists, go to updateProfileGroups for groupID=', groupsFromServer[i]._id);
             matchFound = true;
             this.groupID = groupsFromServer[i]._id;
             this.updateProfileGroups();
@@ -205,17 +185,14 @@ export class ForumsComponent implements OnInit {
 
         // if match found, display any posts; otherwise, create the group forum.
         if (matchFound) {
-          console.log('ForumsComponent:getGroup: group already exists so get posts for the group');
           this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
           this.showSpinner = false;
         } else {
-          console.log('ForumsComponent:getGroup: group does not exist so create it')
           this.createGroupForum(names, values);
         }
       }, error => {
         // if no match at all, create the forum group
         if (error.status === 404) {
-          console.log('404');
           this.createGroupForum(names, values);
         } else {
           console.log(error);
@@ -232,11 +209,9 @@ export class ForumsComponent implements OnInit {
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
 
-    console.log('ForumsComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
       if (!this.reservedField(name)) {
         value = group[name];
-        console.log('ForumsComponent:getGroupDisplayAttributes: NAME=',name, 'VALUE=', value);
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;
         } else {
@@ -257,10 +232,8 @@ export class ForumsComponent implements OnInit {
     let name;
     let groupProfileCodeAttributesFromGroup = [];
 
-    console.log('ForumsComponent:getGroupCodeAttributes: group=', group);
     for (name in group) {
       if (!this.reservedField(name)) {
-        console.log('ForumsComponent.getGroupCodeAttributes: pushing on to local array: ', name);
         groupProfileCodeAttributesFromGroup.push(name);
       }
     }
@@ -276,11 +249,9 @@ export class ForumsComponent implements OnInit {
 
     names = '';
     values = '';
-    console.log('ForumsComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
       if (!this.reservedField(name)) {
         value = group[name];
-        console.log('ForumsComponent:getGroupDisplayAttributes: NAME=',name, 'VALUE=', value);
         if (names) {
           names = names + '|';
           values = values + '|';
@@ -289,15 +260,12 @@ export class ForumsComponent implements OnInit {
         values = values + value;
       }
     }
-    console.log('ForumsComponent:getGroupDisplayAttributes: names=', names, ' values=', values);
     return names + '~' + values;
   }
 
 
   // Create new group forum based on user's attribute match selections
   private createGroupForum(names: string, values: string): void {
-    console.log('ForumsComponent:createGroupForum: For ', names, values);
-
     this.forumSvc.addGroup(names, values)
     .subscribe(group => {
       this.groupID = group._id;
@@ -311,22 +279,17 @@ export class ForumsComponent implements OnInit {
 
   // Update group forum array in user's profile with new group they are associated with.
   private updateProfileGroups() {
-    console.log('ForumsComponent:updateProfileGroups: Check if this group ', this.groupID, ' in users profile groups ', this.groupsListFromUserProfile)
     let groupFound = false;
     for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
-      console.log('ForumsComponent:updateProfileGroups: Check if this group ID ', this.groupID, ' is = group ID from object ', this.groupsListFromUserProfile[i]._id);
       if (this.groupsListFromUserProfile[i]._id === this.groupID) {
-        console.log('updateProfileGroups: group ', this.groupID, ' = groupsListFromProfile ', this.groupsListFromUserProfile[i]._id)
         groupFound = true;
         break;
       }
     }
     if (!groupFound) {
-      console.log('ForumsComponent:updateProfileGroups: Group not found in Profile.  Adding this Group ID to Profile ', this.groupID);
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
-        console.log('ForumsComponent:updateProfileGroups: Updated profile, response from server=', responseData);
         this.showSpinner = false;
       }, error => {
         console.log(error);

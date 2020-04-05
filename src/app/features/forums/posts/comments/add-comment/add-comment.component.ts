@@ -63,17 +63,6 @@ export class AddCommentComponent implements OnInit {
     this.showSmallFieldInitial = true;
     this.postButtonActive = false;
     this.postCommentComplete.emit(result);
-/*     if (post !== 'canceled') {
-      let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
-      '"displayName":"' + post.comments[post.comments.length-1].displayName + '",' +
-      '"profileImageUrl":"' + post.comments[post.comments.length-1].profileImageUrl + '",' +
-      '"createdAt":"' + post.comments[post.comments.length-1].createdAt + '"}';
-      console.log('add-comment:doneWithAdd: new comment=', comment);
-      let JSONComment = JSON.parse(comment);
-      this.postCommentComplete.emit(post.comments[post.comments.length-1]);
-    } else {
-      this.postCommentComplete.emit(post);
-    } */
   }
 
 

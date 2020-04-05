@@ -39,7 +39,6 @@ export class AddPostComponent implements OnInit {
 
   // Whether canceled or posted, send the appropriate data back up the chain
   doneWithAdd(post: any) {
-    console.log('add-postComponent:doneWithAdd: post=', post);
     this.postAddComplete.emit(post);
   }
 
@@ -51,7 +50,6 @@ export class AddPostComponent implements OnInit {
     let postText = this.form.controls.post.value;
     this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl)
     .subscribe(post => {
-      console.log('add-postComponent:onPost: post result=', post);
       this.doneWithAdd(post);
       this.showSpinner = false;
     }, error => {
