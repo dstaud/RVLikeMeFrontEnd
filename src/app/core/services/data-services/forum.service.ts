@@ -89,7 +89,7 @@ export class ForumService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
-  updatePost(postID: string, post:string): Observable<any> {
+  updatePost(postID: string, post:string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.
     // let titleEscaped = this.escapeJsonReservedCharacters(title);
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"postID":"' + postID +
