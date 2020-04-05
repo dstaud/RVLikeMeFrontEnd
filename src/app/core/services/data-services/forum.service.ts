@@ -73,11 +73,11 @@ export class ForumService {
     });
   }
 
-  addPost(groupID: string, title: string, post:string, displayName: string, profileImageUrl: string): Observable<any> {
-    let titleEscaped = this.escapeJsonReservedCharacters(title);
+  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string): Observable<any> {
+    // let titleEscaped = this.escapeJsonReservedCharacters(title);
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"groupID":"' + groupID +
-                '","title":"' + titleEscaped +
+                // '","title":"' + titleEscaped +
                 '","body":"' + postEscaped +
                 '","displayName":"' + displayName +
                 '","profileImageUrl":"' + profileImageUrl +

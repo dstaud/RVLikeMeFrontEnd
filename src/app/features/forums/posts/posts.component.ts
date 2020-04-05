@@ -263,12 +263,12 @@ export class PostsComponent implements OnInit {
   }
 
   private createPostsArrayEntry(post): JSON {
-    let titleEscaped = this.escapeJsonReservedCharacters(post.title);
+    // let titleEscaped = this.escapeJsonReservedCharacters(post.title);
     let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
 
     let newPost = '{"_id":"' + post._id + '",' +
     '"createdBy":"' + post.createdBy + '",' +
-    '"title":"' + titleEscaped + '",' +
+    // '"title":"' + titleEscaped + '",' +
     '"body":"' + bodyEscaped + '",' +
     '"displayName":"' + post.userDisplayName + '",' +
     '"profileImageUrl":"' + post.userProfileUrl + '",' +

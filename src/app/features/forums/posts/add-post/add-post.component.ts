@@ -29,7 +29,7 @@ export class AddPostComponent implements OnInit {
   constructor(private forumSvc: ForumService,
               fb: FormBuilder) {
               this.form = fb.group({
-                title: new FormControl('', Validators.required),
+                // title: new FormControl('', Validators.required),
                 post: new FormControl('', Validators.required)
               });
   }
@@ -44,9 +44,9 @@ export class AddPostComponent implements OnInit {
 
   onPost() {
     this.showSpinner = true;
-    let postTitle = this.form.controls.title.value;
+    // let postTitle = this.form.controls.title.value;
     let postText = this.form.controls.post.value;
-    this.forumSvc.addPost(this.groupID, postTitle, postText, this.displayName, this.profileImageUrl)
+    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl)
     .subscribe(post => {
       console.log('add-postComponent:onPost: post result=', post);
       this.doneWithAdd(post);
