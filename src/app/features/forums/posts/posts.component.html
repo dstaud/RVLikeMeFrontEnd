@@ -28,14 +28,6 @@
     </div>
     <div [hidden]="!showPosts">
         <div *ngFor="let post of posts; let i=index">
-          <app-rvlm-update-post
-            [postIndex]="i"
-            [hidden]="!showUpdatePost[i]"
-            [postID]="posts[i]._id"
-            [postTitle]="posts[i].title"
-            [postBody]="posts[i].body"
-            (postUpdateComplete)="postUpdateComplete($event)">
-          </app-rvlm-update-post>
           <div class="posts">
             <div>
               <!-- <span class="mat-h2">{{ posts[i].title }}</span> -->
@@ -43,7 +35,8 @@
                 <mat-icon
                   class="menu"
                   matPrefix
-                  [matMenuTriggerFor]="beforeMenu">more_horiz
+                  [matMenuTriggerFor]="beforeMenu">
+                  more_horiz
                 </mat-icon>
               </div>
             </div>
@@ -51,7 +44,7 @@
               <mat-menu
                 #beforeMenu="matMenu"
                 xPosition="before">
-                <button mat-menu-item (click)="updatePost(i)">
+                <button mat-menu-item (click)="onUpdatePost(i)">
                   <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
                   Update post
                 </button>

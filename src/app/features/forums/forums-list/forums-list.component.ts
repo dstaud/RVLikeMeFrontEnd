@@ -50,21 +50,16 @@ export class ForumsListComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
     });
 
-    console.log('ForumsListComponent:ngOnInit: getting profile');
+    // Listen for changes in Profile
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('ForumsListComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       if (this.profile._id) {
-        // this.groupsListFromUserProfile = this.profile.forums;
-        console.log('ForumsListComponent:ngOnInit: got Profile Data, so get all groups for user');
         this.groupListDisplayAttributes = this.getGroups();
-        console.log('ForumsListComponent:ngOnInit: got groups and attributes for display ', this.groupListDisplayAttributes);
       }
     }, (error) => {
       console.error(error);
@@ -73,40 +68,36 @@ export class ForumsListComponent implements OnInit {
 
   ngOnDestroy() {}
 
+  // If user likes the comment, add to the total for likes for the comment
   onLikeMe() {
     this.router.navigateByUrl('connections');
   }
 
-  private getGroups(): Array<Array<string>> {
-    let groupsAttributes = [];
 
-    console.log('ForumsListComponent:getGroups: Groups for profile=', this.profile.forums);
-    if (this.profile.forums.length === 0) {
-      console.log('ForumsListComponent:getGroups: Groups not found!');
-    } else {
-      this.groupsListFromUserProfile = this.profile.forums;
-
-      for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
-        console.log('ForumsListComponent:getGroups: Getting attributes for ', this.groupsListFromUserProfile[i]);
-        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(this.groupsListFromUserProfile[i]);
-        groupsAttributes.push(this.groupProfileDisplayAttributesFromGroup);
-      }
-      console.log('ForumsListComponent:getGroups: Group found, Attributes=', groupsAttributes);
-    }
-    return groupsAttributes;
-  }
-
-
+  // If user selects a group, configure query params and go to group forums
   onGroupSelect(groupItem: number) {
     let group = this.groupsListFromUserProfile[groupItem];
     let queryParams: string;
 
     this.activateBackArrowSvc.setBackRoute('forums-list');
-    console.log('ForumsListComponent:onGroupSelect: navigating', group);
-    queryParams = '{"_id":"' + group._id + '",' +
-                  '"theme":"' + this.theme + '"}';
-    console.log('ForumsListComponent:onGroupSelect: query params=', queryParams);
+    queryParams = '{"_id":"' + group._id + '",' + '"theme":"' + this.theme + '"}';
     this.router.navigate(['/forums'], { queryParams: { queryParam: queryParams }});
+  }
+
+
+  // Get groups from user's profile, if there are any
+  private getGroups(): Array<Array<string>> {
+    let groupsAttributes = [];
+
+    if (this.profile.forums.length > 0) {
+      this.groupsListFromUserProfile = this.profile.forums;
+
+      for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
+        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(this.groupsListFromUserProfile[i]);
+        groupsAttributes.push(this.groupProfileDisplayAttributesFromGroup);
+      }
+    }
+    return groupsAttributes;
   }
 
   // Translate group codes to text that a user will understand for display in the template
@@ -116,11 +107,9 @@ export class ForumsListComponent implements OnInit {
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
 
-    console.log('ForumsListComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
       if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
         value = group[name];
-        console.log('ForumsListComponent:getGroupDisplayAttributes: NAME=',name, 'VALUE=', value);
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;
         } else {

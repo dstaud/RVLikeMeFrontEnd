@@ -269,10 +269,10 @@ export class ConnectionsComponent implements OnInit {
   onQuery() {
     let name = '';
     let value = '';
+    let i: number = 0;
 
     this.matches = [];
 
-    let i: number = 0;
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
       value = this.profile[item.value];

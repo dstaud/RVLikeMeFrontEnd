@@ -10,7 +10,6 @@ import { PostsComponent } from './posts/posts.component';
 import { AddPostComponent } from './posts/add-post/add-post.component';
 import { CommentsComponent } from './posts/comments/comments.component';
 import { AddCommentComponent } from './posts/comments/add-comment/add-comment.component';
-import { UpdatePostComponent } from './posts/update-post/update-post.component';
 
 
 @NgModule({
@@ -19,8 +18,7 @@ import { UpdatePostComponent } from './posts/update-post/update-post.component';
     PostsComponent,
     AddPostComponent,
     CommentsComponent,
-    AddCommentComponent,
-    UpdatePostComponent],
+    AddCommentComponent],
   imports: [
     CommonModule,
     ForumsRoutingModule,
@@ -30,8 +28,7 @@ import { UpdatePostComponent } from './posts/update-post/update-post.component';
   ],
   exports: [
     AddPostComponent,
-    AddCommentComponent,
-    UpdatePostComponent
+    AddCommentComponent
   ]
 })
 export class ForumsModule { }

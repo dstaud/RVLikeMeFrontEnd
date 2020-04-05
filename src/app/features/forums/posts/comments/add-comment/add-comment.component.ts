@@ -45,14 +45,15 @@ export class AddCommentComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    console.log('add-comment:ngOnInit: in comments', this.postID, this.title, this.displayName, this.profileImageUrl)
-    console.log('add-comment:ngOnInit: displayName=', this.displayName);
+    // Subscribe to changes in the form.  Since only one field, as soon as user clicks on the add comment inpu, activate button.
     this.form.get('comment').valueChanges
     .subscribe(selectedValue => {
       this.postButtonActive = true;
     })
   }
 
+
+  // When done with add, send the information back up the chain
   doneWithAdd(post: any) {
     let result = [];
     let postIndex = JSON.parse('{"postIndex":"' + this.postIndex + '"}');
@@ -61,7 +62,6 @@ export class AddCommentComponent implements OnInit {
     this.form.reset('comment');
     this.showSmallFieldInitial = true;
     this.postButtonActive = false;
-    console.log('add-comment:doneWithAdd: sending back ', result);
     this.postCommentComplete.emit(result);
 /*     if (post !== 'canceled') {
       let comment = '{"comment":"' + post.comments[post.comments.length-1].comment + '",' +
@@ -77,14 +77,13 @@ export class AddCommentComponent implements OnInit {
   }
 
 
+  // When user submits, send to the server.
   onSubmit() {
     this.postButtonActive = false;
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
-    console.log('add-comment:onSubmit: displayName before Add=', this.displayName)
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
     .subscribe(result => {
-      console.log('add-comment:onSubmit postResult=', result)
       this.doneWithAdd(result);
       this.showSpinner = false;
     }, error => {

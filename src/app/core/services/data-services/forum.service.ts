@@ -89,11 +89,11 @@ export class ForumService {
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
   }
 
-  updatePost(postID: string, title: string, post:string): Observable<any> {
-    let titleEscaped = this.escapeJsonReservedCharacters(title);
+  updatePost(postID: string, post:string): Observable<any> {
+    // let titleEscaped = this.escapeJsonReservedCharacters(title);
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"postID":"' + postID +
-                '","title":"' + titleEscaped +
+                // '","title":"' + titleEscaped +
                 '","body":"' + postEscaped +
                 '"}'
     console.log('BODY=', body)

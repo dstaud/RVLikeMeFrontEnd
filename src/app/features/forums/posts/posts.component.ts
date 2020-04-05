@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -8,8 +9,8 @@ import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { CommentsComponent } from './comments/comments.component';
-import { UpdatePostComponent } from './update-post/update-post.component';
-import { ConstantPool } from '@angular/compiler';
+
+import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
 export type FadeState = 'visible' | 'hidden';
 @Component({
@@ -28,8 +29,18 @@ export class PostsComponent implements OnInit {
   @ViewChild(CommentsComponent)
   public commentsComponent: CommentsComponent;
 
-  @ViewChild(UpdatePostComponent)
-  public updatePostComponent: UpdatePostComponent;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
+    }
+  }
 
   groupID: string;
   userID: string;
@@ -49,9 +60,13 @@ export class PostsComponent implements OnInit {
   showUpdatePost: Array<boolean> = [];
   startCommentsIndex: Array<number> = [];
 
+  private windowWidth: any;
+  private dialogWidth: number;
+  private dialogWidthDisplay: string;
 
   constructor(private forumSvc: ForumService,
-              private profileSvc: ProfileService) { }
+              private profileSvc: ProfileService,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     // Get user profile
@@ -68,6 +83,17 @@ export class PostsComponent implements OnInit {
       console.error(error);
       console.log('error');
     });
+
+    // Get window size to determine how to present dialog windows
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
+    }
   }
 
   ngOnDestroy() {}
@@ -152,6 +178,33 @@ export class PostsComponent implements OnInit {
   }
 
 
+  private openUpdatePostDialog(row: number): void {
+    const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
+      width: this.dialogWidthDisplay,
+      height: '80%',
+      disableClose: true,
+      data: { post: this.posts[row].body }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result !== 'canceled') {
+        this.forumSvc.updatePost(this.posts[row]._id, result)
+        .subscribe(postResult => {
+          this.posts[row].body = postResult.body;
+          this.showSpinner = false;
+        }, error => {
+          console.log(error);
+          this.showSpinner = false;
+        });
+      } else {
+        this.showSpinner = false;
+      }
+    });
+  }
+
+
   postAddComplete(newPost: any): void {
     console.log('PostsComponent:postAddComplete: new post=', newPost);
     if (newPost !== 'canceled') {
@@ -172,9 +225,14 @@ export class PostsComponent implements OnInit {
   postUpdateComplete(postResult: any): void {
     let postIndex = postResult[0].postIndex;
     let post = postResult[1];
-    console.log('PostsComponent:postUpdateComplete: post=', post.title, post.body);
-    this.posts[postIndex].title = post.title;
-    this.posts[postIndex].body = post.body;
+
+    console.log('PostsComponent:postUpdateComplete: post=', post);
+    if (post !== 'canceled') {
+      console.log('PostsComponent:postUpdateComplete: post=', post.body);
+      console.log('PostsComponent:postUpdateComplete: posts array=', this.posts);
+      // this.posts[postIndex].title = post.title;
+      this.posts[postIndex].body = post.body;
+    }
     this.showUpdatePost[postIndex] = false;
   }
 
@@ -224,9 +282,7 @@ export class PostsComponent implements OnInit {
   }
 
   onShowAllComments() {
-    console.log('PostsComponent:onShowAllComments: current row=', this.currentPostRow, ' before start index=', this.startCommentsIndex);
     this.startCommentsIndex[this.currentPostRow] = 0;
-    console.log('PostsComponent:onShowAllComments: current row=', this.currentPostRow, ' after start index=', this.startCommentsIndex);
   }
 
   onAddPost() {
@@ -234,11 +290,14 @@ export class PostsComponent implements OnInit {
     this.showFirstPost = false;
   }
 
-  updatePost(row: number) {
-    console.log('update post', row);
-    this.showUpdatePost[row] = true;
-    this.updatePostComponent.populatePost();
+  onUpdatePost(row: number) {
+    console.log('PostsComponent:onUpdatePost: update post', row, ' posts=', this.posts[row].body);
+    this.openUpdatePostDialog(row);
+    // this.showUpdatePost[row] = true;
+
+    // this.updatePostComponent.populatePost(this.posts[row].body);
   }
+
 
   private checkIfLiked(reactions: any): boolean {
     let reactionMatch = false;

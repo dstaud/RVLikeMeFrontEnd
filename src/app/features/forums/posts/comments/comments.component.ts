@@ -24,9 +24,9 @@ export class CommentsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('CommentsComponent:ngOnInit: comments index=', this.postIndex, ' comments=', this.comments);
   }
 
+  // If user wants to see all comments, pass this up the chain
   onShowAll() {
     this.showAllComments.emit();
   }

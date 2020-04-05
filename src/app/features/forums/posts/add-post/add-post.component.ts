@@ -37,11 +37,14 @@ export class AddPostComponent implements OnInit {
   ngOnInit() {
   }
 
+  // Whether canceled or posted, send the appropriate data back up the chain
   doneWithAdd(post: any) {
     console.log('add-postComponent:doneWithAdd: post=', post);
     this.postAddComplete.emit(post);
   }
 
+
+  // When user clicks post, update the database
   onPost() {
     this.showSpinner = true;
     // let postTitle = this.form.controls.title.value;
