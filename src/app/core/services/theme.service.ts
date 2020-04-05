@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 // Publish color and font themes
 @Injectable({
@@ -11,7 +11,7 @@ export class ThemeService {
 
   constructor() { }
 
-  private defaultTheme = new Subject<string>();
+  private defaultTheme = new BehaviorSubject<string>('light-theme');
   defaultGlobalColorTheme = this.defaultTheme.asObservable();
 
   public setGlobalColorTheme(colorScheme: string): void {

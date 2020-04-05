@@ -186,7 +186,7 @@ export class ForumsComponent implements OnInit {
             if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
               console.log('ForumsComponent:getGroup: groupProfileCodeAttributesFromGroup=', this.groupProfileCodeAttributesFromGroup, ' looking for groupDocKey=', groupDocKeys[j])
 
-              if (groupDocKeys[j] !== 'createdBy' && groupDocKeys[j] !== 'createdAt' && groupDocKeys[j] !== 'updatedAt' && groupDocKeys[j] !== '_id' && groupDocKeys[j] !== '__v') {
+              if (!this.reservedField(groupDocKeys[j])) {
                 docNotAMatch = true;
               }
             }
@@ -234,7 +234,7 @@ export class ForumsComponent implements OnInit {
 
     console.log('ForumsComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
-      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
+      if (!this.reservedField(name)) {
         value = group[name];
         console.log('ForumsComponent:getGroupDisplayAttributes: NAME=',name, 'VALUE=', value);
         if (value === 'true' || value === true) {
@@ -259,7 +259,7 @@ export class ForumsComponent implements OnInit {
 
     console.log('ForumsComponent:getGroupCodeAttributes: group=', group);
     for (name in group) {
-      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
+      if (!this.reservedField(name)) {
         console.log('ForumsComponent.getGroupCodeAttributes: pushing on to local array: ', name);
         groupProfileCodeAttributesFromGroup.push(name);
       }
@@ -278,7 +278,7 @@ export class ForumsComponent implements OnInit {
     values = '';
     console.log('ForumsComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
-      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
+      if (!this.reservedField(name)) {
         value = group[name];
         console.log('ForumsComponent:getGroupDisplayAttributes: NAME=',name, 'VALUE=', value);
         if (names) {
@@ -333,5 +333,11 @@ export class ForumsComponent implements OnInit {
         this.showSpinner = false;
       });
     }
+  }
+
+  private reservedField(name: string): boolean {
+    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' || name === '__v' || name === 'theme') {
+      return true;
+    } else { return false }
   }
 }

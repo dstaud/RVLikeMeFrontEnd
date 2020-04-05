@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -11,6 +10,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
+import { ThemeService } from '@services/theme.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -26,8 +26,6 @@ export class UserQueryComponent implements OnInit {
 
   @Output() onCancelQuery = new EventEmitter()
 
-  form: FormGroup;
-
   showSpinner = false;
   showAllMatches = false;
   showQueryResults = false;
@@ -40,16 +38,15 @@ export class UserQueryComponent implements OnInit {
   queryResultMessage: string;
   queryResultMessagePrefix: string;
   results = [];
+  theme: string;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private queryResult: number;
   private backPath: string;
-  private likeMeItem: string;
   private likeMeAnswer: string;
   private likeMeDesc: string;
   private queryParam: string;
-  private totalLength = 0;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -58,7 +55,8 @@ export class UserQueryComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private likeMeCountsSvc: LikemeCountsService,
               private router: Router,
-              private shared: SharedComponent) { }
+              private shared: SharedComponent,
+              private themeSvc: ThemeService) { }
 
   ngOnInit() {
     if (!this.auth.isLoggedIn()) {
@@ -67,9 +65,16 @@ export class UserQueryComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
+    // Listen for changes in color theme;
+    console.log('ForumsListComponent:ngOnInit: getting theme');
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    });
+
     this.showSpinner = true;
-    let name = '';
-    let value = '';
 
     this.queryResult = 0;
     this.queryResultMessage = '';
@@ -114,10 +119,9 @@ export class UserQueryComponent implements OnInit {
             }
         }
         this.results.push(this.likeMeAnswer);
-        this.queryParam = this.queryParam + '"' + this.matches[i].name + '":"' + this.matches[i].value + '"';
-        if (i !== this.matches.length - 1) { this.queryParam = this.queryParam + ','}
+        this.queryParam = this.queryParam + '"' + this.matches[i].name + '":"' + this.matches[i].value + '",';
       }
-      this.queryParam = this.queryParam + '}';
+      this.queryParam = this.queryParam + '"theme":"' + this.theme + '"}';
       this.showSpinner = false;
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
@@ -145,10 +149,7 @@ export class UserQueryComponent implements OnInit {
   }
 
   onForum() {
-    let name;
-    let value;
-    let i: number = 0;
-    this.matches = [];
+    // this.matches = [];
 
     this.activateBackArrowSvc.setBackRoute('connections');
     this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParam }});

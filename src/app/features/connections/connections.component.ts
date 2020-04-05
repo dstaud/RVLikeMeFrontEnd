@@ -13,6 +13,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { ThemeService } from '@services/theme.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -36,6 +37,7 @@ export class ConnectionsComponent implements OnInit {
   param: string;
   likeMeMatches = [];
   matches = [];
+  theme: string;
 
   private backPath = '';
   private likeMeItem: string;
@@ -59,7 +61,7 @@ export class ConnectionsComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private route: ActivatedRoute,
-              private shared: SharedComponent,
+              private themeSvc: ThemeService,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
@@ -74,6 +76,16 @@ export class ConnectionsComponent implements OnInit {
     }
 
     this.showSpinner = true;
+
+    // Listen for changes in color theme;
+    console.log('ForumsListComponent:ngOnInit: getting theme');
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    });
+
 
     // Get user's profile
     this.userProfile = this.profileSvc.profile;
@@ -245,10 +257,10 @@ export class ConnectionsComponent implements OnInit {
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
       value = this.profile[item.value];
-      this.queryParams = this.queryParams + '"' + name + '":"' + value + '"';
+      this.queryParams = this.queryParams + '"' + name + '":"' + value + '",';
       i++;
     });
-    this.queryParams = this.queryParams + '}';
+    this.queryParams = this.queryParams + '"theme":"' + this.theme + '"}'
     this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParams }});
   }
 
@@ -264,7 +276,7 @@ export class ConnectionsComponent implements OnInit {
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
       value = this.profile[item.value];
-      this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}';
+      this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}'
       this.likeMeItem = JSON.parse(this.likeMeItem);
       this.matches.push(this.likeMeItem);
       i++;
