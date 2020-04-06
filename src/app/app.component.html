@@ -16,7 +16,7 @@
                       'bottom-bar-spacing': !headerDesktopVisible && userAuthorized && !iphoneModelxPlus,
                       'bottom-bar-spacing-xplus': userAuthorized && iphoneModelxPlus
                     }">
-        <router-outlet></router-outlet>
+        <router-outlet (activate)="onActivate($event)"></router-outlet>
       </main>
       <app-rvlm-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-footer>
     </mat-sidenav-content>

@@ -204,8 +204,7 @@ export class ConnectionsComponent implements OnInit {
       // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
       // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
       console.log('allCounts=', counts.allCounts)
-      // if (this.allUsersCount > 0) {
-      if (this.allCountsReceived) {
+      if (this.allUsersCount > 0 && this.allCountsReceived) {
         console.log('ConnectionsComponent:ngOnInit: got real counts.  allUsersCount=', this.allUsersCount, this.allCountsReceived);
         this.showSpinner = false;
         if (!this.foundMatch) {

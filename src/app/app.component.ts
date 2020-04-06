@@ -184,4 +184,17 @@ export class AppComponent implements OnInit {
     console.log('dispose from app');
     this.profileSvc.dispose();
   };
+
+  onActivate(event: any) {
+    console.log('AppComponent:onActivate:')
+    let scrollToTop = window.setInterval(() => {
+        let pos = window.pageYOffset;
+        console.log('AppComponent:onActivate: pos=', pos);
+        if (pos > 0) {
+            window.scrollTo(0, pos - 20); // how far to scroll on each step
+        } else {
+            window.clearInterval(scrollToTop);
+        }
+    }, 16);
+  }
 }

@@ -103,8 +103,7 @@ export class LikemeCountsService {
       console.log('getLikeMeCountsPriority:, counts returned=', this.dataStore.likeMeCounts);
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
-      // this.getLikeMeCountsSecondary();
-      // this._likeMeCounts.complete();
+
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
       if (error.message.includes('Unknown Error')) {
@@ -120,6 +119,10 @@ export class LikemeCountsService {
       headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
     })
     .subscribe(counts => {
+      this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
+      this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
+      this.dataStore.likeMeCounts.rvUse = counts.rvUse;
+      this.dataStore.likeMeCounts.rigType = counts.rigType;
       this.dataStore.likeMeCounts.atv = counts.atv;
       this.dataStore.likeMeCounts.blogging = counts.blogging;
       this.dataStore.likeMeCounts.boondocking = counts.boondocking;
@@ -147,8 +150,9 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.allCounts = true;
 
       console.log('getLikeMeCountsSecondary: counts returned=', this.dataStore.likeMeCounts);
+
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
-      // this._likeMeCounts.complete();
+
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
       if (error.message.includes('Unknown Error')) {

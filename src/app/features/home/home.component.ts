@@ -29,13 +29,7 @@ export class HomeComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-    // console.log('HomeComponent:ngOnInit: get profile')
-    // this.profileSvc.getProfile();
   }
-
-  // setBackRoute() {
-  //   this.activateBackArrowSvc.setBackRoute('home');
-  // }
 
   throwError() {
     throw new Error('test Sentry error handling');
