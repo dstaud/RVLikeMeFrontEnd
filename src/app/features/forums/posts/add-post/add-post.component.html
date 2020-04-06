@@ -14,13 +14,12 @@
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ 'add-post.component.body' | translate }}</mat-label>
-          <textarea
-              matInput
-              rows="4"
-              cdkTextareaAutosize
-              type="text"
-              placeholder="{{ 'add-post.component.whatToSay' | translate }}"
-              formControlName="post">
+          <textarea matInput
+                    rows="4"
+                    cdkTextareaAutosize
+                    type="text"
+                    placeholder="{{ 'add-post.component.whatToSay' | translate }}"
+                    formControlName="post">
           </textarea>
         </mat-form-field>
       </div>

@@ -25,9 +25,16 @@
   margin-left: 50px;
   font-size: 80%;
   line-height: 1.5;
-  background-color:#e0e0e0;
   border-radius: 10px;
   padding: 5px;
+}
+
+.comment-light {
+  background-color:#e0e0e0;
+}
+
+.comment-dark {
+  background-color: #616161;
 }
 
 .date {

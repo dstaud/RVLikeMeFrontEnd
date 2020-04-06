@@ -10,20 +10,15 @@ import { ForumService } from '@services/data-services/forum.service';
 })
 export class AddCommentComponent implements OnInit {
 
-  @Input('postIndex')
-  public postIndex: number;
+  @Input('postIndex') postIndex: number;
 
-  @Input('postID')
-  public postID: string;
+  @Input('postID') postID: string;
 
-  @Input('postTitle')
-  public title: string;
+  @Input('postTitle') title: string;
 
-  @Input('displayName')
-  public displayName: string;
+  @Input('displayName') displayName: string;
 
-  @Input('profileImageUrl')
-  public profileImageUrl: string;
+  @Input('profileImageUrl') profileImageUrl: string;
 
   @Output() postCommentComplete = new EventEmitter()
 
@@ -31,10 +26,6 @@ export class AddCommentComponent implements OnInit {
   showSpinner = false;
   postButtonActive = false;
   showSmallFieldInitial = true;
-
-  private containerHeight: number
-  private windowWidth: number;
-  private windowHeight: number;
 
 
   constructor(private forumSvc: ForumService,

@@ -1,6 +1,6 @@
 <div class="mat-app-background container mat-body-1">
   <div>
-    <div class="group-heading" [ngClass]="theme === 'light-theme' ? 'group-heading-light' : 'group-heading-dark'">
+    <div class="group-heading" [ngClass]="theme === 'dark-theme' ? 'group-heading-dark' : 'group-heading-light'">
       <span>{{ 'forums.component.heading' | translate}}:</span>
       <div class="options">
 <!--         <mat-icon class="options-icons hyperlink"
@@ -31,7 +31,9 @@
     </div>
   </div>
   <div class="posts">
-    <app-rvlm-posts></app-rvlm-posts>
+    <app-rvlm-posts
+      [colorTheme]="theme">
+    </app-rvlm-posts>
   </div>
 
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

@@ -14,12 +14,12 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
         <mat-label>Email</mat-label>
         <input matInput
-              type="text"
-              placeholder="Email"
-              autocapitalize="none"
-              formControlName="username"
-              autocomplete="username email"
-              required>
+                type="text"
+                placeholder="Email"
+                autocapitalize="none"
+                formControlName="username"
+                autocomplete="username email"
+                required>
         <mat-error *ngIf="errorHandling('username', 'required')">
           Please enter your <strong>Email</strong>
         </mat-error>
@@ -30,12 +30,12 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
         <mat-label >Password</mat-label>
         <input matInput
-              [type]="hidePassword ? 'password' : 'text'"
-              placeholder="Password"
-              autocapitalize="none"
-              formControlName="password"
-              autocomplete="new-password"
-              required>
+                [type]="hidePassword ? 'password' : 'text'"
+                placeholder="Password"
+                autocapitalize="none"
+                formControlName="password"
+                autocomplete="new-password"
+                required>
         <mat-error *ngIf="errorHandling('password', 'required')">
           Please enter your <strong>Password</strong>
         </mat-error>

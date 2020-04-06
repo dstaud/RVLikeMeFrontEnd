@@ -1,20 +1,17 @@
 <div class="mat-app-background background mat-body-1">
-  <button
-    [disabled]="disableSingleMatchForumOffer"
-    class="mat-raised-button button mat-primary"
-    (click)="onForum()">
+  <button [disabled]="disableSingleMatchForumOffer"
+          class="mat-raised-button button mat-primary"
+          (click)="onForum()">
       {{ "connections.component.forumButton" | translate }}
   </button>
-  <button
-    class="mat-raised-button button"
-    (click)="onCancel()">
+  <button class="mat-raised-button button"
+          (click)="onCancel()">
     {{ "connections.component.cancelButton" | translate }}
   </button>
   <div><span class="mat-title">{{ queryResultMessagePrefix }}</span></div>
   <mat-list>
-    <mat-list-item
-      *ngFor="let result of results"
-      class="list-item">
+    <mat-list-item *ngFor="let result of results"
+                    class="list-item">
       <mat-icon class="list-item">fiber_manual_record</mat-icon>{{ result }}
     </mat-list-item>
   </mat-list>

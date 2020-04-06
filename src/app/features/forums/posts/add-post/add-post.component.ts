@@ -11,14 +11,11 @@ import { ForumService } from '@services/data-services/forum.service';
 })
 export class AddPostComponent implements OnInit {
 
-  @Input('groupID')
-  public groupID: string;
+  @Input('groupID') groupID: string;
 
-  @Input('displayName')
-  public displayName: string;
+  @Input('displayName') displayName: string;
 
-  @Input('profileImageUrl')
-  public profileImageUrl: string;
+  @Input('profileImageUrl') profileImageUrl: string;
 
   @Output() postAddComplete = new EventEmitter<string>();
 

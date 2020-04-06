@@ -11,10 +11,10 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
         <mat-label>First name</mat-label>
         <input matInput
-              type="text"
-              placeholder="First name"
-              formControlName="firstName"
-              required>
+                type="text"
+                placeholder="First name"
+                formControlName="firstName"
+                required>
         <mat-error *ngIf="!form.controls.firstName.pristine &&
                           form.controls.firstName.hasError('required')">
           Please enter your <strong>First Name</strong>
@@ -47,12 +47,12 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
         <mat-label>Password</mat-label>
         <input matInput
-              [type]="hidePassword ? 'password' : 'text'"
-              placeholder="Password"
-              formControlName="password"
-              autocapitalize="none"
-              autocomplete="new-password"
-              required>
+                [type]="hidePassword ? 'password' : 'text'"
+                placeholder="Password"
+                formControlName="password"
+                autocapitalize="none"
+                autocomplete="new-password"
+                required>
         <mat-error *ngIf="!form.controls.password.pristine &&
                           form.controls.password.hasError('required')">
           Please enter a <strong>Password</strong>
@@ -69,12 +69,12 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
         <mat-label>Confirm password</mat-label>
         <input matInput
-              [type]="hidePassword ? 'password' : 'text'"
-              placeholder="Confirm Password"
-              formControlName="passwordConfirm"
-              autocapitalize="none"
-              autocomplete="new-password"
-              required>
+                [type]="hidePassword ? 'password' : 'text'"
+                placeholder="Confirm Password"
+                formControlName="passwordConfirm"
+                autocapitalize="none"
+                autocomplete="new-password"
+                required>
         <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&
                           form.controls.passwordConfirm.hasError('required')">
           Please re-enter your <strong>Password</strong>

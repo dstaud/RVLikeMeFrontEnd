@@ -25,8 +25,7 @@ import { SharedComponent } from '@shared/shared.component';
 export class RegisterUserComponent implements OnInit {
 
   // Variable passed from the dialog when on desktop through this component's selector in the dialog compoment template
-  @Input('containerDialog')
-  containerDialog = false;
+  @Input('containerDialog') containerDialog = false;
 
   // When user is in desktop mode, tell dialog container form is complete, through the reference obtained through the selector
   @Output() formComplete = new EventEmitter()

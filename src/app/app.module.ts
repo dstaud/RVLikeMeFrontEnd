@@ -40,6 +40,9 @@ import { DesktopDialogComponent } from './dialogs/desktop-dialog/desktop-dialog.
 
 import { SharedModule } from '@shared/shared.module';
 import { UpdatePostDialogComponent } from './dialogs/update-post-dialog/update-post-dialog.component';
+import { YourStoryDialogComponent } from './dialogs/your-story-dialog/your-story-dialog.component';
+
+import { ScrollToTopComponent } from './core/utilities/scroll-to-top/scroll-to-top.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -79,7 +82,9 @@ export function getErrorHandler(): ErrorHandler {
     MyStoryDialogComponent,
     DesktopDialogComponent,
     ForumsListComponent,
-    UpdatePostDialogComponent
+    UpdatePostDialogComponent,
+    YourStoryDialogComponent,
+    ScrollToTopComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

@@ -13,12 +13,11 @@
     </div>
   </div>
   <div *ngIf="showAddPost"
-    class="posts-container">
-    <app-rvlm-add-post
-      [groupID]="groupID"
-      [displayName]="displayName"
-      [profileImageUrl]="profileImageUrl"
-      (postAddComplete)="postAddComplete($event)">
+        class="posts-container">
+    <app-rvlm-add-post [groupID]="groupID"
+                        [displayName]="displayName"
+                        [profileImageUrl]="profileImageUrl"
+                        (postAddComplete)="postAddComplete($event)">
     </app-rvlm-add-post>
   </div>
   <div class="posts-container">
@@ -32,18 +31,16 @@
             <div>
               <!-- <span class="mat-h2">{{ posts[i].title }}</span> -->
               <div *ngIf="posts[i].createdBy === userID">
-                <mat-icon
-                  class="menu"
-                  matPrefix
-                  [matMenuTriggerFor]="beforeMenu">
+                <mat-icon class="menu"
+                          matPrefix
+                          [matMenuTriggerFor]="beforeMenu">
                   more_horiz
                 </mat-icon>
               </div>
             </div>
             <div>
-              <mat-menu
-                #beforeMenu="matMenu"
-                xPosition="before">
+              <mat-menu #beforeMenu="matMenu"
+                        xPosition="before">
                 <button mat-menu-item (click)="openUpdatePostDialog(i)">
                   <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
                   Update post
@@ -51,11 +48,11 @@
               </mat-menu>
             </div>
 
-            <div class="posts">
+            <div class="posts" (click)="onYourStory(posts[i].createdBy)">
               <div>
                 <img class="image profile-image-post"
-                [src]="posts[i].profileImageUrl"
-                style="width:40px;height:40px;">
+                      [src]="posts[i].profileImageUrl"
+                      style="width:40px;height:40px;">
               </div>
               <div class="name-and-date">
                 <div class="display-name">
@@ -73,46 +70,47 @@
               <button (click)="onLike(i)"
                       class="mat-button like"
                       [disabled]="liked[i]">
-                <mat-icon
-                  matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
-                  matBadgeColor="warn"
-                  matBadgeSize="small"
-                  matBadgePosition="above after"
-                  fontSet="material-icons-outlined">thumb_up</mat-icon>
+                <mat-icon matBadge="{{ posts[i].reactionCount > 0 ? posts[i].reactionCount : '' }}"
+                          matBadgeColor="warn"
+                          matBadgeSize="small"
+                          matBadgePosition="above after"
+                          fontSet="material-icons-outlined">
+                    thumb_up
+                </mat-icon>
                 <span class="reaction-text">
                       {{ "posts.component.like" | translate }}
                 </span>
               </button>
               <button (click)="onComment(i)"
                       class="mat-button comment">
-                <mat-icon
-                  class="reaction"
-                  matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"
-                  matBadgeColor="warn"
-                  matBadgeSize="small"
-                  matBadgePosition="above after"
-                  fontSet="material-icons-outlined">comment</mat-icon>
+                <mat-icon class="reaction"
+                          matBadge="{{ posts[i].commentCount > 0 ? posts[i].commentCount : '' }}"
+                          matBadgeColor="warn"
+                          matBadgeSize="small"
+                          matBadgePosition="above after"
+                          fontSet="material-icons-outlined">
+                    comment
+                </mat-icon>
                 <span class="reaction-text">{{ "posts.component.comments" | translate }}</span>
               </button>
             </div>
 
             <div class="comments" [hidden]="!showPostComments[i]">
 
-              <app-rvlm-add-comment
-                [postIndex]="i"
-                [postID]="posts[i]._id"
-                [postTitle]="posts[i].title"
-                [displayName]="displayName"
-                [profileImageUrl]="profileImageUrl"
-                (postCommentComplete)="postCommentComplete($event)">
+              <app-rvlm-add-comment [postIndex]="i"
+                                    [postID]="posts[i]._id"
+                                    [postTitle]="posts[i].title"
+                                    [displayName]="displayName"
+                                    [profileImageUrl]="profileImageUrl"
+                                    (postCommentComplete)="postCommentComplete($event)">
               </app-rvlm-add-comment>
 
-              <app-rvlm-comments
-                [postIndex]="i"
-                [comments]="comments[i]"
-                [startCommentsIndex]="startCommentsIndex[i]"
-                [commentsLength]="posts[i].commentCount"
-                (showAllComments)="onShowAllComments()">
+              <app-rvlm-comments [postIndex]="i"
+                                  [comments]="comments[i]"
+                                  [startCommentsIndex]="startCommentsIndex[i]"
+                                  [commentsLength]="posts[i].commentCount"
+                                  [colorTheme]="theme"
+                                  (showAllComments)="onShowAllComments()">
               </app-rvlm-comments>
             </div>
             <mat-divider></mat-divider>

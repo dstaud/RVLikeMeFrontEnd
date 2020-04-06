@@ -12,10 +12,13 @@
     <div><span class="mat-title">{{ 'forums.component.myGroups' | translate }}</span></div>
       <p>{{ 'forums.component.noGroups1' | translate }}.
         {{ 'forums.component.noGroups2' | translate }}
-        <span class="hyperlink" (click)='onLikeMe()'>{{ 'forums.component.noGroups3' | translate }}</span> {{ 'forums.component.noGroups4' | translate }}.
+        <span class="hyperlink"
+              (click)='onLikeMe()'>
+          {{ 'forums.component.noGroups3' | translate }}
+        </span> {{ 'forums.component.noGroups4' | translate }}.
       </p>
   </div>
-
+  <app-scroll-to-top></app-scroll-to-top>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 
 </div>

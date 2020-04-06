@@ -30,11 +30,11 @@ export class UpdatePostDialogComponent implements OnInit {
   }
 
   constructor(public dialogRef: MatDialogRef<UpdatePostDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    fb: FormBuilder) {
-      this.form = fb.group({
-        post: new FormControl('')
-      });
+              @Inject(MAT_DIALOG_DATA) public data: DialogData,
+              fb: FormBuilder) {
+                this.form = fb.group({
+                  post: new FormControl('')
+                });
 }
 
   ngOnInit(): void {

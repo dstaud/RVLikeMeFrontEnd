@@ -1,4 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { Observable } from 'rxjs';
+
+import { ThemeService } from '@services/theme.service';
 
 @Component({
   selector: 'app-rvlm-comments',
@@ -7,24 +12,30 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class CommentsComponent implements OnInit {
 
-  @Input('postIndex')
-  public postIndex: number;
+  @Input('postIndex') postIndex: number;
 
-  @Input('comments')
-  public comments: [[]];
+  @Input('comments') comments: [[]];
 
-  @Input('startCommentsIndex')
-  public startCommentsIndex: number;
+  @Input('startCommentsIndex') startCommentsIndex: number;
 
-  @Input('commentsLength')
-  public commentsLength: number;
+  @Input('commentsLength') commentsLength: number;
+
+  @Input('colorTheme') theme: string;
 
   @Output() showAllComments = new EventEmitter();
 
-  constructor() {}
+  constructor(private themeSvc: ThemeService) {}
 
   ngOnInit(): void {
+    // Listen for changes in color theme;
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    });
   }
+
+  ngOnDestroy() {}
 
   // If user wants to see all comments, pass this up the chain
   onShowAll() {

@@ -3,23 +3,21 @@
     <mat-form-field appearance="outline" class="comment-input">
       <mat-label>{{ "add-comment.component.comment" | translate }}</mat-label>
 
-        <input
-          *ngIf="showSmallFieldInitial"
-          matInput
-          type="text"
-          placeholder="{{ 'add-comment.component.comment' | translate }}"
-          formControlName="comment"
-          cdkFocusInitial
-          (click)="showSmallFieldInitial=false">
+        <input *ngIf="showSmallFieldInitial"
+                matInput
+                type="text"
+                placeholder="{{ 'add-comment.component.comment' | translate }}"
+                formControlName="comment"
+                cdkFocusInitial
+                (click)="showSmallFieldInitial=false">
 
-        <textarea
-          class="text"
-          *ngIf="!showSmallFieldInitial"
-          matInput
-          type="text"
-          placeholder="{{ 'add-comment.component.comment' | translate }}"
-          formControlName="comment"
-          cdkFocusInitial>
+        <textarea *ngIf="!showSmallFieldInitial"
+                  matInput
+                  class="text"
+                  type="text"
+                  placeholder="{{ 'add-comment.component.comment' | translate }}"
+                  formControlName="comment"
+                  cdkFocusInitial>
         </textarea>
 
     </mat-form-field>

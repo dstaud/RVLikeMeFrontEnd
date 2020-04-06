@@ -6,43 +6,43 @@
       <mat-list-item>{{ "profile.component.personal" | translate }}
         <mat-icon *ngIf="personalEnteredMostInfo" class="thumbs-up-icon">thumb_up</mat-icon>
         <div class="progress-bar">
-          <mat-progress-bar
-            mode="determinate"
-            color="{{ personalProgressBarColor }}"
-            value="{{ percentPersonal }}">
+          <mat-progress-bar mode="determinate"
+                            color="{{ personalProgressBarColor }}"
+                            value="{{ percentPersonal }}">
           </mat-progress-bar>
         </div>
       </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
+
     <div class="row" (click)="onLifestyle()">
       <mat-icon class="icon" fontSet="material-icons-outlined">tag_faces</mat-icon>
       <mat-list-item>{{ "profile.component.lifestyle" | translate }}
         <mat-icon *ngIf="lifestyleEnteredMostInfo" class="thumbs-up-icon">thumb_up</mat-icon>
         <div class="progress-bar">
-          <mat-progress-bar
-            mode="determinate"
-            color="{{ lifestyleProgressBarColor }}"
-            value="{{ percentLifestyle }}">
+          <mat-progress-bar mode="determinate"
+                            color="{{ lifestyleProgressBarColor }}"
+                            value="{{ percentLifestyle }}">
           </mat-progress-bar>
         </div>
       </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
+
     <div class="row" (click)="onRig()">
       <mat-icon class="icon" fontSet="material-icons-outlined">rv_hookup</mat-icon>
       <mat-list-item>{{ "profile.component.rig" | translate }}
         <mat-icon *ngIf="rigEnteredMostInfo" class="thumbs-up-icon">thumb_up</mat-icon>
         <div class="progress-bar">
-          <mat-progress-bar
-            mode="determinate"
-            color="{{ rigProgressBarColor }}"
-            value="{{ percentRig }}">
+          <mat-progress-bar mode="determinate"
+                            color="{{ rigProgressBarColor }}"
+                            value="{{ percentRig }}">
           </mat-progress-bar>
         </div>
       </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
+
     <div class="row" (click)="onInterests()">
       <mat-icon class="icon" fontSet="material-icons-outlined">check_box</mat-icon>
       <mat-list-item>{{ "profile.component.interests" | translate }}
@@ -50,8 +50,11 @@
       </mat-list-item>
       <mat-icon class="row-item navigation">keyboard_arrow_right</mat-icon>
     </div>
+
   </mat-list>
+
   <br>
+
   <form [formGroup]="form">
     <div>
       <mat-form-field>
@@ -60,15 +63,15 @@
                     (selectionChange)="selectedAboutMe($event.source.value)"
                     (openedChange) = "activatedAboutMe()"
                     aria-label="my rv experience">
-          <mat-option
-            aria-placeholder="About Me"
-            *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
-            {{ AboutMe.viewValue | translate }}
+          <mat-option aria-placeholder="About Me"
+                      *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
+                      {{ AboutMe.viewValue | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showAboutMeSaveIcon">save</mat-icon>
     </div>
+
     <div>
       <mat-form-field>
         <mat-select formControlName="language"
@@ -81,6 +84,7 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showLanguageSaveIcon">save</mat-icon>
     </div>
+
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

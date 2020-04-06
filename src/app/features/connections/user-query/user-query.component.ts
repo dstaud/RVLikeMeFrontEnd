@@ -21,8 +21,7 @@ import { SharedComponent } from '@shared/shared.component';
 })
 export class UserQueryComponent implements OnInit {
 
-  @Input('matches')
-  public matches: Array<{name: string, value: string}>;
+  @Input('matches') matches: Array<{name: string, value: string}>;
 
   @Output() onCancelQuery = new EventEmitter()
 

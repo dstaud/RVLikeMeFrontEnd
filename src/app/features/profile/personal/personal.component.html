@@ -2,16 +2,16 @@
   <div>
     <div id="profileImage" class="profile-image">
       <img class="image"
-        [src]="profileImageUrl"
-        style="width:80px;height:80px;">
+            [src]="profileImageUrl"
+            style="width:80px;height:80px;">
     </div>
     <div>
       <button mat-button (click)="fileInput.click()">
         <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
         <input #fileInput type="file"
-          (change)="onProfileImageSelected($event)"
-          accept = "image/*"
-          style="display:none;"/>
+                (change)="onProfileImageSelected($event)"
+                accept = "image/*"
+                style="display:none;"/>
           <span>{{ profileImageLabel | translate }}</span>
       </button>
     </div>
@@ -22,126 +22,120 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.firstName" | translate }}</mat-label>
           <input matInput
-                type="text"
-                placeholder="First name"
-                formControlName="firstName"
-                autocomplete="name"
-                required
-                (blur)="updateDataPoint('firstName')">
+                  type="text"
+                  placeholder="First name"
+                  formControlName="firstName"
+                  autocomplete="name"
+                  required
+                  (blur)="updateDataPoint('firstName')">
           <mat-error *ngIf="errorHandling('firstName', 'required')">
-            Please enter your <strong>{{ "personal.component.firstName" | translate }}</strong>
+            {{ "personal.component.firstNameRequired" | translate }} <strong>{{ "personal.component.firstName" | translate }}</strong>
           </mat-error>
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showfirstNameSaveIcon">save</mat-icon>
       </div>
+
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.lastName" | translate }}</mat-label>
           <input matInput
-                type="text"
-                placeholder="Last name"
-                formControlName="lastName"
-                autocomplete="name"
-                (blur)="updateDataPoint('lastName')">
+                  type="text"
+                  placeholder="Last name"
+                  formControlName="lastName"
+                  autocomplete="name"
+                  (blur)="updateDataPoint('lastName')">
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpName')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showlastNameSaveIcon">save</mat-icon>
       </div>
+
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.displayName" | translate }}</mat-label>
           <input matInput
-                type="text"
-                placeholder="Display name"
-                formControlName="displayName"
-                required
-                (blur)="updateDataPoint('displayName')">
+                  type="text"
+                  placeholder="Display name"
+                  formControlName="displayName"
+                  required
+                  (blur)="updateDataPoint('displayName')">
           <mat-error *ngIf="errorHandling('displayName', 'required')">
-            Please enter a <strong>{{ "personal.component.displayName" | translate }}</strong>
+            {{ "personal.component.displayNameRequired" | translate }} <strong>{{ "personal.component.displayName" | translate }}</strong>
           </mat-error>
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpDisplayName')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
       </div>
+
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.myStory" | translate }}</mat-label>
           <textarea matInput
-                type="text"
-                class="large-input"
-                placeholder="My story"
-                formControlName="myStory"
-                (click)="onMyStory()"
-                (blur)="updateDataPoint('myStory')">
+                    type="text"
+                    class="large-input"
+                    placeholder="My story"
+                    formControlName="myStory"
+                    (click)="onMyStory()"
+                    (blur)="updateDataPoint('myStory')">
           </textarea>
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpMyStory')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
       </div>
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.yearOfBirth" | translate }} (YYYY)</mat-label>
           <input matInput
-                type="text"
-                placeholder="Year of birth"
-                formControlName="yearOfBirth"
-                (blur)="updateDataPoint('yearOfBirth')">
+                  type="text"
+                  placeholder="Year of birth"
+                  formControlName="yearOfBirth"
+                  (blur)="updateDataPoint('yearOfBirth')">
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpYearOfBirth')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showyearOfBirthSaveIcon">save</mat-icon>
       </div>
+
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.gender" | translate }}</mat-label>
-          <mat-select
-              matNativeControl
-              (selectionChange)="updateSelectItem('gender', $event.source.value)"
-              formControlName="gender">
-            <mat-option
-              aria-placeholder="gender"
-              *ngFor="let Gender of Genders" [value]="Gender.value">
-              {{ Gender.viewValue | translate }}
+          <mat-select matNativeControl
+                      (selectionChange)="updateSelectItem('gender', $event.source.value)"
+                      formControlName="gender">
+            <mat-option aria-placeholder="gender"
+                        *ngFor="let Gender of Genders"
+                        [value]="Gender.value">
+                        {{ Gender.viewValue | translate }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpGender')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showgenderSaveIcon">save</mat-icon>
       </div>
+
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.homeCountry" | translate }}</mat-label>
-          <mat-select
-              matNativeControl
-              (selectionChange)="updateSelectItem('homeCountry', $event.source.value)"
-              formControlName="homeCountry">
-            <mat-option
-              aria-placeholder="country"
-              *ngFor="let Country of Countries" [value]="Country.value">
-              {{ Country.viewValue | translate }}
+          <mat-select matNativeControl
+                      (selectionChange)="updateSelectItem('homeCountry', $event.source.value)"
+                      formControlName="homeCountry">
+            <mat-option aria-placeholder="country"
+                        *ngFor="let Country of Countries" [value]="Country.value">
+                        {{ Country.viewValue | translate }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeCountry')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showhomeCountrySaveIcon">save</mat-icon>
       </div>
+
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.homeState" | translate }}</mat-label>
-          <mat-select
-            matNativeControl
-            (selectionChange)="updateSelectItem('homeState', $event.source.value)"
-            formControlName="homeState">
-            <mat-option
-              aria-placeholder="state"
-              *ngFor="let State of States" [value]="State.value">
-              {{ State.viewValue | translate }}
+          <mat-select matNativeControl
+                      (selectionChange)="updateSelectItem('homeState', $event.source.value)"
+                      formControlName="homeState">
+            <mat-option aria-placeholder="state"
+                        *ngFor="let State of States" [value]="State.value">
+                        {{ State.viewValue | translate }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <!-- <mat-icon class="icon" fontSet="material-icons-outlined" (click)="formFieldHelp('personal.component.helpHomeState')">help</mat-icon> -->
         <mat-icon class="icon" *ngIf="showhomeStateSaveIcon">save</mat-icon>
       </div>
+
     </form>
   </div>
   <br>

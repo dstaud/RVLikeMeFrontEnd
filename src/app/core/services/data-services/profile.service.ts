@@ -160,6 +160,17 @@ export class ProfileService {
     }
   }
 
+  getMyStory(userID: string): Observable<any> {
+    let param = JSON.parse('{"userID":"' + userID + '"}');
+    console.log('ProfileService:getMyStory: params=', param);
+
+    return this.http.get(`${this.dataSvcURL}/profile-my-story`,
+    {
+      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
+      params: param
+    });
+  }
+
   addProfile(userProfile: IuserProfile): Observable<any> {
     return this.http.post(`${this.dataSvcURL}/profile`, userProfile,
     { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});

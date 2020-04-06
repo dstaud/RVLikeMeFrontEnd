@@ -11,6 +11,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { CommentsComponent } from './comments/comments.component';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
+import { YourStoryDialogComponent } from '@dialogs/your-story-dialog/your-story-dialog.component';
 
 export type FadeState = 'visible' | 'hidden';
 @Component({
@@ -21,9 +22,7 @@ export type FadeState = 'visible' | 'hidden';
 
 export class PostsComponent implements OnInit {
 
-  // If titlesOnly is true, then only display titles of posts
-  @Input('titlesOnly')
-  public titlesOnly: boolean;
+  @Input('colorTheme') theme: string;
 
   // Provide access to methods on comments component and update post component
   @ViewChild(CommentsComponent)
@@ -50,6 +49,7 @@ export class PostsComponent implements OnInit {
   comments: Array<Array<JSON>> = [];
   currentPostRow: number;
   userProfile: Observable<IuserProfile>;
+  profile: IuserProfile;
   liked: Array<boolean> = [];
 
   showSpinner = false;
@@ -78,6 +78,7 @@ export class PostsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
       console.log('PostsComponent:ngOnInit: got new profile data=', profile);
+      this.profile = profile;
       this.userID = profile.userID;
     }, (error) => {
       console.error(error);
@@ -188,6 +189,17 @@ export class PostsComponent implements OnInit {
     this.showPostComments[row] = !this.showPostComments[row];
   }
 
+  onYourStory(userID: string) {
+    this.showSpinner = true;
+    this.profileSvc.getMyStory(userID)
+    .subscribe(myStoryResult => {
+      this.openMyStoryDialog(myStoryResult.myStory, myStoryResult.displayName, myStoryResult.profileImageUrl)
+      this.showSpinner = false;
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
+  }
 
   // When user clicks to show all comments, set the start index to zero
   onShowAllComments() {
@@ -199,6 +211,21 @@ export class PostsComponent implements OnInit {
   onAddPost() {
     this.showAddPost = true;
     this.showFirstPost = false;
+  }
+
+
+  // Open dialog to display selected user's story
+  openMyStoryDialog(myStory: string, displayName: string, profileImageUrl: string): void {
+    const dialogRef = this.dialog.open(YourStoryDialogComponent, {
+      width: '80vh',
+      maxHeight: '90vh',
+      data: { myStory: myStory, displayName: displayName, profileImageUrl: profileImageUrl }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+    });
   }
 
 

@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { isNumber } from 'util';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 // import { finalize } from 'rxjs/operators';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
@@ -50,6 +51,7 @@ export class ConnectionsComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private routeSubscription: any;
+  private navSubscription: any;
   private allUsersCount: number;
   private queryParams: string;
 
@@ -76,6 +78,12 @@ export class ConnectionsComponent implements OnInit {
     }
 
     this.showSpinner = true;
+
+    this.navSubscription = this.router.events
+    .pipe(
+      filter(event => event instanceof NavigationEnd)
+    )
+    .subscribe(() => window.scrollTo(0,0));
 
     // Listen for changes in color theme;
     console.log('ForumsListComponent:ngOnInit: getting theme');
@@ -200,6 +208,7 @@ export class ConnectionsComponent implements OnInit {
 
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
+    this.navSubscription.unsubscribe();
   }
 
   // Called from child component if user clicks on the cancel button there.

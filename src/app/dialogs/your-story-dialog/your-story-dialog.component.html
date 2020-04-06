@@ -1,0 +1,23 @@
+<div class="mat-app-background container">
+  <div class="posts">
+    <div>
+      <img class="image"
+      [src]="userProfileImage"
+      style="width:80px;height:80px;">
+    </div>
+    <div>
+      <div class="mat-title">
+        {{ data.displayName }}
+      </div>
+    </div>
+  </div>
+  <div class="story">
+    {{userStory}}
+  </div>
+  <div>
+    <app-scroll-to-top></app-scroll-to-top>
+  </div>
+</div>
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button [mat-dialog-close]="data">OK</button>
+</div>

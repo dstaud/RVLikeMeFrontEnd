@@ -11,12 +11,10 @@ import { FakeMissingTranslationHandler } from '@ngx-translate/core';
 export class ImageCropperComponent implements OnInit {
 
   // Inject a reference to the original source image in the HTML (#image) for use as imageElement in the Typescript.
-  @ViewChild('image', {static: false })
-  public imageElement: ElementRef;
+  @ViewChild('image', {static: false }) imageElement: ElementRef;
 
   // Original image passed from the dialog through this component's selector in the dialog compoment template
-  @Input('originalImage')
-  public imageSource: string;
+  @Input('originalImage') imageSource: string;
 
   // Send updated image back to the dialog through the reference obtained through the selector
   @Output() updatedImage = new EventEmitter()

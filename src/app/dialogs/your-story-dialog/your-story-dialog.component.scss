@@ -1,0 +1,11 @@
+.container {
+  overflow: scroll;
+}
+
+.story {
+  white-space: pre-line; // Convert JSON escaped \n back to new lines for display'
+}
+
+.dialog-actions {
+  float: right;
+}

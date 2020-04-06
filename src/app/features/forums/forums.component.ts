@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { PostsComponent } from './posts/posts.component';
 
@@ -14,6 +15,7 @@ import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 
+import { ScrollToTopComponent } from './../../core/utilities/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-rvlm-forums',
@@ -39,6 +41,7 @@ export class ForumsComponent implements OnInit {
 
   private backPath = '';
   private routeSubscription: any;
+  private navSubscription: any;
 
 
   // Interface for profile data
@@ -62,6 +65,12 @@ export class ForumsComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
+
+    this.navSubscription = this.router.events
+    .pipe(
+      filter(event => event instanceof NavigationEnd)
+    )
+    .subscribe(() => window.scrollTo(0,0));
 
     // Listen for changes in color theme;
     this.themeSvc.defaultGlobalColorTheme

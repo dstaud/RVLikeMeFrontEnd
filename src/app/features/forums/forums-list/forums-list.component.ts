@@ -11,6 +11,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ThemeService } from '@services/theme.service';
 
+import { ScrollToTopComponent } from './../../../core/utilities/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-forums-list',
