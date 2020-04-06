@@ -37,6 +37,7 @@ export interface IlikeMeCounts {
   homeState: number;
   gender: number;
   rigYear: number;
+  allCounts: boolean;
 }
 
 @Injectable({
@@ -71,7 +72,8 @@ export class LikemeCountsService {
     homeCountry: 0,
     homeState: 0,
     gender: 0,
-    rigYear: 0
+    rigYear: 0,
+    allCounts: false
   };
 
   private profile: IuserProfile;
@@ -101,7 +103,7 @@ export class LikemeCountsService {
       console.log('getLikeMeCountsPriority:, counts returned=', this.dataStore.likeMeCounts);
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
-      this.getLikeMeCountsSecondary();
+      // this.getLikeMeCountsSecondary();
       // this._likeMeCounts.complete();
     }, (error) => {
       console.warn('ERROR loading user counts: ', error);
@@ -142,6 +144,7 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.traveling = counts.traveling;
       this.dataStore.likeMeCounts.worklife = counts.worklife;
       this.dataStore.likeMeCounts.yearOfBirth = counts.yearOfBirth;
+      this.dataStore.likeMeCounts.allCounts = true;
 
       console.log('getLikeMeCountsSecondary: counts returned=', this.dataStore.likeMeCounts);
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);

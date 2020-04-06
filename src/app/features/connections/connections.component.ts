@@ -44,7 +44,7 @@ export class ConnectionsComponent implements OnInit {
   private likeMeItem: string;
   private likeMeDesc: string;
   private likeMeAnswer: string;
-  private profileKeys = [];
+  private profileKeys: Array<string> = [];
   private profileValues = [];
   private likeMe: IlikeMeCounts;
   private likeMeCounts: Observable<IlikeMeCounts>;
@@ -54,6 +54,7 @@ export class ConnectionsComponent implements OnInit {
   private navSubscription: any;
   private allUsersCount: number;
   private queryParams: string;
+  private allCountsReceived: boolean = false;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -118,6 +119,9 @@ export class ConnectionsComponent implements OnInit {
       }
     });
 
+    // Get all of the rest of the counts not obtained by app-component.
+    this.likeMeCountsSvc.getLikeMeCountsSecondary();
+
     // Get object containing counts of all other users that match this user's profile items
     this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
     this.likeMeCounts
@@ -127,7 +131,11 @@ export class ConnectionsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
       console.log('ConnectionsComponent:ngOnInit: got new counts=', counts);
+
       this.allUsersCount = counts.allUsersCount;
+      if (counts.allCounts) {
+        this.allCountsReceived = true;
+      }
       this.likeMeMatches = [];
 
       // Get the key/value pairs of returned matches/counts into arrays
@@ -158,20 +166,22 @@ export class ConnectionsComponent implements OnInit {
             this.processMatch(this.profileKeys[i], this.profileValues[i]);
           } else {
             if (!isNumber(this.profile[this.profileKeys[i]])) {
-              if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
-                if (this.profileValues[i] === 1) {
-                  this.likeMeDesc = this.translate.instant(
-                    'connections.component.' + this.profileKeys[i] + '1'
+              if (this.profileKeys[i] !== 'allCounts') {
+                if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
+                  if (this.profileValues[i] === 1) {
+                    this.likeMeDesc = this.translate.instant(
+                      'connections.component.' + this.profileKeys[i] + '1'
+                      );
+                  } else {
+                    this.likeMeDesc = this.translate.instant(
+                      'connections.component.' + this.profileKeys[i]
+                      );
+                  }
+                  this.likeMeAnswer = this.translate.instant(
+                    'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
                     );
-                } else {
-                  this.likeMeDesc = this.translate.instant(
-                    'connections.component.' + this.profileKeys[i]
-                    );
+                    this.processMatch(this.profileKeys[i], this.profileValues[i]);
                 }
-                this.likeMeAnswer = this.translate.instant(
-                  'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
-                  );
-                  this.processMatch(this.profileKeys[i], this.profileValues[i]);
               }
             } else {
               if (this.profileValues[i] === 1) {
@@ -193,8 +203,10 @@ export class ConnectionsComponent implements OnInit {
       }
       // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
       // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
-      if (this.allUsersCount > 0) {
-        console.log('ConnectionsComponent:ngOnInit: got real counts.  allUsersCount=', this.allUsersCount);
+      console.log('allCounts=', counts.allCounts)
+      // if (this.allUsersCount > 0) {
+      if (this.allCountsReceived) {
+        console.log('ConnectionsComponent:ngOnInit: got real counts.  allUsersCount=', this.allUsersCount, this.allCountsReceived);
         this.showSpinner = false;
         if (!this.foundMatch) {
           this.showNoConnections = true;
