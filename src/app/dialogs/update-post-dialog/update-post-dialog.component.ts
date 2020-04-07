@@ -45,10 +45,12 @@ export class UpdatePostDialogComponent implements OnInit {
     let fieldH = winH * .8;
     this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 80;
     this.fieldHeight = this.containerHeight.toString() + 'px';
+
+    this.form.get('post').setValue(this.data.post);
   }
 
   onOK() {
-    this.dialogRef.close(this.data.post);
+    this.dialogRef.close(this.form.controls.post.value);
   }
 
   onNoClick(): void {

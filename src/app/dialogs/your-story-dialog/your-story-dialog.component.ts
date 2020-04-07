@@ -1,7 +1,8 @@
-import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface DialogData {
+  userID: string;
   myStory: string;
   displayName: string;
   profileImageUrl: string;
@@ -57,4 +58,7 @@ export class YourStoryDialogComponent implements OnInit {
     window.removeEventListener('scroll', this.scroll, true);
 } */
 
+  onMessage() {
+    this.dialogRef.close('messages');
+  }
 }

@@ -46,10 +46,12 @@ export class MyStoryDialogComponent implements OnInit {
     let fieldH = winH * .8;
     this.containerHeight = Math.round((this.windowHeight *.8) * .8) - 80;
     this.fieldHeight = this.containerHeight.toString() + 'px';
+
+    this.form.get('myStory').setValue(this.data.myStory);
   }
 
   onOK() {
-    this.dialogRef.close(this.data.myStory);
+    this.dialogRef.close(this.form.controls.myStory.value);
   }
 
   onNoClick(): void {

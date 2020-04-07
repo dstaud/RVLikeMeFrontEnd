@@ -1,14 +1,22 @@
 <div class="mat-app-background">
-  <a href=""></a> <!-- prevents auto-scrolling to bottom of page -->
-  <div class="posts">
+  <a href=""></a> <!-- prevents auto-scrolling to bottom of page for a long story, because will scroll to first anchor tag it finds -->
+  <div>
     <div>
-      <img class="image"
-      [src]="userProfileImage"
-      style="width:80px;height:80px;">
-    </div>
-    <div>
-      <div class="mat-title">
-        {{ data.displayName }}
+      <div>
+        <img class="profile-image-post"
+              [src]="userProfileImage"
+              style="width:80px;height:80px;">
+      </div>
+      <div class="name-and-date">
+        <div class="display-name">
+          {{ data.displayName }}
+        </div>
+        <div (click)="onMessage()">
+          <button mat-button class="message-button">
+              <mat-icon fontSet="material-icons-outlined">messages</mat-icon>
+              Message
+          </button>
+        </div>
       </div>
     </div>
   </div>

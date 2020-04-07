@@ -1,13 +1,15 @@
 <div>
-  <mat-form-field appearance="outline">
-    <mat-label>{{ data.name | translate }}</mat-label>
-    <input matInput
-          type="text"
-          cdkFocusInitial
-          [(ngModel)]="data.other">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-button (click)="onNoClick()">{{ 'other-dialog.component.cancel' | translate }}</button>
-  <button mat-button [mat-dialog-close]="data.other">{{ 'other-dialog.component.ok' | translate }}</button>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ data.name | translate }}</mat-label>
+      <input matInput
+            type="text"
+            cdkFocusInitial
+            formControlName="other">
+    </mat-form-field>
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-button (click)="onNoClick()">{{ 'other-dialog.component.cancel' | translate }}</button>
+      <button mat-button [mat-dialog-close]="form.controls.other.value">{{ 'other-dialog.component.ok' | translate }}</button>
+    </div>
+  </form>
 </div>

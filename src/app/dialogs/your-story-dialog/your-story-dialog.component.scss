@@ -1,4 +1,24 @@
+.profile-image-post {
+  float: left;
+}
+
+.name-and-date {
+  margin-left: 90px;
+  line-height: 1.5;
+}
+
+.display-name {
+  font-weight: bold;
+}
+
+.message-button {
+  padding: 0;
+  margin: 0;
+}
+
 .story {
+  clear: left;
+  padding-top: 10px;
   white-space: pre-line; // Convert JSON escaped \n back to new lines for display'
 }
 

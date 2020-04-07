@@ -1,11 +1,14 @@
-<mat-toolbar color="primary" [ngClass]="device === 'iPhone' ? 'toolbar' : 'toolbar mat-elevation-z4'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
+<mat-toolbar [ngClass]="device === 'iPhone' ? 'toolbar' : 'toolbar mat-elevation-z4'"
+              class="mat-h3"
+              color="primary"
+              role="toolbar"
+              fxFlex fxLayout fxLayoutAlign="start">
   <div class="toolbar-image">
-    <mat-icon
-      *ngIf="showBackArrow"
-      mat-button
-      class="back-arrow toolbar-item"
-      alt="back arrow"
-      (click)="returnToBackRoute()">{{ arrowIcon }}
+    <mat-icon *ngIf="showBackArrow"
+              mat-button
+              class="back-arrow toolbar-item"
+              alt="back arrow"
+              (click)="returnToBackRoute()">{{ arrowIcon }}
     </mat-icon>
   </div>
 <!--   <div class="toolbar-image">
@@ -16,40 +19,36 @@
   </div> -->
   <!-- <span class="page-title toolbar-item">{{ pageTitle }}</span> -->
   <span class="fill-space"></span>
-  <button
-    *ngIf="userAuthorized"
-    mat-button
-    class="toolbar-icon"
-    matTooltip="Messages"
-    routerLink="/messages"
-    routerLinkActive="active-menu-item">
-    <mat-icon
-      matBadge="2"
-      matBadgeColor="warn"
-      matBadgeSize="small"
-      matBadgePosition="above after"
-      fontSet="material-icons-outlined">
-      messages
+  <button *ngIf="userAuthorized"
+          mat-button
+          class="toolbar-icon"
+          matTooltip="Messages"
+          routerLink="/messages"
+          routerLinkActive="active-menu-item">
+    <mat-icon matBadge="2"
+          matBadgeColor="warn"
+          matBadgeSize="small"
+          matBadgePosition="above after"
+          fontSet="material-icons-outlined">
+          messages
     </mat-icon>
   </button>
   <div class="toolbar-image">
     <button *ngIf="userAuthorized && profileImage"
-      mat-button
-      [matMenuTriggerFor]="beforeMenu">
+            mat-button
+            [matMenuTriggerFor]="beforeMenu">
       <img *ngIf="profileImage"
-        class="image"
-        [src]="profileImageUrl">
+            class="image"
+            [src]="profileImageUrl">
     </button>
   </div>
-  <button
-    *ngIf="userAuthorized && !profileImage"
-    mat-button
-    class="toolbar-icon"
-    matTooltip="Menu">
-    <mat-icon
-      matPrefix
-      [matMenuTriggerFor]="beforeMenu">
-      account_circle
+  <button *ngIf="userAuthorized && !profileImage"
+          mat-button
+          class="toolbar-icon"
+          matTooltip="Menu">
+    <mat-icon matPrefix
+              [matMenuTriggerFor]="beforeMenu">
+              account_circle
     </mat-icon>
   </button>
 

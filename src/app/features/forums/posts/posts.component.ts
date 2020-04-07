@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -66,6 +67,7 @@ export class PostsComponent implements OnInit {
 
   constructor(private forumSvc: ForumService,
               private profileSvc: ProfileService,
+              private router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -193,7 +195,7 @@ export class PostsComponent implements OnInit {
     this.showSpinner = true;
     this.profileSvc.getMyStory(userID)
     .subscribe(myStoryResult => {
-      this.openMyStoryDialog(myStoryResult.myStory, myStoryResult.displayName, myStoryResult.profileImageUrl)
+      this.openMyStoryDialog(userID, myStoryResult.myStory, myStoryResult.displayName, myStoryResult.profileImageUrl)
       this.showSpinner = false;
     }, error => {
       console.log(error);
@@ -215,16 +217,19 @@ export class PostsComponent implements OnInit {
 
 
   // Open dialog to display selected user's story
-  openMyStoryDialog(myStory: string, displayName: string, profileImageUrl: string): void {
+  openMyStoryDialog(userID: string, myStory: string, displayName: string, profileImageUrl: string): void {
     const dialogRef = this.dialog.open(YourStoryDialogComponent, {
       width: '80vh',
       maxHeight: '90vh',
-      data: { myStory: myStory, displayName: displayName, profileImageUrl: profileImageUrl }
+      data: { userID: userID, myStory: myStory, displayName: displayName, profileImageUrl: profileImageUrl }
     });
 
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
+      if (result === 'messages') {
+        this.navigateToMessages(userID);
+      }
     });
   }
 
@@ -347,5 +352,13 @@ export class PostsComponent implements OnInit {
     '"profileImageUrl":"' + comment.profileImageUrl + '",' +
     '"createdAt":"' + comment.createdAt + '"}';
     return JSON.parse(newComment);
+  }
+
+  private navigateToMessages(userID: string): void {
+    let params: string;
+
+    params = '{"userID":"' + userID + '"}';
+    console.log('YourStoryDialogComponent:onMessage: params=', params);
+    this.router.navigate(['/messages'], { queryParams: { queryParam: params }});
   }
 }

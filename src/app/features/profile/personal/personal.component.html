@@ -7,7 +7,7 @@
     </div>
     <div>
       <button mat-button (click)="fileInput.click()">
-        <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
+        <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
         <input #fileInput type="file"
                 (change)="onProfileImageSelected($event)"
                 accept = "image/*"

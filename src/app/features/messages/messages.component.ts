@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { AuthenticationService } from './../../core/services/data-services/authentication.service';
-import { ThemeService } from '../../core/services/theme.service';
-import { ActivateBackArrowService } from './../../core/services/activate-back-arrow.service';
+
+import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-messages',
@@ -13,33 +12,18 @@ import { ActivateBackArrowService } from './../../core/services/activate-back-ar
   styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent implements OnInit {
-  deviceInfo = null;
-  isMobile: boolean;
-  isTablet: boolean;
-  isDesktop: boolean;
-  browser: string;
-  browserVersion: string;
-  device: string;
-  os: string;
-  osVersion: string;
-  userAgent: string;
-  form: FormGroup;
-  fontTheme = new FormControl('', Validators.required);
-  colorTheme = new FormControl('', Validators.required);
-  backPath = '';
+
+  showSpinner: boolean = false;
+
+  private backPath = '';
+  private routeSubscription: any;
 
   constructor(public translate: TranslateService,
               private authSvc: AuthenticationService,
               private router: Router,
-              private themeService: ThemeService,
               private location: Location,
-              private activateBackArrowSvc: ActivateBackArrowService,
-              fb: FormBuilder) {
-              this.form = fb.group({
-                fontTheme: ['global-font', Validators.required],
-                colorTheme: ['dark-theme', Validators.required]
-              });
-            }
+              private route: ActivatedRoute,
+              private activateBackArrowSvc: ActivateBackArrowService) { }
 
   ngOnInit() {
     if (!this.authSvc.isLoggedIn()) {
@@ -47,12 +31,15 @@ export class MessagesComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-  }
 
-  setThemeColorScheme(colorSceheme: string) {
-    this.themeService.setGlobalColorTheme(colorSceheme);
-  }
-  setThemeFont(font: string) {
-    this.themeService.setGlobalFontTheme(font);
+    // Get parameters
+    this.routeSubscription = this.route
+    .queryParams
+    .subscribe(params => {
+      if (params) {
+        let queryParams = JSON.parse(params.queryParam);
+        console.log('Params=', queryParams);
+      }
+    });
   }
 }
