@@ -15,7 +15,6 @@ import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 
-import { ScrollToTopComponent } from './../../core/utilities/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-rvlm-forums',
@@ -299,6 +298,7 @@ export class ForumsComponent implements OnInit {
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
+        this.profileSvc.getProfile();
         this.showSpinner = false;
       }, error => {
         console.log(error);

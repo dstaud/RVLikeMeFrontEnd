@@ -1,7 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { ScrollToTopComponent } from './../../core/utilities/scroll-to-top/scroll-to-top.component';
 
 export interface DialogData {
   myStory: string;
@@ -16,10 +14,20 @@ export interface DialogData {
 })
 
 export class YourStoryDialogComponent implements OnInit {
-
-
   userStory: string;
   userProfileImage: string;
+  windowScrolled: boolean;
+  currentScroll: number
+
+/*   scroll = (event: any): void => {
+    // Here scroll is a variable holding the anonymous function
+    // this allows scroll to be assigned to the event during onInit
+    // and removed onDestroy
+    // To see what changed:
+    this.currentScroll = event.srcElement.scrollTop;
+    console.log(event);
+    console.log('I am scrolling ' + this.currentScroll);
+  }; */
 
   constructor(public dialogRef: MatDialogRef<YourStoryDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
@@ -35,6 +43,18 @@ export class YourStoryDialogComponent implements OnInit {
     } else {
       this.userProfileImage = './../../../assets/images/no-profile-pic.jpg';
     }
+
+/*     // Add an event listener to window
+    // Window can be defined in the pollyfiles.ts as:
+    // if (window) {
+    //    (window as any).global = window;
+    // }
+    window.addEventListener('scroll', this.scroll, true); //third parameter */
+
   }
+
+/*   ngOnDestroy() {
+    window.removeEventListener('scroll', this.scroll, true);
+} */
 
 }

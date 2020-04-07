@@ -42,7 +42,6 @@ import { SharedModule } from '@shared/shared.module';
 import { UpdatePostDialogComponent } from './dialogs/update-post-dialog/update-post-dialog.component';
 import { YourStoryDialogComponent } from './dialogs/your-story-dialog/your-story-dialog.component';
 
-import { ScrollToTopComponent } from './core/utilities/scroll-to-top/scroll-to-top.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
@@ -83,8 +82,7 @@ export function getErrorHandler(): ErrorHandler {
     DesktopDialogComponent,
     ForumsListComponent,
     UpdatePostDialogComponent,
-    YourStoryDialogComponent,
-    ScrollToTopComponent
+    YourStoryDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -104,7 +102,6 @@ export function getErrorHandler(): ErrorHandler {
     FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
-    // ScrollingModule
   ],
   providers: [
     WindowService,

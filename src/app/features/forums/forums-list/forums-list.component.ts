@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -10,8 +10,6 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ThemeService } from '@services/theme.service';
-
-import { ScrollToTopComponent } from './../../../core/utilities/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-forums-list',
@@ -36,7 +34,8 @@ export class ForumsListComponent implements OnInit {
               private profileSvc: ProfileService,
               public translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private themeSvc: ThemeService) { }
+              private themeSvc: ThemeService,
+              private elementRef: ElementRef) { }
 
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
@@ -58,8 +57,10 @@ export class ForumsListComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
+      console.log('ForumsListComponent:ngOnInit: got new profile', data)
       this.profile = data;
       if (this.profile._id) {
+        console.log('ForumsListComponent:ngOnInit: getting groups')
         this.groupListDisplayAttributes = this.getGroups();
       }
     }, (error) => {
@@ -67,7 +68,10 @@ export class ForumsListComponent implements OnInit {
     });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    console.log('ForumslistComponent:ngOnDestroy:')
+    // this.elementRef.nativeElement.remove();
+  }
 
   // If user likes the comment, add to the total for likes for the comment
   onLikeMe() {
