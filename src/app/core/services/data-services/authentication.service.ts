@@ -4,7 +4,6 @@ import { HttpClient} from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { CommonDataService } from './common-data.service';
 import { ProfileService } from '@services/data-services/profile.service';
 
 import { ItokenPayload } from '@interfaces/tokenPayload';
@@ -22,14 +21,11 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient,
               private profileSvc: ProfileService,
-              private sentryMonitorSvc: SentryMonitorService,
-              private commonData: CommonDataService) { }
+              private sentryMonitorSvc: SentryMonitorService) { }
 
 
   getUsername(): Observable<any> {
-    const dataSvcURL = this.commonData.getLocation();
-    return this.http.get(`${dataSvcURL}/username`,
-    { headers: { Authorization: `Bearer ${this.getToken()}` }});
+    return this.http.get(`/api/username`);
   }
 
   handleBackendError(error) {
@@ -59,8 +55,7 @@ export class AuthenticationService {
 
   login(user: ItokenPayload): Observable<any> {
     let base;
-    const dataSvcURL = this.commonData.getLocation();
-    base = this.http.post(`${dataSvcURL}/login`, user);
+    base = this.http.post(`/api/login`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
         if (data.token) {
@@ -82,8 +77,7 @@ export class AuthenticationService {
 
   registerUser(user: ItokenPayload): Observable<any> {
     let base;
-    const dataSvcURL = this.commonData.getLocation();
-    base = this.http.post(`${dataSvcURL}/register`, user);
+    base = this.http.post(`/api/register`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
         if (data.token) {
@@ -101,9 +95,7 @@ export class AuthenticationService {
   }
 
   updateUsername(user: ItokenPayload): Observable<any> {
-    const dataSvcURL = this.commonData.getLocation();
-    return this.http.patch(`${dataSvcURL}/username`, user,
-    { headers: { Authorization: `Bearer ${this.getToken()}` }});
+    return this.http.patch(`/api/username`, user, {});
   }
 
   private getToken(): string {

@@ -3,7 +3,7 @@ import { HttpEventType } from '@angular/common/http';
 
 import { NgxImageCompressService } from 'ngx-image-compress';
 
-import { ProfileService } from '@services/data-services/profile.service';
+import { ImageService } from '@services/data-services/images.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import { ProfileService } from '@services/data-services/profile.service';
 export class UploadImageService {
 
   constructor(private imageCompress: NgxImageCompressService,
-              private profileSvc: ProfileService) { }
+              private imageSvc: ImageService) { }
 
   // Get image selected from file system or device or camera, compress and upload
   compressImageFile(event: any, cb: CallableFunction) {
@@ -28,7 +28,7 @@ export class UploadImageService {
     // Convert to FormData type for upload
     fd.append('image', imageFile, imageFile.name);
 
-    this.profileSvc.uploadProfileImage(fd)
+    this.imageSvc.uploadProfileImage(fd)
     .subscribe(event => {
       if (event.type === HttpEventType.Response) {
           imageFileUrl = event.body['imageUrl'];
@@ -43,7 +43,7 @@ export class UploadImageService {
   uploadImageBase64(croppedImage: string, cb: CallableFunction) {
     let profileImageUrl: string;
 
-    this.profileSvc.uploadProfileImageBase64(croppedImage)
+    this.imageSvc.uploadProfileImageBase64(croppedImage)
     .subscribe(event => {
     if (event.type === HttpEventType.Response) {
         profileImageUrl = event.body['imageUrl'];

@@ -1,18 +1,39 @@
 import { Injectable } from '@angular/core';
+import { HttpClient} from '@angular/common/http';
+
 import { WindowService } from './../window.service';
 import { environment } from '../../../../environments/environment';
 
 
-// For use by other data services, not by components
 @Injectable({
   providedIn: 'root'
 })
-export class CommonDataService {
+export class ImageService {
   private token: string;
+  private dataSvcURL = this.getLocation();
 
-  constructor(private WindowRef: WindowService) { }
+  constructor(private http: HttpClient,
+              private WindowRef: WindowService) { }
 
-  public getLocation() {
+
+  uploadProfileImage(fd: FormData) {
+    return this.http.post(`${this.dataSvcURL}/upload-image`, fd,
+    { headers: { Authorization: `Bearer ${this.getToken()}` },
+    reportProgress: true,
+    observe: 'events'
+    });
+  }
+
+  uploadProfileImageBase64(image: string) {
+    let imagePackage = {'image': image}
+    return this.http.post(`${this.dataSvcURL}/upload-image`, imagePackage,
+    { headers: { Authorization: `Bearer ${this.getToken()}` },
+    reportProgress: true,
+    observe: 'events'
+    });
+  }
+
+  private getLocation() {
     // Get back-end URL
     const hostLocation = this.WindowRef.nativeWindow.location.host;
     // let dataSvcURL = environment.dataServiceURL + 'api/posts';
@@ -27,10 +48,10 @@ export class CommonDataService {
     return dataSvcURL;
   }
 
-  public getToken(): string {
+  private getToken(): string {
     // Get from local storage everytime in cae different people register on same machine and this.token is from previous
     this.token = localStorage.getItem('rvlikeme-token');
     return this.token;
   }
-
 }
+

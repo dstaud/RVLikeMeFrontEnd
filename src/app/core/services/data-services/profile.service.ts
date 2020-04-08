@@ -3,7 +3,6 @@ import { HttpClient} from '@angular/common/http';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { CommonDataService } from './common-data.service';
 import { SharedComponent } from '@shared/shared.component';
 
 export interface IuserProfile {
@@ -92,14 +91,11 @@ export class ProfileService {
   };
   private profileSubscription: any;
 
-  private dataSvcURL = this.commonData.getLocation();
-
   private _profile = new BehaviorSubject<IuserProfile>(this.userProfile);
   private dataStore: { profile: IuserProfile } = { profile: this.userProfile }
   readonly profile = this._profile.asObservable();
 
-  constructor(private commonData: CommonDataService,
-              private shared: SharedComponent,
+  constructor(private shared: SharedComponent,
               private http: HttpClient) { }
 
   getProfile(reset?: boolean) {
@@ -185,23 +181,6 @@ export class ProfileService {
     let groupJSON = JSON.parse(group);
     console.log('updateProfile: params=', groupJSON)
     return this.http.put(`/profile-forums`, groupJSON, {});
-  }
-
-  uploadProfileImage(fd: FormData) {
-    return this.http.post(`${this.dataSvcURL}/upload-image`, fd,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-    reportProgress: true,
-    observe: 'events'
-    });
-  }
-
-  uploadProfileImageBase64(image: string) {
-    let imagePackage = {'image': image}
-    return this.http.post(`${this.dataSvcURL}/upload-image`, imagePackage,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-    reportProgress: true,
-    observe: 'events'
-    });
   }
 
   public dispose() {

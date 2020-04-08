@@ -15,6 +15,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     status: 0,
     message: ''
   }
+
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
@@ -36,7 +37,6 @@ export class HttpInterceptorService implements HttpInterceptor {
         authReq = request;
     }
 
-    // return next.handle(request).pipe(
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {
@@ -56,7 +56,7 @@ export class HttpInterceptorService implements HttpInterceptor {
 
   constructor(private WindowRef: WindowService) { }
 
-  public getHostLocation() {
+  private getHostLocation() {
     // Get back-end URL
     const hostLocation = this.WindowRef.nativeWindow.location.host;
     // let dataSvcURL = environment.dataServiceURL + 'api/posts';
@@ -74,7 +74,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     return dataSvcURL;
   }
 
-  public getToken(): string {
+  private getToken(): string {
     // Get from local storage everytime in cae different people register on same machine and this.token is from previous
     this.token = localStorage.getItem('rvlikeme-token');
     return this.token;
