@@ -22,9 +22,7 @@ export class HttpInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     let authReq
     const dataSvcURL = this.getHostLocation();
-    console.log('REQUEST URL=', dataSvcURL + request.url);
     let part = request.url.substring(0,4);
-    console.log('request assests part = ', part);
     if (part === '/api') { // anything other than an api call, such as language translation, should be passed through
       authReq = request.clone({
         url: `${dataSvcURL}${request.url}`,

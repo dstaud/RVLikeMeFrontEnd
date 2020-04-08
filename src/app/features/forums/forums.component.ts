@@ -14,6 +14,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
+import { ShareDataService } from '@services/share-data.service';
 
 
 @Component({
@@ -54,6 +55,7 @@ export class ForumsComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private route: ActivatedRoute,
+              private shareDataSvc: ShareDataService,
               private forumSvc: ForumService,
               private themeSvc: ThemeService) {
               }
@@ -92,19 +94,20 @@ export class ForumsComponent implements OnInit {
     });
 
     // Get parameters
-    this.routeSubscription = this.route
+/*     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
       this.showSpinner = true;
       let queryParams = JSON.parse(params.queryParam);
       this.theme = queryParams.theme;
       this.getGroup(queryParams);
-    });
+    }); */
+    this.getGroup();
   }
 
   ngOnDestroy() {
     this.navSubscription.unsubscribe();
-    this.routeSubscription.unsubscribe();
+    // this.routeSubscription.unsubscribe();
   }
 
 
@@ -117,21 +120,43 @@ export class ForumsComponent implements OnInit {
   // getGroup extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
   // If the group does exist, it asks the server for all posts for the group forum for display in the template.
   // If the group does not exist, it asks the server to create the group forum.
-  private getGroup(queryParams: any): void {
+  private getGroup(): void {
     let docNotAMatch = false;
     let matchFound = false;
     let keyValue;
     let names;
     let values;
+    let data: any;
 
-    this.showSpinner = true;
+    if (!this.shareDataSvc.getData()) {
+      console.log('ForumsComponent:getGroup: no parameters');
+      this.router.navigateByUrl('/forums-list');
+    } else {
+      data = JSON.parse(this.shareDataSvc.getData());
 
-    if (queryParams._id) {
-      this.groupID = queryParams._id;
-      this.forumSvc.getGroupByID(queryParams._id)
-      .subscribe(groupFromServer => {
-        this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
-        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
+      this.showSpinner = true;
+
+      if (data._id) {
+        this.groupID = data._id;
+        this.forumSvc.getGroupByID(data._id)
+        .subscribe(groupFromServer => {
+          this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
+          this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
+
+          // If there are more than 3 attributes, show only three with ...more on the template.
+          if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
+            this.showMoreOption = true;
+          } else {
+            this.showMoreOption = false;
+          }
+
+          this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+          this.showSpinner = false;
+
+        });
+      } else {
+        this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(data);
+        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(data);
 
         // If there are more than 3 attributes, show only three with ...more on the template.
         if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -140,77 +165,65 @@ export class ForumsComponent implements OnInit {
           this.showMoreOption = false;
         }
 
-        this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-        this.showSpinner = false;
+        keyValue = this.getGroupKeyValueAttributes(data).split('~');
+        names = keyValue[0];
+        values = keyValue[1];
 
-      });
-    } else {
-      this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(queryParams);
-      this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(queryParams);
+        // Check if group already exists
+        this.forumSvc.getGroup(names, values)
+        .subscribe(groupsFromServer => {
 
-      // If there are more than 3 attributes, show only three with ...more on the template.
-      if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
-        this.showMoreOption = true;
-      } else {
-        this.showMoreOption = false;
-      }
+          // Query may return multiple group forums that include the specific name/value pairs user is looking for.
+          // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
+          // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
+          for (let i = 0; i < groupsFromServer.length; i++) {
+            let groupDocKeys = Object.keys(groupsFromServer[i]);
+            docNotAMatch = false;
 
-      keyValue = this.getGroupKeyValueAttributes(queryParams).split('~');
-      names = keyValue[0];
-      values = keyValue[1];
+            // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
+            // selected by the user, and make sure that it does not have other attributes.
+            for (let j = 0; j < groupDocKeys.length; j++) {
 
-      // Check if group already exists
-      this.forumSvc.getGroup(names, values)
-      .subscribe(groupsFromServer => {
+              // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
+              // this group because it is not an exact match.
+              if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
 
-        // Query may return multiple group forums that include the specific name/value pairs user is looking for.
-        // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
-        // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
-        for (let i = 0; i < groupsFromServer.length; i++) {
-          let groupDocKeys = Object.keys(groupsFromServer[i]);
-          docNotAMatch = false;
-
-          // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
-          // selected by the user, and make sure that it does not have other attributes.
-          for (let j = 0; j < groupDocKeys.length; j++) {
-
-            // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
-            // this group because it is not an exact match.
-            if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
-
-              if (!this.reservedField(groupDocKeys[j])) {
-                docNotAMatch = true;
+                if (!this.reservedField(groupDocKeys[j])) {
+                  docNotAMatch = true;
+                }
               }
+            }
+
+            // If no group forum documents found with additional keys the user did not target, then the group already exists
+            // and all we have to do is make sure that the group is already in the user's profile group forum list.
+            if (!docNotAMatch) {
+              matchFound = true;
+              this.groupID = groupsFromServer[i]._id;
+              this.updateProfileGroups();
+              break;
             }
           }
 
-          // If no group forum documents found with additional keys the user did not target, then the group already exists
-          // and all we have to do is make sure that the group is already in the user's profile group forum list.
-          if (!docNotAMatch) {
-            matchFound = true;
-            this.groupID = groupsFromServer[i]._id;
-            this.updateProfileGroups();
-            break;
+          // if match found, display any posts; otherwise, create the group forum.
+          if (matchFound) {
+            this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+            this.showSpinner = false;
+          } else {
+            this.createGroupForum(names, values);
           }
-        }
-
-        // if match found, display any posts; otherwise, create the group forum.
-        if (matchFound) {
-          this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-          this.showSpinner = false;
-        } else {
-          this.createGroupForum(names, values);
-        }
-      }, error => {
-        // if no match at all, create the forum group
-        if (error.status === 404) {
-          this.createGroupForum(names, values);
-        } else {
-          console.log(error);
-          this.showSpinner = false;
-        }
-      });
+        }, error => {
+          // if no match at all, create the forum group
+          if (error.status === 404) {
+            this.createGroupForum(names, values);
+          } else {
+            console.log(error);
+            this.showSpinner = false;
+          }
+        });
+      }
     }
+
+
   }
 
   // Translate group codes to text that a user will understand for display in the template

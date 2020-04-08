@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+
+import { MessagesService } from '@services/data-services/messages.service';
+import { ShareDataService } from '@services/share-data.service';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -9,32 +12,50 @@ import { ActivateBackArrowService } from '@core/services/activate-back-arrow.ser
   styleUrls: ['./send-message.component.scss']
 })
 export class SendMessageComponent implements OnInit {
-  sendToUserID: string;
+  showSpinner: boolean = false;
 
   private routeSubscription: any;
   private backPath = '';
 
-  constructor(private activateBackArrowSvc: ActivateBackArrowService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+  constructor(private route: ActivatedRoute,
+              private shareDataSvc: ShareDataService,
+              private messagesSvc: MessagesService) { }
 
   ngOnInit(): void {
-    console.log('AddMessageComponent:ngOnInit')
-    // Get parameters
-    this.routeSubscription = this.route
-    .queryParams
-    .subscribe(params => {
-      console.log('SendMessagesComponent:ngOnInit: Params=', params, JSON.stringify(params));
-      if (JSON.stringify({}) != JSON.stringify(params)) {
-        console.log('SendMessagesComponent:ngOnInit: Params=', params);
-        this.sendToUserID = JSON.parse(params.queryParam).userID;
-        console.log('SendMessagesComponent:ngOnInit: send to=', this.sendToUserID);
+    this.getMessages();
+  }
+
+  ngOnDestroy() { }
+
+  getMessages() {
+    let fromUserID: string;
+    let toUserID: string;
+    let data: any;
+    let profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg';
+
+    if (!this.shareDataSvc.getData()) {
+      console.log('SendMessageComponent:getMessages: no parameters');
+    } else {
+      data = JSON.parse(this.shareDataSvc.getData());
+
+      console.log('SendMessagesComponent:getMessages: Params=', data, data.fromUserID);
+
+      if (data.toProfileImageUrl) {
+        profileImageUrl = data.toProfileImageUrl;
       }
-    });
-  }
 
-  ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+      this.messagesSvc.getMessagesByUserID(data.fromUserID, data.toUserID, data.toDisplayName, profileImageUrl)
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(messagesResult => {
+        console.log('SendMessagesComponent:getMessages: RESULT=', messagesResult);
+        this.showSpinner = false;
+      }, error => {
+        // if no messages for pair found, that is OK.
+        if (error.status !== 404) {
+          console.log(error);
+          this.showSpinner = false;
+        }
+      });
+    }
   }
-
 }

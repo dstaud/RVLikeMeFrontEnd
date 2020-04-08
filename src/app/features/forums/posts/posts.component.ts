@@ -8,6 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { ShareDataService } from '@services/share-data.service';
 
 import { CommentsComponent } from './comments/comments.component';
 
@@ -67,6 +68,7 @@ export class PostsComponent implements OnInit {
 
   constructor(private forumSvc: ForumService,
               private profileSvc: ProfileService,
+              private shareDataSvc: ShareDataService,
               private router: Router,
               private dialog: MatDialog) { }
 
@@ -228,7 +230,8 @@ export class PostsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
       if (result === 'messages') {
-        this.navigateToMessages(userID);
+        console.log('PostsComponent:OpenMyStoryDialog: go to navigate messages');
+        this.navigateToMessages(userID, displayName, profileImageUrl);
       }
     });
   }
@@ -354,11 +357,17 @@ export class PostsComponent implements OnInit {
     return JSON.parse(newComment);
   }
 
-  private navigateToMessages(userID: string): void {
+  private navigateToMessages(toUserID: string, toDisplayName: string, toProfileImageUrl: string): void {
     let params: string;
 
-    params = '{"userID":"' + userID + '"}';
-    console.log('YourStoryDialogComponent:onMessage: params=', params);
-    this.router.navigate(['/messages/send-message'], { queryParams: { queryParam: params }});
+    params = '{"fromUserID":"' + this.userID + '",' +
+              '"toUserID":"' + toUserID + '",' +
+              '"toUserDisplayName":"' + toDisplayName + '",' +
+              '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
+
+    console.log('PostsComponent:navigateToMessages: params=', params);
+
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/messages/send-message');
   }
 }

@@ -10,6 +10,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ThemeService } from '@services/theme.service';
+import { ShareDataService } from '@services/share-data.service';
 
 @Component({
   selector: 'app-forums-list',
@@ -35,6 +36,7 @@ export class ForumsListComponent implements OnInit {
               public translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private themeSvc: ThemeService,
+              private shareDataSvc: ShareDataService,
               private elementRef: ElementRef) { }
 
   ngOnInit(): void {
@@ -82,11 +84,15 @@ export class ForumsListComponent implements OnInit {
   // If user selects a group, configure query params and go to group forums
   onGroupSelect(groupItem: number) {
     let group = this.groupsListFromUserProfile[groupItem];
-    let queryParams: string;
+    let params: string;
 
+    params = '{"_id":"' + group._id + '",' + '"theme":"' + this.theme + '"}';
+
+    console.log('ForumsListComponent:onGroupSelect: params=', params);
+
+    this.shareDataSvc.setData(params);
     this.activateBackArrowSvc.setBackRoute('forums-list');
-    queryParams = '{"_id":"' + group._id + '",' + '"theme":"' + this.theme + '"}';
-    this.router.navigate(['/forums'], { queryParams: { queryParam: queryParams }});
+    this.router.navigateByUrl('/forums');
   }
 
 
