@@ -1,4 +1,3 @@
-import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,7 +12,7 @@ import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
 import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
 import { InterestsComponent } from './features/profile/interests/interests.component';
 import { UserQueryComponent } from './features/connections/user-query/user-query.component';
-import { ForumsComponent } from './features/forums/forums.component';
+import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 
 const routes: Routes = [
   { path: 'connections',

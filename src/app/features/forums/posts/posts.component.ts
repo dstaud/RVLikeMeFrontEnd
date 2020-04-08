@@ -221,7 +221,7 @@ export class PostsComponent implements OnInit {
     const dialogRef = this.dialog.open(YourStoryDialogComponent, {
       width: '80vh',
       maxHeight: '90vh',
-      data: { userID: userID, myStory: myStory, displayName: displayName, profileImageUrl: profileImageUrl }
+      data: { userID: userID, sendingUserID: this.userID, myStory: myStory, displayName: displayName, profileImageUrl: profileImageUrl }
     });
 
     dialogRef.afterClosed()
@@ -359,6 +359,6 @@ export class PostsComponent implements OnInit {
 
     params = '{"userID":"' + userID + '"}';
     console.log('YourStoryDialogComponent:onMessage: params=', params);
-    this.router.navigate(['/messages'], { queryParams: { queryParam: params }});
+    this.router.navigate(['/messages/send-message'], { queryParams: { queryParam: params }});
   }
 }

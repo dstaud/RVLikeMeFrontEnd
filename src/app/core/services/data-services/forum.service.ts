@@ -3,19 +3,13 @@ import { HttpClient} from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { CommonDataService } from './common-data.service';
-import { SharedComponent } from '@shared/shared.component';
-
 @Injectable({
   providedIn: 'root'
 })
 export class ForumService {
 
-  private dataSvcURL = this.commonData.getLocation();
 
-  constructor(private commonData: CommonDataService,
-              private shared: SharedComponent,
-              private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   getGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');
@@ -30,11 +24,7 @@ export class ForumService {
     let param = JSON.parse(keyValues);
     console.log('ForumService:getGroup: Key values=', keyValues);
 
-    return this.http.get(`${this.dataSvcURL}/forum-group`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: param
-    });
+    return this.http.get(`/api/forum-group`, { params: param });
   }
 
   getGroupByID(groupID: string): Observable<any> {
@@ -42,11 +32,7 @@ export class ForumService {
 
     console.log('ForumService:getGroup: param =', param);
 
-    return this.http.get(`${this.dataSvcURL}/forum-group-id`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: param
-    });
+    return this.http.get(`/api/forum-group-id`, { params: param });
   }
 
   addGroup(names: string, values: string): Observable<any> {
@@ -61,16 +47,11 @@ export class ForumService {
     keyValues = JSON.parse(keyValues);
     console.log('KEY VALUES ADD=', keyValues);
 
-    return this.http.post(`${this.dataSvcURL}/forum-group`, keyValues,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.post(`/api/forum-group`, keyValues, {});
   }
 
   getPosts(groupID: string): Observable<any> {
-    return this.http.get(`${this.dataSvcURL}/forum-posts`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: { "groupID": groupID }
-    });
+    return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
   }
 
   addPost(groupID: string, post:string, displayName: string, profileImageUrl: string): Observable<any> {
@@ -85,8 +66,7 @@ export class ForumService {
     console.log('BODY=', body)
     let bodyJSON = JSON.parse(body);
     console.log('BODYJSON=', body);
-    return this.http.post(`${this.dataSvcURL}/forum-post`, bodyJSON,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.post(`/api/forum-post`, bodyJSON, {});
   }
 
   updatePost(postID: string, post:string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.
@@ -99,8 +79,7 @@ export class ForumService {
     console.log('BODY=', body)
     let bodyJSON = JSON.parse(body);
     console.log('BODYJSON=', body);
-    return this.http.put(`${this.dataSvcURL}/forum-post`, bodyJSON,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.put(`/api/forum-post`, bodyJSON, {});
   }
 
   addComment(postID: string, displayName: string, profileImageUrl: string, comment: string): Observable<any> {
@@ -112,8 +91,7 @@ export class ForumService {
     console.log('COMMENT BODY=', body)
     let bodyJSON = JSON.parse(body);
     console.log('COMMENT BODYJSON=', bodyJSON);
-    return this.http.post(`${this.dataSvcURL}/forum-post-comment`, bodyJSON,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.post(`/api/forum-post-comment`, bodyJSON, {});
   }
 
   addReaction(postID: string, displayName: string, profileImageUrl: string, reaction: string): Observable<any> {
@@ -124,8 +102,7 @@ export class ForumService {
     console.log('REACTION BODY=', body)
     let bodyJSON = JSON.parse(body);
     console.log('REACTION BODYJSON=', bodyJSON);
-    return this.http.post(`${this.dataSvcURL}/forum-post-reaction`, bodyJSON,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.post(`/api/forum-post-reaction`, bodyJSON, {});
   }
 
   private escapeJsonReservedCharacters(string: string): string {

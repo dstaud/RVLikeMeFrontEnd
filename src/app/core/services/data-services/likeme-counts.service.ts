@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 
-import { CommonDataService } from './common-data.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { SharedComponent } from '@shared/shared.component';
@@ -79,22 +78,17 @@ export class LikemeCountsService {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private likeMeCountsSubscription: any;
-  private dataSvcURL = this.commonData.getLocation();
   private _likeMeCounts = new BehaviorSubject<IlikeMeCounts>(this.likeMeUserCounts);
   private dataStore: { likeMeCounts: IlikeMeCounts } = { likeMeCounts: this.likeMeUserCounts }
   readonly likeMeCounts = this._likeMeCounts.asObservable();
 
-  constructor(private commonData: CommonDataService,
-              private http: HttpClient,
+  constructor(private http: HttpClient,
               private profileSvc: ProfileService,
               private shared: SharedComponent) { }
 
   getLikeMeCountsPriority() {
     console.log('getLikeMeCountsPriority:');
-    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts-priority`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
-    })
+    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-priority`)
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
@@ -114,10 +108,7 @@ export class LikemeCountsService {
 
   getLikeMeCountsSecondary() {
     console.log('getLikeMeCountsSecondary:');
-    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`${this.dataSvcURL}/user-counts-secondary`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` }
-    })
+    this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-secondary`)
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
@@ -172,10 +163,6 @@ export class LikemeCountsService {
       value = value + '|' + query[i].value;
     }
 
-    return this.http.get(`${this.dataSvcURL}/user-query`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: {name, value}
-    });
+    return this.http.get(`/api/user-query`, { params: {name, value}});
   }
 }

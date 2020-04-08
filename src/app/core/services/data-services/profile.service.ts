@@ -145,8 +145,7 @@ export class ProfileService {
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       console.log('ProfileService:getProfile: Getting Profile');
-      this.profileSubscription = this.http.get<IuserProfile>(`${this.dataSvcURL}/profile`,
-      { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }})
+      this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)
       .subscribe(data => {
         this.dataStore.profile = data;
         console.log('ProfileService:getProfile: Profile=', this.dataStore.profile);
@@ -164,16 +163,11 @@ export class ProfileService {
     let param = JSON.parse('{"userID":"' + userID + '"}');
     console.log('ProfileService:getMyStory: params=', param);
 
-    return this.http.get(`${this.dataSvcURL}/profile-my-story`,
-    {
-      headers: { Authorization: `Bearer ${this.commonData.getToken()}` },
-      params: param
-    });
+    return this.http.get(`/api/profile-my-story`, { params: param });
   }
 
   addProfile(userProfile: IuserProfile): Observable<any> {
-    return this.http.post(`${this.dataSvcURL}/profile`, userProfile,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.post(`/api/profile`, userProfile, {});
   }
 
   distributeProfileUpdate(userProfile: IuserProfile) {
@@ -183,16 +177,14 @@ export class ProfileService {
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
     console.log('updateProfile: for profile ', userProfile)
-    return this.http.put(`${this.dataSvcURL}/profile`, userProfile,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.put(`/api/profile`, userProfile, {});
   }
 
   addGroupToProfile(profileID: string, groupID: string): Observable<any> {
     let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
     let groupJSON = JSON.parse(group);
     console.log('updateProfile: params=', groupJSON)
-    return this.http.put(`${this.dataSvcURL}/profile-forums`, groupJSON,
-    { headers: { Authorization: `Bearer ${this.commonData.getToken()}` }});
+    return this.http.put(`/profile-forums`, groupJSON, {});
   }
 
   uploadProfileImage(fd: FormData) {

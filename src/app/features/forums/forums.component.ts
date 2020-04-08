@@ -102,7 +102,10 @@ export class ForumsComponent implements OnInit {
     });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.navSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
+  }
 
 
   onSearch() {

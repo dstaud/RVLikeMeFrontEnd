@@ -11,8 +11,11 @@
         <div class="display-name">
           {{ data.displayName }}
         </div>
-        <div (click)="onMessage()">
-          <button mat-button class="message-button">
+        <div>
+          <button [disabled]="data.userID === data.sendingUserID"
+                  mat-button
+                  class="message-button"
+                  (click)="onMessage()">
               <mat-icon fontSet="material-icons-outlined">messages</mat-icon>
               Message
           </button>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -12,17 +12,12 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
   styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent implements OnInit {
-
-  showSpinner: boolean = false;
-
   private backPath = '';
-  private routeSubscription: any;
 
   constructor(public translate: TranslateService,
               private authSvc: AuthenticationService,
               private router: Router,
               private location: Location,
-              private route: ActivatedRoute,
               private activateBackArrowSvc: ActivateBackArrowService) { }
 
   ngOnInit() {
@@ -31,15 +26,5 @@ export class MessagesComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-
-    // Get parameters
-    this.routeSubscription = this.route
-    .queryParams
-    .subscribe(params => {
-      if (params) {
-        let queryParams = JSON.parse(params.queryParam);
-        console.log('Params=', queryParams);
-      }
-    });
   }
 }
