@@ -3,6 +3,30 @@ import { HttpClient} from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
+export interface Imessage {
+  _id: string;
+  createdBy: string;
+  createdByDisplayName: string;
+  createdByProfileImageUrl: string;
+  withUserID: string;
+  withUserDisplayName: string;
+  withUserProfileImageUrl: string;
+  message: string;
+  createdAt: Date;
+}
+
+export interface Iconversation {
+  _id: string;
+  createdBy: string;
+  createdByDisplayName: string;
+  createdByProfileImageUrl: string;
+  createdByUnreadMessages: Boolean;
+  withUserID: string;
+  withUserDisplayName: string;
+  withUserProfileImageUrl: string;
+  withUserUnreadMessages: boolean;
+  messages: Array<Imessage>;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,31 +35,36 @@ export class MessagesService {
 
   constructor(private http: HttpClient) { }
 
-  getMessages(): Observable<any> {
-    return this.http.get(`/api/messages`);
+  getConversations(): Observable<any> {
+    return this.http.get(`/api/conversations`);
   }
 
-  getMessagesByUserID(fromUserID: string, toUserID: string, toDisplayName: string, toProfileImageUrl: string): Observable<any> {
+  getConversation(fromUserID: string, toUserID: string): Observable<any> {
     let param = JSON.parse('{"fromUserID":"' + fromUserID + '","toUserID":"' + toUserID + '"}');
-    console.log('Messages:getMessagesByUserID: param=', param);
-    console.log('MessagesService:getMessagesByUserID: param =', param);
+    console.log('MessagesService:getConversation: param=', param);
 
-    return this.http.get(`/api/messages-by-userid`, { params: param  });
+    return this.http.get(`/api/conversation`, { params: param  });
   }
 
-  sendMessage(fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,
+  updateMessagesRead(messagesRead) {
+    console.log('MessagesService:updateMessagesRead: array=', messagesRead);
+    return this.http.put(`/api/messages-update`, messagesRead,{});
+  }
+
+  sendMessage(conversationID: string, fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,
               toUserID: string, toDisplayName: string, toProfileImageUrl: string, message): Observable<any> {
     let messageEscaped = this.escapeJsonReservedCharacters(message);
-    let body = '{"fromUserID":"' + fromUserID + '",' +
+    let body = '{"conversationID":"' + conversationID + '",' +
+                '"fromUserID":"' + fromUserID + '",' +
                 '"fromDisplayName":"' + fromDisplayName + '",' +
                 '"fromProfileImageUrl":"' + fromProfileImageUrl + '",' +
                 '"toUserID":"' + toUserID + '",' +
                 '"toDisplayName":"' + toDisplayName + '",' +
                 '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
                 '"message":"' + messageEscaped + '"}'
-    console.log('MESSAGE BODY=', body)
+    console.log('MessagesService:sendMessage: body=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('COMMENT BODYJSON=', bodyJSON);
+    console.log('MessagesService:sendMessage: bodyJson=', bodyJSON);
     return this.http.post(`/api/message-send`, bodyJSON, {});
   }
 

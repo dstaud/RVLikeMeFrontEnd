@@ -8,6 +8,7 @@
                         fxHide fxShow.gt-sm>
       </app-rvlm-header>
       <app-rvlm-header-mobile *ngIf="headerVisible || userAuthorized"
+                              [newMessageCount]=newMessageCount
                               (sidenavToggle)="sidenav.toggle()"
                               fxHide fxShow.lt-sm>
       </app-rvlm-header-mobile>

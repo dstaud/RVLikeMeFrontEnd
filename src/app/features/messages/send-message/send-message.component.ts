@@ -4,7 +4,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { MessagesService } from '@services/data-services/messages.service';
+import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { ShareDataService } from '@services/share-data.service';
 
 @Component({
@@ -20,7 +20,8 @@ export class SendMessageComponent implements OnInit {
   toUserID: string;
   toDisplayName: string;
   toProfileImageUrl: string;
-  messages: Array<string> = [];
+  messages: Array<any> = [];
+  conversationID: string;
 
   showSpinner: boolean = false;
 
@@ -34,15 +35,10 @@ export class SendMessageComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.getMessages();
-  }
-
-  ngOnDestroy() { }
-
-  getMessages() {
     let data: any;
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg';
 
+    // This component expects data passed through a shared data service.  If no data, then redirect to message-list component.
     if (!this.shareDataSvc.getData()) {
       console.log('SendMessageComponent:getMessages: no parameters');
       this.router.navigateByUrl('/messages/message-list');
@@ -70,28 +66,39 @@ export class SendMessageComponent implements OnInit {
       console.log('SendMessagesComponent:getMessages: toDisplayName=', this.toDisplayName);
       console.log('SendMessagesComponent:getMessages: toProfileImageUrl=', this.toProfileImageUrl);
 
-      this.messagesSvc.getMessagesByUserID(this.fromUserID, this.toUserID, this.toDisplayName, this.toProfileImageUrl)
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(messagesResult => {
-        console.log('SendMessagesComponent:getMessages: RESULT=', messagesResult);
-        this.messages = messagesResult;
-        this.showSpinner = false;
-      }, error => {
-        // if no messages for pair found, that is OK.
-        if (error.status !== 404) {
-          console.log(error);
-          this.showSpinner = false;
-        }
-      });
+      this.getMessages();
     }
+  }
+
+  ngOnDestroy() { }
+
+  getMessages() {
+    this.messagesSvc.getConversation(this.fromUserID, this.toUserID)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(conversationResult => {
+      console.log('SendMessagesComponent:getMessages: RESULT=', conversationResult);
+      if (conversationResult.length === 0) {
+        this.conversationID = null;
+        this.messages = [];
+      } else {
+        this.conversationID = conversationResult[0]._id;
+        this.messages = conversationResult[0].messages;
+        console.log('SendMessagesComponent:getMessages: messages=', this.messages);
+      }
+      this.showSpinner = false;
+    }, error => {
+      console.log(error);
+      this.showSpinner = false;
+    });
   }
 
   onSubmit() {
     const message = this.form.controls.message.value;
     console.log('SendMessageComponent:onSubmit: message=', message);
     this.showSpinner = true;
-    this.messagesSvc.sendMessage(this.fromUserID, this.fromDisplayName, this.fromProfileImageUrl,
+    this.messagesSvc.sendMessage(this.conversationID, this.fromUserID, this.fromDisplayName, this.fromProfileImageUrl,
                                 this.toUserID, this.toDisplayName, this.toProfileImageUrl, message)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(messageResult => {
       console.log('result = ', messageResult);
       this.showSpinner = false;
@@ -99,6 +106,31 @@ export class SendMessageComponent implements OnInit {
         console.log(error);
         this.showSpinner = false;
     });
+  }
+
+  private processUnreadMessages() {
+    let updateMessages = [];
+    let rec: string;
+
+    for (let i=0; i < this.messages.length; i++) {
+      console.log('SendMessageComponent:processUnreadMessages: result from User=', this.messages[i].createdBy, ' this user=', this.toUserID);
+      if (this.messages[i].createdBy === this.toUserID && !this.messages[i].sentToRead) {
+        rec = '{"_id":"' + this.messages[i]._id + '"}';
+        updateMessages.push(JSON.parse(rec));
+      }
+    }
+    console.log('SendMessageComponent:processUnreadMessages: array=', updateMessages);
+    this.updateMessages(updateMessages);
+  }
+
+  private updateMessages(updateMessages: Array<any>) {
+    this.messagesSvc.updateMessagesRead(updateMessages)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(messagesResult => {
+      console.log('SendMessageComponent:processUnreadMessages: messages marked as read');
+    }, error => {
+        console.log(error);
+    })
   }
 
   private escapeJsonReservedCharacters(string: string): string {

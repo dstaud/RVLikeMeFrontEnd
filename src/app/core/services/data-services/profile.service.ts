@@ -43,7 +43,6 @@ export interface IuserProfile {
   programming: boolean;
   mobileInternet: boolean;
   forums: Array<string>;
-  messages: Array<string>;
 }
 
 @Injectable({
@@ -88,8 +87,7 @@ export class ProfileService {
     musicalInstrument: null,
     programming: null,
     mobileInternet: null,
-    forums: [],
-    messages: []
+    forums: []
   };
   private profileSubscription: any;
 
@@ -140,7 +138,6 @@ export class ProfileService {
       this.dataStore.profile.programming = null;
       this.dataStore.profile.mobileInternet = null;
       this.dataStore.profile.forums = [];
-      this.dataStore.profile.messages = [];
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       console.log('ProfileService:getProfile: Getting Profile');

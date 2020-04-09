@@ -1,3 +1,5 @@
+@import './../../../../styles/_variables';
+
 .container {
   padding: 10px;
   margin-top: 50px;
@@ -28,4 +30,16 @@
 
 .date {
   font-size: 80%;
+}
+
+.notRead {
+  font-weight: bold;
+}
+
+.read {
+  font-weight: normal;
+}
+
+.hyperlink {
+  color: $primary-color;
 }

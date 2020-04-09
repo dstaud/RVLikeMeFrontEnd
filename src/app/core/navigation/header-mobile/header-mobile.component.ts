@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -19,6 +19,9 @@ import { ThemeService } from '@services/theme.service';
   styleUrls: ['./header-mobile.component.scss']
 })
 export class HeaderMobileComponent implements OnInit {
+
+  @Input('newMessageCount') newMessageCount: number;
+
   pageTitle = 'RV Like Me';
   userAuthorized$: Observable<boolean>;
   userAuthorized = false;

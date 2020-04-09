@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { MessagesService } from '@services/data-services/messages.service';
+import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { ShareDataService } from '@services/share-data.service';
 
 @Component({
@@ -15,9 +15,10 @@ import { ShareDataService } from '@services/share-data.service';
 })
 export class MessageListComponent implements OnInit {
   showSpinner: boolean = false;
-  conversations: Array<JSON> = [];
+  conversations: Array<Iconversation> = [];
   displayName: string;
   userID: string;
+  noConversations: boolean = false;
 
    // Interface for profile data
    profile: IuserProfile;
@@ -35,10 +36,12 @@ export class MessageListComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.profile = data;
+      console.log('MessageListComponent:ngOnInit: got profile =', this.profile.userID);
       if (this.profile.userID) {
         this.userID = this.profile.userID;
         this.displayName = this.profile.displayName;
-        this.getMessages();
+        console.log('MessageListComponent:ngOnInit: getting conversations');
+        this.getConversations();
       }
     }, (error) => {
       console.error(error);
@@ -47,56 +50,67 @@ export class MessageListComponent implements OnInit {
 
   ngOnDestroy() {}
 
-  getMessages(): void {
-    let previousPair1: string;
-    let previousPair2: string;
-    let newPair: string;
+  onGroup() {
+    this.router.navigateByUrl('forums');
+  }
 
-    this.messagesSvc.getMessages()
+  getConversations(): void {
+    console.log('MessageListComponent:getConversations: in getConversations');
+    this.messagesSvc.getConversations()
     .subscribe(messagesResult => {
-      console.log('MessageListComponent:getMessages: result=', messagesResult);
-
-      previousPair1 = messagesResult[0].createdBy + messagesResult[0].messageUserID;
-      previousPair2 = messagesResult[0].messageUserID + messagesResult[0].createdBy;
-      console.log('MessageListComponent:getMessages: result 0=',messagesResult[0] );
-      this.conversations.push(messagesResult[0]);
-
-      for (let i=1; i < messagesResult.length; i++) {
-        newPair = messagesResult[i].createdBy + messagesResult[i].messageUserID;
-
-        if (newPair !== previousPair1 && newPair !== previousPair2) {
-          this.conversations.push(messagesResult[i]);
-        }
+      console.log('MessageListComponent:getConversations: result=', messagesResult);
+      this.conversations = messagesResult;
+      if (this.conversations.length === 0) {
+        this.noConversations = true;
       }
-
-      console.log('MessageListComponent:getMessages: array=', this.conversations);
+      console.log('MessageListComponent:getConversations: array=', this.conversations);
       this.showSpinner = false;
     }, error => {
       // if no messages for pair found, that is OK.
-      if (error.status !== 404) {
+      if (error.status === 404) {
+        this.noConversations = true;
+        this.showSpinner = false;
+      } else {
         console.log(error);
         this.showSpinner = false;
       }
-    })
+    });
   }
 
-  onSelectMessage(user: string, row: number) {
+  onSelectSendTo(row: number) {
     let params: any;
+    let fromUserID: string;
+    let fromDisplayName: string;
+    let fromProfileImageUrl: string;
+    let toUserID: string;
+    let toDisplayName: string;
+    let toProfileImageUrl: string;
 
-    if (user === 'message') {
-      params = '{"fromUserID":"' + this.conversations[row].createdBy + '",' +
-              '"fromDisplayName":"' + this.conversations[row].createdBydisplayName + '",' +
-              '"fromProfileImageUrl":"' + this.conversations[row].createdByprofileImageUrl + '",' +
-              '"toUserID":"' + this.conversations[row].messageUserID + '",' +
-              '"toDisplayName":"' + this.conversations[row].messageDisplayName + '",' +
-              '"toProfileImageUrl":"' + this.conversations[row].messageProfileImageUrl + '"}';
-
-      console.log('MessageListComponent:navigateToMessages: params=', params);
-
-      this.shareDataSvc.setData(params);
-      this.router.navigateByUrl('/messages/send-message');
+    if (this.conversations[row].createdBy === this.userID) {
+      fromUserID = this.conversations[row].createdBy;
+      fromDisplayName = this.conversations[row].createdByDisplayName;
+      fromProfileImageUrl = this.conversations[row].createdByProfileImageUrl;
+      toUserID = this.conversations[row].withUserID;
+      toDisplayName = this.conversations[row].withUserDisplayName;
+      toProfileImageUrl = this.conversations[row].withUserProfileImageUrl;
     } else {
-      console.log(this.conversations[row].createdByDisplayName)
+      fromUserID = this.conversations[row].withUserID;
+      fromDisplayName = this.conversations[row].withUserDisplayName;
+      fromProfileImageUrl = this.conversations[row].withUserProfileImageUrl;
+      toUserID = this.conversations[row].createdBy;
+      toDisplayName = this.conversations[row].createdByDisplayName;
+      toProfileImageUrl = this.conversations[row].createdByProfileImageUrl;
     }
+    params = '{"fromUserID":"' + fromUserID + '",' +
+            '"fromDisplayName":"' +fromDisplayName + '",' +
+            '"fromProfileImageUrl":"' + fromProfileImageUrl + '",' +
+            '"toUserID":"' + toUserID + '",' +
+            '"toDisplayName":"' + toDisplayName + '",' +
+            '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
+
+    console.log('MessageListComponent:navigateToMessages: params=', params);
+
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/messages/send-message');
   }
 }
