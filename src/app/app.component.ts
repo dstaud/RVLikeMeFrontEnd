@@ -16,7 +16,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
-import { MessagesService } from '@services/data-services/messages.service';
+import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 
 
 @Component({
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   userProfile: Observable<IuserProfile>;
   iphoneModelxPlus: boolean;
   newMessageCount: number;
+  userID: string;
 
 
   constructor(public translateSvc: TranslateService,
@@ -145,6 +146,8 @@ export class AppComponent implements OnInit {
       if (profile._id) {
         console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
         this.likeMeCountsSvc.getLikeMeCountsPriority();
+        this.messagesSvc.getConversations();
+        this.userID = profile.userID;
       }
 
     }, (error) => {
@@ -154,7 +157,7 @@ export class AppComponent implements OnInit {
       this.themeSvc.setGlobalColorTheme('light-theme');
     });
 
-    // this.getNewMessageCount();
+    this.getNewMessageCount();
 
     // Listen for Chrome event that indicates we can offer the user option to install the app
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -192,23 +195,54 @@ export class AppComponent implements OnInit {
   };
 
 
-/*   getNewMessageCount() {
+  getNewMessageCount() {
+    this.newMessageCount = 0;
+
+    console.log('AppComponent:getNewMessageCount: subscribe to userConversations');
+
     // Get count of new messages for messages badge
     console.log('AppComponent:getNewMessageCount: getting new message count');
-    this.messagesSvc.getNewMessageCount()
+    this.messagesSvc.getConversationsNotRead('createdBy')
     .pipe(untilComponentDestroyed(this))
     .subscribe(messageCountResult => {
       console.log('AppComponent:getNewMessageCount: New message count=', messageCountResult);
       this.newMessageCount = messageCountResult;
+      console.log('AppComponent:getNewMessageCount: no messages for createdBy');
+      this.messagesSvc.getConversationsNotRead('withUserID')
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(messageCountResult2 => {
+        console.log('AppComponent:getNewMessageCount: New message count=', messageCountResult2);
+        this.newMessageCount = this.newMessageCount + messageCountResult2;
+      }, (error) => {
+        if (error.status === 404) {
+          console.log('AppComponent:getNewMessageCount: no messages for withUserID');
+        } else {
+          console.error(error);
+          console.log('AppComponent:getNewMessageCount: error getting new message count', error);
+        }
+      });
     }, (error) => {
       if (error.status === 404) {
-        console.log('AppComponent:getNewMessageCount: no messages');
+        console.log('AppComponent:getNewMessageCount: no messages for createdBy');
+        this.messagesSvc.getConversationsNotRead('withUserID')
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(messageCountResult2 => {
+          console.log('AppComponent:getNewMessageCount: New message count=', messageCountResult2);
+          this.newMessageCount = this.newMessageCount + messageCountResult2;
+        }, (error) => {
+          if (error.status === 404) {
+            console.log('AppComponent:getNewMessageCount: no messages for withUserID');
+          } else {
+            console.error(error);
+            console.log('AppComponent:getNewMessageCount: error getting new message count', error);
+          }
+        });
       } else {
         console.error(error);
-        console.log('AppComponent:getNewMessageCount: error getting new message count');
+        console.log('AppComponent:getNewMessageCount: error getting new message count', error);
       }
     });
-  } */
+  }
 
 
   // This is supposed to scroll to the top for new pages but pageYOffset is always 0.  I think because of my top and bottom toolbars and required margins.

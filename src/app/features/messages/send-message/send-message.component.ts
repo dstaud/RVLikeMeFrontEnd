@@ -20,7 +20,8 @@ export class SendMessageComponent implements OnInit {
   toUserID: string;
   toDisplayName: string;
   toProfileImageUrl: string;
-  messages: Array<any> = [];
+  messages: Array<Imessage> = [];
+  conversation: Iconversation;
   conversationID: string;
 
   showSpinner: boolean = false;
@@ -78,12 +79,16 @@ export class SendMessageComponent implements OnInit {
     .subscribe(conversationResult => {
       console.log('SendMessagesComponent:getMessages: RESULT=', conversationResult);
       if (conversationResult.length === 0) {
+        this.conversation = null;
         this.conversationID = null;
         this.messages = [];
       } else {
-        this.conversationID = conversationResult[0]._id;
+        this.conversation = conversationResult[0];
+        this.conversationID = this.conversation._id;
+        console.log('SendMessagesComponent:getMessages: conversation=', this.conversation);
         this.messages = conversationResult[0].messages;
         console.log('SendMessagesComponent:getMessages: messages=', this.messages);
+        this.updateConversationAsRead();
       }
       this.showSpinner = false;
     }, error => {
@@ -108,26 +113,21 @@ export class SendMessageComponent implements OnInit {
     });
   }
 
-  private processUnreadMessages() {
-    let updateMessages = [];
-    let rec: string;
 
-    for (let i=0; i < this.messages.length; i++) {
-      console.log('SendMessageComponent:processUnreadMessages: result from User=', this.messages[i].createdBy, ' this user=', this.toUserID);
-      if (this.messages[i].createdBy === this.toUserID && !this.messages[i].sentToRead) {
-        rec = '{"_id":"' + this.messages[i]._id + '"}';
-        updateMessages.push(JSON.parse(rec));
-      }
+  private updateConversationAsRead() {
+    let userIdType: string;
+
+    console.log('SendMessageComponent:updateConversationAsRead: id=', this.conversationID);
+    if (this.conversation.createdBy === this.fromUserID) {
+      userIdType = 'createdBy';
+    } else {
+      userIdType = 'withUserID';
     }
-    console.log('SendMessageComponent:processUnreadMessages: array=', updateMessages);
-    this.updateMessages(updateMessages);
-  }
 
-  private updateMessages(updateMessages: Array<any>) {
-    this.messagesSvc.updateMessagesRead(updateMessages)
+    this.messagesSvc.updateConversationAsRead(this.conversationID, userIdType)
     .pipe(untilComponentDestroyed(this))
-    .subscribe(messagesResult => {
-      console.log('SendMessageComponent:processUnreadMessages: messages marked as read');
+    .subscribe(conversationResult => {
+      console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
     }, error => {
         console.log(error);
     })

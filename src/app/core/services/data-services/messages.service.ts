@@ -20,11 +20,11 @@ export interface Iconversation {
   createdBy: string;
   createdByDisplayName: string;
   createdByProfileImageUrl: string;
-  createdByUnreadMessages: Boolean;
+  createdByReadMessages: Boolean;
   withUserID: string;
   withUserDisplayName: string;
   withUserProfileImageUrl: string;
-  withUserUnreadMessages: boolean;
+  withUserReadMessages: boolean;
   messages: Array<Imessage>;
 }
 
@@ -33,10 +33,30 @@ export interface Iconversation {
 })
 export class MessagesService {
 
+  private userConversations = [ {
+    _id: null,
+    createdBy: null,
+    createdByDisplayName: null,
+    createdByProfileImageUrl: null,
+    createdByReadMessages: false,
+    withUserID: null,
+    withUserDisplayName: null,
+    withUserProfileImageUrl: null,
+    withUserReadMessages: false,
+    messages: []
+  } ]
+
+
   constructor(private http: HttpClient) { }
 
-  getConversations(): Observable<any> {
-    return this.http.get(`/api/conversations`);
+  getConversations(): Observable<Iconversation[]> {
+    return this.http.get<Iconversation[]>(`/api/conversations`);
+  }
+
+  getConversationsNotRead(userIdType: string): Observable<number> {
+    console.log('MessagesService:getConversationsNotRead: userIdType=', userIdType);
+    let param = JSON.parse('{"userIdType":"' + userIdType + '"}');
+    return this.http.get<number>(`/api/conversations-not-read`, { params: param  });
   }
 
   getConversation(fromUserID: string, toUserID: string): Observable<any> {
@@ -46,9 +66,12 @@ export class MessagesService {
     return this.http.get(`/api/conversation`, { params: param  });
   }
 
-  updateMessagesRead(messagesRead) {
-    console.log('MessagesService:updateMessagesRead: array=', messagesRead);
-    return this.http.put(`/api/messages-update`, messagesRead,{});
+  updateConversationAsRead(conversationID: string, userIdType: string) {
+    console.log('MessagesService:updateMessagesRead:', conversationID, userIdType);
+
+    let update = '{"conversationID":"' + conversationID + '",' +
+                  '"userIdType":"' + userIdType + '"}';
+    return this.http.put(`/api/conversation-update`, JSON.parse(update),{});
   }
 
   sendMessage(conversationID: string, fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,

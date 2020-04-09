@@ -24,7 +24,7 @@
             <span class="date">{{ conversation.messages[conversation.messages.length - 1].createdAt | date:'short'}}</span>
           </div>
           <div class="message">
-            <span [ngClass]="conversation.createdByUnreadMessages ? 'notRead' : 'read'">
+            <span [ngClass]="conversation.createdByReadMessages ? 'read' : 'not-read'">
               {{ conversation.createdByDisplayName }}
             </span> : <span>{{ conversation.messages[conversation.messages.length - 1].message.substring(0,20) }}...</span>
           </div>
@@ -43,7 +43,7 @@
             <span class="date">{{ conversation.messages[conversation.messages.length - 1].createdAt | date:'short'}}</span>
           </div>
           <div class="message">
-            <span [ngClass]="conversation.withUserUnreadMessages ? 'notRead' : 'read'">
+            <span [ngClass]="conversation.withUserReadMessages ? 'read' : 'not-read'">
               {{ conversation.createdByDisplayName }}
             </span> : <span>{{ conversation.messages[conversation.messages.length - 1].message.substring(0,20) }}...</span>
           </div>
