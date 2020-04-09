@@ -11,12 +11,8 @@ export class MessagesService {
 
   constructor(private http: HttpClient) { }
 
-  getMessagesByID(messageID: string): Observable<any> {
-    let param = JSON.parse('{"messageID":"' + messageID + '"}');
-
-    console.log('MessagesService:getMessagesByUserID: param =', param);
-
-    return this.http.get(`/api/messages-by-id`, { params: param  });
+  getMessages(): Observable<any> {
+    return this.http.get(`/api/messages`);
   }
 
   getMessagesByUserID(fromUserID: string, toUserID: string, toDisplayName: string, toProfileImageUrl: string): Observable<any> {
@@ -27,4 +23,28 @@ export class MessagesService {
     return this.http.get(`/api/messages-by-userid`, { params: param  });
   }
 
+  sendMessage(fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,
+              toUserID: string, toDisplayName: string, toProfileImageUrl: string, message): Observable<any> {
+    let messageEscaped = this.escapeJsonReservedCharacters(message);
+    let body = '{"fromUserID":"' + fromUserID + '",' +
+                '"fromDisplayName":"' + fromDisplayName + '",' +
+                '"fromProfileImageUrl":"' + fromProfileImageUrl + '",' +
+                '"toUserID":"' + toUserID + '",' +
+                '"toDisplayName":"' + toDisplayName + '",' +
+                '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
+                '"message":"' + messageEscaped + '"}'
+    console.log('MESSAGE BODY=', body)
+    let bodyJSON = JSON.parse(body);
+    console.log('COMMENT BODYJSON=', bodyJSON);
+    return this.http.post(`/api/message-send`, bodyJSON, {});
+  }
+
+  private escapeJsonReservedCharacters(string: string): string {
+    let newString = string;
+    newString = newString.replace(/"/g, "'").trim();
+    newString = newString.replace(/\\/g, "|");
+    newString = newString.replace(/\n/g, "\\n");
+    console.log(string, newString);
+    return newString;
+  }
 }

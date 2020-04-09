@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { PostsComponent } from './posts/posts.component';

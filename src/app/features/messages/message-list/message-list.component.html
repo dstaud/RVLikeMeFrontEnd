@@ -1,0 +1,39 @@
+<div class="mat-app-background mat-body-1 container">
+  <p class="mat-title">Messages</p>
+  <div class="conversations">
+    <div *ngFor="let conversation of conversations; let i = index">
+      <div [hidden]="conversation.messageUserID === userID"
+            (click)="onSelectMessage('message', i)">
+        <div>
+          <img class="image profile-image"
+                [src]="conversation.messageProfileImageUrl"
+                style="width:40px;height:40px;">
+        </div>
+        <div class="name-and-date">
+          <div>
+            <span class="display-name">{{ conversation.messageDisplayName }}</span><span class="date">{{ conversation.createdAt | date:'short'}}</span>
+          </div>
+          <div class="message">
+            {{ conversation.messageDisplayName }} : {{ conversation.message.substring(0,20) }}...
+          </div>
+        </div>
+      </div>
+      <div [hidden]="conversation.createdBy === userID"
+            (click)="onSelectMessage('createdBy', i)">
+        <div>
+          <img class="image profile-image"
+                [src]="conversation.createdByProfileImageUrl"
+                style="width:40px;height:40px;">
+        </div>
+        <div class="name-and-date">
+          <div>
+            <span class="display-name">{{ conversation.createdByDisplayName }}</span><span class="date">{{ conversation.createdAt | date:'short'}}</span>
+          </div>
+          <div class="message">
+            {{ conversation.createdByDisplayName }} : {{ conversation.message.substring(0,20) }}...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -115,6 +115,7 @@ export class PostsComponent implements OnInit {
     if (profileImageUrl) {
       this.profileImageUrl = profileImageUrl;
     }
+    console.log('PostsComponent:getPosts: displayname=', displayName);
     this.displayName = displayName;
 
     this.posts = [];
@@ -359,10 +360,12 @@ export class PostsComponent implements OnInit {
 
   private navigateToMessages(toUserID: string, toDisplayName: string, toProfileImageUrl: string): void {
     let params: string;
-
+    console.log('PostsComponent:navigateToMessages: displayName=', this.displayName);
     params = '{"fromUserID":"' + this.userID + '",' +
+              '"fromDisplayName":"' + this.displayName + '",' +
+              '"fromProfileImageUrl":"' + this.profileImageUrl + '",' +
               '"toUserID":"' + toUserID + '",' +
-              '"toUserDisplayName":"' + toDisplayName + '",' +
+              '"toDisplayName":"' + toDisplayName + '",' +
               '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
 
     console.log('PostsComponent:navigateToMessages: params=', params);

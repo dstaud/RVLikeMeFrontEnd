@@ -6,9 +6,10 @@ import { MessagesRoutingModule } from './messages-routing.module';
 import { MessagesComponent } from './messages.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SendMessageComponent } from './send-message/send-message.component';
+import { MessageListComponent } from './message-list/message-list.component';
 
 @NgModule({
-  declarations: [MessagesComponent, SendMessageComponent],
+  declarations: [MessagesComponent, SendMessageComponent, MessageListComponent],
   imports: [
     CommonModule,
     MessagesRoutingModule,

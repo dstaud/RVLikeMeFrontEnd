@@ -1,3 +1,5 @@
+@import './../../../../styles/_variables';
+
 .container {
   padding: 10px;
   margin-top: 50px;
@@ -7,9 +9,72 @@
   line-height: 1.4;
 }
 
-.comment-input {
+.posts {
+  clear: left;
+  margin-top: 10px;
+}
+
+.profile-image {
+  float: left;
+}
+
+.image {
+  border-radius: 50%;
+}
+
+.name-and-date {
+  margin-left: 50px;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+.messages {
+  clear: left;
+  padding-top: 10px;
+}
+
+.message-left {
+  float: left;
+  line-height: 1.5;
+  width: 80%;
+  border-radius: 10px;
+  padding: 5px;
+  background-color:#e0e0e0;
+  margin-top: 10px;
+  border-style: solid;
+  border-color: green;
+  border-width: 1;
+}
+
+.message-right {
+  float: right;
+  line-height: 1.5;
+  width: 80%;
+  border-radius: 10px;
+  padding: 5px;
+  background-color: #80deea;
+  margin-top: 10px;
+  border-style: solid;
+  border-color: blue;
+  border-width: 1;
+}
+
+.message-text {
+  padding-left: 5px;
+}
+
+.message-input {
   // float:left;
   margin-right: 5px;
+}
+
+.new-message {
+  clear: left;
+  clear: right;
+  padding-top: 20px;
+  border-style: solid;
+  border-color: red;
+  border-width: 1;
 }
 
 .spinner {
