@@ -88,7 +88,7 @@ export class SendMessageComponent implements OnInit {
         console.log('SendMessagesComponent:getMessages: conversation=', this.conversation);
         this.messages = conversationResult[0].messages;
         console.log('SendMessagesComponent:getMessages: messages=', this.messages);
-        this.updateConversationAsRead();
+        this.updateConversation(true, 'read');
       }
       this.showSpinner = false;
     }, error => {
@@ -106,6 +106,7 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(messageResult => {
       console.log('result = ', messageResult);
+      this.updateConversation(false, 'add');
       this.showSpinner = false;
     }, error => {
         console.log(error);
@@ -114,7 +115,7 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  private updateConversationAsRead() {
+  private updateConversation(read: boolean, type: string) {
     let userIdType: string;
 
     console.log('SendMessageComponent:updateConversationAsRead: id=', this.conversationID);
@@ -124,7 +125,7 @@ export class SendMessageComponent implements OnInit {
       userIdType = 'withUserID';
     }
 
-    this.messagesSvc.updateConversationAsRead(this.conversationID, userIdType)
+    this.messagesSvc.updateConversation(this.conversationID, userIdType, read, type)
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
       console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);

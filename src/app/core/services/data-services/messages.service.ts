@@ -66,11 +66,13 @@ export class MessagesService {
     return this.http.get(`/api/conversation`, { params: param  });
   }
 
-  updateConversationAsRead(conversationID: string, userIdType: string) {
-    console.log('MessagesService:updateMessagesRead:', conversationID, userIdType);
+  updateConversation(conversationID: string, userIdType: string, read: boolean, type: string) {
+    console.log('MessagesService:updateMessagesRead:', conversationID, userIdType, type);
 
     let update = '{"conversationID":"' + conversationID + '",' +
-                  '"userIdType":"' + userIdType + '"}';
+                  '"userIdType":"' + userIdType + '",' +
+                  '"read":"' + read + '",' +
+                  '"type":"' + type + '"}';
     return this.http.put(`/api/conversation-update`, JSON.parse(update),{});
   }
 
