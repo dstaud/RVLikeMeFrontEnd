@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
@@ -14,6 +14,9 @@ import { ShareDataService } from '@services/share-data.service';
   styleUrls: ['./send-message.component.scss']
 })
 export class SendMessageComponent implements OnInit {
+
+  @ViewChild(FormGroupDirective) myForm;
+
   form: FormGroup;
   fromUserID: string;
   fromDisplayName: string;
@@ -112,6 +115,13 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(messageResult => {
       console.log('result = ', messageResult);
+      console.log('SendMessageComponent:onSubmit: result=', messageResult.messages[messageResult.messages.length - 1]);
+      this.messages.push(messageResult.messages[messageResult.messages.length - 1]);
+
+      this.myForm.resetForm(); // Only way to reset the form without having it invalidate because field is required.
+
+      console.log('SendMessageComponent:onSubmit: pushed. messages=', this.messages);
+
       if (!this.newConversation) {
         this.updateConversation('sent');
       }
