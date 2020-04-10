@@ -216,10 +216,15 @@ export class AppComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(messageCountResult => {
       console.log('AppComponent:getNewMessageCount: result count=', messageCountResult);
-      this.newMessageCount = this.newMessageCount + messageCountResult;
+      if (userIdType === 'createdBy') {
+        this.newMessageCount = this.newMessageCount + messageCountResult.createdByUnreadMessages;
+      } else {
+        this.newMessageCount = this.newMessageCount + messageCountResult.withUserUnreadMessages;
+      }
+
     }, (error) => {
       if (error.status === 404) {
-        console.log('AppComponent:getNewMessageCount: no messages for withUserID');
+        console.log('AppComponent:getNewMessageCount: no messages for ', userIdType);
       } else {
         console.error(error);
         console.log('AppComponent:getNewMessageCount: error getting new message count', error);

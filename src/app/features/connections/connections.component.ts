@@ -15,6 +15,7 @@ import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/like
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ThemeService } from '@services/theme.service';
+import { ShareDataService } from '@services/share-data.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -65,6 +66,7 @@ export class ConnectionsComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private themeSvc: ThemeService,
+              private shareDataSvc: ShareDataService,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
@@ -281,7 +283,11 @@ export class ConnectionsComponent implements OnInit {
       i++;
     });
     this.queryParams = this.queryParams + '"theme":"' + this.theme + '"}'
-    this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParams }});
+    console.log('ConnectionsComponent:onForum: navigate to forums with ', this.queryParams)
+
+    this.shareDataSvc.setData(this.queryParams);
+    this.router.navigateByUrl('/forums');
+    // this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParams }});
   }
 
   // If user wants to query on more than one match point then set up an array of data from

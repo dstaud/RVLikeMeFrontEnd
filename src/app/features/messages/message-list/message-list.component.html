@@ -12,7 +12,8 @@
     </div>
     <div *ngFor="let conversation of conversations; let i = index">
       <div [hidden]="conversation.withUserID === userID"
-            (click)="onSelectSendTo(i)">
+            (click)="onSelectSendTo(i)"
+            class="conversation">
         <div>
           <img class="image profile-image"
                 [src]="conversation.withUserProfileImageUrl"
@@ -24,14 +25,15 @@
             <span class="date">{{ conversation.messages[conversation.messages.length - 1].createdAt | date:'short'}}</span>
           </div>
           <div class="message">
-            <span [ngClass]="conversation.createdByReadMessages ? 'read' : 'not-read'">
+            <span [ngClass]="conversation.createdByUnreadMessages === 0 ? 'read' : 'not-read'">
               {{ conversation.createdByDisplayName }}
             </span> : <span>{{ conversation.messages[conversation.messages.length - 1].message.substring(0,20) }}...</span>
           </div>
         </div>
       </div>
       <div [hidden]="conversation.createdBy === userID"
-            (click)="onSelectSendTo(i)">
+            (click)="onSelectSendTo(i)"
+            class="conversation">
         <div>
           <img class="image profile-image"
                 [src]="conversation.createdByProfileImageUrl"
@@ -43,7 +45,7 @@
             <span class="date">{{ conversation.messages[conversation.messages.length - 1].createdAt | date:'short'}}</span>
           </div>
           <div class="message">
-            <span [ngClass]="conversation.withUserReadMessages ? 'read' : 'not-read'">
+            <span [ngClass]="conversation.withUserUnreadMessages === 0 ? 'read' : 'not-read'">
               {{ conversation.createdByDisplayName }}
             </span> : <span>{{ conversation.messages[conversation.messages.length - 1].message.substring(0,20) }}...</span>
           </div>

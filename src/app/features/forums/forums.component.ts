@@ -100,7 +100,7 @@ export class ForumsComponent implements OnInit {
       this.showSpinner = true;
       let queryParams = JSON.parse(params.queryParam);
       this.theme = queryParams.theme;
-      this.getGroup(queryParams);
+      this.getGroup();
     }); */
     this.getGroup();
   }

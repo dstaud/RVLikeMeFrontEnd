@@ -20,11 +20,11 @@ export interface Iconversation {
   createdBy: string;
   createdByDisplayName: string;
   createdByProfileImageUrl: string;
-  createdByReadMessages: Boolean;
+  createdByUnreadMessages: number;
   withUserID: string;
   withUserDisplayName: string;
   withUserProfileImageUrl: string;
-  withUserReadMessages: boolean;
+  withUserUnreadMessages: number;
   messages: Array<Imessage>;
 }
 
@@ -38,11 +38,11 @@ export class MessagesService {
     createdBy: null,
     createdByDisplayName: null,
     createdByProfileImageUrl: null,
-    createdByReadMessages: false,
+    createdByUnreadMessages: 0,
     withUserID: null,
     withUserDisplayName: null,
     withUserProfileImageUrl: null,
-    withUserReadMessages: false,
+    withUserUnreadMessages: 0,
     messages: []
   } ]
 
@@ -53,7 +53,7 @@ export class MessagesService {
     return this.http.get<Iconversation[]>(`/api/conversations`);
   }
 
-  getConversationsNotRead(userIdType: string): Observable<number> {
+  getConversationsNotRead(userIdType: string): Observable<any> {
     console.log('MessagesService:getConversationsNotRead: userIdType=', userIdType);
     let param = JSON.parse('{"userIdType":"' + userIdType + '"}');
     return this.http.get<number>(`/api/conversations-not-read`, { params: param  });
@@ -66,13 +66,12 @@ export class MessagesService {
     return this.http.get(`/api/conversation`, { params: param  });
   }
 
-  updateConversation(conversationID: string, userIdType: string, read: boolean, type: string) {
-    console.log('MessagesService:updateMessagesRead:', conversationID, userIdType, type);
+  updateConversation(conversationID: string, userIdType: string, action: string) {
+    console.log('MessagesService:updateMessagesRead:', conversationID, userIdType, action);
 
     let update = '{"conversationID":"' + conversationID + '",' +
                   '"userIdType":"' + userIdType + '",' +
-                  '"read":"' + read + '",' +
-                  '"type":"' + type + '"}';
+                  '"action":"' + action + '"}';
     return this.http.put(`/api/conversation-update`, JSON.parse(update),{});
   }
 

@@ -22,7 +22,9 @@ export class SendMessageComponent implements OnInit {
   toProfileImageUrl: string;
   messages: Array<Imessage> = [];
   conversation: Iconversation;
-  conversationID: string;
+
+  private conversationID: string;
+  private newConversation: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -82,13 +84,15 @@ export class SendMessageComponent implements OnInit {
         this.conversation = null;
         this.conversationID = null;
         this.messages = [];
+        this.newConversation = true;
       } else {
         this.conversation = conversationResult[0];
         this.conversationID = this.conversation._id;
+        this.newConversation = false;
         console.log('SendMessagesComponent:getMessages: conversation=', this.conversation);
         this.messages = conversationResult[0].messages;
         console.log('SendMessagesComponent:getMessages: messages=', this.messages);
-        this.updateConversation(true, 'read');
+        this.updateConversation('read');
       }
       this.showSpinner = false;
     }, error => {
@@ -106,7 +110,9 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(messageResult => {
       console.log('result = ', messageResult);
-      this.updateConversation(false, 'add');
+      if (!this.newConversation) {
+        this.updateConversation('sent');
+      }
       this.showSpinner = false;
     }, error => {
         console.log(error);
@@ -115,8 +121,9 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  private updateConversation(read: boolean, type: string) {
+  private updateConversation(action: string) {
     let userIdType: string;
+    let messageCount: number;
 
     console.log('SendMessageComponent:updateConversationAsRead: id=', this.conversationID);
     if (this.conversation.createdBy === this.fromUserID) {
@@ -125,7 +132,7 @@ export class SendMessageComponent implements OnInit {
       userIdType = 'withUserID';
     }
 
-    this.messagesSvc.updateConversation(this.conversationID, userIdType, read, type)
+    this.messagesSvc.updateConversation(this.conversationID, userIdType, action)
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
       console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
