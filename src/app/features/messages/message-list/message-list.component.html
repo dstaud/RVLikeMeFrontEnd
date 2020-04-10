@@ -11,6 +11,7 @@
       </span>
     </div>
     <div *ngFor="let conversation of conversations; let i = index">
+      <!-- with={{conversation.withUserID}} user={{userID}} -->
       <div [hidden]="conversation.withUserID === userID"
             (click)="onSelectSendTo(i)"
             class="conversation">
@@ -22,7 +23,7 @@
         <div class="name-and-date">
           <div>
             <span class="display-name">{{ conversation.withUserDisplayName }}</span>
-            <span class="date">{{ conversation.messages[conversation.messages.length - 1].createdAt | date:'short'}}</span>
+            <span class="date">{{ conversation.updatedAt | date:'short'}}</span>
           </div>
           <div class="message">
             <span [ngClass]="conversation.createdByUnreadMessages === 0 ? 'read' : 'not-read'">
@@ -31,6 +32,7 @@
           </div>
         </div>
       </div>
+      <!-- createdBy={{conversation.createdBy}}  user={{userID}} -->
       <div [hidden]="conversation.createdBy === userID"
             (click)="onSelectSendTo(i)"
             class="conversation">
@@ -42,7 +44,7 @@
         <div class="name-and-date">
           <div>
             <span class="display-name">{{ conversation.createdByDisplayName }}</span>
-            <span class="date">{{ conversation.messages[conversation.messages.length - 1].createdAt | date:'short'}}</span>
+            <span class="date">{{ conversation.updatedAt | date:'short'}}</span>
           </div>
           <div class="message">
             <span [ngClass]="conversation.withUserUnreadMessages === 0 ? 'read' : 'not-read'">
@@ -53,4 +55,5 @@
       </div>
     </div>
   </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

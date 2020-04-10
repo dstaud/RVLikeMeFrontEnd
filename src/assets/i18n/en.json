@@ -25,7 +25,7 @@
   },
   "connections.component": {
     "header": "Like Me",
-    "heading": "Select one or more to connect with others through forums",
+    "heading": "Select one or more to connect with others through groups",
     "noResults": "Sorry, no RVers Like you found yet.  Be sure to fill out your profile as completely as possible because this is what is used to locate others like you.  Also, check back and try again because as other users join, you will find others like you.",
     "forumButton": "Connect in a group",
     "queryButton": "Search for combined matches",

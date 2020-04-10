@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -18,6 +18,9 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+
+  @Input('newMessageCount') newMessageCount: number;
+
   lightTheme = true;
   profile: IuserProfile;
   userAuthorized: boolean;

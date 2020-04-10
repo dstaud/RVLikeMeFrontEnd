@@ -81,6 +81,8 @@ export class SendMessageComponent implements OnInit {
   ngOnDestroy() { }
 
   getMessages() {
+    this.showSpinner = true;
+
     this.messagesSvc.getConversation(this.fromUserID, this.toUserID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
@@ -154,12 +156,4 @@ export class SendMessageComponent implements OnInit {
     })
   }
 
-  private escapeJsonReservedCharacters(string: string): string {
-    let newString = string;
-    newString = newString.replace(/"/g, "'").trim();
-    newString = newString.replace(/\\/g, "|");
-    newString = newString.replace(/\n/g, "\\n");
-    console.log(string, newString);
-    return newString;
-  }
 }

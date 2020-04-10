@@ -43,10 +43,10 @@
     mat-button
     class="toolbar-icon"
     matTooltip="Messages"
-    routerLink="/messages"
+    routerLink="/messages/message-list"
     routerLinkActive="active-menu-item">
     <mat-icon
-      matBadge="2"
+      matBadge="{{newMessageCount}}"
       matBadgeColor="warn"
       matBadgeSize="small"
       matBadgePosition="above after"

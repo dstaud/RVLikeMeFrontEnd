@@ -13,7 +13,7 @@
             (click)="onQuery()">
         {{ "connections.component.queryButton" | translate }}
     </button>
-    <form *ngIf="showAllMatches" [formGroup]="form" novalidate>
+    <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation-->
       <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
         <mat-label>
           <mat-checkbox [checked]="likeMeMatch.id === param"

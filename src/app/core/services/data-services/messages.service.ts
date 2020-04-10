@@ -26,6 +26,7 @@ export interface Iconversation {
   withUserProfileImageUrl: string;
   withUserUnreadMessages: number;
   messages: Array<Imessage>;
+  updatedAt: Date;
 }
 
 @Injectable({
@@ -43,7 +44,8 @@ export class MessagesService {
     withUserDisplayName: null,
     withUserProfileImageUrl: null,
     withUserUnreadMessages: 0,
-    messages: []
+    messages: [],
+    updatedAt: null
   } ]
 
 

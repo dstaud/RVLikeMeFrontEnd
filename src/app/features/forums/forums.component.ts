@@ -311,12 +311,14 @@ export class ForumsComponent implements OnInit {
       }
     }
     if (!groupFound) {
+      console.log('ForumsComponent:updateProfileGroups: group not in profile, calling add ', this.groupID, ' to profile for ', this.profile._id);
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
         this.profileSvc.getProfile();
         this.showSpinner = false;
       }, error => {
+        console.log('ForumsComponent:updateProfileGroups: got an error adding group to profile ', error);
         console.log(error);
         this.showSpinner = false;
       });

@@ -30,6 +30,8 @@ export class MessageListComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+    this.showSpinner = true;
+
     // Listen for Profile changes
     this.userProfile = this.profileSvc.profile;
     this.userProfile

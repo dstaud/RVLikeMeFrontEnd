@@ -208,6 +208,7 @@ export class ConnectionsComponent implements OnInit {
       console.log('allCounts=', counts.allCounts)
       if (this.allUsersCount > 0 && this.allCountsReceived) {
         console.log('ConnectionsComponent:ngOnInit: got real counts.  allUsersCount=', this.allUsersCount, this.allCountsReceived);
+        this.form.get('likeMe').disable({onlySelf: true});
         this.showSpinner = false;
         if (!this.foundMatch) {
           this.showNoConnections = true;
