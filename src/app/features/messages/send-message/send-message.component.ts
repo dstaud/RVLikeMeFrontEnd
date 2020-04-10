@@ -5,6 +5,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
+import { NewMsgCountService } from '@services/new-msg-count.service';
 import { ShareDataService } from '@services/share-data.service';
 
 @Component({
@@ -30,6 +31,7 @@ export class SendMessageComponent implements OnInit {
 
   constructor(private shareDataSvc: ShareDataService,
               private messagesSvc: MessagesService,
+              private newMsgCountSvc: NewMsgCountService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -136,6 +138,7 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
       console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
+      this.newMsgCountSvc.getNewMessageCount(this.fromUserID);
     }, error => {
         console.log(error);
     })

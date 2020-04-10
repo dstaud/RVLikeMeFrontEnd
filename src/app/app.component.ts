@@ -17,6 +17,7 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
+import { NewMsgCountService } from '@services/new-msg-count.service';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private messagesSvc: MessagesService,
               private beforeInstallEventSvc: BeforeInstallEventService,
+              private newMsgCountSvc: NewMsgCountService,
               private router: Router) {
     console.log('AppComponent:constructor: get color theme');
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -148,7 +150,7 @@ export class AppComponent implements OnInit {
         this.likeMeCountsSvc.getLikeMeCountsPriority();
         this.messagesSvc.getConversations();
         this.userID = profile.userID;
-        this.getNewMessageCount();
+        this.newMsgCountSvc.getNewMessageCount(this.userID);
       }
 
     }, (error) => {
@@ -157,6 +159,19 @@ export class AppComponent implements OnInit {
       this.language.setLanguage('en');
       this.themeSvc.setGlobalColorTheme('light-theme');
     });
+
+
+    this.newMsgCountSvc.newMessageCount$
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(count => {
+        console.log('AppComponent:newMsgCount: got a count=', count);
+        if (count.valueOf() === 0) {
+          this.newMessageCount = null;
+        } else {
+          this.newMessageCount = count.valueOf();
+        }
+      });
+
 
     // Listen for Chrome event that indicates we can offer the user option to install the app
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -194,15 +209,15 @@ export class AppComponent implements OnInit {
   };
 
 
-  private getNewMessageCount() {
+/*   private getNewMessageCount() {
     this.newMessageCount = 0;
 
     console.log('AppComponent:getNewMessageCount: subscribe to userConversations');
 
     // Get count of new messages for messages badge
     console.log('AppComponent:getNewMessageCount: getting new message count');
-    this.getNewMessageCountByUserType('createdBy');
-    this.getNewMessageCountByUserType('withUserID');
+    this.newMsgCountSvc.getNewMessageCount('createdBy');
+    this.newMsgCountSvc.getNewMessageCount('withUserID');
     console.log('AppComponent:getNewMessageCount: count=', this.newMessageCount);
     if (this.newMessageCount === 0) {
       this.newMessageCount = null;
@@ -230,7 +245,7 @@ export class AppComponent implements OnInit {
         console.log('AppComponent:getNewMessageCount: error getting new message count', error);
       }
     });
-  }
+  } */
 
   // This is supposed to scroll to the top for new pages but pageYOffset is always 0.  I think because of my top and bottom toolbars and required margins.
   // TODO: make this work somehow because when going to connections or groups to other pages, they are scrolled and content is under toolbar at top.
