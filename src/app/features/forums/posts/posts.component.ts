@@ -166,8 +166,9 @@ export class PostsComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      console.log(error);
       this.showSpinner = false;
+      console.log('PostsComponent:getPosts: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -183,8 +184,9 @@ export class PostsComponent implements OnInit {
       this.liked[row] = true;
       this.showSpinner = false;
     }, error => {
-      console.log(error);
       this.showSpinner = false;
+      console.log('PostsComponent:onLike: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -201,8 +203,9 @@ export class PostsComponent implements OnInit {
       this.openMyStoryDialog(userID, myStoryResult.myStory, myStoryResult.displayName, myStoryResult.profileImageUrl)
       this.showSpinner = false;
     }, error => {
-      console.log(error);
       this.showSpinner = false;
+      console.log('PostsComponent:onYourStory: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -256,8 +259,9 @@ export class PostsComponent implements OnInit {
           this.posts[row].body = postResult.body;
           this.showSpinner = false;
         }, error => {
-          console.log(error);
           this.showSpinner = false;
+          console.log('PostsComponent:openUpdatePostDialog: throw error ', error);
+          throw new Error(error);
         });
       } else {
         this.showSpinner = false;

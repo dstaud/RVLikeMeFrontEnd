@@ -43,8 +43,8 @@ export class NewMsgCountService {
       if (error.status === 404) {
         console.log('NewMsgCountService:getNewMessageCount: no conversations found');
       } else {
-        console.error(error);
-        console.log('NewMsgCountService:getNewMessageCount: error getting new message count', error);
+        console.log('NewMsgCountService:getNewMessageCount: throw error ', error);
+        throw new Error(error);
       }
     });
   }

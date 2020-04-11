@@ -216,8 +216,9 @@ export class ForumsComponent implements OnInit {
           if (error.status === 404) {
             this.createGroupForum(names, values);
           } else {
-            console.log(error);
             this.showSpinner = false;
+            console.log('ForumsComponent:getGroup: throw error ', error);
+            throw new Error(error);
           }
         });
       }
@@ -296,8 +297,9 @@ export class ForumsComponent implements OnInit {
       this.updateProfileGroups();
       this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
     }, error => {
-      console.log(error);
       this.showSpinner = false;
+      console.log('ForumsComponentcreateGroupForum: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -318,9 +320,9 @@ export class ForumsComponent implements OnInit {
         this.profileSvc.getProfile();
         this.showSpinner = false;
       }, error => {
-        console.log('ForumsComponent:updateProfileGroups: got an error adding group to profile ', error);
-        console.log(error);
         this.showSpinner = false;
+        console.log('ForumsComponent:updateProfileGroups: throw error ', error);
+        throw new Error(error);
       });
     }
   }

@@ -123,7 +123,8 @@ export class HeaderComponent implements OnInit {
       console.log('update color theme response = ', responseData);
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
-      console.log(error);
+      console.log('HeaderComponent:selectTheme: throw error ', error);
+      throw new Error(error);
     });
   }
 

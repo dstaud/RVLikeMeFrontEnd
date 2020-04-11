@@ -34,25 +34,10 @@ export interface Iconversation {
 })
 export class MessagesService {
 
-  private userConversations = [ {
-    _id: null,
-    createdBy: null,
-    createdByDisplayName: null,
-    createdByProfileImageUrl: null,
-    createdByUnreadMessages: 0,
-    withUserID: null,
-    withUserDisplayName: null,
-    withUserProfileImageUrl: null,
-    withUserUnreadMessages: 0,
-    messages: [],
-    updatedAt: null
-  } ]
-
-
   constructor(private http: HttpClient) { }
 
   getConversations(): Observable<Iconversation[]> {
-    return this.http.get<Iconversation[]>(`/api/conversations`);
+    return this.http.get<Iconversation[]>(`/api/conversations`)
   }
 
   getConversationsNotRead(userIdType: string): Observable<any> {

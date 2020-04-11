@@ -61,8 +61,6 @@ and I can't notify them. */
 })
 export class LifestyleComponent implements OnInit {
   form: FormGroup;
-  httpError = false;
-  httpErrorText = '';
   helpMsg = '';
   backPath: string;
 
@@ -351,8 +349,6 @@ export class LifestyleComponent implements OnInit {
 
   updateLifestyle(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this.httpError = false;
-    this.httpErrorText = '';
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
@@ -360,14 +356,8 @@ export class LifestyleComponent implements OnInit {
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      console.log('LifestyleComponent:updateLifestyle: throw error ', error);
+      throw new Error(error);
     });
   }
-
-
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
-  }
-
 }

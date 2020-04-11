@@ -50,8 +50,9 @@ export class AddPostComponent implements OnInit {
       this.doneWithAdd(post);
       this.showSpinner = false;
     }, error => {
-      console.log(error);
       this.showSpinner = false;
+      console.log('AddPostComponent:onPost: throw error ', error);
+      throw new Error(error);
     });
   }
 }

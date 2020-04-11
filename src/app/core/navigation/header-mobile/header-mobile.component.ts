@@ -234,7 +234,8 @@ export class HeaderMobileComponent implements OnInit {
       console.log('update color theme response = ', responseData);
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
-      console.log(error);
+      console.log('HeaderMobileComponent:selectTheme: throw error ', error);
+      throw new Error(error);
     });
   }
 

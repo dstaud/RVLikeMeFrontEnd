@@ -290,6 +290,8 @@ export class ProfileComponent implements OnInit {
       this.language.setLanguage(entry);
     }, error => {
       this.showLanguageSaveIcon = false;
+      console.log('ProfileComponent:setLanguage: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -325,6 +327,8 @@ export class ProfileComponent implements OnInit {
       }
     }, error => {
       this.showAboutMeSaveIcon = false;
+      console.log('ProfileComponent:updateAboutMe: throw error ', error);
+      throw new Error(error);
     });
   }
 }

@@ -29,34 +29,10 @@ export interface RigType {
 export class RvRigComponent implements OnInit {
   form: FormGroup;
   backPath: string;
-  httpError = false;
-  httpErrorText = '';
   helpMsg = '';
 
   // Interface for Profile data
-/*   profile: IuserProfile = {
-    firstName: null,
-    lastName: null,
-    displayName: null,
-    yearOfBirth: null,
-    homeCountry: null,
-    homeState: null,
-    language: 'en',
-    colorThemePreference: 'light-theme',
-    aboutMe: null,
-    rvUse: null,
-    worklife: null,
-    campsWithMe: null,
-    boondocking: null,
-    traveling: null,
-    rigType: null,
-    rigManufacturer: null,
-    rigBrand: null,
-    rigModel: null,
-    rigYear: null
-  }; */
   profile: IuserProfile;
-
   userProfile: Observable<IuserProfile>;
 
   rigType = '';
@@ -266,8 +242,6 @@ export class RvRigComponent implements OnInit {
 
   updateRig(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this.httpError = false;
-    this.httpErrorText = '';
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
@@ -275,8 +249,8 @@ export class RvRigComponent implements OnInit {
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      console.log('PersonalComponent:updateRig: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -288,9 +262,5 @@ export class RvRigComponent implements OnInit {
       return { birthYear: true };
     }
     return null;
-  }
-
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
   }
 }

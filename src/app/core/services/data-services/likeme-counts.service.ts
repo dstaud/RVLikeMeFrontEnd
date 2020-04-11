@@ -98,11 +98,9 @@ export class LikemeCountsService {
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
 
-    }, (error) => {
-      console.warn('ERROR loading user counts: ', error);
-      if (error.message.includes('Unknown Error')) {
-        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-      }
+    }, error => {
+      console.log('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -145,10 +143,8 @@ export class LikemeCountsService {
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
 
     }, (error) => {
-      console.warn('ERROR loading user counts: ', error);
-      if (error.message.includes('Unknown Error')) {
-        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-      }
+      console.log('LikeMeCountsService:getLikeMeCountsSecondary: throw error ', error);
+      throw new Error(error);
     });
   }
 

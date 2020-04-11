@@ -52,7 +52,7 @@ export class SendMessageComponent implements OnInit {
       this.router.navigateByUrl('/messages/message-list');
     } else {
       data = JSON.parse(this.shareDataSvc.getData());
-      console.log('SendMessagesComponent:getMessages: data=', data);
+      console.log('sendMessageComponent:getMessages: data=', data);
       this.fromUserID = data.fromUserID;
       this.fromDisplayName = data.fromDisplayName;
       if (!data.fromProfileImageUrl || data.fromProfileImageUrl === 'null') {
@@ -67,12 +67,12 @@ export class SendMessageComponent implements OnInit {
       } else {
         this.toProfileImageUrl = data.toProfileImageUrl;
       }
-      console.log('SendMessagesComponent:getMessages: fromUserID=', this.fromUserID);
-      console.log('SendMessagesComponent:getMessages: fromdisplayName=', this.fromDisplayName);
-      console.log('SendMessagesComponent:getMessages: fromProfileImageUrl=', this.fromProfileImageUrl);
-      console.log('SendMessagesComponent:getMessages: toUserID=', this.toUserID);
-      console.log('SendMessagesComponent:getMessages: toDisplayName=', this.toDisplayName);
-      console.log('SendMessagesComponent:getMessages: toProfileImageUrl=', this.toProfileImageUrl);
+      console.log('sendMessageComponent:getMessages: fromUserID=', this.fromUserID);
+      console.log('sendMessageComponent:getMessages: fromdisplayName=', this.fromDisplayName);
+      console.log('sendMessageComponent:getMessages: fromProfileImageUrl=', this.fromProfileImageUrl);
+      console.log('sendMessageComponent:getMessages: toUserID=', this.toUserID);
+      console.log('sendMessageComponent:getMessages: toDisplayName=', this.toDisplayName);
+      console.log('sendMessageComponent:getMessages: toProfileImageUrl=', this.toProfileImageUrl);
 
       this.getMessages();
     }
@@ -86,7 +86,7 @@ export class SendMessageComponent implements OnInit {
     this.messagesSvc.getConversation(this.fromUserID, this.toUserID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
-      console.log('SendMessagesComponent:getMessages: RESULT=', conversationResult);
+      console.log('sendMessageComponent:getMessages: RESULT=', conversationResult);
       if (conversationResult.length === 0) {
         this.conversation = null;
         this.conversationID = null;
@@ -96,15 +96,16 @@ export class SendMessageComponent implements OnInit {
         this.conversation = conversationResult[0];
         this.conversationID = this.conversation._id;
         this.newConversation = false;
-        console.log('SendMessagesComponent:getMessages: conversation=', this.conversation);
+        console.log('sendMessageComponent:getMessages: conversation=', this.conversation);
         this.messages = conversationResult[0].messages;
-        console.log('SendMessagesComponent:getMessages: messages=', this.messages);
+        console.log('sendMessageComponent:getMessages: messages=', this.messages);
         this.updateConversation('read');
       }
       this.showSpinner = false;
     }, error => {
-      console.log(error);
       this.showSpinner = false;
+      console.log('SendMessageComponent:getMessages: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -129,8 +130,9 @@ export class SendMessageComponent implements OnInit {
       }
       this.showSpinner = false;
     }, error => {
-        console.log(error);
         this.showSpinner = false;
+        console.log('SendMessageComponent:onSubmit: throw error ', error);
+        throw new Error(error);
     });
   }
 
@@ -152,7 +154,8 @@ export class SendMessageComponent implements OnInit {
       console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
       this.newMsgCountSvc.getNewMessageCount(this.fromUserID);
     }, error => {
-        console.log(error);
+      console.log('SendMessageComponent:updateConversation: throw error ', error);
+      throw new Error(error);
     })
   }
 

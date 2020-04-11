@@ -50,8 +50,6 @@ and I can't notify them. */
 export class PersonalComponent implements OnInit {
   form: FormGroup;
   backPath: string;
-  httpError = false;
-  httpErrorText = '';
   helpMsg = '';
   profileImageUploaded:File = null;
   profileImageUpdated: any;
@@ -377,8 +375,6 @@ export class PersonalComponent implements OnInit {
 
   updatePersonal(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this.httpError = false;
-    this.httpErrorText = '';
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
@@ -386,9 +382,8 @@ export class PersonalComponent implements OnInit {
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
-      console.log('in error!', error);
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      console.log('PersonalComponent:updatePersonal: throw error ', error);
+      throw new Error(error);
     });
   }
 

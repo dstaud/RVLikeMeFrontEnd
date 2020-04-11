@@ -122,11 +122,9 @@ export class UserQueryComponent implements OnInit {
       }
       this.queryParam = this.queryParam + '"theme":"' + this.theme + '"}';
       this.showSpinner = false;
-    }, (error) => {
-      console.warn('ERROR loading user counts: ', error);
-      if (error.message.includes('Unknown Error')) {
-        this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-      }
+    }, error => {
+      console.log('UserQueryComponent:ngOnInit: throw error ', error);
+      throw new Error(error);
     });
 
     this.showSpinner = true;
@@ -138,6 +136,9 @@ export class UserQueryComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
       console.log('User-QueryComponent:ngOnInit: got new profile data=', data);
+    }, error => {
+      console.log('UserQueryComponent:ngOnInit: throw error ', error);
+      throw new Error(error);
     });
   }
 

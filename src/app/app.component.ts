@@ -148,7 +148,6 @@ export class AppComponent implements OnInit {
       if (profile._id) {
         console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
         this.likeMeCountsSvc.getLikeMeCountsPriority();
-        this.messagesSvc.getConversations();
         this.userID = profile.userID;
         this.newMsgCountSvc.getNewMessageCount(this.userID);
       }
@@ -208,44 +207,6 @@ export class AppComponent implements OnInit {
     this.profileSvc.dispose();
   };
 
-
-/*   private getNewMessageCount() {
-    this.newMessageCount = 0;
-
-    console.log('AppComponent:getNewMessageCount: subscribe to userConversations');
-
-    // Get count of new messages for messages badge
-    console.log('AppComponent:getNewMessageCount: getting new message count');
-    this.newMsgCountSvc.getNewMessageCount('createdBy');
-    this.newMsgCountSvc.getNewMessageCount('withUserID');
-    console.log('AppComponent:getNewMessageCount: count=', this.newMessageCount);
-    if (this.newMessageCount === 0) {
-      this.newMessageCount = null;
-    }
-  }
-
-  private getNewMessageCountByUserType(userIdType: string) {
-    let count: number = 0;
-
-    this.messagesSvc.getConversationsNotRead(userIdType)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(messageCountResult => {
-      console.log('AppComponent:getNewMessageCount: result count=', messageCountResult);
-      if (userIdType === 'createdBy') {
-        this.newMessageCount = this.newMessageCount + messageCountResult.createdByUnreadMessages;
-      } else {
-        this.newMessageCount = this.newMessageCount + messageCountResult.withUserUnreadMessages;
-      }
-
-    }, (error) => {
-      if (error.status === 404) {
-        console.log('AppComponent:getNewMessageCount: no messages for ', userIdType);
-      } else {
-        console.error(error);
-        console.log('AppComponent:getNewMessageCount: error getting new message count', error);
-      }
-    });
-  } */
 
   // This is supposed to scroll to the top for new pages but pageYOffset is always 0.  I think because of my top and bottom toolbars and required margins.
   // TODO: make this work somehow because when going to connections or groups to other pages, they are scrolled and content is under toolbar at top.

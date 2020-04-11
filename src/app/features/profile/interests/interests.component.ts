@@ -23,8 +23,6 @@ import { SharedComponent } from '@shared/shared.component';
 })
 export class InterestsComponent implements OnInit {
   form: FormGroup;
-  httpError = false;
-  httpErrorText = '';
   backPath: string;
 
 
@@ -120,8 +118,6 @@ ngOnInit() {
 
   updateLifestyle(control: string, event: any) {
     this.showSaveIcon = true;
-    this.httpError = false;
-    this.httpErrorText = '';
     this.profile[control] = event.checked;
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
@@ -130,14 +126,9 @@ ngOnInit() {
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this.showSaveIcon = false;
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      console.log('InterestsComponent:updateLifestyle: throw error ', error);
+      throw new Error(error);
     });
-  }
-
-
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
   }
 
 }

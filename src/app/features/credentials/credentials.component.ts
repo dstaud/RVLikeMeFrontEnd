@@ -70,12 +70,13 @@ export class CredentialsComponent implements OnInit {
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else {
-        this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+        console.log('CredentialsComponent:onSubmit: throw error ', error);
+        throw new Error(error);
       }
     });
   }
 
-  errorHandling = (control: string, error: string) => {
+  public errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
   }
 }

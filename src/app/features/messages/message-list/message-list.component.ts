@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
@@ -73,8 +73,9 @@ export class MessageListComponent implements OnInit {
         this.noConversations = true;
         this.showSpinner = false;
       } else {
-        console.log(error);
         this.showSpinner = false;
+        console.log('MessageListComponent:getConversations: throw error ', error);
+        throw new Error(error);
       }
     });
   }

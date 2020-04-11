@@ -35,7 +35,8 @@ export class UploadImageService {
           cb(imageFileUrl);
       }
     }, error => {
-      console.log(error);
+      console.log('UploadImageService:uploadImage: throw error ', error);
+      throw new Error(error);
     });
   }
 
@@ -50,7 +51,8 @@ export class UploadImageService {
         cb(profileImageUrl);
       }
     }, error => {
-      console.log(error);
+      console.log('UploadImageService:uploadImagebase64: throw error ', error);
+      throw new Error(error);
     });
   }
 

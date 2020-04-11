@@ -147,10 +147,8 @@ export class ProfileService {
         console.log('ProfileService:getProfile: Profile=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, (error) => {
-        console.warn('ERROR loading profile: ', error);
-        if (error.message.includes('Unknown Error')) {
-          this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-        }
+        console.log('ProfileService:getProfile: throw error ', error);
+        throw new Error(error);
       });
     }
   }
