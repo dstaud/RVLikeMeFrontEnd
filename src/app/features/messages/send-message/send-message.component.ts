@@ -109,6 +109,10 @@ export class SendMessageComponent implements OnInit {
             this.originalMsgCount = conversations[0].withUserUnreadMessages;
             console.log('sendMessageComponent:getMessages: original withUser new unread count=', this.originalMsgCount);
           }
+          if (this.originalMsgCount > 0) {
+            this.updateConversation('read');
+            this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
+          }
         }
         this.showSpinner = false;
       });
