@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 export interface Imessage {
   _id: string;
@@ -33,12 +34,43 @@ export interface Iconversation {
   providedIn: 'root'
 })
 export class MessagesService {
+  private userConversation = [{
+    _id: null,
+    createdBy: null,
+    createdByDisplayName: null,
+    createdByProfileImageUrl: null,
+    createdByUnreadMessages: 0,
+    withUserID: null,
+    withUserDisplayName: null,
+    withUserProfileImageUrl: null,
+    withUserUnreadMessages: 0,
+    messages: [],
+    updatedAt: null
+  }];
+
+  private _conversation = new BehaviorSubject<Iconversation[]>(this.userConversation);
+  private dataStore: { conversation: Iconversation[] } = { conversation: this.userConversation }
+  conversation$ = this._conversation.asObservable();
 
   constructor(private http: HttpClient) { }
 
-  getConversations(): Observable<Iconversation[]> {
-    console.log('MessagesServcie:getConversations:')
-    return this.http.get<Iconversation[]>(`/api/conversations`)
+  ngOnDestroy() {}
+
+  getConversations() {
+    this.http.get<Iconversation[]>(`/api/conversations`)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(conversationResult => {
+      this.dataStore.conversation = conversationResult;
+      console.log('MessagesService:getConversations: got conversations=', this.dataStore.conversation);
+      this._conversation.next(Object.assign({}, this.dataStore).conversation);
+    }, (error) => {
+      if (error.status === 404) {
+        console.log('MessagesService:getConversations: no conversations found');
+      } else {
+        console.log('MessagesService:getConversations: throw error ', error);
+        throw new Error(error);
+      }
+    });
   }
 
   getConversationsNotRead(userIdType: string): Observable<any> {

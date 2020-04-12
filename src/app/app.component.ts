@@ -17,7 +17,7 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
-import { NewMsgCountService } from '@services/new-msg-count.service';
+import { NewMessageCountService } from '@services/new-msg-count.service';
 
 
 @Component({
@@ -35,6 +35,7 @@ export class AppComponent implements OnInit {
   headerVisible = false;
   headerDesktopVisible = false;
   userProfile: Observable<IuserProfile>;
+  userConversations: Observable<Iconversation[]>;
   iphoneModelxPlus: boolean;
   newMessageCount: number;
   userID: string;
@@ -50,7 +51,7 @@ export class AppComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private messagesSvc: MessagesService,
               private beforeInstallEventSvc: BeforeInstallEventService,
-              private newMsgCountSvc: NewMsgCountService,
+              private newMsgCountSvc: NewMessageCountService,
               private router: Router) {
     console.log('AppComponent:constructor: get color theme');
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -149,7 +150,7 @@ export class AppComponent implements OnInit {
         console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
         this.likeMeCountsSvc.getLikeMeCountsPriority();
         this.userID = profile.userID;
-        // this.newMsgCountSvc.getNewMessageCount(this.userID);
+        this.messagesSvc.getConversations();
       }
 
     }, (error) => {
@@ -159,17 +160,28 @@ export class AppComponent implements OnInit {
       this.themeSvc.setGlobalColorTheme('light-theme');
     });
 
+    this.userConversations = this.messagesSvc.conversation$;
+    this.userConversations
+    // .pipe(untilComponentDestroyed(this))
+    .subscribe(conversations => {
+      console.log('AppComponent:conversations: got conversations', conversations);
+      if (conversations.length === 0) {
+        this.newMessageCount = null;
+      } else {
+        this.newMsgCountSvc.getNewMessageCount(this.userID, conversations);
+      }
+    });
 
     this.newMsgCountSvc.newMessageCount$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(count => {
-        console.log('AppComponent:newMsgCount: got a count=', count);
-        if (count.valueOf() === 0) {
-          this.newMessageCount = null;
-        } else {
-          this.newMessageCount = count.valueOf();
-        }
-      });
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(count => {
+      console.log('AppComponent:newMsgCount: got a count=', count);
+      if (count.valueOf() === 0) {
+        this.newMessageCount = null;
+      } else {
+        this.newMessageCount = count.valueOf();
+      }
+    });
 
 
     // Listen for Chrome event that indicates we can offer the user option to install the app

@@ -16,6 +16,7 @@ import { ShareDataService } from '@services/share-data.service';
 export class MessageListComponent implements OnInit {
   showSpinner: boolean = false;
   conversations: Array<Iconversation> = [];
+  userConversations: Observable<Iconversation[]>;
   displayName: string;
   userID: string;
   noConversations: boolean = false;
@@ -42,42 +43,35 @@ export class MessageListComponent implements OnInit {
       if (this.profile.userID) {
         this.userID = this.profile.userID;
         this.displayName = this.profile.displayName;
-        console.log('MessageListComponent:ngOnInit: getting conversations');
-        this.getConversations();
       }
     }, (error) => {
       console.error(error);
     });
+
+    this.userConversations = this.messagesSvc.conversation$;
+    this.userConversations
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(conversations => {
+      console.log('MessageListComponent:ngOnInit: got new conversations', conversations);
+      if (conversations.length === 1 && conversations[0]._id === null) {
+        console.log('MessageListComponent:ngOnInit: default conversation ', conversations);
+      } else if (conversations.length === 0) {
+        this.noConversations = true;
+        this.showSpinner = false;
+      } else {
+        console.log('MessageListComponent:ngOnInit: have a real conversation=', conversations);
+        this.noConversations = false;
+        this.conversations = conversations;
+        this.showSpinner = false;
+      }
+    });
   }
+
 
   ngOnDestroy() {}
 
   onGroup() {
     this.router.navigateByUrl('forums');
-  }
-
-  getConversations(): void {
-    console.log('MessageListComponent:getConversations: in getConversations');
-    this.messagesSvc.getConversations()
-    .subscribe(messagesResult => {
-      console.log('MessageListComponent:getConversations: result=', messagesResult);
-      this.conversations = messagesResult;
-      if (this.conversations.length === 0) {
-        this.noConversations = true;
-      }
-      console.log('MessageListComponent:getConversations: array=', this.conversations);
-      this.showSpinner = false;
-    }, error => {
-      // if no messages for pair found, that is OK.
-      if (error.status === 404) {
-        this.noConversations = true;
-        this.showSpinner = false;
-      } else {
-        this.showSpinner = false;
-        console.log('MessageListComponent:getConversations: throw error ', error);
-        throw new Error(error);
-      }
-    });
   }
 
   onSelectSendTo(row: number) {

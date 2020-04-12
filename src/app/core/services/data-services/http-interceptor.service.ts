@@ -35,7 +35,6 @@ export class HttpInterceptorService implements HttpInterceptor {
         authReq = request;
     }
 
-    console.log('http intercept for ', authReq.url);
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {

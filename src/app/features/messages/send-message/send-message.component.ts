@@ -5,7 +5,6 @@ import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } f
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
-import { NewMsgCountService } from '@services/new-msg-count.service';
 import { ShareDataService } from '@services/share-data.service';
 
 @Component({
@@ -34,7 +33,6 @@ export class SendMessageComponent implements OnInit {
 
   constructor(private shareDataSvc: ShareDataService,
               private messagesSvc: MessagesService,
-              private newMsgCountSvc: NewMsgCountService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -86,17 +84,18 @@ export class SendMessageComponent implements OnInit {
     this.messagesSvc.getConversation(this.fromUserID, this.toUserID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
-      console.log('sendMessageComponent:getMessages: RESULT=', conversationResult);
+      console.log('sendMessageComponent:getMessages: RESULT=', conversationResult, conversationResult.length);
       if (conversationResult.length === 0) {
         this.conversation = null;
         this.conversationID = null;
         this.messages = [];
         this.newConversation = true;
+        console.log('SendMessageComponent:getMessages newConversation=', this.newConversation);
       } else {
         this.conversation = conversationResult[0];
         this.conversationID = this.conversation._id;
         this.newConversation = false;
-        console.log('sendMessageComponent:getMessages: conversation=', this.conversation);
+        console.log('sendMessageComponent:getMessages: conversation=', this.conversation), this.newConversation;
         this.messages = conversationResult[0].messages;
         console.log('sendMessageComponent:getMessages: messages=', this.messages);
         this.updateConversation('read');
@@ -124,8 +123,11 @@ export class SendMessageComponent implements OnInit {
       this.myForm.resetForm(); // Only way to reset the form without having it invalidate because field is required.
 
       console.log('SendMessageComponent:onSubmit: pushed. messages=', this.messages);
-
-      if (!this.newConversation) {
+      console.log('SendMessageComponent:onSubmit: newConversation=', this.newConversation);
+      if (this.newConversation) {
+        this.messagesSvc.getConversations();
+      } else {
+        console.log('SendMessageComponent:onSubmit: new conversation, update conversations');
         this.updateConversation('sent');
       }
       this.showSpinner = false;
@@ -152,7 +154,7 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
       console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
-      this.newMsgCountSvc.getNewMessageCount(this.fromUserID);
+      this.messagesSvc.getConversations();
     }, error => {
       console.log('SendMessageComponent:updateConversation: throw error ', error);
       throw new Error(error);
