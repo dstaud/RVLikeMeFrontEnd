@@ -37,6 +37,7 @@ export class MessagesService {
   constructor(private http: HttpClient) { }
 
   getConversations(): Observable<Iconversation[]> {
+    console.log('MessagesServcie:getConversations:')
     return this.http.get<Iconversation[]>(`/api/conversations`)
   }
 

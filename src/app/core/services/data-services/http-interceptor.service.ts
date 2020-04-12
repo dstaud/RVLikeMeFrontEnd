@@ -40,13 +40,15 @@ export class HttpInterceptorService implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {
           // server-side error
-          console.log('Server Error', error);
           this.httpError.status = error.status;
           this.httpError.message = error.message;
+          console.log('HttpInterceptor: Server Side error for request', authReq);
+          console.log('HttpInterceptor: Server Side error: ', this.httpError);
           return throwError(this.httpError);
         } else {
           // client-side error
-          console.log('Client Error ', error);
+          console.log('HttpInterceptor: Client Side error for request', authReq);
+          console.log('HttpInterceptor: Client Side error: ', error);
           return throwError(error);
         }
       })

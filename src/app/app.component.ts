@@ -149,7 +149,7 @@ export class AppComponent implements OnInit {
         console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
         this.likeMeCountsSvc.getLikeMeCountsPriority();
         this.userID = profile.userID;
-        this.newMsgCountSvc.getNewMessageCount(this.userID);
+        // this.newMsgCountSvc.getNewMessageCount(this.userID);
       }
 
     }, (error) => {
