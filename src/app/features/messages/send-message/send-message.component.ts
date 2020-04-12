@@ -2,10 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 
+import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { ShareDataService } from '@services/share-data.service';
+import { NewMessageCountService } from '@services/new-msg-count.service';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -27,12 +29,16 @@ export class SendMessageComponent implements OnInit {
   conversation: Iconversation;
 
   private conversationID: string;
+  private originalMsgCount: number = 0;
   private newConversation: boolean = false;
+  private userConversations: Observable<Iconversation[]>;
+
 
   showSpinner: boolean = false;
 
   constructor(private shareDataSvc: ShareDataService,
               private messagesSvc: MessagesService,
+              private newMsgCountSvc: NewMessageCountService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -72,13 +78,49 @@ export class SendMessageComponent implements OnInit {
       console.log('sendMessageComponent:getMessages: toDisplayName=', this.toDisplayName);
       console.log('sendMessageComponent:getMessages: toProfileImageUrl=', this.toProfileImageUrl);
 
-      this.getMessages();
+      this.userConversations = this.messagesSvc.conversation$;
+      this.userConversations
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(conversations => {
+        console.log('MessageListComponent:ngOnInit: got new conversations', conversations);
+        if (conversations.length === 1 && conversations[0]._id === null) {
+          console.log('MessageListComponent:ngOnInit: default conversation ', conversations);
+        } else if (conversations.length === 0) {
+          this.conversation = null;
+          this.conversationID = null;
+          this.messages = [];
+          this.newConversation = true;
+          console.log('SendMessageComponent:getMessages newConversation=', this.newConversation);
+        } else {
+          console.log('MessageListComponent:ngOnInit: have a real conversation=', conversations);
+          this.conversation = conversations[0];
+          this.conversationID = this.conversation._id;
+          this.newConversation = false;
+          console.log('sendMessageComponent:getMessages: conversation=', this.conversation), this.newConversation;
+          this.messages = conversations[0].messages;
+          console.log('sendMessageComponent:getMessages: messages=', this.messages);
+
+          if (conversations[0].createdBy === this.fromUserID) {
+            console.log('sendMessageComponent:getMessages: original createdBy unread count=', this.originalMsgCount);
+            this.originalMsgCount = conversations[0].createdByUnreadMessages;
+            console.log('sendMessageComponent:getMessages: original createdBy new unread count=', this.originalMsgCount);
+          } else {
+            console.log('sendMessageComponent:getMessages: original withUser unread count=', this.originalMsgCount);
+            this.originalMsgCount = conversations[0].withUserUnreadMessages;
+            console.log('sendMessageComponent:getMessages: original withUser new unread count=', this.originalMsgCount);
+          }
+        }
+        this.showSpinner = false;
+      });
     }
   }
 
+  // TODO: where put this?   Oninit not working.  need to know a real user came in and was viewing.
+  // this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
+
   ngOnDestroy() { }
 
-  getMessages() {
+/*   getMessages() {
     this.showSpinner = true;
 
     this.messagesSvc.getConversation(this.fromUserID, this.toUserID)
@@ -106,7 +148,7 @@ export class SendMessageComponent implements OnInit {
       console.log('SendMessageComponent:getMessages: throw error ', error);
       throw new Error(error);
     });
-  }
+  } */
 
   onSubmit() {
     const message = this.form.controls.message.value;

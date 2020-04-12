@@ -9,6 +9,8 @@ import { Iconversation } from '@services/data-services/messages.service';
   providedIn: 'root'
 })
 export class NewMessageCountService {
+  messageCount: number;
+
   private _newMessageCount = new Subject<number>();
   newMessageCount$ = this._newMessageCount.asObservable();
 
@@ -16,7 +18,7 @@ export class NewMessageCountService {
 
   ngOnDestroy() {}
 
-  public getNewMessageCount(userID: string, conversations: Iconversation[]): void {
+  getNewMessageCount(userID: string, conversations: Iconversation[]): void {
     let count: number = 0;
 
     console.log('NewMsgCountService:getNewMessageCount: getting new message count');
@@ -31,8 +33,19 @@ export class NewMessageCountService {
         console.log('NewMsgCountService:getNewMessageCount: withUser count=', conversations[i].withUserUnreadMessages, count);
       }
     }
-    console.log('NewMsgCountService:getNewMessageCount: count=', count);
+    this.messageCount = count;
+    console.log('NewMsgCountService:getNewMessageCount: count=', this.messageCount);
 
-    this._newMessageCount.next(count);
+    this._newMessageCount.next(this.messageCount);
+  }
+
+  updateMessageCount(count: number) {
+    let newCount;
+
+    newCount = this.messageCount - count;
+    console.log('NewMessageCountService:updateMessageCount: original count=', this.messageCount, ' new count=', newCount);
+
+    this.messageCount = newCount;
+    this._newMessageCount.next(this.messageCount);
   }
 }
