@@ -39,8 +39,15 @@
   width: 80%;
   border-radius: 10px;
   padding: 5px;
-  background-color:#e0e0e0;
   margin-top: 10px;
+}
+
+.message-left-light {
+  background-color:#e0e0e0;
+}
+
+.message-left-dark {
+  background-color: #616161;
 }
 
 .message-right {
@@ -48,9 +55,17 @@
   line-height: 1.5;
   width: 80%;
   border-radius: 10px;
+  min-height: 35px;
   padding: 5px;
-  background-color: #80deea;
   margin-top: 10px;
+}
+
+.message-right-light {
+  background-color: #80deea;
+}
+
+.message-right-dark {
+  background-color: #006064;
 }
 
 .message-text {

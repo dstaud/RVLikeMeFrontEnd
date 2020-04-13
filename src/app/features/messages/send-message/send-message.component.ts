@@ -8,6 +8,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { ShareDataService } from '@services/share-data.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
+import { ThemeService } from '@services/theme.service';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -27,6 +28,7 @@ export class SendMessageComponent implements OnInit {
   toProfileImageUrl: string;
   messages: Array<Imessage> = [];
   conversation: Iconversation;
+  theme: string;
 
   private conversationID: string;
   private originalMsgCount: number = 0;
@@ -39,6 +41,7 @@ export class SendMessageComponent implements OnInit {
   constructor(private shareDataSvc: ShareDataService,
               private messagesSvc: MessagesService,
               private newMsgCountSvc: NewMessageCountService,
+              private themeSvc: ThemeService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -49,6 +52,13 @@ export class SendMessageComponent implements OnInit {
   ngOnInit(): void {
     let data: any;
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg';
+
+    // Listen for changes in color theme;
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    });
 
     // This component expects data passed through a shared data service.  If no data, then redirect to message-list component.
     if (!this.shareDataSvc.getData()) {
