@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 import { WindowService } from './../window.service';
 import { environment } from '../../../../environments/environment';
 
@@ -35,7 +35,7 @@ export class HttpInterceptorService implements HttpInterceptor {
         authReq = request;
     }
 
-    return next.handle(authReq).pipe(
+    return next.handle(authReq).pipe(retry(3),
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {
           // server-side error

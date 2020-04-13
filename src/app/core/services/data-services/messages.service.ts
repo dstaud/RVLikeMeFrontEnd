@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
+import { retry } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 export interface Imessage {
@@ -58,7 +59,7 @@ export class MessagesService {
 
   getConversations() {
     this.http.get<Iconversation[]>(`/api/conversations`)
-    .pipe(untilComponentDestroyed(this))
+    .pipe(untilComponentDestroyed(this), retry(3))
     .subscribe(conversationResult => {
       this.dataStore.conversation = conversationResult;
       console.log('MessagesService:getConversations: got conversations=', this.dataStore.conversation);
@@ -72,6 +73,27 @@ export class MessagesService {
       }
     });
   }
+
+/*   getConversations() {
+    this.http.get<Iconversation[]>(`/api/conversations`)
+    .pipe(untilComponentDestroyed(this), retry(3))
+    .subscribe(this.handleConversationsData, this.handleConversationsError)
+  }
+
+  private handleConversationsData(conversationResult: Iconversation[]) {
+    this.dataStore.conversation = conversationResult;
+    this._conversation.next(Object.assign({}, this.dataStore).conversation);
+  }
+
+  private handleConversationsError(error) {
+    if (error.status === 404) {
+      console.log('MessagesService:getConversations: no conversations found');
+    } else {
+      console.log('MessagesService:getConversations: throw error ', error);
+      throw new Error(error);
+    }
+  } */
+
 
   getConversationsNotRead(userIdType: string): Observable<any> {
     console.log('MessagesService:getConversationsNotRead: userIdType=', userIdType);
