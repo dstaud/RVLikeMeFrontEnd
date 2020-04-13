@@ -110,8 +110,11 @@ export class SendMessageComponent implements OnInit {
             console.log('sendMessageComponent:getMessages: original withUser new unread count=', this.originalMsgCount);
           }
           if (this.originalMsgCount > 0) {
+            console.log('sendMessageComponent:getMessages: count > 0 updating conversation and count. was=', this.originalMsgCount);
             this.updateConversation('read');
             this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
+            this.originalMsgCount = 0;
+            console.log('sendMessageComponent:getMessages: after update count=', this.originalMsgCount);
           }
         }
         this.showSpinner = false;
@@ -119,40 +122,9 @@ export class SendMessageComponent implements OnInit {
     }
   }
 
-  // TODO: where put this?   Oninit not working.  need to know a real user came in and was viewing.
-  // this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
 
   ngOnDestroy() { }
 
-/*   getMessages() {
-    this.showSpinner = true;
-
-    this.messagesSvc.getConversation(this.fromUserID, this.toUserID)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(conversationResult => {
-      console.log('sendMessageComponent:getMessages: RESULT=', conversationResult, conversationResult.length);
-      if (conversationResult.length === 0) {
-        this.conversation = null;
-        this.conversationID = null;
-        this.messages = [];
-        this.newConversation = true;
-        console.log('SendMessageComponent:getMessages newConversation=', this.newConversation);
-      } else {
-        this.conversation = conversationResult[0];
-        this.conversationID = this.conversation._id;
-        this.newConversation = false;
-        console.log('sendMessageComponent:getMessages: conversation=', this.conversation), this.newConversation;
-        this.messages = conversationResult[0].messages;
-        console.log('sendMessageComponent:getMessages: messages=', this.messages);
-        this.updateConversation('read');
-      }
-      this.showSpinner = false;
-    }, error => {
-      this.showSpinner = false;
-      console.log('SendMessageComponent:getMessages: throw error ', error);
-      throw new Error(error);
-    });
-  } */
 
   onSubmit() {
     const message = this.form.controls.message.value;
@@ -200,7 +172,7 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
       console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
-      this.messagesSvc.getConversations();
+      this.messagesSvc.getConversations(); // Get updated conversation into behaviorSubject
     }, error => {
       console.log('SendMessageComponent:updateConversation: throw error ', error);
       throw new Error(error);

@@ -288,7 +288,6 @@ export class ConnectionsComponent implements OnInit {
 
     this.shareDataSvc.setData(this.queryParams);
     this.router.navigateByUrl('/forums');
-    // this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParams }});
   }
 
   // If user wants to query on more than one match point then set up an array of data from
@@ -308,6 +307,7 @@ export class ConnectionsComponent implements OnInit {
       this.matches.push(this.likeMeItem);
       i++;
     });
+    console.log('ConnectionsComponent:onQuery: matches=', this.matches);
     this.showQueryResults = true;
   }
 

@@ -11,6 +11,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 import { ThemeService } from '@services/theme.service';
+import { ShareDataService } from '@services/share-data.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -54,7 +55,7 @@ export class UserQueryComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private likeMeCountsSvc: LikemeCountsService,
               private router: Router,
-              private shared: SharedComponent,
+              private shareDataSvc: ShareDataService,
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
@@ -64,6 +65,7 @@ export class UserQueryComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
+    console.log('UserQueryComponent:ngOnInit: matches input=', this.matches);
     // Listen for changes in color theme;
     console.log('ForumsListComponent:ngOnInit: getting theme');
     this.themeSvc.defaultGlobalColorTheme
@@ -149,9 +151,24 @@ export class UserQueryComponent implements OnInit {
   }
 
   onForum() {
-    // this.matches = [];
+    let name;
+    let value;
+    let i: number = 0;
 
+    let queryParams = '{';
+    name = this.matches[0].name;
+    value = this.matches[0].value;
+    queryParams = queryParams + '"' + name + '":"' + value + '"';
+    for (let i=1; i < this.matches.length; i++) {
+      name = this.matches[i].name;
+      value = this.matches[i].value;
+      queryParams = queryParams + ',"' + name + '":"' + value + '"';
+    }
+    queryParams = queryParams + '}'
+    console.log('UserQueryComponent:onForum: navigate to forums with ', queryParams)
+
+    this.shareDataSvc.setData(queryParams);
     this.activateBackArrowSvc.setBackRoute('connections');
-    this.router.navigate(['/forums'], { queryParams: { queryParam: this.queryParam }});
+    this.router.navigateByUrl('/forums');
   }
 }

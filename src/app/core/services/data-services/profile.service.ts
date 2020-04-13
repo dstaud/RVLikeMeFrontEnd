@@ -178,7 +178,7 @@ export class ProfileService {
     let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
     let groupJSON = JSON.parse(group);
     console.log('updateProfile: params=', groupJSON)
-    return this.http.put(`/profile-forums`, groupJSON, {});
+    return this.http.put(`/api/profile-forums`, groupJSON, {});
   }
 
   public dispose() {
