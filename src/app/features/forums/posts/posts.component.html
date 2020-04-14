@@ -29,7 +29,6 @@
         <div *ngFor="let post of posts; let i=index">
           <div class="posts">
             <div>
-              <!-- <span class="mat-h2">{{ posts[i].title }}</span> -->
               <div *ngIf="posts[i].createdBy === userID">
                 <mat-icon class="menu"
                           matPrefix
@@ -48,7 +47,9 @@
               </mat-menu>
             </div>
 
-            <div class="posts" (click)="onYourStory(posts[i].createdBy)">
+            <div class="posts" (click)="onYourStory(posts[i].createdBy,
+                                        posts[i].displayName,
+                                        posts[i].profileImageUrl)">
               <div>
                 <img class="image profile-image-post"
                       [src]="posts[i].profileImageUrl"
@@ -110,6 +111,9 @@
                                   [startCommentsIndex]="startCommentsIndex[i]"
                                   [commentsLength]="posts[i].commentCount"
                                   [colorTheme]="theme"
+                                  [displayName]="displayName"
+                                  [profileImageUrl]="profileImageUrl"
+                                  [userID]="userID"
                                   (showAllComments)="onShowAllComments()">
               </app-rvlm-comments>
             </div>

@@ -63,6 +63,7 @@ export class SendMessageComponent implements OnInit {
       this.router.navigateByUrl('/messages/message-list');
     } else {
       paramData = JSON.parse(this.shareDataSvc.getData());
+      console.log('SendMessageComponent:ngOnInit: params=', paramData);
       this.fromUserID = paramData.fromUserID;
       this.fromDisplayName = paramData.fromDisplayName;
       if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {

@@ -1,4 +1,4 @@
-<div class="mat-app-background">
+<div class="mat-app-background container">
   <a href=""></a> <!-- prevents auto-scrolling to bottom of page for a long story, because will scroll to first anchor tag it finds -->
   <div>
     <div>
@@ -9,10 +9,10 @@
       </div>
       <div class="name-and-date">
         <div class="display-name">
-          {{ data.displayName }}
+          {{ userDisplayName }}
         </div>
         <div>
-          <button [disabled]="data.userID === data.sendingUserID"
+          <button [disabled]="userIdViewer === userID"
                   mat-button
                   class="message-button"
                   (click)="onMessage()">
@@ -23,10 +23,18 @@
       </div>
     </div>
   </div>
-  <div class="story">
-    {{userStory}}
+  <div class="attributes">
+    <p><span class="attribute-label">RV Experience:</span> {{ userAboutMe | translate }}</p>
+    <p><span class="attribute-label">How Rvs:</span> {{ userRvUse | translate }}</p>
+    <p><span class="attribute-label">Rig type:</span> {{ userRigType | translate }}</p>
+  </div>
+  <div>
+    <div class="story-heading mat-title">
+      Story of {{ userDisplayName }}
+    </div>
+    <div class="story">
+      {{ userMyStory }}
+    </div>
   </div>
 </div>
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-button [mat-dialog-close]="data">OK</button>
-</div>
+

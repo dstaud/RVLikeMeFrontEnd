@@ -13,6 +13,7 @@ import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.compo
 import { InterestsComponent } from './features/profile/interests/interests.component';
 import { UserQueryComponent } from './features/connections/user-query/user-query.component';
 import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
+import { YourStoryComponent } from './features/forums/posts/your-story/your-story.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -59,7 +60,7 @@ const routes: Routes = [
   { path: 'profile-interests', component: InterestsComponent },
   { path: 'user-query', component: UserQueryComponent },
   { path: 'forums-list', component: ForumsListComponent },
-  // { path: 'forums', component: ForumsComponent },
+  { path: 'mystory', component: YourStoryComponent },
   { path: '', component: LandingPageComponent },
   { path: '**', component: PageNotFoundComponent }
 ];

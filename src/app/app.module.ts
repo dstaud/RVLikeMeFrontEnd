@@ -40,7 +40,6 @@ import { DesktopDialogComponent } from './dialogs/desktop-dialog/desktop-dialog.
 
 import { SharedModule } from '@shared/shared.module';
 import { UpdatePostDialogComponent } from './dialogs/update-post-dialog/update-post-dialog.component';
-import { YourStoryDialogComponent } from './dialogs/your-story-dialog/your-story-dialog.component';
 
 
 Sentry.init({
@@ -81,8 +80,7 @@ export function getErrorHandler(): ErrorHandler {
     MyStoryDialogComponent,
     DesktopDialogComponent,
     ForumsListComponent,
-    UpdatePostDialogComponent,
-    YourStoryDialogComponent
+    UpdatePostDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

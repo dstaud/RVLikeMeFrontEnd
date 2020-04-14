@@ -40,7 +40,7 @@ export class ForumsComponent implements OnInit {
   showMoreOption = false;
 
   private backPath = '';
-  private navSubscription: any;
+  // private navSubscription: any;
 
 
   // Interface for profile data
@@ -99,7 +99,7 @@ export class ForumsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.navSubscription.unsubscribe();
+    // this.navSubscription.unsubscribe();
   }
 
 

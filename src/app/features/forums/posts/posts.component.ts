@@ -6,14 +6,15 @@ import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
+import { CommentsComponent } from './comments/comments.component';
+
 import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
-
-import { CommentsComponent } from './comments/comments.component';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
-import { YourStoryDialogComponent } from '@dialogs/your-story-dialog/your-story-dialog.component';
+
 
 export type FadeState = 'visible' | 'hidden';
 @Component({
@@ -69,6 +70,7 @@ export class PostsComponent implements OnInit {
   constructor(private forumSvc: ForumService,
               private profileSvc: ProfileService,
               private shareDataSvc: ShareDataService,
+              private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private dialog: MatDialog) { }
 
@@ -136,6 +138,7 @@ export class PostsComponent implements OnInit {
         post = this.createPostsArrayEntry(postResult[0]);
         this.posts.push(post);
         this.comments.push(postComments);
+        console.log('PostsComponent:getPosts: comments=', postComments);
         this.showPostComments.push(false);
         if (postComments.length > 4) {
           this.startCommentsIndex.push(postComments.length - 4);
@@ -196,17 +199,15 @@ export class PostsComponent implements OnInit {
     this.showPostComments[row] = !this.showPostComments[row];
   }
 
-  onYourStory(userID: string) {
-    this.showSpinner = true;
-    this.profileSvc.getMyStory(userID)
-    .subscribe(myStoryResult => {
-      this.openMyStoryDialog(userID, myStoryResult.myStory, myStoryResult.displayName, myStoryResult.profileImageUrl)
-      this.showSpinner = false;
-    }, error => {
-      this.showSpinner = false;
-      console.log('PostsComponent:onYourStory: throw error ', error);
-      throw new Error(error);
-    });
+  onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
+    let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
+    let params = '{"userID":"' + toUserID + '",' +
+                      '"userIdViewer":"' + this.userID + '",' +
+                      '"params":' + userParams + '}';
+    console.log('PostsComponent:onYourStory: params=', params);
+    this.activateBackArrowSvc.setBackRoute('forums-list');
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/mystory');
   }
 
   // When user clicks to show all comments, set the start index to zero
@@ -219,25 +220,6 @@ export class PostsComponent implements OnInit {
   onAddPost() {
     this.showAddPost = true;
     this.showFirstPost = false;
-  }
-
-
-  // Open dialog to display selected user's story
-  openMyStoryDialog(userID: string, myStory: string, displayName: string, profileImageUrl: string): void {
-    const dialogRef = this.dialog.open(YourStoryDialogComponent, {
-      width: '80vh',
-      maxHeight: '90vh',
-      data: { userID: userID, sendingUserID: this.userID, myStory: myStory, displayName: displayName, profileImageUrl: profileImageUrl }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result === 'messages') {
-        console.log('PostsComponent:OpenMyStoryDialog: go to navigate messages');
-        this.navigateToMessages(userID, displayName, profileImageUrl);
-      }
-    });
   }
 
 
@@ -358,11 +340,18 @@ export class PostsComponent implements OnInit {
     let newComment = '{"comment":"' + comment.comment + '",' +
     '"displayName":"' + comment.displayName + '",' +
     '"profileImageUrl":"' + comment.profileImageUrl + '",' +
-    '"createdAt":"' + comment.createdAt + '"}';
+    '"createdAt":"' + comment.createdAt + '",' +
+    '"createdBy":"' + comment.createdBy + '"}';
     return JSON.parse(newComment);
   }
 
-  private navigateToMessages(toUserID: string, toDisplayName: string, toProfileImageUrl: string): void {
+/*   private navigateToMessages(toUserID: string, toDisplayName: string, toProfileImageUrl: string): void {
+    let params = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl)
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/messages/send-message');
+  } */
+
+  private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): string {
     let params: string;
     console.log('PostsComponent:navigateToMessages: displayName=', this.displayName);
     params = '{"fromUserID":"' + this.userID + '",' +
@@ -373,8 +362,6 @@ export class PostsComponent implements OnInit {
               '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
 
     console.log('PostsComponent:navigateToMessages: params=', params);
-
-    this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/messages/send-message');
+    return params;
   }
 }

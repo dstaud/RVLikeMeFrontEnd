@@ -7,7 +7,7 @@
   </div>
   <div *ngFor="let comment of comments | slice: startCommentsIndex : commentsLength">
     <div class="comment-container">
-      <div>
+      <div (click)="onYourStory(comment.createdBy, comment.displayName, comment.profileImageUrl)">
         <img class="image profile-image-post"
               [src]="comment.profileImageUrl"
               style="width:40px;height:40px;">

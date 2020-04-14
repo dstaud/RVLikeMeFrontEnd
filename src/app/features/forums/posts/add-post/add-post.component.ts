@@ -26,7 +26,6 @@ export class AddPostComponent implements OnInit {
   constructor(private forumSvc: ForumService,
               fb: FormBuilder) {
               this.form = fb.group({
-                // title: new FormControl('', Validators.required),
                 post: new FormControl('', Validators.required)
               });
   }

@@ -1,3 +1,8 @@
+.container {
+  margin-top: 50px;
+  padding: 10px;
+}
+
 .profile-image-post {
   float: left;
 }
@@ -16,9 +21,21 @@
   margin: 0;
 }
 
-.story {
+.attributes {
   clear: left;
   padding-top: 10px;
+  font-size: 90%;
+}
+
+.attribute-label {
+  font-weight: bold;
+}
+
+.story-heading {
+  padding-top: 15px;
+}
+
+.story {
   white-space: pre-line; // Convert JSON escaped \n back to new lines for display'
 }
 

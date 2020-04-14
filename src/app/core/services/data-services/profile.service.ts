@@ -153,11 +153,12 @@ export class ProfileService {
     }
   }
 
-  getMyStory(userID: string): Observable<any> {
+  // Get profile for a user based on user ID
+  getUserProfile(userID: string): Observable<any> {
     let param = JSON.parse('{"userID":"' + userID + '"}');
     console.log('ProfileService:getMyStory: params=', param);
 
-    return this.http.get(`/api/profile-my-story`, { params: param });
+    return this.http.get(`/api/profile-user`, { params: param });
   }
 
   addProfile(userProfile: IuserProfile): Observable<any> {

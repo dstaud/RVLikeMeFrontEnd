@@ -227,7 +227,6 @@ export class PersonalComponent implements OnInit {
     }
 
     this.userProfile = this.profileSvc.profile;
-
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
@@ -261,16 +260,11 @@ export class PersonalComponent implements OnInit {
   ngOnDestroy() {};
 
 
-  // Help pop-up text
-  formFieldHelp(controlDesc: string) {
-    this.helpMsg = this.translate.instant(controlDesc);
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
-
   // Give user more space to enter their story
   onMyStory() {
     this.openMyStoryDialog(this.profile.myStory);
   }
+
 
   // Compress Image and offer up for user to crop
   onProfileImageSelected(event: any) {
@@ -281,6 +275,7 @@ export class PersonalComponent implements OnInit {
       });
     });
   }
+
 
   // Present image for user to crop
   openImageCropperDialog(imageSource: string): void {
@@ -304,7 +299,7 @@ export class PersonalComponent implements OnInit {
             this.profileImageUrl = this.profile.profileImageUrl;
             this.profileImageLabel = 'personal.component.changeProfilePic'
             this.showSpinner = false;
-            this.profileSvc.distributeProfileUpdate(this.profile);
+            this.profileSvc.distributeProfileUpdate(this.profile); //TODO: it seems that this is causing jump to profile page?
           })
         } else {
           this.showSpinner = false;
@@ -359,7 +354,6 @@ export class PersonalComponent implements OnInit {
     this.updatePersonal(control);
   }
 
-
   updateSelectItem(control: string, event) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
@@ -371,7 +365,6 @@ export class PersonalComponent implements OnInit {
     }
     this.updatePersonal(control);
   }
-
 
   updatePersonal(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';

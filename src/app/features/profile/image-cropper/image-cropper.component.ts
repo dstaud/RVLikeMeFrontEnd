@@ -33,6 +33,7 @@ export class ImageCropperComponent implements OnInit {
   ngOnInit() {
   }
 
+  // TODO: how hide destination until have original loaded
   ngAfterViewInit() {
     this.cropper = new Cropper(this.imageElement.nativeElement, {
       zoomable: false,

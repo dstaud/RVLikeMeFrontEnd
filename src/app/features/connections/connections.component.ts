@@ -127,6 +127,7 @@ export class ConnectionsComponent implements OnInit {
     });
 
     // Get all of the rest of the counts not obtained by app-component.
+    // TODO: figure out how to deactivate the checkboxes until secondary is complete
     this.likeMeCountsSvc.getLikeMeCountsSecondary();
 
     // Get object containing counts of all other users that match this user's profile items
@@ -194,7 +195,7 @@ export class ConnectionsComponent implements OnInit {
         } else {
           if (!isNumber(this.profile[this.profileKeys[i]])) {
             if (this.profileKeys[i] !== 'allCounts') {
-              console.log('ConnectionsComponent:ngOnInit: will substring blow?=',this.profile[this.profileKeys[i]])
+              console.log('ConnectionsComponent:ngOnInit: will substring blow?=',this.profileKeys[i], this.profileValues[i], this.profile[this.profileKeys[i]])
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
                 if (this.profileValues[i] === 1) {
                   this.likeMeDesc = this.translate.instant(
