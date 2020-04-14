@@ -35,18 +35,14 @@ export class UserQueryComponent implements OnInit {
   showQueryCancel = false;
   showNoConnections = false;
   queryMatches = false;
-  queryResultMessage: string;
   queryResultMessagePrefix: string;
-  results = [];
+  matchResults = [];
   theme: string;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
-  private queryResult: number;
   private backPath: string;
-  private likeMeAnswer: string;
-  private likeMeDesc: string;
-  private queryParam: string;
+  // private queryParam: string;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -77,53 +73,10 @@ export class UserQueryComponent implements OnInit {
 
     this.showSpinner = true;
 
-    this.queryResult = 0;
-    this.queryResultMessage = '';
+    // Look for matches with user-selected query parameters
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
-    .subscribe(data => {
-      this.queryResult = data;
-      if (this.queryResult === 0) {
-        this.queryResultMessagePrefix = this.translate.instant(
-          'connections.component.resultPrefix0') + ':';
-        this.queryMatches = false;
-        this.disableSingleMatchForumOffer = true;
-      } else {
-        this.queryMatches = true;
-        this.disableSingleMatchForumOffer = false;
-        if (this.queryResult === 1) {
-        this.queryResultMessagePrefix = this.queryResult + ' ' + this.translate.instant(
-          'connections.component.resultPrefix1') + ':';
-        } else {
-          this.queryResultMessagePrefix = this.queryResult + ' ' + this.translate.instant(
-          'connections.component.resultPrefix2') + ':';
-        }
-      }
-      this.queryParam = '{';
-      for (let i=0; i < this.matches.length; i++) {
-        // get original answers for those checked
-        if (this.matches[i].value === 'true') {
-          this.likeMeAnswer = this.translate.instant(
-            'interests.component.' + this.matches[i].name
-          );
-        } else {
-            this.likeMeDesc = this.translate.instant(
-              'connections.component.' + this.matches[i].name
-            );
-            if (this.matches[i].name === 'yearOfBirth') {
-              this.likeMeAnswer = this.translate.instant(
-                'profile.component.' + this.matches[i].name
-                );
-            } else {
-              this.likeMeAnswer = this.translate.instant(
-                'profile.component.list.' + this.matches[i].name.toLowerCase() + '.' + this.matches[i].value.toLowerCase()
-                );
-            }
-        }
-        this.results.push(this.likeMeAnswer);
-        this.queryParam = this.queryParam + '"' + this.matches[i].name + '":"' + this.matches[i].value + '",';
-      }
-      this.queryParam = this.queryParam + '"theme":"' + this.theme + '"}';
-      this.showSpinner = false;
+    .subscribe(matchResults => {
+      this.matchQueryParams(matchResults);
     }, error => {
       console.log('UserQueryComponent:ngOnInit: throw error ', error);
       throw new Error(error);
@@ -146,14 +99,64 @@ export class UserQueryComponent implements OnInit {
 
   ngOnDestroy() {}
 
+
+  private matchQueryParams(matchResults) {
+    let likeMeAnswer: string;
+
+    if (matchResults === 0) {
+      this.queryResultMessagePrefix = this.translate.instant(
+                                      'connections.component.resultPrefix0') + ':';
+      this.queryMatches = false;
+      this.disableSingleMatchForumOffer = true;
+    } else {
+      this.queryMatches = true;
+      this.disableSingleMatchForumOffer = false;
+      if (matchResults === 1) {
+      this.queryResultMessagePrefix = matchResults + ' ' + this.translate.instant(
+                                              'connections.component.resultPrefix1') + ':';
+      } else {
+        this.queryResultMessagePrefix = matchResults + ' ' + this.translate.instant(
+                                              'connections.component.resultPrefix2') + ':';
+      }
+    }
+
+    // determine appropriate group attribute names for display and store in array
+    // this.queryParam = '{';
+    for (let i=0; i < this.matches.length; i++) {
+
+      // get original answers for those checked
+      if (this.matches[i].value === 'true') {
+        likeMeAnswer = this.translate.instant(
+                            'interests.component.' + this.matches[i].name
+        );
+      } else {
+/*           likeMeDesc = this.translate.instant( // What is this?  I think not needed
+                            'connections.component.' + this.matches[i].name
+          ); */
+          if (this.matches[i].name === 'yearOfBirth') {
+            likeMeAnswer = this.translate.instant(
+                                'profile.component.' + this.matches[i].name
+              );
+          } else {
+            likeMeAnswer = this.translate.instant(
+                                'profile.component.list.' + this.matches[i].name.toLowerCase() +
+                                '.' + this.matches[i].value.toLowerCase()
+              );
+          }
+      }
+      this.matchResults.push(likeMeAnswer);
+      // this.queryParam = this.queryParam + '"' + this.matches[i].name + '":"' + this.matches[i].value + '",';
+    }
+    // this.queryParam = this.queryParam + '"theme":"' + this.theme + '"}';
+    this.showSpinner = false;
+  }
   onCancel() {
     this.onCancelQuery.emit();
   }
 
   onForum() {
-    let name;
-    let value;
-    let i: number = 0;
+    let name: string;
+    let value: any;
 
     let queryParams = '{';
     name = this.matches[0].name;

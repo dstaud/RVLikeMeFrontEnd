@@ -43,11 +43,11 @@
 }
 
 .message-left-light {
-  background-color:#e0e0e0;
+  background-color: $light-mode-message-other;
 }
 
 .message-left-dark {
-  background-color: #616161;
+  background-color: $dark-mode-message-other;
 }
 
 .message-right {
@@ -61,11 +61,11 @@
 }
 
 .message-right-light {
-  background-color: #80deea;
+  background-color: $light-mode-message-me;
 }
 
 .message-right-dark {
-  background-color: #006064;
+  background-color: $dark-mode-message-me;
 }
 
 .message-text {

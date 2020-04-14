@@ -40,7 +40,6 @@ export class ForumsComponent implements OnInit {
   showMoreOption = false;
 
   private backPath = '';
-  private routeSubscription: any;
   private navSubscription: any;
 
 
@@ -67,17 +66,20 @@ export class ForumsComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.navSubscription = this.router.events
+    // supposed to auto-scroll to top but doesn't seem to work
+/*     this.navSubscription = this.router.events
     .pipe(
       filter(event => event instanceof NavigationEnd)
     )
-    .subscribe(() => window.scrollTo(0,0));
+    .subscribe(() => window.scrollTo(0,0)); */
 
     // Listen for changes in color theme;
     this.themeSvc.defaultGlobalColorTheme
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
+    }, error => {
+      console.error(error);
     });
 
     // Listen for Profile changes
@@ -89,25 +91,15 @@ export class ForumsComponent implements OnInit {
       if (this.profile._id) {
         this.groupsListFromUserProfile = this.profile.forums;
       }
-    }, (error) => {
+    }, error => {
       console.error(error);
     });
 
-    // Get parameters
-/*     this.routeSubscription = this.route
-    .queryParams
-    .subscribe(params => {
-      this.showSpinner = true;
-      let queryParams = JSON.parse(params.queryParam);
-      this.theme = queryParams.theme;
-      this.getGroup();
-    }); */
     this.getGroup();
   }
 
   ngOnDestroy() {
     this.navSubscription.unsubscribe();
-    // this.routeSubscription.unsubscribe();
   }
 
 
@@ -115,30 +107,46 @@ export class ForumsComponent implements OnInit {
     console.log('search');
   }
 
+
+  // Create new group forum based on user's attribute match selections
+  private createGroupForum(names: string, values: string): void {
+    this.forumSvc.addGroup(names, values)
+    .subscribe(group => {
+      this.groupID = group._id;
+      this.updateProfileGroups();
+      this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+    }, error => {
+      this.showSpinner = false;
+      console.log('ForumsComponentcreateGroupForum: throw error ', error);
+      throw new Error(error);
+    });
+  }
+
+
   // If coming from groups list, we know the user already has this group in their profile and we have the group ID
-  // so get group information by key. Otherwise, queryParams sent from connections page may contain one or more profile attributes that will define a group forum.
+  // so get group information by key. Otherwise, queryParams sent from connections page will contain one or more profile attributes that will define a group forum.
   // getGroup extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
   // If the group does exist, it asks the server for all posts for the group forum for display in the template.
   // If the group does not exist, it asks the server to create the group forum.
   private getGroup(): void {
     let docNotAMatch = false;
     let matchFound = false;
-    let keyValue;
-    let names;
-    let values;
-    let data: any;
+    let keyValue: Array<string>;
+    let names: string;
+    let values: string;
+    let paramData: any;
 
     if (!this.shareDataSvc.getData()) {
       console.log('ForumsComponent:getGroup: no parameters');
       this.router.navigateByUrl('/forums-list');
     } else {
-      data = JSON.parse(this.shareDataSvc.getData());
+      paramData = JSON.parse(this.shareDataSvc.getData());
 
       this.showSpinner = true;
 
-      if (data._id) {
-        this.groupID = data._id;
-        this.forumSvc.getGroupByID(data._id)
+      if (paramData._id) {
+        this.groupID = paramData._id;
+        this.forumSvc.getGroupByID(paramData._id)
         .subscribe(groupFromServer => {
           this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
           this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
@@ -155,8 +163,8 @@ export class ForumsComponent implements OnInit {
 
         });
       } else {
-        this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(data);
-        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(data);
+        this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
+        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
 
         // If there are more than 3 attributes, show only three with ...more on the template.
         if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -165,7 +173,7 @@ export class ForumsComponent implements OnInit {
           this.showMoreOption = false;
         }
 
-        keyValue = this.getGroupKeyValueAttributes(data).split('~');
+        keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
         names = keyValue[0];
         values = keyValue[1];
 
@@ -223,9 +231,22 @@ export class ForumsComponent implements OnInit {
         });
       }
     }
-
-
   }
+
+
+  // Extract profile attribute codes from groups and push to an array
+  private getGroupCodeAttributes(group: any): Array<string> {
+    let name;
+    let groupProfileCodeAttributesFromGroup = [];
+
+    for (name in group) {
+      if (!this.reservedField(name)) {
+        groupProfileCodeAttributesFromGroup.push(name);
+      }
+    }
+    return groupProfileCodeAttributesFromGroup;
+  }
+
 
   // Translate group codes to text that a user will understand for display in the template
   private getGroupDisplayAttributes(group: any): Array<string> {
@@ -252,18 +273,6 @@ export class ForumsComponent implements OnInit {
     return groupProfileDisplayAttributesFromGroup;
   }
 
-  // Extract profile attribute codes from groups and push to an array
-  private getGroupCodeAttributes(group: any): Array<string> {
-    let name;
-    let groupProfileCodeAttributesFromGroup = [];
-
-    for (name in group) {
-      if (!this.reservedField(name)) {
-        groupProfileCodeAttributesFromGroup.push(name);
-      }
-    }
-    return groupProfileCodeAttributesFromGroup;
-  }
 
   // extract key/value pairs of profile attributes with user values from groups
   private getGroupKeyValueAttributes(group: any): string {
@@ -288,20 +297,6 @@ export class ForumsComponent implements OnInit {
     return names + '~' + values;
   }
 
-
-  // Create new group forum based on user's attribute match selections
-  private createGroupForum(names: string, values: string): void {
-    this.forumSvc.addGroup(names, values)
-    .subscribe(group => {
-      this.groupID = group._id;
-      this.updateProfileGroups();
-      this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-    }, error => {
-      this.showSpinner = false;
-      console.log('ForumsComponentcreateGroupForum: throw error ', error);
-      throw new Error(error);
-    });
-  }
 
   // Update group forum array in user's profile with new group they are associated with.
   private updateProfileGroups() {

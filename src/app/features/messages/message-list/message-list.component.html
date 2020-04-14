@@ -11,7 +11,6 @@
       </span>
     </div>
     <div *ngFor="let conversation of conversations; let i = index">
-      <!-- with={{conversation.withUserID}} user={{userID}} -->
       <div [hidden]="conversation.withUserID === userID"
             (click)="onSelectSendTo(i)"
             class="conversation">
@@ -32,7 +31,6 @@
           </div>
         </div>
       </div>
-      <!-- createdBy={{conversation.createdBy}}  user={{userID}} -->
       <div [hidden]="conversation.createdBy === userID"
             (click)="onSelectSendTo(i)"
             class="conversation">

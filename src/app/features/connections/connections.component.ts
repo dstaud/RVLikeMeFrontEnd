@@ -95,8 +95,9 @@ export class ConnectionsComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
       console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    }, error => {
+      console.error(error);
     });
-
 
     // Get user's profile
     this.userProfile = this.profileSvc.profile;
@@ -105,6 +106,8 @@ export class ConnectionsComponent implements OnInit {
     .subscribe(data => {
       console.log('ConnectionsComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
+    }, error => {
+      console.error(error);
     });
 
     // If coming from a link on the home page, will have a param which will be one of the checkbox
@@ -119,6 +122,8 @@ export class ConnectionsComponent implements OnInit {
         this.checkArray = this.form.get('likeMe') as FormArray;
         this.checkArray.push(new FormControl(this.param));
       }
+    }, error => {
+      console.error(error);
     });
 
     // Get all of the rest of the counts not obtained by app-component.
@@ -127,93 +132,9 @@ export class ConnectionsComponent implements OnInit {
     // Get object containing counts of all other users that match this user's profile items
     this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
     this.likeMeCounts
-/*     .pipe(finalize(() => {
-      this.showSpinner = false;
-    })) */
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
-      console.log('ConnectionsComponent:ngOnInit: got new counts=', counts);
-
-      this.allUsersCount = counts.allUsersCount;
-      if (counts.allCounts) {
-        this.allCountsReceived = true;
-      }
-      this.likeMeMatches = [];
-
-      // Get the key/value pairs of returned matches/counts into arrays
-      this.profileKeys = Object.keys(counts);
-      this.profileValues = Object.values(counts);
-
-      // Go through the key array.  For each key, get associated value.
-      // If the value is null or false, skip it.  This means there were no matches
-      // for that item with other users at this time.
-      // If have a match, create a new array of nicely worded results that can be displayed
-      // with checkboxes on the template.
-      for (let i = 1; i < this.profileKeys.length; i++ ) {
-        if (this.profileValues[i]) {
-          if (this.profile[this.profileKeys[i]] === true) {
-            this.foundMatch = true;
-            this.likeMeAnswer = this.translate.instant(
-              'interests.component.' + this.profileKeys[i]
-            );
-            if (this.profileValues[i] === 1) {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.interest1'
-              );
-            } else {
-              this.likeMeDesc = this.translate.instant(
-                'connections.component.interest'
-              );
-            }
-            this.processMatch(this.profileKeys[i], this.profileValues[i]);
-          } else {
-            if (!isNumber(this.profile[this.profileKeys[i]])) {
-              if (this.profileKeys[i] !== 'allCounts') {
-                if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
-                  if (this.profileValues[i] === 1) {
-                    this.likeMeDesc = this.translate.instant(
-                      'connections.component.' + this.profileKeys[i] + '1'
-                      );
-                  } else {
-                    this.likeMeDesc = this.translate.instant(
-                      'connections.component.' + this.profileKeys[i]
-                      );
-                  }
-                  this.likeMeAnswer = this.translate.instant(
-                    'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
-                    );
-                    this.processMatch(this.profileKeys[i], this.profileValues[i]);
-                }
-              }
-            } else {
-              if (this.profileValues[i] === 1) {
-                this.likeMeDesc = this.translate.instant(
-                  'connections.component.' + this.profileKeys[i] + '1'
-                  );
-              } else {
-                this.likeMeDesc = this.translate.instant(
-                  'connections.component.' + this.profileKeys[i]
-                  );
-              }
-              this.likeMeAnswer = this.translate.instant(
-                'profile.component.' + this.profileKeys[i]
-                );
-                this.processMatch(this.profileKeys[i], this.profileValues[i]);
-            }
-          }
-        }
-      }
-      // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
-      // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
-      console.log('allCounts=', counts.allCounts)
-      if (this.allUsersCount > 0 && this.allCountsReceived) {
-        console.log('ConnectionsComponent:ngOnInit: got real counts.  allUsersCount=', this.allUsersCount, this.allCountsReceived);
-        this.form.get('likeMe').disable({onlySelf: true});
-        this.showSpinner = false;
-        if (!this.foundMatch) {
-          this.showNoConnections = true;
-        }
-      }
+      this.displayMatches(counts);
     }, (error) => {
       this.showSpinner = false;
       console.error(error);
@@ -232,6 +153,93 @@ export class ConnectionsComponent implements OnInit {
       this.checkArray.removeAt(i);
     }
     this.showQueryResults = false;
+  }
+
+
+  // Display matches
+  private displayMatches(counts) {
+    this.allUsersCount = counts.allUsersCount;
+
+    if (counts.allCounts) {
+      this.allCountsReceived = true;
+    }
+    this.likeMeMatches = [];
+
+    // Get the key/value pairs of returned matches/counts into arrays
+    this.profileKeys = Object.keys(counts);
+    this.profileValues = Object.values(counts);
+
+    // Go through the key array.  For each key, get associated value.
+    // If the value is null or false, skip it.  This means there were no matches
+    // for that item with other users at this time.
+    // If have a match, create a new array of nicely worded results that can be displayed
+    // with checkboxes on the template.
+    for (let i = 1; i < this.profileKeys.length; i++ ) {
+      if (this.profileValues[i]) {
+        if (this.profile[this.profileKeys[i]] === true) {
+          this.foundMatch = true;
+          this.likeMeAnswer = this.translate.instant(
+            'interests.component.' + this.profileKeys[i]
+          );
+          if (this.profileValues[i] === 1) {
+            this.likeMeDesc = this.translate.instant(
+              'connections.component.interest1'
+            );
+          } else {
+            this.likeMeDesc = this.translate.instant(
+              'connections.component.interest'
+            );
+          }
+          this.processMatch(this.profileKeys[i], this.profileValues[i]);
+        } else {
+          if (!isNumber(this.profile[this.profileKeys[i]])) {
+            if (this.profileKeys[i] !== 'allCounts') {
+              console.log('ConnectionsComponent:ngOnInit: will substring blow?=',this.profile[this.profileKeys[i]])
+              if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
+                if (this.profileValues[i] === 1) {
+                  this.likeMeDesc = this.translate.instant(
+                    'connections.component.' + this.profileKeys[i] + '1'
+                    );
+                } else {
+                  this.likeMeDesc = this.translate.instant(
+                    'connections.component.' + this.profileKeys[i]
+                    );
+                }
+                this.likeMeAnswer = this.translate.instant(
+                  'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
+                  );
+                  this.processMatch(this.profileKeys[i], this.profileValues[i]);
+              }
+            }
+          } else {
+            if (this.profileValues[i] === 1) {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.' + this.profileKeys[i] + '1'
+                );
+            } else {
+              this.likeMeDesc = this.translate.instant(
+                'connections.component.' + this.profileKeys[i]
+                );
+            }
+            this.likeMeAnswer = this.translate.instant(
+              'profile.component.' + this.profileKeys[i]
+              );
+              this.processMatch(this.profileKeys[i], this.profileValues[i]);
+          }
+        }
+      }
+    }
+
+    // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
+    // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
+    console.log('allCounts=', counts.allCounts)
+    if (this.allUsersCount > 0 && this.allCountsReceived) {
+      this.form.get('likeMe').disable({onlySelf: true});
+      this.showSpinner = false;
+      if (!this.foundMatch) {
+        this.showNoConnections = true;
+      }
+    }
   }
 
 
@@ -269,6 +277,7 @@ export class ConnectionsComponent implements OnInit {
     }
   }
 
+
   // If user clicks button to go to forum, collect data needed by forum about the matches and send as params
   onForum() {
     let name;
@@ -284,11 +293,11 @@ export class ConnectionsComponent implements OnInit {
       i++;
     });
     this.queryParams = this.queryParams + '"theme":"' + this.theme + '"}'
-    console.log('ConnectionsComponent:onForum: navigate to forums with ', this.queryParams)
 
     this.shareDataSvc.setData(this.queryParams);
     this.router.navigateByUrl('/forums');
   }
+
 
   // If user wants to query on more than one match point then set up an array of data from
   // user selection and switch to child query component by setting showQueryResults = true.
@@ -307,9 +316,9 @@ export class ConnectionsComponent implements OnInit {
       this.matches.push(this.likeMeItem);
       i++;
     });
-    console.log('ConnectionsComponent:onQuery: matches=', this.matches);
     this.showQueryResults = true;
   }
+
 
   // If there is a checkbox checked, allow user to go to forums
   onQueryCheckboxChange(event) {

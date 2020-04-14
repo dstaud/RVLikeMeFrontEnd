@@ -29,14 +29,12 @@ export class SendMessageComponent implements OnInit {
   messages: Array<Imessage> = [];
   conversation: Iconversation;
   theme: string;
+  showSpinner: boolean = false;
 
   private conversationID: string;
   private originalMsgCount: number = 0;
   private newConversation: boolean = false;
   private userConversations: Observable<Iconversation[]>;
-
-
-  showSpinner: boolean = false;
 
   constructor(private shareDataSvc: ShareDataService,
               private messagesSvc: MessagesService,
@@ -50,8 +48,8 @@ export class SendMessageComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    let data: any;
-    const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg';
+    let paramData: any;
+    const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
 
     // Listen for changes in color theme;
     this.themeSvc.defaultGlobalColorTheme
@@ -60,75 +58,30 @@ export class SendMessageComponent implements OnInit {
       this.theme = themeData.valueOf();
     });
 
-    // This component expects data passed through a shared data service.  If no data, then redirect to message-list component.
+    // This component expects data passed through a shared data service.  If no data (because user bookmarked this page perhaps), then redirect to message-list component.
     if (!this.shareDataSvc.getData()) {
-      console.log('SendMessageComponent:getMessages: no parameters');
       this.router.navigateByUrl('/messages/message-list');
     } else {
-      data = JSON.parse(this.shareDataSvc.getData());
-      console.log('sendMessageComponent:getMessages: data=', data);
-      this.fromUserID = data.fromUserID;
-      this.fromDisplayName = data.fromDisplayName;
-      if (!data.fromProfileImageUrl || data.fromProfileImageUrl === 'null') {
+      paramData = JSON.parse(this.shareDataSvc.getData());
+      this.fromUserID = paramData.fromUserID;
+      this.fromDisplayName = paramData.fromDisplayName;
+      if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {
         this.fromProfileImageUrl = profileImageUrl;
       } else {
-        this.fromProfileImageUrl = data.fromProfileImageUrl;
+        this.fromProfileImageUrl = paramData.fromProfileImageUrl;
       }
-      this.toUserID = data.toUserID;
-      this.toDisplayName = data.toDisplayName;
-      if (!data.toProfileImageUrl || data.toProfileImageUrl === 'null') {
+      this.toUserID = paramData.toUserID;
+      this.toDisplayName = paramData.toDisplayName;
+      if (!paramData.toProfileImageUrl || paramData.toProfileImageUrl === 'null') {
         this.toProfileImageUrl = profileImageUrl;
       } else {
-        this.toProfileImageUrl = data.toProfileImageUrl;
+        this.toProfileImageUrl = paramData.toProfileImageUrl;
       }
-      console.log('sendMessageComponent:getMessages: fromUserID=', this.fromUserID);
-      console.log('sendMessageComponent:getMessages: fromdisplayName=', this.fromDisplayName);
-      console.log('sendMessageComponent:getMessages: fromProfileImageUrl=', this.fromProfileImageUrl);
-      console.log('sendMessageComponent:getMessages: toUserID=', this.toUserID);
-      console.log('sendMessageComponent:getMessages: toDisplayName=', this.toDisplayName);
-      console.log('sendMessageComponent:getMessages: toProfileImageUrl=', this.toProfileImageUrl);
+      if (paramData.conversationID && paramData.conversationID !== 'null') {
+        this.conversationID = paramData.conversationID;
+      }
 
-      this.userConversations = this.messagesSvc.conversation$;
-      this.userConversations
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(conversations => {
-        console.log('MessageListComponent:ngOnInit: got new conversations', conversations);
-        if (conversations.length === 1 && conversations[0]._id === null) {
-          console.log('MessageListComponent:ngOnInit: default conversation ', conversations);
-        } else if (conversations.length === 0) {
-          this.conversation = null;
-          this.conversationID = null;
-          this.messages = [];
-          this.newConversation = true;
-          console.log('SendMessageComponent:getMessages newConversation=', this.newConversation);
-        } else {
-          console.log('MessageListComponent:ngOnInit: have a real conversation=', conversations);
-          this.conversation = conversations[0];
-          this.conversationID = this.conversation._id;
-          this.newConversation = false;
-          console.log('sendMessageComponent:getMessages: conversation=', this.conversation), this.newConversation;
-          this.messages = conversations[0].messages;
-          console.log('sendMessageComponent:getMessages: messages=', this.messages);
-
-          if (conversations[0].createdBy === this.fromUserID) {
-            console.log('sendMessageComponent:getMessages: original createdBy unread count=', this.originalMsgCount);
-            this.originalMsgCount = conversations[0].createdByUnreadMessages;
-            console.log('sendMessageComponent:getMessages: original createdBy new unread count=', this.originalMsgCount);
-          } else {
-            console.log('sendMessageComponent:getMessages: original withUser unread count=', this.originalMsgCount);
-            this.originalMsgCount = conversations[0].withUserUnreadMessages;
-            console.log('sendMessageComponent:getMessages: original withUser new unread count=', this.originalMsgCount);
-          }
-          if (this.originalMsgCount > 0) {
-            console.log('sendMessageComponent:getMessages: count > 0 updating conversation and count. was=', this.originalMsgCount);
-            this.updateConversation('read');
-            this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
-            this.originalMsgCount = 0;
-            console.log('sendMessageComponent:getMessages: after update count=', this.originalMsgCount);
-          }
-        }
-        this.showSpinner = false;
-      });
+      this.getMessages();
     }
   }
 
@@ -136,6 +89,7 @@ export class SendMessageComponent implements OnInit {
   ngOnDestroy() { }
 
 
+  // Update conversation in database with new message
   onSubmit() {
     const message = this.form.controls.message.value;
     console.log('SendMessageComponent:onSubmit: message=', message);
@@ -167,11 +121,71 @@ export class SendMessageComponent implements OnInit {
   }
 
 
+  // Use converation ID or from/to users to select the appropriate conversation
+  private findConversation(conversations: Iconversation[], fromUserID: string, toUserID: string, conversationID?: string): number {
+    let index: number;
+
+    for (let i=0; i < conversations.length; i++) {
+      if (conversationID) {
+        if (conversations[i]._id === conversationID) {
+          index = i;
+          break;
+        }
+      } else {
+        if ((conversations[i].createdBy === fromUserID || conversations[i].createdBy === toUserID) &&
+            (conversations[i].withUserID === fromUserID || conversations[i].withUserID === toUserID)) {
+          index = i;
+          break;
+        }
+      }
+    }
+    return index;
+  }
+
+
+  // Get previous messages in this conversation for display
+  private getMessages() {
+    this.userConversations = this.messagesSvc.conversation$;
+    this.userConversations
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(conversations => {
+      if (conversations.length === 1 && conversations[0]._id === null) {
+        console.log('MessageListComponent:ngOnInit: default conversation ', conversations);
+      } else if (conversations.length === 0) {
+        this.newConversation = true;
+        this.conversation = null;
+        this.conversationID = null;
+        this.messages = [];
+      } else {
+        let conversationIndex = this.findConversation(conversations, this.fromUserID, this.toUserID, this.conversationID);
+        this.conversation = conversations[conversationIndex];
+        this.conversationID = this.conversation._id;
+        this.newConversation = false;
+        this.messages = conversations[conversationIndex].messages;
+
+        if (conversations[conversationIndex].createdBy === this.fromUserID) {
+          this.originalMsgCount = conversations[conversationIndex].createdByUnreadMessages;
+        } else {
+          this.originalMsgCount = conversations[conversationIndex].withUserUnreadMessages;
+        }
+        if (this.originalMsgCount > 0) {
+          this.updateConversation('read');
+          this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
+          this.originalMsgCount = 0;
+        }
+      }
+      this.showSpinner = false;
+    });
+  }
+
+
+  // Update count of unread messages in conversation in database
+  // If user viewed unread messages, set to zero
+  // If user sent a new message, add to the count for the person sent to.
   private updateConversation(action: string) {
     let userIdType: string;
     let messageCount: number;
 
-    console.log('SendMessageComponent:updateConversationAsRead: id=', this.conversationID);
     if (this.conversation.createdBy === this.fromUserID) {
       userIdType = 'createdBy';
     } else {
@@ -181,7 +195,6 @@ export class SendMessageComponent implements OnInit {
     this.messagesSvc.updateConversation(this.conversationID, userIdType, action)
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
-      console.log('SendMessageComponent:processUnreadMessages: marked as read, result=', conversationResult);
       this.messagesSvc.getConversations(); // Get updated conversation into behaviorSubject
     }, error => {
       console.log('SendMessageComponent:updateConversation: throw error ', error);

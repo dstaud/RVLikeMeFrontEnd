@@ -74,6 +74,7 @@ export class MessageListComponent implements OnInit {
     this.router.navigateByUrl('forums');
   }
 
+  // When user clicks on a conversation, extract the information needed on the SendMessageComponent, save save it for that component and navigate
   onSelectSendTo(row: number) {
     let params: any;
     let fromUserID: string;
@@ -82,6 +83,7 @@ export class MessageListComponent implements OnInit {
     let toUserID: string;
     let toDisplayName: string;
     let toProfileImageUrl: string;
+    let conversationID: string;
 
     if (this.conversations[row].createdBy === this.userID) {
       fromUserID = this.conversations[row].createdBy;
@@ -98,12 +100,15 @@ export class MessageListComponent implements OnInit {
       toDisplayName = this.conversations[row].createdByDisplayName;
       toProfileImageUrl = this.conversations[row].createdByProfileImageUrl;
     }
+    conversationID = this.conversations[row]._id;
+
     params = '{"fromUserID":"' + fromUserID + '",' +
             '"fromDisplayName":"' +fromDisplayName + '",' +
             '"fromProfileImageUrl":"' + fromProfileImageUrl + '",' +
             '"toUserID":"' + toUserID + '",' +
             '"toDisplayName":"' + toDisplayName + '",' +
-            '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
+            '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
+            '"conversationID":"' + conversationID + '"}';
 
     console.log('MessageListComponent:navigateToMessages: params=', params);
 
