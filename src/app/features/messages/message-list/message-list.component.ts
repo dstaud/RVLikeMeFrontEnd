@@ -8,6 +8,8 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { ShareDataService } from '@services/share-data.service';
 
+// TODO: Add language translation to this component/HTML
+
 @Component({
   selector: 'app-message-list',
   templateUrl: './message-list.component.html',
@@ -112,7 +114,7 @@ export class MessageListComponent implements OnInit {
 
     console.log('MessageListComponent:navigateToMessages: params=', params);
 
-    this.shareDataSvc.setData(params);
+    this.shareDataSvc.setData(JSON.parse(params));
     this.router.navigateByUrl('/messages/send-message');
   }
 }

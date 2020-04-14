@@ -42,7 +42,7 @@ export class YourStoryComponent implements OnInit {
       this.userIdViewer = paramData.userIdViewer;
       this.paramsForMessaging = paramData.params;
 
-      console.log('YourStoryComponent:ngOnInit: params', paramData);
+      console.log('YourStoryComponent:ngOnInit: params', this.paramsForMessaging);
       this.profileSvc.getUserProfile(this.userID)
       .subscribe(profileResult => {
         console.log('YourStoryComponent:ngOnInit: profile=', profileResult);
@@ -54,9 +54,9 @@ export class YourStoryComponent implements OnInit {
     }
   }
 
-
+  // TODO: maintain data if user goes back to this component from Send Messages
   onMessage() {
-    this.activateBackArrowSvc.setBackRoute('forums-list');
+    this.activateBackArrowSvc.setBackRoute('mystory');
     console.log('YourStoryComponent:onMessage: params for messaging=', this.paramsForMessaging);
     this.shareDataSvc.setData(this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');

@@ -17,6 +17,8 @@ import { ThemeService } from '@services/theme.service';
 })
 export class SendMessageComponent implements OnInit {
 
+  // TODO: Add language translation to this component/HTML
+
   @ViewChild(FormGroupDirective) myForm;
 
   form: FormGroup;
@@ -62,7 +64,7 @@ export class SendMessageComponent implements OnInit {
     if (!this.shareDataSvc.getData()) {
       this.router.navigateByUrl('/messages/message-list');
     } else {
-      paramData = JSON.parse(this.shareDataSvc.getData());
+      paramData = this.shareDataSvc.getData();
       console.log('SendMessageComponent:ngOnInit: params=', paramData);
       this.fromUserID = paramData.fromUserID;
       this.fromDisplayName = paramData.fromDisplayName;

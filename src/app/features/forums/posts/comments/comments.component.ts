@@ -63,21 +63,6 @@ export class CommentsComponent implements OnInit {
     this.showAllComments.emit();
   }
 
-  private navigateToMessages(toUserID: string, toDisplayName: string, toProfileImageUrl: string): void {
-    let params: string;
-    console.log('CommentsComponent:navigateToMessages: displayName=', this.displayName);
-    params = '{"fromUserID":"' + this.userID + '",' +
-              '"fromDisplayName":"' + this.displayName + '",' +
-              '"fromProfileImageUrl":"' + this.profileImageUrl + '",' +
-              '"toUserID":"' + toUserID + '",' +
-              '"toDisplayName":"' + toDisplayName + '",' +
-              '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
-
-    console.log('CommentsComponent:navigateToMessages: params=', params);
-
-    this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/messages/send-message');
-  }
 
   private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): string {
     let params: string;
