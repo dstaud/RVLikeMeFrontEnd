@@ -6,10 +6,19 @@ import { map } from 'rxjs/operators';
 
 import { ProfileService } from '@services/data-services/profile.service';
 
-import { ItokenPayload } from '@interfaces/tokenPayload';
-import { ItokenResponse } from '@interfaces/tokenResponse';
-
 import { SentryMonitorService } from './../sentry-monitor.service';
+
+export interface ItokenPayload {
+  _id: string;
+  email: string;
+  password: string;
+  firstName?: string;
+  tokenExpire: number;
+}
+
+export interface ItokenResponse {
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root'

@@ -3,11 +3,6 @@
     <div class="group-heading" [ngClass]="theme === 'dark-theme' ? 'group-heading-dark' : 'group-heading-light'">
       <span>{{ 'forums.component.heading' | translate}}:</span>
       <div class="options">
-<!--         <mat-icon class="options-icons hyperlink"
-                  fontSet="material-icons-outlined"
-                  (click)="showTitlesOnly = !showTitlesOnly">
-                  subject
-        </mat-icon> -->
         <mat-icon class="options-icons hyperlink"
                   fontSet="material-icons-outlined"
                   (click)="onSearch()">

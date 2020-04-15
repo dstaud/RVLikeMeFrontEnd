@@ -15,6 +15,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
+// TODO: Image upload for posts and comments
 
 export type FadeState = 'visible' | 'hidden';
 @Component({

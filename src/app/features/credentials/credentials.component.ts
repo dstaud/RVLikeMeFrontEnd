@@ -7,7 +7,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 
-import { ItokenPayload } from '@interfaces/tokenPayload';
+import { ItokenPayload } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
 
 @Component({

@@ -176,7 +176,7 @@ export class ConnectionsComponent implements OnInit {
     // If have a match, create a new array of nicely worded results that can be displayed
     // with checkboxes on the template.
     for (let i = 1; i < this.profileKeys.length; i++ ) {
-      if (this.profileValues[i]) {
+      if (this.profileValues[i] && this.profileValues[i] !== null && this.profileValues[i] !== 'null') {
         if (this.profile[this.profileKeys[i]] === true) {
           this.foundMatch = true;
           this.likeMeAnswer = this.translate.instant(

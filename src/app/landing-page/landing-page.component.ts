@@ -11,6 +11,9 @@ import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.c
 
 // import { timingSafeEqual } from 'crypto';
 
+// TODO: more interesting thigns on landing page
+// TODO: newbie corner to help newbies
+
 @Component({
   selector: 'app-rvlm-landing-page',
   templateUrl: './landing-page.component.html',

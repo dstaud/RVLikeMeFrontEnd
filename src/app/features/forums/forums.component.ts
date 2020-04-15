@@ -102,8 +102,10 @@ export class ForumsComponent implements OnInit {
     // this.navSubscription.unsubscribe();
   }
 
+  // TODO: Add transitions for things like adding post
 
   onSearch() {
+    // TODO: Add search capability for group discussions
     console.log('search');
   }
 

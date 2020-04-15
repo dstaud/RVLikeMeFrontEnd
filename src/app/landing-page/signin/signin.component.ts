@@ -12,7 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 
-import { ItokenPayload } from '@interfaces/tokenPayload';
+import { ItokenPayload } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
 
 @Component({

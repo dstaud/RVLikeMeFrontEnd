@@ -12,10 +12,12 @@ import { DeviceService } from '@services/device.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 
-import { ItokenPayload } from '@interfaces/tokenPayload';
+import { ItokenPayload } from '@services/data-services/authentication.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
+// TODO: confirm email address by sending out
+// TODO: enforce stricter passwords
 
 @Component({
   selector: 'app-rvlm-register-user',

@@ -16,6 +16,8 @@ import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.compone
 
 import { SharedComponent } from '@shared/shared.component';
 
+// TODO: Add rig database and hook to this component
+
 export interface RigType {
   value: string;
   viewValue: string;

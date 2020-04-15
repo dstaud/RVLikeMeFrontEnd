@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import * as Sentry from '@sentry/browser';
-import {NgxImageCompressService} from 'ngx-image-compress';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
