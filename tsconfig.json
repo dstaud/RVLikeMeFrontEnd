@@ -26,7 +26,8 @@
         "@interfaces/*": ["app/interfaces/*"],
         "@shared/*": ["app/shared/*"],
         "@dialogs/*": ["app/dialogs/*"],
-        "@assets/*": ["assets/*"]
+        "@assets/*": ["assets/*"],
+        "@environments/*": ["environments/*"]
     }
   },
   "angularCompilerOptions": {

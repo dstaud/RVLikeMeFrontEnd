@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   dataServiceURL: 'http://localhost:3000/',
-  name: 'Development'
+  name: 'Development',
+  vapidPublicKey: 'BO9mq1oFUV5ShdJdEBZ849ak_nxAiBxLPwkG1HnKa2RXTp56dNng3eMZXR2vq6OuDDy34uGSOZQARKgcpaz2xS0'
 };
 
 /*

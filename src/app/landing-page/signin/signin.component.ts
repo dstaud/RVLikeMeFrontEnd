@@ -15,6 +15,9 @@ import { ThemeService } from '@services/theme.service';
 import { ItokenPayload } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
 
+// TODO: Add forgot user id / password feature
+// TODO: Add change password feature
+
 @Component({
   selector: 'app-rvlm-signin',
   templateUrl: './signin.component.html',

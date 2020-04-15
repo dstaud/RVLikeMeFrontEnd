@@ -15,7 +15,7 @@ import { NgxImageCompressService } from 'ngx-image-compress';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from '../environments/environment';
+import { environment } from '@environments/environment';
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';

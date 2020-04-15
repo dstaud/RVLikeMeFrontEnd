@@ -3,10 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
+import { SwPush, SwUpdate } from '@angular/service-worker';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { filter } from 'rxjs/operators';
+
+import { environment } from '@environments/environment';
 
 import { DeviceService } from '@services/device.service';
 import { LanguageService } from '@services/language.service';
@@ -20,6 +23,11 @@ import { MessagesService, Iconversation, Imessage } from '@services/data-service
 import { NewMessageCountService } from '@services/new-msg-count.service';
 
 
+// TODO: Make sure unsubscribing to all subscriptions appropriately
+// TODO: Add push notifications and location information
+// TODO: Can the side-to-side shimmy because web page on IOS be handled?
+// TODO: Reduce size of image storage.  Right now storing twice.
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -28,6 +36,9 @@ import { NewMessageCountService } from '@services/new-msg-count.service';
 })
 
 export class AppComponent implements OnInit {
+
+  readonly VAPID_PUBLIC_KEY = environment.vapidPublicKey;
+
   userAuthorized$: Observable<boolean>;
   theme: string;
   font: string;
@@ -52,6 +63,8 @@ export class AppComponent implements OnInit {
               private messagesSvc: MessagesService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private newMsgCountSvc: NewMessageCountService,
+              private swPush: SwPush,
+              private swUpdate: SwUpdate,
               private router: Router) {
     console.log('AppComponent:constructor: get color theme');
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -79,7 +92,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-     // Listen for changes in font theme;
+    // Listen for updated version of web app
+    this.appVersionCheck();
+
+    // Listen for changes in font theme;
     this.themeSvc.defaultGlobalFontTheme
       .pipe(untilComponentDestroyed(this))
       .subscribe(fontData => {
@@ -233,5 +249,15 @@ export class AppComponent implements OnInit {
             window.clearInterval(scrollToTop);
         }
     }, 16);
+  }
+
+  appVersionCheck() {
+    if (this.swUpdate.isEnabled) { // Does browser support service worker
+      this.swUpdate.available.subscribe(() => {
+        if (confirm('A new version of RVLikeMe is available. Would you like to update now?')) {
+          window.location.reload();
+        }
+      })
+    }
   }
 }

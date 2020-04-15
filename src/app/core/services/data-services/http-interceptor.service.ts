@@ -3,7 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { WindowService } from './../window.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,7 @@ export class HttpInterceptorService implements HttpInterceptor {
         authReq = request;
     }
 
+    console.log('http-interceptor: getting request for url ', request.url);
     return next.handle(authReq).pipe(retry(3),
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {

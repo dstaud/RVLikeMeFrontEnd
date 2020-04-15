@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 
 import { WindowService } from './../window.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 
 @Injectable({

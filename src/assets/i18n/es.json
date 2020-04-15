@@ -12,7 +12,8 @@
     "about": "acerca de",
     "more": "más",
     "profile": "perfil",
-    "install": "instalar aplicación"
+    "install": "instalar aplicación",
+    "subscribe": "subscribe"
   },
   "signin.component": {
     "header": "Registrarse"

@@ -15,8 +15,14 @@
   </a>
   <a id="installApp"
     mat-list-item
+    (click)="onSubscribeNotifications()">
+    <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
+    <span class="nav-caption">{{ "menu.subscribe" | translate }}</span>
+  </a>
+  <a id="installApp"
+    mat-list-item
     *ngIf="showInstallLink"
-    (click)="installApp()">
+    (click)="onInstallApp()">
     <mat-icon fontSet="material-icons-outlined" >save_alt</mat-icon>
     <span class="nav-caption">{{ "menu.install" | translate }}</span>
   </a>
