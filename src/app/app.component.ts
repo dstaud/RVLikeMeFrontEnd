@@ -93,7 +93,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Listen for updated version of web app
-    this.appVersionCheck();
+    if (this.swUpdate.isEnabled) { // Is service worker running?
+      this.swUpdate.available.subscribe(() => {
+        if (confirm('A new version of RVLikeMe is available. Would you like to update now?')) {
+          window.location.reload();
+        }
+      })
+    }
 
     // Listen for changes in font theme;
     this.themeSvc.defaultGlobalFontTheme
@@ -249,15 +255,5 @@ export class AppComponent implements OnInit {
             window.clearInterval(scrollToTop);
         }
     }, 16);
-  }
-
-  appVersionCheck() {
-    if (this.swUpdate.isEnabled) { // Does browser support service worker
-      this.swUpdate.available.subscribe(() => {
-        if (confirm('A new version of RVLikeMe is available. Would you like to update now?')) {
-          window.location.reload();
-        }
-      })
-    }
   }
 }

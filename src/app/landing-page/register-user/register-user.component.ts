@@ -87,7 +87,8 @@ export class RegisterUserComponent implements OnInit {
     musicalInstrument: null,
     programming: null,
     mobileInternet: null,
-    forums: []
+    forums: [],
+    notifySubscription: null
   };
 
   constructor(private authSvc: AuthenticationService,

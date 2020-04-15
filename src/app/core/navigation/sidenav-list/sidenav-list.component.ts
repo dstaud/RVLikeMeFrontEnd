@@ -3,11 +3,13 @@ import { Location } from '@angular/common';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { SwUpdate, SwPush } from '@angular/service-worker';
 
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { SubscribeNotificationsService } from '@services/data-services/subscribe-notifications.service';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -24,7 +26,11 @@ export class SidenavListComponent implements OnInit {
   showInstallLink = false;
   event: any;
   deviceMode = false;
+
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
   private windowWidth: any;
+  private profileID: string;
 
   @Output() sideNavClosed = new EventEmitter();
 
@@ -40,6 +46,7 @@ export class SidenavListComponent implements OnInit {
 
   constructor(private location: Location,
               private focusMonitor: FocusMonitor,
+              private profileSvc: ProfileService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private subscribeNotifiationsSvc: SubscribeNotificationsService,
@@ -59,6 +66,13 @@ export class SidenavListComponent implements OnInit {
         this.event = data.valueOf();
         this.showInstallLink = true;
       }
+    });
+
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profile => {
+      this.profileID = profile._id;
     });
 
     // Get window size to determine what items presented in menu
@@ -111,7 +125,7 @@ export class SidenavListComponent implements OnInit {
       })
       .then(subscription => {
         console.log('onSubscribeNotifications: calling server with subscription ', subscription);
-        this.subscribeNotifiationsSvc.subscribeToNotifications(subscription)
+        this.subscribeNotifiationsSvc.subscribeToNotifications(this.profileID, subscription)
         .subscribe(subscribeResults => {
           console.log('onSubscribeNotifications: received server response=', subscribeResults);
         }, error => {
