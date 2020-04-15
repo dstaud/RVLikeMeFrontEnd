@@ -21,7 +21,13 @@
     "header": "Registrarse"
   },
   "messages.component": {
-    "header": "Mensajes"
+    "header": "Mensajes",
+    "message": "mensaje",
+    "whatsay": "¿Qué quieres decir?",
+    "send": "Enviar",
+    "noMessages1": "Aún no tienes ninguna conversación iniciada. Puede enviar un mensaje a cualquier persona de un grupo desde",
+    "noMessages2": "grupos",
+    "noMessages3": "página"
   },
   "connections.component": {
     "header": "Como yo",

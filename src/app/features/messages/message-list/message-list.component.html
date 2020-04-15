@@ -1,13 +1,12 @@
 <div class="mat-app-background mat-body-1 container">
-  <p class="mat-title">Messages</p>
+  <p class="mat-title">{{ 'messages.component.header' | translate }}</p>
   <div class="conversations">
     <div *ngIf="noConversations">
-      <span>You do not have any conversations started yet.
-            You can send a message to anyone in a group from the
+      <span>{{ 'messages.component.noMessages1' | translate }} 
             <span class="hyperlink"
                   (click)='onGroup()'>
-              group
-            </span> page.
+              {{ 'messages.component.noMessages2' | translate }}
+            </span> {{ 'messages.component.noMessages3' | translate }}.
       </span>
     </div>
     <div *ngFor="let conversation of conversations; let i = index">

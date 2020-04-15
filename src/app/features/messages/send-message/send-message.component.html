@@ -32,12 +32,12 @@
   <div class="new-message">
     <form [formGroup]="form">
       <mat-form-field appearance="outline" class="message-input">
-        <mat-label>Message {{toDisplayName}}</mat-label>
+        <mat-label>{{ 'messages.component.message' | translate }} {{toDisplayName}}</mat-label>
 
           <textarea matInput
                     class="text"
                     type="text"
-                    placeholder="What do you want to say?"
+                    placeholder="{{ 'messages.component.whatsay' | translate }}"
                     formControlName="message"
                     cdkFocusInitial>
           </textarea>
@@ -48,7 +48,7 @@
         <button [disabled]="!form.valid"
                 class="mat-raised-button mat-primary"
                 (click)="onSubmit()">
-                Send
+                {{ 'messages.component.send' | translate }}
         </button>
       </div>
     </form>

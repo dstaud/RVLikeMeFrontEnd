@@ -17,8 +17,6 @@ import { ThemeService } from '@services/theme.service';
 })
 export class SendMessageComponent implements OnInit {
 
-  // TODO: Add language translation to this component/HTML
-
   @ViewChild(FormGroupDirective) myForm;
 
   form: FormGroup;

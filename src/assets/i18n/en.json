@@ -21,7 +21,13 @@
     "header": "Register"
   },
   "messages.component": {
-    "header": "Messages"
+    "header": "Messages",
+    "message": "message",
+    "whatsay": "What do you want to say?",
+    "send": "Send",
+    "noMessages1": "You do not have any conversations started yet. You can send a message to anyone in a group from the",
+    "noMessages2": "group",
+    "noMessages3": "page"
   },
   "connections.component": {
     "header": "Like Me",
