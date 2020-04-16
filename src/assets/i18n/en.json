@@ -13,7 +13,8 @@
     "more": "more",
     "profile": "profile",
     "install": "install app",
-    "subscribe": "subscribe"
+    "subscribe": "subscribe notifications",
+    "unsubscribe": "unsubscribe notifications"
   },
   "signin.component": {
     "header": "Sign in"

@@ -13,7 +13,8 @@
     "more": "más",
     "profile": "perfil",
     "install": "instalar aplicación",
-    "subscribe": "subscribe"
+    "subscribe": "subscribe notifications",
+    "unsubscribe": "unsubscribe notifications"
   },
   "signin.component": {
     "header": "Registrarse"

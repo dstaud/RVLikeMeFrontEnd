@@ -70,8 +70,11 @@ export class SidenavListComponent implements OnInit {
 
     this.userProfile = this.profileSvc.profile;
     this.userProfile
-    .pipe(untilComponentDestroyed(this))
+    // .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
+      this.profile = profile;
+      console.log('SideNav:ngOnInit: profile=', this.profile);
+      console.log('SideNav:ngOnInit: notify=', this.profile.notifySubscription);
       this.profileID = profile._id;
     });
 
@@ -134,5 +137,29 @@ export class SidenavListComponent implements OnInit {
         })
       })
     }
+    this.closeSideNav();
+  }
+
+  onUnsubscribeNotifications() {
+    this.subscribeNotifiationsSvc.unsubscribeFromNotifications(this.profileID)
+    .subscribe(unsubscribeResults => {
+      console.log('onSubscribeNotifications: received server response=', unsubscribeResults);
+    }, error => {
+      console.error('onSubscribeNotifications: throw error ', error);
+      throw new Error(error);
+    });
+    this.closeSideNav();
+  }
+
+  onNotify() {
+    console.log('SideNavComponent:onNotify: in onNotify');
+    console.log('SideNavComponent:onNotify: notify=', this.profile.notifySubscription);
+    this.subscribeNotifiationsSvc.sendNotificationTest(this.profile.notifySubscription)
+    .subscribe(notifyResult => {
+      console.log('onNotify: message should be on the way', notifyResult);
+    }, error => {
+      console.error('onNotify: throw error ', error);
+      throw new Error(error);
+    })
   }
 }

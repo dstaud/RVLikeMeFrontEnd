@@ -13,11 +13,23 @@
     <mat-icon fontSet="material-icons-outlined" >rv_hookup</mat-icon>
     <span class="nav-caption">{{ "menu.about" | translate }}</span>
   </a>
-  <a id="installApp"
+  <a id="subscribe"
     mat-list-item
     (click)="onSubscribeNotifications()">
     <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
     <span class="nav-caption">{{ "menu.subscribe" | translate }}</span>
+  </a>
+  <a id="unsubscribe"
+    mat-list-item
+    (click)="onUnsubscribeNotifications()">
+    <mat-icon fontSet="material-icons-outlined" >remove_circle</mat-icon>
+    <span class="nav-caption">{{ "menu.unsubscribe" | translate }}</span>
+  </a>
+  <a id="notify"
+    mat-list-item
+    (click)="onNotify()">
+    <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
+    <span class="nav-caption">notify</span>
   </a>
   <a id="installApp"
     mat-list-item
