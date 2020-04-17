@@ -44,19 +44,6 @@ export class AddCommentComponent implements OnInit {
   }
 
 
-  // When done with add, send the information back up the chain
-  doneWithAdd(post: any) {
-    let result = [];
-    let postIndex = JSON.parse('{"postIndex":"' + this.postIndex + '"}');
-    result.push(postIndex);
-    result.push(post);
-    this.form.reset('comment');
-    this.showSmallFieldInitial = true;
-    this.postButtonActive = false;
-    this.postCommentComplete.emit(result);
-  }
-
-
   // When user submits, send to the server.
   onSubmit() {
     this.postButtonActive = false;
@@ -71,6 +58,19 @@ export class AddCommentComponent implements OnInit {
       console.log('AddCommentComponent:onSubmit: throw error ', error);
       throw new Error(error);
     });
+  }
+
+
+  // When done with add, send the information back up the chain
+  private doneWithAdd(post: any) {
+    let result = [];
+    let postIndex = JSON.parse('{"postIndex":"' + this.postIndex + '"}');
+    result.push(postIndex);
+    result.push(post);
+    this.form.reset('comment');
+    this.showSmallFieldInitial = true;
+    this.postButtonActive = false;
+    this.postCommentComplete.emit(result);
   }
 }
 

@@ -33,11 +33,6 @@ export class AddPostComponent implements OnInit {
   ngOnInit() {
   }
 
-  // Whether canceled or posted, send the appropriate data back up the chain
-  doneWithAdd(post: any) {
-    this.postAddComplete.emit(post);
-  }
-
 
   // When user clicks post, update the database
   onPost() {
@@ -53,5 +48,11 @@ export class AddPostComponent implements OnInit {
       console.log('AddPostComponent:onPost: throw error ', error);
       throw new Error(error);
     });
+  }
+
+
+  // Whether canceled or posted, send the appropriate data back up the chain
+  private doneWithAdd(post: any) {
+    this.postAddComplete.emit(post);
   }
 }

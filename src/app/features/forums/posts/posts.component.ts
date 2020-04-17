@@ -34,15 +34,7 @@ export class PostsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.windowWidth = window.innerWidth;
-    if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
-      } else {
-        this.dialogWidth = this.windowWidth * .95;
-      }
-      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
-    }
+    this.setDialogDimensions();
   }
 
   groupID: string;
@@ -52,8 +44,6 @@ export class PostsComponent implements OnInit {
   posts: Array<any> = [];
   comments: Array<Array<JSON>> = [];
   currentPostRow: number;
-  userProfile: Observable<IuserProfile>;
-  profile: IuserProfile;
   liked: Array<boolean> = [];
 
   showSpinner = false;
@@ -67,41 +57,21 @@ export class PostsComponent implements OnInit {
   private windowWidth: any;
   private dialogWidth: number;
   private dialogWidthDisplay: string;
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
 
   constructor(private forumSvc: ForumService,
               private profileSvc: ProfileService,
+              private translate: TranslateService,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit() {
-    // Get user profile
-    this.userProfile = this.profileSvc.profile;
-    // this.profileSvc.getProfile();
+    this.listenForUserProfile();
 
-    // Get user's ID and store for use in determining what posts or comments can edit
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(profile => {
-      console.log('PostsComponent:ngOnInit: got new profile data=', profile);
-      this.profile = profile;
-      this.userID = profile.userID;
-    }, (error) => {
-      console.error(error);
-      console.log('error');
-    });
-
-    // Get window size to determine how to present dialog windows
-    this.windowWidth = window.innerWidth;
-    if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
-      } else {
-        this.dialogWidth = this.windowWidth * .95;
-      }
-      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
-    }
+    this.setDialogDimensions();
   }
 
   ngOnDestroy() {}
@@ -109,17 +79,168 @@ export class PostsComponent implements OnInit {
 
   // Get all posts for group passed from forums component.
   getPosts(groupID: string, profileImageUrl: string, displayName: string): void {
-    let post: JSON;
-    let comment: JSON;
-    let postComments: Array<JSON> = [];
-
     this.showSpinner = true;
     this.groupID = groupID;
     if (profileImageUrl) {
       this.profileImageUrl = profileImageUrl;
     }
-    console.log('PostsComponent:getPosts: displayname=', displayName);
     this.displayName = displayName;
+
+    this.getPostsFromDatabase();
+  }
+
+
+  // When user clicks like, send update to server and turn off their ability to like again
+  onLike(row: number): void {
+    console.log('row=', row);
+    let reaction = 'like';
+
+    this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
+    .subscribe(reactionResult => {
+      this.posts[row].reactionCount++;
+      this.liked[row] = true;
+      this.showSpinner = false;
+    }, error => {
+      this.showSpinner = false;
+      console.log('PostsComponent:onLike: throw error ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  // When user clicks comment, open up the comments for viewing
+  onComment(row: number) {
+    this.showPostComments[row] = !this.showPostComments[row];
+  }
+
+
+  // When user clicks to see the story of another user, navigate to myStory page
+  onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
+    let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
+    let params = '{"userID":"' + toUserID + '",' +
+                      '"userIdViewer":"' + this.userID + '",' +
+                      '"params":' + userParams + '}';
+    console.log('PostsComponent:onYourStory: params=', params);
+    this.activateBackArrowSvc.setBackRoute('forums-list');
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/mystory');
+  }
+
+  // TODO: Add inifinity scrolling for posts
+
+  // When user clicks to show all comments, set the start index to zero
+  onShowAllComments() {
+    this.startCommentsIndex[this.currentPostRow] = 0;
+  }
+
+
+  // When user clicks to add a post, show the form
+  onAddPost() {
+    this.showAddPost = true;
+    this.showFirstPost = false;
+  }
+
+
+  // After submits their post, this is called from child component
+  postAddComplete(newPost: any): void {
+    if (newPost !== 'canceled') {
+      let post = this.createPostsArrayEntry(newPost);
+      this.posts.unshift(post);
+      this.comments.unshift([]);
+      this.showUpdatePost.unshift(false);
+      this.showPostComments.unshift(false);
+      this.startCommentsIndex.unshift(0);
+      this.showPosts = true;
+      this.currentPostRow = 0;
+    }
+    this.showAddPost = false;
+  }
+
+
+  // After submits their post, this is called from child component
+  postUpdateComplete(postResult: any): void {
+    let postIndex = postResult[0].postIndex;
+    let post = postResult[1];
+
+    if (post !== 'canceled') {
+      this.posts[postIndex].body = post.body;
+    }
+    this.showUpdatePost[postIndex] = false;
+  }
+
+
+  // After user posts a comment, update the appropriate arrays
+  postCommentComplete(post: any) {
+    let currentRow = post[0].postIndex;
+    let newComment = this.createCommentsArrayEntry(post[1].comments[post[1].comments.length-1]);
+
+    if (this.posts[currentRow].commentCount == 0) {
+        this.comments[currentRow] = [];
+    }
+
+    this.comments[currentRow].push(newComment);
+    this.posts[currentRow].commentCount++;
+    if (this.comments[currentRow].length > 4) {
+      this.startCommentsIndex[currentRow]++
+    }
+  }
+
+
+  // Check if user already liked the post
+  private checkIfLiked(reactions: any): boolean {
+    let reactionMatch = false;
+
+    console.log('PostsComponent:checkIfLiked: reactions=', reactions);
+    for (let i=0; i < reactions.length; i++) {
+      if (reactions[i].createdBy === this.userID) {
+        reactionMatch = true;
+        break;
+      }
+    }
+    return reactionMatch;
+  }
+
+
+  private createCommentsArrayEntry(comment): JSON {
+    let newComment = '{"comment":"' + comment.comment + '",' +
+    '"displayName":"' + comment.displayName + '",' +
+    '"profileImageUrl":"' + comment.profileImageUrl + '",' +
+    '"createdAt":"' + comment.createdAt + '",' +
+    '"createdBy":"' + comment.createdBy + '"}';
+    return JSON.parse(newComment);
+  }
+
+
+  private createPostsArrayEntry(post): JSON {
+    let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
+
+    let newPost = '{"_id":"' + post._id + '",' +
+    '"createdBy":"' + post.createdBy + '",' +
+    '"body":"' + bodyEscaped + '",' +
+    '"displayName":"' + post.userDisplayName + '",' +
+    '"profileImageUrl":"' + post.userProfileUrl + '",' +
+    '"commentCount":"' + post.comments.length + '",' +
+    '"reactionCount":"' + post.reactions.length + '",' +
+    '"createdAt":"' + post.createdAt + '"}';
+    return JSON.parse(newPost);
+  }
+
+
+  private escapeJsonReservedCharacters(string: string): string {
+    let newString = string;
+    newString = newString.replace(/"/g, "'").trim();
+    newString = newString.replace(/\\/g, "|");
+    newString = newString.replace(/\n/g, "\\n");
+    console.log(string, newString);
+    return newString;
+  }
+
+
+  // Get all posts for the group
+  private getPostsFromDatabase() {
+    let post: JSON;
+    let comment: JSON;
+    let postComments: Array<JSON> = [];
 
     this.posts = [];
     this.forumSvc.getPosts(this.groupID)
@@ -139,7 +260,6 @@ export class PostsComponent implements OnInit {
         post = this.createPostsArrayEntry(postResult[0]);
         this.posts.push(post);
         this.comments.push(postComments);
-        console.log('PostsComponent:getPosts: comments=', postComments);
         this.showPostComments.push(false);
         if (postComments.length > 4) {
           this.startCommentsIndex.push(postComments.length - 4);
@@ -177,55 +297,24 @@ export class PostsComponent implements OnInit {
   }
 
 
-  // When user clicks like, send update to server and turn off their ability to like again
-  onLike(row: number): void {
-    console.log('row=', row);
-    let reaction = 'like';
-
-    this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
-    .subscribe(reactionResult => {
-      this.posts[row].reactionCount++;
-      this.liked[row] = true;
-      this.showSpinner = false;
-    }, error => {
-      this.showSpinner = false;
-      console.log('PostsComponent:onLike: throw error ', error);
+  // Get user profile
+  // Get user's ID and store for use in determining what posts or comments can edit
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profile => {
+      this.profile = profile;
+      this.userID = profile.userID;
+    }, (error) => {
+      console.error('PostsComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }
 
 
-  // When user clicks comment, open up the comments for viewing
-  onComment(row: number) {
-    this.showPostComments[row] = !this.showPostComments[row];
-  }
-
-  onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
-    let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
-    let params = '{"userID":"' + toUserID + '",' +
-                      '"userIdViewer":"' + this.userID + '",' +
-                      '"params":' + userParams + '}';
-    console.log('PostsComponent:onYourStory: params=', params);
-    this.activateBackArrowSvc.setBackRoute('forums-list');
-    this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/mystory');
-  }
-
-  // When user clicks to show all comments, set the start index to zero
-  onShowAllComments() {
-    this.startCommentsIndex[this.currentPostRow] = 0;
-  }
-
-
-  // When user clicks to add a post, show the form
-  onAddPost() {
-    this.showAddPost = true;
-    this.showFirstPost = false;
-  }
-
-
   // Open dialog for user to update their post
-  openUpdatePostDialog(row: number): void {
+  private openUpdatePostDialog(row: number): void {
     const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
       width: this.dialogWidthDisplay,
       height: '80%',
@@ -253,105 +342,6 @@ export class PostsComponent implements OnInit {
   }
 
 
-  // After submits their post, this is called from child component
-  postAddComplete(newPost: any): void {
-    if (newPost !== 'canceled') {
-      let post = this.createPostsArrayEntry(newPost);
-      this.posts.unshift(post);
-      this.comments.unshift([]);
-      this.showUpdatePost.unshift(false);
-      this.showPostComments.unshift(false);
-      this.startCommentsIndex.unshift(0);
-      this.showPosts = true;
-      this.currentPostRow = 0;
-    }
-    this.showAddPost = false;
-  }
-
-
-  // After submits their post, this is called from child component
-  postUpdateComplete(postResult: any): void {
-    let postIndex = postResult[0].postIndex;
-    let post = postResult[1];
-
-    if (post !== 'canceled') {
-      // this.posts[postIndex].title = post.title;
-      this.posts[postIndex].body = post.body;
-    }
-    this.showUpdatePost[postIndex] = false;
-  }
-
-
-  // After user posts a comment, update the appropriate arrays
-  postCommentComplete(post: any) {
-    let currentRow = post[0].postIndex;
-    let newComment = this.createCommentsArrayEntry(post[1].comments[post[1].comments.length-1]);
-
-    if (this.posts[currentRow].commentCount == 0) {
-        this.comments[currentRow] = [];
-    }
-
-    this.comments[currentRow].push(newComment);
-    this.posts[currentRow].commentCount++;
-    if (this.comments[currentRow].length > 4) {
-      this.startCommentsIndex[currentRow]++
-    }
-  }
-
-
-  private checkIfLiked(reactions: any): boolean {
-    let reactionMatch = false;
-
-    console.log('PostsComponent:checkIfLiked: reactions=', reactions);
-    for (let i=0; i < reactions.length; i++) {
-      if (reactions[i].createdBy === this.userID) {
-        reactionMatch = true;
-        break;
-      }
-    }
-    return reactionMatch;
-  }
-
-  private escapeJsonReservedCharacters(string: string): string {
-    let newString = string;
-    newString = newString.replace(/"/g, "'").trim();
-    newString = newString.replace(/\\/g, "|");
-    newString = newString.replace(/\n/g, "\\n");
-    console.log(string, newString);
-    return newString;
-  }
-
-  private createPostsArrayEntry(post): JSON {
-    // let titleEscaped = this.escapeJsonReservedCharacters(post.title);
-    let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
-
-    let newPost = '{"_id":"' + post._id + '",' +
-    '"createdBy":"' + post.createdBy + '",' +
-    // '"title":"' + titleEscaped + '",' +
-    '"body":"' + bodyEscaped + '",' +
-    '"displayName":"' + post.userDisplayName + '",' +
-    '"profileImageUrl":"' + post.userProfileUrl + '",' +
-    '"commentCount":"' + post.comments.length + '",' +
-    '"reactionCount":"' + post.reactions.length + '",' +
-    '"createdAt":"' + post.createdAt + '"}';
-    return JSON.parse(newPost);
-  }
-
-  private createCommentsArrayEntry(comment): JSON {
-    let newComment = '{"comment":"' + comment.comment + '",' +
-    '"displayName":"' + comment.displayName + '",' +
-    '"profileImageUrl":"' + comment.profileImageUrl + '",' +
-    '"createdAt":"' + comment.createdAt + '",' +
-    '"createdBy":"' + comment.createdBy + '"}';
-    return JSON.parse(newComment);
-  }
-
-/*   private navigateToMessages(toUserID: string, toDisplayName: string, toProfileImageUrl: string): void {
-    let params = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl)
-    this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/messages/send-message');
-  } */
-
   private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): string {
     let params: string;
     console.log('PostsComponent:navigateToMessages: displayName=', this.displayName);
@@ -364,5 +354,19 @@ export class PostsComponent implements OnInit {
 
     console.log('PostsComponent:navigateToMessages: params=', params);
     return params;
+  }
+
+
+  // Get window size to determine how to present dialog windows
+  private setDialogDimensions() {
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
+    }
   }
 }

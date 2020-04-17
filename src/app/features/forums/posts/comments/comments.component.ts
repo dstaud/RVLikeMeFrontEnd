@@ -33,19 +33,19 @@ export class CommentsComponent implements OnInit {
               private router: Router) {}
 
   ngOnInit(): void {
-    // Listen for changes in color theme;
-    this.themeSvc.defaultGlobalColorTheme
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(themeData => {
-      this.theme = themeData.valueOf();
-    });
-
-    console.log('CommentsComponent:ngOnInit: ', this.displayName, this.userID, this.profileImageUrl);
-    console.log('commentsComponent.ngOnInit: comments=', this.comments);
+    this.listenForColorTheme();
   }
 
   ngOnDestroy() {}
 
+
+  // If user wants to see all comments, pass this up the chain
+  onShowAll() {
+    this.showAllComments.emit();
+  }
+
+
+  // If user clicks to see story of another user, go to MyStory component
   onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
     let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
     let params = '{"userID":"' + toUserID + '",' +
@@ -58,9 +58,13 @@ export class CommentsComponent implements OnInit {
   }
 
 
-  // If user wants to see all comments, pass this up the chain
-  onShowAll() {
-    this.showAllComments.emit();
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    });
   }
 
 
@@ -77,4 +81,6 @@ export class CommentsComponent implements OnInit {
     console.log('PostsComponent:navigateToMessages: params=', params);
     return params;
   }
+
+
 }

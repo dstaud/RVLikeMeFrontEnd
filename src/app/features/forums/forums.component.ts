@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 import { PostsComponent } from './posts/posts.component';
 
@@ -28,24 +27,21 @@ export class ForumsComponent implements OnInit {
   @ViewChild(PostsComponent)
   public posts: PostsComponent;
 
-  groupID: string;
   groupProfileDisplayAttributesFromGroup = [];
-  groupListDisplayAttributes = [];
-  groupProfileCodeAttributesFromGroup = [];
-  groupsListFromUserProfile = [];
   theme: string;
 
   showSpinner = false;
   showLessMatches = true;
   showMoreOption = false;
 
+  private groupID: string;
   private backPath = '';
-  // private navSubscription: any;
-
+  private groupProfileCodeAttributesFromGroup = [];
+  private groupsListFromUserProfile = [];
 
   // Interface for profile data
-  profile: IuserProfile;
-  userProfile: Observable<IuserProfile>;
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
 
   constructor(public translate: TranslateService,
               private auth: AuthenticationService,
@@ -53,7 +49,6 @@ export class ForumsComponent implements OnInit {
               private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
-              private route: ActivatedRoute,
               private shareDataSvc: ShareDataService,
               private forumSvc: ForumService,
               private themeSvc: ThemeService) {
@@ -66,41 +61,14 @@ export class ForumsComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    // supposed to auto-scroll to top but doesn't seem to work
-/*     this.navSubscription = this.router.events
-    .pipe(
-      filter(event => event instanceof NavigationEnd)
-    )
-    .subscribe(() => window.scrollTo(0,0)); */
+    this.listenForChangeInColorTheme();
 
-    // Listen for changes in color theme;
-    this.themeSvc.defaultGlobalColorTheme
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(themeData => {
-      this.theme = themeData.valueOf();
-    }, error => {
-      console.error(error);
-    });
-
-    // Listen for Profile changes
-    this.userProfile = this.profileSvc.profile;
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      this.profile = data;
-      if (this.profile._id) {
-        this.groupsListFromUserProfile = this.profile.forums;
-      }
-    }, error => {
-      console.error(error);
-    });
+    this.listenForUserProfile();
 
     this.getGroup();
   }
 
-  ngOnDestroy() {
-    // this.navSubscription.unsubscribe();
-  }
+  ngOnDestroy() {}
 
   // TODO: Add transitions for things like adding post
 
@@ -131,8 +99,6 @@ export class ForumsComponent implements OnInit {
   // If the group does exist, it asks the server for all posts for the group forum for display in the template.
   // If the group does not exist, it asks the server to create the group forum.
   private getGroup(): void {
-    let docNotAMatch = false;
-    let matchFound = false;
     let keyValue: Array<string>;
     let names: string;
     let values: string;
@@ -179,58 +145,7 @@ export class ForumsComponent implements OnInit {
         names = keyValue[0];
         values = keyValue[1];
 
-        // Check if group already exists
-        this.forumSvc.getGroup(names, values)
-        .subscribe(groupsFromServer => {
-
-          // Query may return multiple group forums that include the specific name/value pairs user is looking for.
-          // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
-          // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
-          for (let i = 0; i < groupsFromServer.length; i++) {
-            let groupDocKeys = Object.keys(groupsFromServer[i]);
-            docNotAMatch = false;
-
-            // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
-            // selected by the user, and make sure that it does not have other attributes.
-            for (let j = 0; j < groupDocKeys.length; j++) {
-
-              // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
-              // this group because it is not an exact match.
-              if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
-
-                if (!this.reservedField(groupDocKeys[j])) {
-                  docNotAMatch = true;
-                }
-              }
-            }
-
-            // If no group forum documents found with additional keys the user did not target, then the group already exists
-            // and all we have to do is make sure that the group is already in the user's profile group forum list.
-            if (!docNotAMatch) {
-              matchFound = true;
-              this.groupID = groupsFromServer[i]._id;
-              this.updateProfileGroups();
-              break;
-            }
-          }
-
-          // if match found, display any posts; otherwise, create the group forum.
-          if (matchFound) {
-            this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-            this.showSpinner = false;
-          } else {
-            this.createGroupForum(names, values);
-          }
-        }, error => {
-          // if no match at all, create the forum group
-          if (error.status === 404) {
-            this.createGroupForum(names, values);
-          } else {
-            this.showSpinner = false;
-            console.log('ForumsComponent:getGroup: throw error ', error);
-            throw new Error(error);
-          }
-        });
+        this.checkIfUserProfileHasGroupAndUpdate(names, values);
       }
     }
   }
@@ -250,6 +165,63 @@ export class ForumsComponent implements OnInit {
   }
 
 
+  private checkIfUserProfileHasGroupAndUpdate(names: string, values: string) {
+    let matchFound: boolean = false;
+    let docNotAMatch = false;
+
+    // Check if group already exists
+    this.forumSvc.getGroup(names, values)
+    .subscribe(groupsFromServer => {
+
+      // Query may return multiple group forums that include the specific name/value pairs user is looking for.
+      // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
+      // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
+      for (let i = 0; i < groupsFromServer.length; i++) {
+        let groupDocKeys = Object.keys(groupsFromServer[i]);
+        docNotAMatch = false;
+
+        // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
+        // selected by the user, and make sure that it does not have other attributes.
+        for (let j = 0; j < groupDocKeys.length; j++) {
+
+          // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
+          // this group because it is not an exact match.
+          if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
+
+            if (!this.reservedField(groupDocKeys[j])) {
+              docNotAMatch = true;
+            }
+          }
+        }
+
+        // If no group forum documents found with additional keys the user did not target, then the group already exists
+        // and all we have to do is make sure that the group is already in the user's profile group forum list.
+        if (!docNotAMatch) {
+          matchFound = true;
+          this.groupID = groupsFromServer[i]._id;
+          this.updateProfileGroups();
+          break;
+        }
+      }
+
+      // if match found, display any posts; otherwise, create the group forum.
+      if (matchFound) {
+        this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+        this.showSpinner = false;
+      } else {
+        this.createGroupForum(names, values);
+      }
+    }, error => {
+      // if no match at all, create the forum group
+      if (error.status === 404) {
+        this.createGroupForum(names, values);
+      } else {
+        this.showSpinner = false;
+        console.log('ForumsComponent:getGroup: throw error ', error);
+        throw new Error(error);
+      }
+    });
+  }
   // Translate group codes to text that a user will understand for display in the template
   private getGroupDisplayAttributes(group: any): Array<string> {
     let name;
@@ -297,6 +269,35 @@ export class ForumsComponent implements OnInit {
       }
     }
     return names + '~' + values;
+  }
+
+
+  // Listen for changes in color theme;
+  private listenForChangeInColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      console.error(error);
+    });
+  }
+
+
+  // Listen for Profile changes
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      this.profile = data;
+      if (this.profile._id) {
+        this.groupsListFromUserProfile = this.profile.forums;
+      }
+    }, error => {
+      console.error('ForumsComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
   }
 
 
