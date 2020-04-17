@@ -5,14 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { AuthenticationService } from '@services/data-services/authentication.service';
+import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { DeviceService } from '@services/device.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
-
-import { ItokenPayload } from '@services/data-services/authentication.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -35,12 +32,11 @@ export class RegisterUserComponent implements OnInit {
 
   form: FormGroup;
   hidePassword = true;
-  showSpinner = false;
-  arrowIcon = 'arrow_back';
   httpError = false;
   httpErrorText = '';
 
-  private device: string;
+  showSpinner = false;
+
   private presentInstallOption = false;
   private event: any;
 
@@ -93,7 +89,6 @@ export class RegisterUserComponent implements OnInit {
 
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
-              private deviceSvc: DeviceService,
               private shared: SharedComponent,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private dialog: MatDialog,
@@ -109,29 +104,17 @@ export class RegisterUserComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.device = this.deviceSvc.device;
-
-    if (this.device === 'iPhone') {
-      // arrow_back_ios icon not coming up at all regardless of this if
-      this.arrowIcon = 'arrow_back_ios';
-      // this.arrowIcon = 'keyboard_arrow_left';
-    }
-
-    // Get the event handle when beforeInstallEvent fired that allows for app installation.
-    // When fired, offer user option to install app from menu
-    this.event = this.beforeInstallEventSvc.beforeInstallEvent$
-
-    this.event
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      if (data !== null) {
-        this.presentInstallOption = true;
-        this.event = data.valueOf();
-      }
-    });
+    this.onBeforeInstallEventOfferInstallApp();
   }
 
   ngOnDestroy() {};
+
+
+  // Form validation error handling
+  errorHandling = (control: string, error: string) => {
+    return this.form.controls[control].hasError(error);
+  }
+
 
   // For desktop only, have cancel button because in a dialog
   onCancel() {
@@ -139,6 +122,9 @@ export class RegisterUserComponent implements OnInit {
     this.formComplete.emit(this.formCompleted);
   }
 
+  // TODO: Better validation on format of email
+
+  // Register user on form submit
   onSubmit() {
     if (this.form.controls.password.value !== this.form.controls.passwordConfirm.value) {
       this.shared.openSnackBar('Passwords do not match', 'error');
@@ -147,63 +133,13 @@ export class RegisterUserComponent implements OnInit {
       this.form.controls.password.markAllAsTouched();
       this.form.controls.password.setErrors({incorrect: true});
     } else {
-      this.credentials.email = this.form.controls.email.value;
-      this.credentials.email = this.credentials.email.toLowerCase();
-      this.credentials.password = this.form.controls.password.value;
-      this.showSpinner = true;
-      this.authSvc.registerUser(this.credentials)
-      .pipe(untilComponentDestroyed(this))
-      .subscribe((responseData) => {
-        if (responseData.status === 201) {
-          this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
-        } else {
-          this.profile.firstName = this.form.controls.firstName.value;
-          this.profile.language = 'en';
-          this.profile.colorThemePreference = 'light-theme';
-          this.profileSvc.addProfile(this.profile)
-          .pipe(untilComponentDestroyed(this))
-          .subscribe((data) => {
-            this.showSpinner = false;
-            if (this.presentInstallOption) {
-              // Show the install prompt
-              this.openInstallDialog();
-            } else if (!this.containerDialog) {
-              this.shared.openSnackBar('Credentials saved.  Please sign in', 'message', 2000);
-            }
-            this.authSvc.logout();
-            if (this.containerDialog) {
-              this.formCompleted = 'complete';
-              this.formComplete.emit(this.formCompleted);
-            } else {
-              this.activateBackArrowSvc.setBackRoute('landing-page');
-              this.router.navigateByUrl('/signin');
-            }
-          });
-        }
-      }, error => {
-        this.showSpinner = false;
-        this.httpError = true;
-        if (error.status === 401) {
-          this.httpErrorText = 'Invalid email address or password';
-        } else {
-          if (error.status === 403) {
-            this.httpErrorText = 'Email address already registered';
-          } else {
-            console.warn('ERROR: ', error);
-            if (error.message.includes('Unknown Error')) {
-              this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-              this.httpErrorText = 'Please connect to Internet and try again';
-            } else {
-              this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-            }
-          }
-        }
-      });
+      this.registerUser();
     }
   }
 
+
   // App Install Option
-  openInstallDialog(): void {
+  private openInstallDialog(): void {
     const dialogRef = this.dialog.open(InstallDialogComponent, {
       width: '250px',
       disableClose: true
@@ -218,22 +154,92 @@ export class RegisterUserComponent implements OnInit {
         // Wait for the user to respond to the prompt
         this.event.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
+            console.log('RegisterUserComponent:openInstallDialog: User accepted the install prompt');
             this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
           } else {
-            console.log('User dismissed the install prompt');
+            console.log('RegisterUserComponent:openInstallDialog: User dismissed the install prompt');
           }
         });
       }
     });
   }
 
-  returnToBackRoute() {
-    this.router.navigateByUrl('/');
-    this.activateBackArrowSvc.setBackRoute('');
+  private registerUser() {
+    this.credentials.email = this.form.controls.email.value;
+    this.credentials.email = this.credentials.email.toLowerCase();
+    this.credentials.password = this.form.controls.password.value;
+    this.showSpinner = true;
+
+    this.authSvc.registerUser(this.credentials)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe((responseData) => {
+      if (responseData.status === 201) {
+        this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
+      } else {
+        this.profile.firstName = this.form.controls.firstName.value;
+        this.profile.language = 'en';
+        this.profile.colorThemePreference = 'light-theme';
+
+        this.addProfileForUser();
+      }
+    }, error => {
+      this.showSpinner = false;
+      this.httpError = true;
+      if (error.status === 401) {
+        this.httpErrorText = 'Invalid email address or password';
+      } else {
+        if (error.status === 403) {
+          this.httpErrorText = 'Email address already registered';
+        } else {
+          console.warn('ERROR: ', error);
+          if (error.message.includes('Unknown Error')) {
+            this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+            this.httpErrorText = 'Please connect to Internet and try again';
+          } else {
+            this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+          }
+        }
+      }
+    });
   }
 
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
+
+  private addProfileForUser() {
+    this.profileSvc.addProfile(this.profile)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe((data) => {
+      this.showSpinner = false;
+      if (this.presentInstallOption) {
+        // Show the app install prompt
+        this.openInstallDialog();
+      } else if (!this.containerDialog) {
+        this.shared.openSnackBar('Credentials saved.  Please sign in', 'message', 2000);
+      }
+
+      // After adding profile, log user out to clear token and go to the signin page
+      this.authSvc.logout();
+      if (this.containerDialog) {
+        this.formCompleted = 'complete';
+        this.formComplete.emit(this.formCompleted);
+      } else {
+        this.activateBackArrowSvc.setBackRoute('landing-page');
+        this.router.navigateByUrl('/signin');
+      }
+    });
+  }
+
+
+  // Get the event handle when beforeInstallEvent fired that allows for app installation.
+  // When fired, offer user option to install app from menu
+  private onBeforeInstallEventOfferInstallApp() {
+    this.event = this.beforeInstallEventSvc.beforeInstallEvent$
+    this.event
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      if (data !== null) {
+        this.presentInstallOption = true;
+        this.event = data.valueOf();
+      }
+    });
   }
 }

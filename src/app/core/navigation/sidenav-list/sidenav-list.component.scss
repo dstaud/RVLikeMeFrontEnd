@@ -15,3 +15,12 @@ a:hover, a:active{
     // display: inline-block;
     padding-left: 6px;
 }
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

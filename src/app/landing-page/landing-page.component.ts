@@ -9,8 +9,6 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 
 import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
 
-// import { timingSafeEqual } from 'crypto';
-
 // TODO: more interesting thigns on landing page
 // TODO: newbie corner to help newbies
 
@@ -21,68 +19,85 @@ import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.c
 })
 export class LandingPageComponent implements OnInit {
   landingImage: string;
-  maxRvImageHeight = 'auto';
-  maxRvImageWidth = '100%';
   logoClass: string;
   logoDesktopLeft: string;
-  showLearnMoreDesktop = false;
+  showLearnMoreDesktop: boolean = false;
+  maxRvImageHeight = 'auto';
+  maxRvImageWidth = '100%';
 
-  private landingImageNbr: number;
-  private imageHeight: number
   private windowWidth: number;
-  private windowHeight: number;
-  private logoDesktopLeftPosition: number;
+  private landingImageNbr: number;
 
+  // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-  this.windowWidth = window.innerWidth;
-  this.windowHeight = window.innerHeight;
-
-/*   if (this.windowWidth > 600) {
-    this.imageHeight = this.windowHeight *.6;
-    this.maxRvImageHeight = this.imageHeight.toString() + 'px';
-    this.maxRvImageWidth = 'auto';
-  } else { */
-    this.maxRvImageHeight = 'auto';
-    this.maxRvImageWidth = '100%';
-/*   } */
-}
+    this.setImageBasedOnScreenWidth();
+  }
 
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private headerVisibleSvc: HeaderVisibleService,
               private dialog: MatDialog,
               private router: Router) {
-}
+  }
 
   ngOnInit() {
-    // Get window size to determine how to present register, signon and learn more
-    this.windowWidth = window.innerWidth;
-    this.windowHeight = window.innerHeight;
-
     // Randomly pick one of 3 landing page RV images
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
 
-    if (this.windowWidth > 600) {
-      this.landingImage = 'landing-image' + this.landingImageNbr + '.jpeg';
-    } else {
-      this.landingImage = 'landing-imageM' + this.landingImageNbr + '.jpeg';
-    }
-
-/*     if (this.windowWidth > 600) {
-      this.imageHeight = this.windowHeight *.6;
-      this.maxRvImageHeight = this.imageHeight.toString() + 'px';
-      this.maxRvImageWidth = 'auto';
-    } else { */
-    this.maxRvImageHeight = 'auto';
-    this.maxRvImageWidth = '100%';
-/*     } */
+    this.setImageBasedOnScreenWidth();
   }
 
   ngOnDestroy() {}
 
 
-  // For Desktop users, present register as a dialog
-  openDialog(component: string, cb: CallableFunction): void {
+  onLearnMore() {
+    this.headerVisibleSvc.toggleHeaderVisible(true);
+    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+    this.router.navigateByUrl('/learn-more');
+    this.activateBackArrowSvc.setBackRoute('landing-page');
+  }
+
+
+  // When user selects register, if mobile, go to register component.
+  // If desktop, present register component in dialog and take action when registration complete.
+  onRegisterUser() {
+    if (this.windowWidth > 600) {
+      this.openDialog('register', (result: string) => {
+        if (result === 'complete') {
+          this.onSignIn();
+        }
+      });
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.router.navigateByUrl('/register');
+      this.activateBackArrowSvc.setBackRoute('landing-page');
+    }
+  }
+
+
+  // When user selects signin, if mobile, go to signin component.
+  // If desktop, present signin component in dialog and take action when signin complete.
+  onSignIn() {
+    if (this.windowWidth > 600) {
+      this.openDialog('signin', (result: string) => {
+        if (result === 'complete') {
+          this.activateBackArrowSvc.setBackRoute('landing-page');
+          this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
+          this.router.navigateByUrl('/home');
+        }
+      });
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.router.navigateByUrl('/signin');
+      this.activateBackArrowSvc.setBackRoute('landing-page');
+    }
+  }
+
+
+  // For Desktop users, present register / signin as a dialog
+  private openDialog(component: string, cb: CallableFunction): void {
     const dialogRef = this.dialog.open(DesktopDialogComponent, {
       width: '340px',
       height: '525px',
@@ -97,42 +112,13 @@ export class LandingPageComponent implements OnInit {
     });
   }
 
-  registerUser() {
-    if (this.windowWidth > 600) {
-      this.openDialog('register', (result: string) => {
-        if (result === 'complete') {
-          this.signIn();
-        }
-      });
-    } else {
-      this.headerVisibleSvc.toggleHeaderVisible(true);
-      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-      this.router.navigateByUrl('/register');
-      this.activateBackArrowSvc.setBackRoute('landing-page');
-    }
-  }
+  private setImageBasedOnScreenWidth() {
+    this.windowWidth = window.innerWidth;
 
-  learnMore() {
-    this.headerVisibleSvc.toggleHeaderVisible(true);
-    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.router.navigateByUrl('/learn-more');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
-  }
-
-  signIn() {
     if (this.windowWidth > 600) {
-      this.openDialog('signin', (result: string) => {
-        if (result === 'complete') {
-          this.activateBackArrowSvc.setBackRoute('landing-page');
-          this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-          this.router.navigateByUrl('/home');
-        }
-      });
+      this.landingImage = 'landing-image' + this.landingImageNbr + '.jpeg';
     } else {
-      this.headerVisibleSvc.toggleHeaderVisible(true);
-      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-      this.router.navigateByUrl('/signin');
-      this.activateBackArrowSvc.setBackRoute('landing-page');
+      this.landingImage = 'landing-imageM' + this.landingImageNbr + '.jpeg';
     }
   }
 }

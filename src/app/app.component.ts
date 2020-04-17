@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router} from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
-import { SwPush, SwUpdate } from '@angular/service-worker';
+import { SwUpdate } from '@angular/service-worker';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -27,6 +27,7 @@ import { NewMessageCountService } from '@services/new-msg-count.service';
 // TODO: Add push notifications and location information
 // TODO: Can the side-to-side shimmy because web page on IOS be handled?
 // TODO: Reduce size of image storage.  Right now storing twice.
+// TODO: Clean up all ngOnInits by moving everything to specific functions
 
 @Component({
   selector: 'app-root',
@@ -39,18 +40,18 @@ export class AppComponent implements OnInit {
 
   readonly VAPID_PUBLIC_KEY = environment.vapidPublicKey;
 
-  userAuthorized$: Observable<boolean>;
+  notificationPermission: string;
   theme: string;
   font: string;
-  userAuthorized = false;
-  headerVisible = false;
-  headerDesktopVisible = false;
-  userProfile: Observable<IuserProfile>;
-  userConversations: Observable<Iconversation[]>;
+  userAuthorized: boolean = false;
+  headerVisible: boolean = false;
+  headerDesktopVisible: boolean = false;
   iphoneModelxPlus: boolean;
   newMessageCount: number;
-  userID: string;
 
+  private userID: string;
+  private userProfile: Observable<IuserProfile>;
+  private userConversations: Observable<Iconversation[]>;
 
   constructor(public translateSvc: TranslateService,
               private deviceSvc: DeviceService,
@@ -63,11 +64,10 @@ export class AppComponent implements OnInit {
               private messagesSvc: MessagesService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private newMsgCountSvc: NewMessageCountService,
-              private swPush: SwPush,
               private swUpdate: SwUpdate,
               private router: Router) {
-    console.log('AppComponent:constructor: get color theme');
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
+
     this.router.events
     .pipe(
       filter(
@@ -92,120 +92,98 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Listen for updated version of web app
-    if (this.swUpdate.isEnabled) { // Is service worker running?
-      this.swUpdate.available.subscribe(() => {
-        if (confirm('A new version of RVLikeMe is available. Would you like to update now?')) {
-          window.location.reload();
+
+    this.listenForUpdatedVersionOfApp();
+
+    this.listenForChangeInFontTheme();
+
+    this.listenForChangeInColorTheme();
+
+    this.listenForChangeInUserAuth();
+
+    this.listenForChangeInHeaderVisibility();
+
+    this.returnToStateIfUserLoggedIn();
+
+    this.listenForUserProfile();
+
+    this.listenForUserConversationsForMessageCount();
+
+    this.listenForInstallPrompts();
+
+  };
+
+  ngOnDestroy() {
+    this.profileSvc.dispose();
+  };
+
+
+  // This is supposed to scroll to the top for new pages but pageYOffset is always 0.  I think because of my top and bottom toolbars and required margins.
+  // TODO: make this work somehow because when going to connections or groups to other pages, they are scrolled and content is under toolbar at top.
+  onActivate(event: any) {
+    console.log('AppComponent:onActivate:')
+    let scrollToTop = window.setInterval(() => {
+        let pos = window.pageYOffset;
+        console.log('AppComponent:onActivate: pos=', pos);
+        if (pos > 0) {
+            window.scrollTo(0, pos - 20); // how far to scroll on each step
+        } else {
+            window.clearInterval(scrollToTop);
         }
-      })
-    }
+    }, 16);
+  }
 
-    // Listen for changes in font theme;
-    this.themeSvc.defaultGlobalFontTheme
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(fontData => {
-        this.font = fontData.valueOf();
-        console.log('AppComponent:ngOnInit: Font=', this.font);
-      });
 
-    // Listen for changes in color theme;
+  // Listen for changes in color theme;
+  private listenForChangeInColorTheme() {
     this.themeSvc.defaultGlobalColorTheme
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(themeData => {
-        this.theme = themeData.valueOf();
-        console.log('AppComponent:ngOnInit: Theme=', this.theme);
-      });
-
-    // Listen for changes in user authorization state
-    this.authSvc.userAuth$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(authData => {
-        this.userAuthorized = authData.valueOf();
-      });
-
-    // Listen for changes in whether should show header toolbar
-    this.headerVisibleSvc.headerVisible$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(header => {
-        this.headerVisible = header.valueOf();
-      });
-    this.headerVisibleSvc.headerDesktopVisible$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(header => {
-        this.headerDesktopVisible = header.valueOf();
-      });
-
-    // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
-    console.log('AppComponent:ngOnInit: checking if user is logged in');
-    if (this.authSvc.isLoggedIn()) {
-      this.authSvc.setUserToAuthorized(true);
-      this.profileSvc.getProfile();
-    }
-
-    // Get user profile
-    this.userProfile = this.profileSvc.profile;
-    // console.log('AppComponent:ngOnInit: call get profile');
-    // this.profileSvc.getProfile();
-    console.log('AppComponent:ngOnInit: subscribe to userProfile');
-
-    this.userProfile
-    // .pipe(untilComponentDestroyed(this))
-    .subscribe(profile => {
-      console.log('AppComponent:ngOnInit: got new profile=', profile);
-      if (profile.language) {
-        console.log('AppComponent:ngOnInit: Setting Language to ', profile.language);
-        this.language.setLanguage(profile.language);
-      } else {
-        console.log('AppComponent:ngOnInit: Setting Language to default');
-        this.language.setLanguage('en');
-      }
-      if (profile.colorThemePreference) {
-        this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
-      } else {
-        this.themeSvc.setGlobalColorTheme('light-theme');
-      }
-
-      // When we have actual profile data from the database, then go get the counts that will be used on the home page
-      console.log('AppComponent:ngOnInit: Before counts.  Profile=', profile);
-      if (profile._id) {
-        console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
-        this.likeMeCountsSvc.getLikeMeCountsPriority();
-        this.userID = profile.userID;
-        this.messagesSvc.getConversations();
-      }
-
-    }, (error) => {
-      console.error(error);
-      console.log('error, setting language to default');
-      this.language.setLanguage('en');
-      this.themeSvc.setGlobalColorTheme('light-theme');
-    });
-
-    this.userConversations = this.messagesSvc.conversation$;
-    this.userConversations
-    // .pipe(untilComponentDestroyed(this))
-    .subscribe(conversations => {
-      console.log('AppComponent:conversations: got conversations', conversations);
-      if (conversations.length === 0) {
-        this.newMessageCount = null;
-      } else {
-        this.newMsgCountSvc.getNewMessageCount(this.userID, conversations);
-      }
-    });
-
-    this.newMsgCountSvc.newMessageCount$
     .pipe(untilComponentDestroyed(this))
-    .subscribe(count => {
-      console.log('AppComponent:newMsgCount: got a count=', count);
-      if (count.valueOf() === 0) {
-        this.newMessageCount = null;
-      } else {
-        this.newMessageCount = count.valueOf();
-      }
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('AppComponent:ngOnInit: Theme=', this.theme);
+    });
+  }
+
+
+  // Listen for changes in font theme;
+  private listenForChangeInFontTheme() {
+    this.themeSvc.defaultGlobalFontTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(fontData => {
+      this.font = fontData.valueOf();
+      console.log('AppComponent:ngOnInit: Font=', this.font);
+    });
+  }
+
+
+  // Listen for changes in whether should show header toolbar
+  private listenForChangeInHeaderVisibility() {
+    this.headerVisibleSvc.headerVisible$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(header => {
+      this.headerVisible = header.valueOf();
     });
 
+    this.headerVisibleSvc.headerDesktopVisible$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(header => {
+      this.headerDesktopVisible = header.valueOf();
+    });
+  }
 
+
+  // Listen for changes in user authorization state
+  private listenForChangeInUserAuth() {
+    this.authSvc.userAuth$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(authData => {
+      this.userAuthorized = authData.valueOf();
+    });
+  }
+
+
+  // Listen for events around web app installation
+  private listenForInstallPrompts() {
     // Listen for Chrome event that indicates we can offer the user option to install the app
     window.addEventListener('beforeinstallprompt', (event) => {
 
@@ -234,26 +212,88 @@ export class AppComponent implements OnInit {
       }
     });
     this.iphoneModelxPlus = this.deviceSvc.iPhoneModelXPlus;
-  };
-
-  ngOnDestroy() {
-    console.log('dispose from app');
-    this.profileSvc.dispose();
-  };
+  }
 
 
-  // This is supposed to scroll to the top for new pages but pageYOffset is always 0.  I think because of my top and bottom toolbars and required margins.
-  // TODO: make this work somehow because when going to connections or groups to other pages, they are scrolled and content is under toolbar at top.
-  onActivate(event: any) {
-    console.log('AppComponent:onActivate:')
-    let scrollToTop = window.setInterval(() => {
-        let pos = window.pageYOffset;
-        console.log('AppComponent:onActivate: pos=', pos);
-        if (pos > 0) {
-            window.scrollTo(0, pos - 20); // how far to scroll on each step
-        } else {
-            window.clearInterval(scrollToTop);
+  // Listen for updated version of web app
+  private listenForUpdatedVersionOfApp() {
+    if (this.swUpdate.isEnabled) { // Is service worker running?
+      this.swUpdate.available.subscribe(() => {
+        if (confirm('A new version of RVLikeMe is available. Would you like to update now?')) {
+          window.location.reload();
         }
-    }, 16);
+      })
+    }
+  }
+
+
+  // Listen for conversations and if get valid conversations for this user, then initiate getting new message count and listen for that
+  private listenForUserConversationsForMessageCount() {
+    this.userConversations = this.messagesSvc.conversation$;
+    this.userConversations
+    // .pipe(untilComponentDestroyed(this))
+    .subscribe(conversations => {
+      console.log('AppComponent:conversations: got conversations', conversations);
+      if (conversations.length === 0) {
+        this.newMessageCount = null;
+      } else {
+        this.newMsgCountSvc.getNewMessageCount(this.userID, conversations);
+      }
+    });
+
+    this.newMsgCountSvc.newMessageCount$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(count => {
+      console.log('AppComponent:newMsgCount: got a count=', count);
+      if (count.valueOf() === 0) {
+        this.newMessageCount = null;
+      } else {
+        this.newMessageCount = count.valueOf();
+      }
+    });
+  }
+
+  // Listen for user profile.  Once we have a real profile, take other actions like getting Like Me Counts and user conversations
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    // .pipe(untilComponentDestroyed(this))
+    .subscribe(profile => {
+      console.log('AppComponent:ngOnInit: got new profile=', profile);
+      if (profile.language) {
+        console.log('AppComponent:ngOnInit: Setting Language to ', profile.language);
+        this.language.setLanguage(profile.language);
+      } else {
+        console.log('AppComponent:ngOnInit: Setting Language to default');
+        this.language.setLanguage('en');
+      }
+      if (profile.colorThemePreference) {
+        this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
+      } else {
+        this.themeSvc.setGlobalColorTheme('light-theme');
+      }
+
+      // When we have actual profile data from the database, then go get the counts that will be used on the home page
+      if (profile._id) {
+        console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
+        this.likeMeCountsSvc.getLikeMeCountsPriority();
+        this.userID = profile.userID;
+        this.messagesSvc.getConversations();
+      }
+    }, (error) => {
+      console.error(error);
+      console.log('error, setting language to default');
+      this.language.setLanguage('en');
+      this.themeSvc.setGlobalColorTheme('light-theme');
+    });
+  }
+
+
+  // If user leaves the page but returns (back on browser, bookmark, entering url, etc.), and auth token is still valid, return to state
+  private returnToStateIfUserLoggedIn() {
+    if (this.authSvc.isLoggedIn()) {
+      this.authSvc.setUserToAuthorized(true);
+      this.profileSvc.getProfile();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { SwUpdate, SwPush } from '@angular/service-worker';
@@ -22,17 +22,20 @@ import { environment } from '@environments/environment';
   styleUrls: ['./sidenav-list.component.scss']
 })
 export class SidenavListComponent implements OnInit {
-  backPath = '';
-  showInstallLink = false;
+
+  @Input('notificationPermission') notificationPermission: string;
+  @Output() sideNavClosed = new EventEmitter();
+
+  backPath: string = '';
+  showInstallLink:boolean = false;
   event: any;
-  deviceMode = false;
+  deviceMode: boolean = false;
+  showSpinner: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private windowWidth: any;
   private profileID: string;
-
-  @Output() sideNavClosed = new EventEmitter();
 
 
   @HostListener('window:resize', ['$event'])
@@ -73,8 +76,6 @@ export class SidenavListComponent implements OnInit {
     // .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
       this.profile = profile;
-      console.log('SideNav:ngOnInit: profile=', this.profile);
-      console.log('SideNav:ngOnInit: notify=', this.profile.notifySubscription);
       this.profileID = profile._id;
     });
 
@@ -120,6 +121,7 @@ export class SidenavListComponent implements OnInit {
   }
 
   onSubscribeNotifications() {
+    this.showSpinner = true;
     console.log('onSubscribeNotifications: swUpdate enabled=', this.swUpdate.isEnabled);
     if (this.swUpdate.isEnabled) {
       console.log('onSubscribeNotifications: swUpdate is enabled. requesting sub with key=', environment.vapidPublicKey);
@@ -131,32 +133,39 @@ export class SidenavListComponent implements OnInit {
         this.subscribeNotifiationsSvc.subscribeToNotifications(this.profileID, subscription)
         .subscribe(subscribeResults => {
           console.log('onSubscribeNotifications: received server response=', subscribeResults);
+          this.showSpinner = false;
+          this.closeSideNav();
         }, error => {
           console.error('onSubscribeNotifications: throw error ', error);
           throw new Error(error);
         })
       })
+      .catch(err => console.error("Could not subscribe to notifications", err));
     }
-    this.closeSideNav();
   }
 
   onUnsubscribeNotifications() {
+    this.showSpinner = true;
     this.subscribeNotifiationsSvc.unsubscribeFromNotifications(this.profileID)
     .subscribe(unsubscribeResults => {
       console.log('onSubscribeNotifications: received server response=', unsubscribeResults);
+      this.showSpinner = false;
+      this.closeSideNav();
     }, error => {
       console.error('onSubscribeNotifications: throw error ', error);
       throw new Error(error);
     });
-    this.closeSideNav();
   }
 
   onNotify() {
+    this.showSpinner = true;
     console.log('SideNavComponent:onNotify: in onNotify');
     console.log('SideNavComponent:onNotify: notify=', this.profile.notifySubscription);
     this.subscribeNotifiationsSvc.sendNotificationTest(this.profile.notifySubscription)
     .subscribe(notifyResult => {
       console.log('onNotify: message should be on the way', notifyResult);
+      this.showSpinner = false;
+      this.closeSideNav();
     }, error => {
       console.error('onNotify: throw error ', error);
       throw new Error(error);

@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { AuthenticationService } from '@services/data-services/authentication.service';
-import { HeaderVisibleService } from '@services/header-visibility.service';
+import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 
-import { ItokenPayload } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
 
 // TODO: Add forgot user id / password feature
@@ -32,19 +31,21 @@ export class SigninComponent implements OnInit {
   @Output() formComplete = new EventEmitter()
   public formCompleted: string;
 
-  userProfile: Observable<IuserProfile>;
   form: FormGroup;
-  hidePassword = true;
-  credentials: ItokenPayload = {
+  hidePassword: boolean = true;
+  httpError: boolean = false;
+  httpErrorText: string = 'No Error';
+
+  showSpinner = false;
+
+  private userProfile: Observable<IuserProfile>;
+  private returnRoute: string = '';
+  private credentials: ItokenPayload = {
     _id: '',
     email: '',
     password: '',
     tokenExpire: 0
   };
-  showSpinner = false;
-  httpError = false;
-  httpErrorText = 'No Error';
-  returnRoute = '';
 
   constructor(private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -66,19 +67,18 @@ export class SigninComponent implements OnInit {
   ngOnInit() {
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.activateBackArrowSvc.route$
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      this.returnRoute = data.valueOf();
-      if (this.returnRoute) {
-        if (this.returnRoute.substring(0, 1) === '*') {
-            this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
-        }
-      }
-    });
+
+    this.setReturnRoute();
    }
 
   ngOnDestroy() {};
+
+
+  // Form validation error handling
+  errorHandling = (control: string, error: string) => {
+    return this.form.controls[control].hasError(error);
+  }
+
 
    // For desktop only, have cancel button because in a dialog
    onCancel() {
@@ -86,6 +86,8 @@ export class SigninComponent implements OnInit {
     this.formComplete.emit(this.formCompleted);
   }
 
+
+  // Signin processing
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
     this.credentials.email = this.credentials.email.toLowerCase();
@@ -93,57 +95,14 @@ export class SigninComponent implements OnInit {
     this.httpError = false;
     this.httpErrorText = '';
     this.showSpinner = true;
+
+    // Login the user
     this.authSvc.login(this.credentials)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      // Get user profile
-      this.userProfile = this.profileSvc.profile;
-      console.log('SigninComponent:onSubmit: get profile');
+      // Once logged in, get the users profile for distribution throughout the app
       this.profileSvc.getProfile();
-
-      this.userProfile
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(data => {
-        console.log('SignInComponent:ngOnInit: got new profile data=', data);
-        if (data.language) {
-          console.log('Signin, set language to ', data.language);
-          this.language.setLanguage(data.language);
-        } else {
-          console.log('Signin, set language to default');
-          this.language.setLanguage('en');
-        }
-        if (data.colorThemePreference) {
-          this.themeSvc.setGlobalColorTheme(data.colorThemePreference);
-        } else {
-          this.themeSvc.setGlobalColorTheme('light-theme');
-        }
-        this.showSpinner = false;
-        this.authSvc.setUserToAuthorized(true);
-        if (this.returnRoute && this.returnRoute !== 'landing-page') {
-          // User booked-marked a specific page which can route too after authorization
-          this.router.navigateByUrl(this.returnRoute);
-          this.activateBackArrowSvc.setBackRoute('');
-        } else {
-          if (this.containerDialog) {
-            this.formCompleted = 'complete';
-            this.formComplete.emit(this.formCompleted);
-          } else {
-            // After user authorizied go to home page
-            this.router.navigateByUrl('/home');
-            this.activateBackArrowSvc.setBackRoute('');
-          }
-        }
-      }, (error) => {
-        console.error(error);
-        this.showSpinner = false;
-        this.httpError = true;
-        this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-        console.log('Signin error, set language to default');
-        this.language.setLanguage('en');
-        this.themeSvc.setGlobalColorTheme('light-theme')
-        console.log('error ', error);
-        this.shared.openSnackBar('It looks like you are having trouble connecting to the Internet','error', 5000);
-      });
+      this.listenForUserProfile();
     }, error => {
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(false);
@@ -164,8 +123,79 @@ export class SigninComponent implements OnInit {
     });
   }
 
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
+
+  // If user used a bookmark to go to a certain page, go there after valid signin
+  private handleReturnRoute() {
+    if (this.returnRoute && this.returnRoute !== 'landing-page') {
+      // User booked-marked a specific page which can route too after authorization
+      this.router.navigateByUrl(this.returnRoute);
+      this.activateBackArrowSvc.setBackRoute('');
+    } else {
+      if (this.containerDialog) {
+        this.formCompleted = 'complete';
+        this.formComplete.emit(this.formCompleted);
+      } else {
+        // After user authorizied go to home page
+        this.router.navigateByUrl('/home');
+        this.activateBackArrowSvc.setBackRoute('');
+      }
+    }
   }
 
+
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profileResult => {
+      this.setLanguage(profileResult);
+      this.setColorTheme(profileResult);
+      this.authSvc.setUserToAuthorized(true);
+      this.showSpinner = false;
+      this.handleReturnRoute();
+
+    }, error => {
+      console.error('SigninComponent:onSubmit: Error authorizing ', error);
+      this.showSpinner = false;
+      this.httpError = true;
+      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+      this.language.setLanguage('en');
+      this.themeSvc.setGlobalColorTheme('light-theme')
+      this.shared.openSnackBar('It looks like you are having trouble connecting to the Internet','error', 5000);
+    });
+  }
+  // Set dark/light color theme based on user preference or default of light-theme.
+  private setColorTheme(profile) {
+    if (profile.colorThemePreference) {
+      this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
+    } else {
+      this.themeSvc.setGlobalColorTheme('light-theme');
+    }
+  }
+
+
+  // Set user chosen language or set to default of US English
+  private setLanguage(profile) {
+    if (profile.language) {
+      console.log('Signin, set language to ', profile.language);
+      this.language.setLanguage(profile.language);
+    } else {
+      console.log('Signin, set language to default');
+      this.language.setLanguage('en');
+    }
+  }
+
+
+  private setReturnRoute() {
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(routeResult => {
+      this.returnRoute = routeResult.valueOf();
+      if (this.returnRoute) {
+        if (this.returnRoute.substring(0, 1) === '*') {
+            this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
+        }
+      }
+    });
+  }
 }
