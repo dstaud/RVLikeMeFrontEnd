@@ -28,6 +28,7 @@ import { NewMessageCountService } from '@services/new-msg-count.service';
 // TODO: Can the side-to-side shimmy because web page on IOS be handled?
 // TODO: Reduce size of image storage.  Right now storing twice.
 // TODO: Clean up all ngOnInits by moving everything to specific functions
+// TODO: For 'other' dialogs, when user clicks OK, pops up again
 
 @Component({
   selector: 'app-root',

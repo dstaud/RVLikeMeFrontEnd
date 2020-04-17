@@ -138,72 +138,7 @@ export class RegisterUserComponent implements OnInit {
   }
 
 
-  // App Install Option
-  private openInstallDialog(): void {
-    const dialogRef = this.dialog.open(InstallDialogComponent, {
-      width: '250px',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result !== 'canceled') {
-        this.event.prompt();
-
-        // Wait for the user to respond to the prompt
-        this.event.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('RegisterUserComponent:openInstallDialog: User accepted the install prompt');
-            this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
-          } else {
-            console.log('RegisterUserComponent:openInstallDialog: User dismissed the install prompt');
-          }
-        });
-      }
-    });
-  }
-
-  private registerUser() {
-    this.credentials.email = this.form.controls.email.value;
-    this.credentials.email = this.credentials.email.toLowerCase();
-    this.credentials.password = this.form.controls.password.value;
-    this.showSpinner = true;
-
-    this.authSvc.registerUser(this.credentials)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe((responseData) => {
-      if (responseData.status === 201) {
-        this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
-      } else {
-        this.profile.firstName = this.form.controls.firstName.value;
-        this.profile.language = 'en';
-        this.profile.colorThemePreference = 'light-theme';
-
-        this.addProfileForUser();
-      }
-    }, error => {
-      this.showSpinner = false;
-      this.httpError = true;
-      if (error.status === 401) {
-        this.httpErrorText = 'Invalid email address or password';
-      } else {
-        if (error.status === 403) {
-          this.httpErrorText = 'Email address already registered';
-        } else {
-          console.warn('ERROR: ', error);
-          if (error.message.includes('Unknown Error')) {
-            this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
-            this.httpErrorText = 'Please connect to Internet and try again';
-          } else {
-            this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-          }
-        }
-      }
-    });
-  }
-
-
+  // Create profile document in database for new user
   private addProfileForUser() {
     this.profileSvc.addProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
@@ -239,6 +174,74 @@ export class RegisterUserComponent implements OnInit {
       if (data !== null) {
         this.presentInstallOption = true;
         this.event = data.valueOf();
+      }
+    });
+  }
+
+
+  // App Install Option
+  private openInstallDialog(): void {
+    const dialogRef = this.dialog.open(InstallDialogComponent, {
+      width: '250px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result !== 'canceled') {
+        this.event.prompt();
+
+        // Wait for the user to respond to the prompt
+        this.event.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('RegisterUserComponent:openInstallDialog: User accepted the install prompt');
+            this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
+          } else {
+            console.log('RegisterUserComponent:openInstallDialog: User dismissed the install prompt');
+          }
+        });
+      }
+    });
+  }
+
+
+  // Save new user information in database and store user token locally
+  private registerUser() {
+    this.credentials.email = this.form.controls.email.value;
+    this.credentials.email = this.credentials.email.toLowerCase();
+    this.credentials.password = this.form.controls.password.value;
+    this.showSpinner = true;
+
+    this.authSvc.registerUser(this.credentials)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe((responseData) => {
+      if (responseData.status === 201) {
+        this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
+      } else {
+        this.profile.firstName = this.form.controls.firstName.value;
+        this.profile.language = 'en';
+        this.profile.colorThemePreference = 'light-theme';
+
+        this.addProfileForUser();
+      }
+    }, error => {
+      this.showSpinner = false;
+      this.httpError = true;
+      if (error.status === 401) {
+        this.httpErrorText = 'Invalid email address or password';
+      } else {
+        if (error.status === 403) {
+          this.httpErrorText = 'Email address already registered';
+        } else {
+          console.warn('ERROR: ', error);
+          if (error.message.includes('Unknown Error')) {
+            this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
+            this.httpErrorText = 'Please connect to Internet and try again';
+          } else {
+            this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+          }
+        }
       }
     });
   }

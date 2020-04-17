@@ -60,7 +60,7 @@
       <mat-form-field>
         <mat-select formControlName="aboutMe"
                     placeholder="{{ 'profile.component.aboutMe'| translate }}"
-                    (selectionChange)="selectedAboutMe($event.source.value)"
+                    (selectionChange)="onSelectedAboutMe($event.source.value)"
                     (openedChange) = "activatedAboutMe()"
                     aria-label="my rv experience">
           <mat-option aria-placeholder="About Me"
@@ -76,7 +76,7 @@
       <mat-form-field>
         <mat-select formControlName="language"
                     placeholder="{{ 'profile.component.preferred-language' | translate }}"
-                    (selectionChange)="setLanguage($event.source.value)"
+                    (selectionChange)="onSetLanguage($event.source.value)"
                     aria-label="select language">
           <mat-option value='en'>{{ "profile.component.english" | translate }}</mat-option>
           <mat-option value='es'>{{ "profile.component.spanish" | translate }}</mat-option>

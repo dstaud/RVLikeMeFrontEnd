@@ -94,104 +94,16 @@ export class ProfileComponent implements OnInit {
             }
 
   ngOnInit() {
-    this.form.disable();
-    this.showSpinner = true;
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
 
-    this.userProfile = this.profileSvc.profile;
+    this.form.disable();
+    this.showSpinner = true;
 
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      console.log('ProfileComponent:ngOnInit: got new profile data=', data);
-      this.profile = data;
-      this.totalPersonalFieldsWithData = 0;
-      this.totalLifestyleFieldsWithData = 0;
-      this.totalRigFieldsWithData = 0;
-
-      if (this.profile.aboutMe) {
-        if (this.profile.aboutMe.substring(0, 1) === '@') {
-          this.aboutMeOther = this.profile.aboutMe.substring(1, this.profile.aboutMe.length);
-          this.aboutMeFormValue = 'other';
-        } else {
-          this.aboutMeFormValue = this.profile.aboutMe;
-        }
-      }
-
-      this.form.patchValue ({
-        language: data.language,
-        aboutMe: this.aboutMeFormValue
-      });
-
-      if (data.firstName) { this.totalPersonalFieldsWithData++; };
-      if (data.lastName) { this.totalPersonalFieldsWithData++; };
-      if (data.displayName) { this.totalPersonalFieldsWithData++; };
-      if (data.yearOfBirth) { this.totalPersonalFieldsWithData++; };
-      if (data.homeCountry) { this.totalPersonalFieldsWithData++; };
-      if (data.homeState) { this.totalPersonalFieldsWithData++; };
-      if (data.gender) { this.totalPersonalFieldsWithData++; };
-      if (data.myStory) { this.totalPersonalFieldsWithData++; };
-      this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
-      if (this.percentPersonal < 13) {
-        this.personalProgressBarColor = 'warn'
-      } else {
-        this.personalProgressBarColor = 'primary'
-      }
-      if (this.percentPersonal > 74) {
-        this.personalEnteredMostInfo = true;
-      }
-
-      if (data.aboutMe) { this.totalLifestyleFieldsWithData++; };
-      if (data.rvUse) { this.totalLifestyleFieldsWithData++; };
-      if (data.worklife) { this.totalLifestyleFieldsWithData++; };
-      if (data.campsWithMe) { this.totalLifestyleFieldsWithData++; };
-      if (data.boondocking) { this.totalLifestyleFieldsWithData++; };
-      if (data.traveling) { this.totalLifestyleFieldsWithData++; };
-      this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
-      if (this.percentLifestyle < 5) {
-        this.lifestyleProgressBarColor = 'warn'
-      } else {
-        this.lifestyleProgressBarColor = 'primary'
-      }
-      if (this.percentLifestyle> 65) {
-        this.lifestyleEnteredMostInfo = true;
-      }
-
-      if (data.rigType) { this.totalRigFieldsWithData++; };
-      if (data.rigYear) { this.totalRigFieldsWithData++; };
-      if (data.rigManufacturer) { this.totalRigFieldsWithData++; };
-      if (data.rigBrand) { this.totalRigFieldsWithData++; };
-      if (data.rigModel) { this.totalRigFieldsWithData++; };
-      this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
-      if (this.percentRig < 13) {
-        this.rigProgressBarColor = 'warn'
-      } else {
-        this.rigProgressBarColor = 'primary'
-      }
-      if (this.percentRig > 49) {
-        this.rigEnteredMostInfo = true;
-      }
-
-      if (data.atv || data.motorcycle || data.travel || data.quilting || data.cooking || data.painting ||
-          data.blogging || data.livingFrugally || data.gaming || data.musicalInstrument || data.programming ||
-          data.mobileInternet) {
-        this.interestsIndicator = 'sentiment_very_satisfied';
-        this.interestsIndClass = 'has-interests';
-      } else {
-        this.interestsIndicator = 'sentiment_dissatisfied';
-        this.interestsIndClass = 'no-interests';
-      }
-
-      this.showSpinner = false;
-      this.form.enable();
-    }, (error) => {
-      this.showSpinner = false;
-      console.error(error);
-    });
+    this.listenForUserProfile();
    }
 
    ngOnDestroy() { }
@@ -199,15 +111,15 @@ export class ProfileComponent implements OnInit {
   // If use touches aboutMe control and had previously selected 'other' then open the dialog to show what they had entered.
   activatedAboutMe() {
     if (this.aboutMeOther) {
-      this.openDialog('other');
+      this.openOtherDialog('other');
     }
   }
 
 
   /**** Route to sub-profile pages as user selects ****/
-  onPersonal() {
+  onInterests() {
     this.activateBackArrowSvc.setBackRoute('profile');
-    this.router.navigateByUrl('/profile-personal');
+    this.router.navigateByUrl('/profile-interests');
   }
 
   onLifestyle() {
@@ -215,18 +127,147 @@ export class ProfileComponent implements OnInit {
     this.router.navigateByUrl('/profile-lifestyle');
   }
 
+  onPersonal() {
+    this.activateBackArrowSvc.setBackRoute('profile');
+    this.router.navigateByUrl('/profile-personal');
+  }
+
   onRig() {
     this.activateBackArrowSvc.setBackRoute('profile');
     this.router.navigateByUrl('/profile-rig');
   }
 
-  onInterests() {
-    this.activateBackArrowSvc.setBackRoute('profile');
-    this.router.navigateByUrl('/profile-interests');
+
+  // On user selection of Other from aboutMe control, open dialog to collection information. If not other, update database.
+  onSelectedAboutMe(event: string) {
+    if (event === 'other') {
+      this.openOtherDialog(event);
+    } else {
+      this.aboutMeOther = '';
+      this.updateAboutMe(event);
+    }
   }
 
-  // Wen user selects 'other' open dialog to collect data
-  openDialog(event: string): void {
+
+  // Set language based on user selection and store in database
+  onSetLanguage(entry: string) {
+    this.showLanguageSaveIcon = true;
+    this.profile.language = this.form.controls.language.value;
+    this.profileSvc.updateProfile(this.profile)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this.showLanguageSaveIcon = false;
+      this.language.setLanguage(entry);
+    }, error => {
+      this.showLanguageSaveIcon = false;
+      console.log('ProfileComponent:setLanguage: throw error ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  // Determine the percent complete for each type of data in the form and display appropriate data
+  private determinePercentComplete(profile) {
+    this.totalPersonalFieldsWithData = 0;
+    this.totalLifestyleFieldsWithData = 0;
+    this.totalRigFieldsWithData = 0;
+
+    // Personal data
+    if (profile.firstName) { this.totalPersonalFieldsWithData++; };
+    if (profile.lastName) { this.totalPersonalFieldsWithData++; };
+    if (profile.displayName) { this.totalPersonalFieldsWithData++; };
+    if (profile.yearOfBirth) { this.totalPersonalFieldsWithData++; };
+    if (profile.homeCountry) { this.totalPersonalFieldsWithData++; };
+    if (profile.homeState) { this.totalPersonalFieldsWithData++; };
+    if (profile.gender) { this.totalPersonalFieldsWithData++; };
+    if (profile.myStory) { this.totalPersonalFieldsWithData++; };
+    this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
+    if (this.percentPersonal < 13) {
+      this.personalProgressBarColor = 'warn'
+    } else {
+      this.personalProgressBarColor = 'primary'
+    }
+    if (this.percentPersonal > 74) {
+      this.personalEnteredMostInfo = true;
+    }
+
+    // Lifestyle data
+    if (profile.aboutMe) { this.totalLifestyleFieldsWithData++; };
+    if (profile.rvUse) { this.totalLifestyleFieldsWithData++; };
+    if (profile.worklife) { this.totalLifestyleFieldsWithData++; };
+    if (profile.campsWithMe) { this.totalLifestyleFieldsWithData++; };
+    if (profile.boondocking) { this.totalLifestyleFieldsWithData++; };
+    if (profile.traveling) { this.totalLifestyleFieldsWithData++; };
+    this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+    if (this.percentLifestyle < 5) {
+      this.lifestyleProgressBarColor = 'warn'
+    } else {
+      this.lifestyleProgressBarColor = 'primary'
+    }
+    if (this.percentLifestyle> 65) {
+      this.lifestyleEnteredMostInfo = true;
+    }
+
+    // Rig data
+    if (profile.rigType) { this.totalRigFieldsWithData++; };
+    if (profile.rigYear) { this.totalRigFieldsWithData++; };
+    if (profile.rigManufacturer) { this.totalRigFieldsWithData++; };
+    if (profile.rigBrand) { this.totalRigFieldsWithData++; };
+    if (profile.rigModel) { this.totalRigFieldsWithData++; };
+    this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
+    if (this.percentRig < 13) {
+      this.rigProgressBarColor = 'warn'
+    } else {
+      this.rigProgressBarColor = 'primary'
+    }
+    if (this.percentRig > 49) {
+      this.rigEnteredMostInfo = true;
+    }
+
+    // Interests Data
+    if (profile.atv || profile.motorcycle || profile.travel || profile.quilting || profile.cooking || profile.painting ||
+        profile.blogging || profile.livingFrugally || profile.gaming || profile.musicalInstrument || profile.programming ||
+        profile.mobileInternet) {
+      this.interestsIndicator = 'sentiment_very_satisfied';
+      this.interestsIndClass = 'has-interests';
+    } else {
+      this.interestsIndicator = 'sentiment_dissatisfied';
+      this.interestsIndClass = 'no-interests';
+    }
+  }
+
+
+  // Listen for profile data and then take actions based on that data
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profileResult => {
+      console.log('ProfileComponent:ngOnInit: got new profile data=', profileResult);
+      this.profile = profileResult;
+
+      this.readyAboutMeFormFieldData();
+
+      this.form.patchValue ({
+        language: profileResult.language,
+        aboutMe: this.aboutMeFormValue
+      });
+
+      this.determinePercentComplete(profileResult);
+
+      this.showSpinner = false;
+
+      this.form.enable();
+    }, (error) => {
+      this.showSpinner = false;
+      console.error('ProfileComponent:listenForUserProfile: error saving new profile ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  // When user selects 'other' open dialog to collect data
+  private openOtherDialog(event: string): void {
     let other = '';
     let selection = null;
     if (this.aboutMeOther) {
@@ -268,36 +309,21 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  // On user selection of Other from aboutMe control, open dialog to collection information. If not other, update database.
-  selectedAboutMe(event: string) {
-    if (event === 'other') {
-      this.openDialog(event);
-    } else {
-      this.aboutMeOther = '';
-      this.updateAboutMe(event);
+  // If user had previously selected 'other', then make set up data for correct display
+  private readyAboutMeFormFieldData() {
+    if (this.profile.aboutMe) {
+      if (this.profile.aboutMe.substring(0, 1) === '@') {
+        this.aboutMeOther = this.profile.aboutMe.substring(1, this.profile.aboutMe.length);
+        this.aboutMeFormValue = 'other';
+      } else {
+        this.aboutMeFormValue = this.profile.aboutMe;
+      }
     }
   }
 
 
-  // Set language based on user selection and store in database
-  setLanguage(entry: string) {
-    this.showLanguageSaveIcon = true;
-    this.profile.language = this.form.controls.language.value;
-    this.profileSvc.updateProfile(this.profile)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe ((responseData) => {
-      this.showLanguageSaveIcon = false;
-      this.language.setLanguage(entry);
-    }, error => {
-      this.showLanguageSaveIcon = false;
-      console.log('ProfileComponent:setLanguage: throw error ', error);
-      throw new Error(error);
-    });
-  }
-
-
   // Auto-update aboutMe selection to server
-  updateAboutMe(event: string) {
+  private updateAboutMe(event: string) {
     if (this.form.controls.aboutMe.value === '') {
       this.profile.aboutMe = null;
       this.form.patchValue({
