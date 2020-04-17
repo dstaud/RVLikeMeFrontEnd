@@ -10,7 +10,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { DeviceService } from '@services/device.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { ThemeService } from '@services/theme.service';
+
 
 
 @Component({
@@ -44,29 +44,86 @@ export class HeaderMobileComponent implements OnInit {
   constructor(private translate: TranslateService,
               private router: Router,
               private deviceSvc: DeviceService,
-              private themeSvc: ThemeService,
               private profileSvc: ProfileService,
               private headerVisibleSvc: HeaderVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService) { }
 
   ngOnInit() {
-    this.router.events
+    this.listenRouterEvents();
+
+    this.listenForUserProfile();
+
+    this.setDeviceSettings();
+
+    this.listenForAuthChanges();
+
+    // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
+    if (this.authSvc.isLoggedIn()) {
+      this.authSvc.setUserToAuthorized(true);
+    }
+
+    this.setReturnRoute();
+  }
+
+  ngOnDestroy() {}
+
+
+  onChangeProfileImage() {
+    this.router.navigateByUrl('/profile-personal');
+    this.activateBackArrowSvc.setBackRoute('/profile');
+  }
+
+
+  onChangeUsername() {
+    this.router.navigateByUrl('/credentials');
+    this.activateBackArrowSvc.setBackRoute('/home');
+  }
+
+
+  onUpdateProfile() {
+    this.router.navigateByUrl('/profile');
+    this.activateBackArrowSvc.setBackRoute('home');
+  }
+
+
+  onLogout() {
+    this.authSvc.logout();
+    this.profileSvc.dispose();
+    this.authSvc.setUserToAuthorized(false);
+    this.headerVisibleSvc.toggleHeaderVisible(false);
+    this.router.navigateByUrl('/');
+  }
+
+
+
+  returnToBackRoute() {
+    if (this.returnRoute === 'landing-page') {
+      this.headerVisibleSvc.toggleHeaderVisible(false);
+      this.router.navigateByUrl('/');
+    } else {
+      this.router.navigateByUrl('/' + this.returnRoute);
+    }
+    this.activateBackArrowSvc.setBackRoute('');
+  }
+
+
+  // Listen for changes in user authorization state
+  private listenForAuthChanges() {
+    this.authSvc.userAuth$
     .pipe(untilComponentDestroyed(this))
-    .subscribe({
-      next: (event) => {
-        if (event instanceof NavigationEnd) {
-          this.setTitleOnRouteChange();
-        }
-      }
+    .subscribe(authData => {
+      this.userAuthorized = authData.valueOf();
     });
+  }
 
+
+  // Listen for user profile and take action
+  private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
-
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('HeaderMobileComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       if (this.profile.colorThemePreference === 'light-theme') {
         this.lightTheme = true;
@@ -78,9 +135,28 @@ export class HeaderMobileComponent implements OnInit {
         this.profileImage = true;
       }
     }, (error) => {
-      console.error(error);
+      console.error('HeaderMobileComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
     });
+  }
 
+
+  // Used to display title in header, but may need this for other reasons so keeping for now
+  private listenRouterEvents() {
+    this.router.events
+    .pipe(untilComponentDestroyed(this))
+    .subscribe({
+      next: (event) => {
+        if (event instanceof NavigationEnd) {
+          this.setTitleOnRouteChange();
+        }
+      }
+    });
+  }
+
+
+  // Set arrow based on device
+  private setDeviceSettings() {
     this.device = this.deviceSvc.device;
     console.log('DEVICE=', this.device)
 
@@ -89,42 +165,33 @@ export class HeaderMobileComponent implements OnInit {
       this.arrowIcon = 'arrow_back_ios';
       // this.arrowIcon = 'keyboard_arrow_left';
     }
-
-    // Listen for changes in user authorization state
-    this.authSvc.userAuth$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(authData => {
-        this.userAuthorized = authData.valueOf();
-      });
-
-
-      // If user leaves the page but returns (back on browser, bookmark), and auth token is still valid, return to state
-    if (this.authSvc.isLoggedIn()) {
-      this.authSvc.setUserToAuthorized(true);
-    }
-
-    this.activateBackArrowSvc.route$
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(data => {
-        this.returnRoute = data.valueOf();
-        if (this.returnRoute) {
-          if (this.returnRoute.substring(0, 1) === '*') {
-              this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
-              this.autoRoute = true;
-              this.showBackArrow = false;
-            } else {
-              this.showBackArrow = true;
-            }
-          } else {
-              this.showBackArrow = false;
-              this.autoRoute = false;
-          }
-      });
   }
 
-  ngOnDestroy() {}
 
-  setTitleOnRouteChange(): void {
+  private setReturnRoute() {
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      this.returnRoute = data.valueOf();
+      if (this.returnRoute) {
+        if (this.returnRoute.substring(0, 1) === '*') {
+            this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
+            this.autoRoute = true;
+            this.showBackArrow = false;
+          } else {
+            this.showBackArrow = true;
+          }
+        } else {
+            this.showBackArrow = false;
+            this.autoRoute = false;
+        }
+    }, error => {
+      console.error('HeaderMobileComponent:setReturnRoute: error setting return route ', error);
+    });
+  }
+
+  // Current not used.  Consider removing.
+  private setTitleOnRouteChange(): void {
     if (this.router.url.includes('home')) {
      this.pageTitle = this.translate.instant('home.component.header');
     } else {
@@ -178,69 +245,5 @@ export class HeaderMobileComponent implements OnInit {
         }
       }
     }
-  }
-
-  changeProfileImage() {
-    this.router.navigateByUrl('/profile-personal');
-    this.activateBackArrowSvc.setBackRoute('/profile');
-  }
-
-
-  updateProfile() {
-    this.router.navigateByUrl('/profile');
-    this.activateBackArrowSvc.setBackRoute('home');
-  }
-
-
-  changeUsername() {
-    this.router.navigateByUrl('/credentials');
-    this.activateBackArrowSvc.setBackRoute('/home');
-  }
-
-
-  logout() {
-    this.authSvc.logout();
-    this.profileSvc.dispose();
-    this.authSvc.setUserToAuthorized(false);
-    this.headerVisibleSvc.toggleHeaderVisible(false);
-    this.router.navigateByUrl('/');
-  }
-
-
-  register() {
-    this.router.navigateByUrl('/register');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
-  }
-
-
-  returnToBackRoute() {
-    if (this.returnRoute === 'landing-page') {
-      this.headerVisibleSvc.toggleHeaderVisible(false);
-      this.router.navigateByUrl('/');
-    } else {
-      this.router.navigateByUrl('/' + this.returnRoute);
-    }
-    this.activateBackArrowSvc.setBackRoute('');
-  }
-
-  selectTheme(theme: string) {
-    this.lightTheme = !this.lightTheme;
-
-    this.themeSvc.setGlobalColorTheme(theme);
-    this.profile.colorThemePreference = theme;
-    this.profileSvc.updateProfile(this.profile)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe ((responseData) => {
-      console.log('update color theme response = ', responseData);
-      // this.profileSvc.distributeProfileUpdate(this.profile);
-    }, error => {
-      console.log('HeaderMobileComponent:selectTheme: throw error ', error);
-      throw new Error(error);
-    });
-  }
-
-  signIn() {
-    this.router.navigateByUrl('/signin');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
   }
 }

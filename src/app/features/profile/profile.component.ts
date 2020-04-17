@@ -6,7 +6,6 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { LanguageService } from '@services/language.service';
@@ -76,7 +75,6 @@ export class ProfileComponent implements OnInit {
 
 
   constructor(private authSvc: AuthenticationService,
-              private translate: TranslateService,
               private profileSvc: ProfileService,
               private location: Location,
               private language: LanguageService,

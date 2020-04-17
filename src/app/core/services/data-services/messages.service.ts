@@ -74,27 +74,6 @@ export class MessagesService {
     });
   }
 
-/*   getConversations() {
-    this.http.get<Iconversation[]>(`/api/conversations`)
-    .pipe(untilComponentDestroyed(this), retry(3))
-    .subscribe(this.handleConversationsData, this.handleConversationsError)
-  }
-
-  private handleConversationsData(conversationResult: Iconversation[]) {
-    this.dataStore.conversation = conversationResult;
-    this._conversation.next(Object.assign({}, this.dataStore).conversation);
-  }
-
-  private handleConversationsError(error) {
-    if (error.status === 404) {
-      console.log('MessagesService:getConversations: no conversations found');
-    } else {
-      console.log('MessagesService:getConversations: throw error ', error);
-      throw new Error(error);
-    }
-  } */
-
-
   getConversationsNotRead(userIdType: string): Observable<any> {
     console.log('MessagesService:getConversationsNotRead: userIdType=', userIdType);
     let param = JSON.parse('{"userIdType":"' + userIdType + '"}');

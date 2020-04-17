@@ -6,7 +6,6 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -14,7 +13,6 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
-import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
 export interface AboutMe {
@@ -158,7 +156,6 @@ export class LifestyleComponent implements OnInit {
   }
 
   constructor(private profileSvc: ProfileService,
-              private translate: TranslateService,
               private dialog: MatDialog,
               private location: Location,
               private router: Router,

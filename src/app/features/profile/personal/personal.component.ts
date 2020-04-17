@@ -16,7 +16,6 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
 
-import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
 export interface Gender {
@@ -167,9 +166,7 @@ export class PersonalComponent implements OnInit {
     this.setDialogWindowDimensions();
   }
 
-  constructor(private translate: TranslateService,
-              private shared: SharedComponent,
-              private authSvc: AuthenticationService,
+  constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private router: Router,
               private location: Location,

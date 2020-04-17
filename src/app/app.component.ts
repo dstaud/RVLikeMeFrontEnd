@@ -122,10 +122,8 @@ export class AppComponent implements OnInit {
   // This is supposed to scroll to the top for new pages but pageYOffset is always 0.  I think because of my top and bottom toolbars and required margins.
   // TODO: make this work somehow because when going to connections or groups to other pages, they are scrolled and content is under toolbar at top.
   onActivate(event: any) {
-    console.log('AppComponent:onActivate:')
     let scrollToTop = window.setInterval(() => {
         let pos = window.pageYOffset;
-        console.log('AppComponent:onActivate: pos=', pos);
         if (pos > 0) {
             window.scrollTo(0, pos - 20); // how far to scroll on each step
         } else {

@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
-import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DeviceService } from '@services/device.service';
 
 @Component({
@@ -13,8 +12,7 @@ export class FooterComponent implements OnInit {
 
   @Output() public sidenavToggle = new EventEmitter();
 
-  constructor(private activateBackArrowSvc: ActivateBackArrowService,
-              private deviceSvc: DeviceService) { }
+  constructor(private deviceSvc: DeviceService) { }
 
   ngOnInit() {
     this.iPhoneXPlus = this.deviceSvc.iPhoneModelXPlus;

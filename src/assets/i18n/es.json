@@ -9,12 +9,13 @@
     "forums": "grupos",
     "messages": "mensajes",
     "home": "casa",
-    "about": "acerca de",
+    "about": "acerca de RV Like Me",
     "more": "más",
     "profile": "perfil",
+    "settings": "ajustes",
     "install": "instalar aplicación",
-    "subscribe": "subscribe notifications",
-    "unsubscribe": "unsubscribe notifications"
+    "subscribe": "suscribirse notificaciones",
+    "unsubscribe": "darse de baja de notificacioness"
   },
   "signin.component": {
     "header": "Registrarse"

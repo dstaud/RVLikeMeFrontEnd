@@ -51,6 +51,11 @@ const routes: Routes = [
     import('./features/credentials/credentials.module')
     .then(m => m.CredentialsModule)
   },
+  { path: 'settings',
+  loadChildren: () =>
+  import('./features/settings/settings.module')
+  .then(m => m.SettingsModule)
+},
   { path: 'signin', component: SigninComponent },
   { path: 'register', component: RegisterUserComponent },
   { path: 'learn-more', component: LearnMoreComponent },
@@ -62,6 +67,7 @@ const routes: Routes = [
   { path: 'forums-list', component: ForumsListComponent },
   { path: 'mystory', component: YourStoryComponent },
   { path: '', component: LandingPageComponent },
+  { path: 'settings', loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule) },
   { path: '**', component: PageNotFoundComponent }
 ];
 

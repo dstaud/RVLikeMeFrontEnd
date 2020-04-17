@@ -6,7 +6,6 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -14,7 +13,6 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
-import { SharedComponent } from '@shared/shared.component';
 
 // TODO: Add rig database and hook to this component
 
@@ -71,8 +69,7 @@ export class RvRigComponent implements OnInit {
     $event.returnValue = true;
   }
 
-  constructor(private translate: TranslateService,
-              private authSvc: AuthenticationService,
+  constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private dialog: MatDialog,
               private router: Router,

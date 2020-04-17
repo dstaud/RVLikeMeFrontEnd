@@ -1,20 +1,14 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder} from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-
-import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-
-import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-interests',
@@ -48,7 +42,6 @@ export class InterestsComponent implements OnInit {
   private backPath: string;
 
   constructor(private profileSvc: ProfileService,
-              private translate: TranslateService,
               private location: Location,
               private router: Router,
               private authSvc: AuthenticationService,

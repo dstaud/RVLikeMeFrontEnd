@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ThemeService } from './theme.service';
 
+// TODO: Add page to explain how to 'install' web app for iPhone users
+
 @Injectable({
   providedIn: 'root'
 })
