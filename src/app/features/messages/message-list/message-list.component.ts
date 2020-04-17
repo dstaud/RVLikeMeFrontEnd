@@ -16,16 +16,17 @@ import { ShareDataService } from '@services/share-data.service';
   styleUrls: ['./message-list.component.scss']
 })
 export class MessageListComponent implements OnInit {
-  showSpinner: boolean = false;
   conversations: Array<Iconversation> = [];
-  userConversations: Observable<Iconversation[]>;
   displayName: string;
   userID: string;
   noConversations: boolean = false;
 
+  showSpinner: boolean = false;
+
    // Interface for profile data
-   profile: IuserProfile;
-   userProfile: Observable<IuserProfile>;
+   private profile: IuserProfile;
+   private userProfile: Observable<IuserProfile>;
+   private userConversations: Observable<Iconversation[]>;
 
   constructor(private messagesSvc: MessagesService,
               private profileSvc: ProfileService,
@@ -35,7 +36,48 @@ export class MessageListComponent implements OnInit {
   ngOnInit(): void {
     this.showSpinner = true;
 
-    // Listen for Profile changes
+    this.listenForUserProfile();
+
+    this.listenForUserConversations();
+  }
+
+
+  ngOnDestroy() {}
+
+  onClickGoToGroup() {
+    this.router.navigateByUrl('forums');
+  }
+
+  // When user clicks on a conversation, extract the information needed on the SendMessageComponent,
+  // save it for that component and navigate
+  onSelectSendTo(row: number) {
+    this.setParameters(row);
+
+    this.router.navigateByUrl('/messages/send-message');
+  }
+
+
+  // Listen for conversations for this user.
+  private listenForUserConversations() {
+    this.userConversations = this.messagesSvc.conversation$;
+    this.userConversations
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(conversations => {
+      if (conversations.length === 1 && conversations[0]._id === null) {
+      } else if (conversations.length === 0) {
+        this.noConversations = true;
+        this.showSpinner = false;
+      } else {
+        this.noConversations = false;
+        this.conversations = conversations;
+        this.showSpinner = false;
+      }
+    });
+  }
+
+
+  // Listen for Profile changes
+  private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
@@ -49,35 +91,11 @@ export class MessageListComponent implements OnInit {
     }, (error) => {
       console.error(error);
     });
-
-    this.userConversations = this.messagesSvc.conversation$;
-    this.userConversations
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(conversations => {
-      console.log('MessageListComponent:ngOnInit: got new conversations', conversations);
-      if (conversations.length === 1 && conversations[0]._id === null) {
-        console.log('MessageListComponent:ngOnInit: default conversation ', conversations);
-      } else if (conversations.length === 0) {
-        this.noConversations = true;
-        this.showSpinner = false;
-      } else {
-        console.log('MessageListComponent:ngOnInit: have a real conversation=', conversations);
-        this.noConversations = false;
-        this.conversations = conversations;
-        this.showSpinner = false;
-      }
-    });
   }
 
 
-  ngOnDestroy() {}
-
-  onGroup() {
-    this.router.navigateByUrl('forums');
-  }
-
-  // When user clicks on a conversation, extract the information needed on the SendMessageComponent, save save it for that component and navigate
-  onSelectSendTo(row: number) {
+  // Set parameters for selected row
+  private setParameters(row) {
     let params: any;
     let fromUserID: string;
     let fromDisplayName: string;
@@ -112,9 +130,6 @@ export class MessageListComponent implements OnInit {
             '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
             '"conversationID":"' + conversationID + '"}';
 
-    console.log('MessageListComponent:navigateToMessages: params=', params);
-
     this.shareDataSvc.setData(JSON.parse(params));
-    this.router.navigateByUrl('/messages/send-message');
   }
 }

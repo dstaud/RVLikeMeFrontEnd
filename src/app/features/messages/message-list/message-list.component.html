@@ -2,9 +2,9 @@
   <p class="mat-title">{{ 'messages.component.header' | translate }}</p>
   <div class="conversations">
     <div *ngIf="noConversations">
-      <span>{{ 'messages.component.noMessages1' | translate }} 
+      <span>{{ 'messages.component.noMessages1' | translate }}
             <span class="hyperlink"
-                  (click)='onGroup()'>
+                  (click)='onClickGoToGroup()'>
               {{ 'messages.component.noMessages2' | translate }}
             </span> {{ 'messages.component.noMessages3' | translate }}.
       </span>
