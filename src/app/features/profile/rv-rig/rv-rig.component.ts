@@ -30,15 +30,7 @@ export interface RigType {
 })
 export class RvRigComponent implements OnInit {
   form: FormGroup;
-  backPath: string;
-  helpMsg = '';
-
-  // Interface for Profile data
-  profile: IuserProfile;
-  userProfile: Observable<IuserProfile>;
-
   rigType = '';
-  rigTypeFormValue = '';
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -48,8 +40,6 @@ export class RvRigComponent implements OnInit {
   showrigBrandSaveIcon = false;
   showrigModelSaveIcon = false;
   showrigYearSaveIcon = false;
-
-  rvType = '';
 
   /**** Select form select field option data. ****/
   RigTypes: RigType[] = [
@@ -67,6 +57,12 @@ export class RvRigComponent implements OnInit {
     {value: 'other', viewValue: 'profile.component.list.rigtype.other'}
   ];
 
+  // Interface for Profile data
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
+  private backPath: string;
+  private rigTypeFormValue = '';
+
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -76,7 +72,6 @@ export class RvRigComponent implements OnInit {
   }
 
   constructor(private translate: TranslateService,
-              private shared: SharedComponent,
               private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private dialog: MatDialog,
@@ -90,41 +85,95 @@ export class RvRigComponent implements OnInit {
                 rigBrand: new FormControl(''),
                 rigModel: new FormControl(''),
                 rigYear: new FormControl('',
-                                              [Validators.minLength(4),
-                                              Validators.maxLength(4)])
+                                [Validators.minLength(4),
+                                Validators.maxLength(4)])
               },
                 { updateOn: 'blur' }
               );
 }
 
   ngOnInit() {
-    this.form.disable();
-
     // If user got to this page without logging in (i.e. a bookmark or attack), send
     // them to the signin page and set the back path to the page they wanted to go
-    this.showSpinner = true;
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
 
-    this.userProfile = this.profileSvc.profile;
+    this.form.disable();
+    this.showSpinner = true;
 
+    this.listenForUserProfile();
+  }
+
+  ngOnDestroy() {}
+
+  // Automatically pop-up the 'other' dialog with the correct
+  // control and name when use clicks on select if other
+  onActivateSelectItem(control: string, controlDesc: string) {
+    if (this[control]) {
+      this.openOtherDialog(control, controlDesc, 'other');
+    }
+  }
+
+  // Form Select option processing
+  onSelectedSelectItem(control: string, controlDesc: string, event: string) {
+
+    // If user chose other, set description for dialog
+    if (event === 'other') {
+      this.openOtherDialog(control, controlDesc, event);
+    } else {
+
+      // If user did not choose other, call the correct update processor for the field selected
+      this[control] = '';
+      this.updateSelectItem(control, event);
+    }
+  }
+
+  /**** Field auto-update processing ****/
+  onUpdateDataPoint(control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (this.form.controls[control].value === '') {
+      this.profile[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      this.profile[control] = this.form.controls[control].value;
+    }
+    this.updateRig(control);
+  }
+
+
+  // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
+  private handleOtherData(control: string): boolean {
+    let result = false;
+    if (this.profile[control]) {
+      if (this.profile[control].substring(0, 1) === '@') {
+        this[control] = this.profile[control].substring(1, this.profile[control].length);
+        result = true;
+      }
+    }
+    return result;
+  }
+
+
+  // Listen for user profile and when received, take action
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      console.log('RigComponent:ngOnInit: got new profile data=', data);
-      this.profile = data;
+    .subscribe(profileResult => {
+      this.profile = profileResult;
 
       // If user selected other on a form field, need to get the data they entered
-      if (this.otherData('rigType')) {
+      if (this.handleOtherData('rigType')) {
         this.rigTypeFormValue = 'other';
       } else {
         this.rigTypeFormValue = this.profile.rigType;
       }
 
-      if (data) {
+      if (profileResult) {
         this.form.patchValue ({
           rigType: this.rigTypeFormValue,
           rigYear: this.profile.rigYear,
@@ -138,22 +187,14 @@ export class RvRigComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       this.showSpinner = false;
-      console.error(error);
+      console.error('RigComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
     });
   }
 
-  ngOnDestroy() {}
-
-  // Automatically pop-up the 'other' dialog with the correct
-  // control and name when use clicks on select if other
-  activatedSelectItem(control: string, controlDesc: string) {
-    if (this[control]) {
-      this.openDialog(control, controlDesc, 'other');
-    }
-  }
 
   // Select form 'Other' Dialog
-  openDialog(control: string, name: string, event: string): void {
+  private openOtherDialog(control: string, name: string, event: string): void {
     let other = '';
     let selection = '';
     other = this[control];
@@ -191,46 +232,24 @@ export class RvRigComponent implements OnInit {
     });
   }
 
-  // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
-  otherData(control: string): boolean {
-    let result = false;
-    if (this.profile[control]) {
-      if (this.profile[control].substring(0, 1) === '@') {
-        this[control] = this.profile[control].substring(1, this.profile[control].length);
-        result = true;
-      }
-    }
-    return result;
-  }
 
-  // Form Select option processing
-  selectedSelectItem(control: string, controlDesc: string, event: string) {
-
-    // If user chose other, set description for dialog
-    if (event === 'other') {
-      this.openDialog(control, controlDesc, event);
-    } else {
-
-      // If user did not choose other, call the correct update processor for the field selected
-      this[control] = '';
-      this.updateSelectItem(control, event);
-    }
-  }
-
-  /**** Field auto-update processing ****/
-  updateDataPoint(control: string) {
+  // Update form field data on server
+  private updateRig(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    if (this.form.controls[control].value === '') {
-      this.profile[control] = null;
-      this.form.patchValue({ [control]: null });
-    } else {
-      this.profile[control] = this.form.controls[control].value;
-    }
-    this.updateRig(control);
+    this.profileSvc.updateProfile(this.profile)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this[SaveIcon] = false;
+    }, error => {
+      this[SaveIcon] = false;
+      console.log('PersonalComponent:updateRig: throw error ', error);
+      throw new Error(error);
+    });
   }
 
-  updateSelectItem(control: string, event) {
+
+  // Pre-process form data and call update on server
+  private updateSelectItem(control: string, event) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     if (event === '') {
@@ -240,29 +259,5 @@ export class RvRigComponent implements OnInit {
       this.profile[control] = event;
     }
     this.updateRig(control);
-  }
-
-  updateRig(control: string) {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this.profileSvc.updateProfile(this.profile)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe ((responseData) => {
-      this[SaveIcon] = false;
-      // this.profileSvc.distributeProfileUpdate(this.profile);
-    }, error => {
-      this[SaveIcon] = false;
-      console.log('PersonalComponent:updateRig: throw error ', error);
-      throw new Error(error);
-    });
-  }
-
-
-
-  // Validate year of birth entered is a number
-  yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
-    if (control.value !== undefined && (isNaN(control.value))) {
-      return { birthYear: true };
-    }
-    return null;
   }
 }

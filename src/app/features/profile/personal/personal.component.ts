@@ -49,28 +49,18 @@ and I can't notify them. */
 
 export class PersonalComponent implements OnInit {
   form: FormGroup;
-  backPath: string;
-  helpMsg = '';
-  profileImageUploaded:File = null;
-  profileImageUpdated: any;
-  profileImageTempUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
-  profileCompressedImage:File = null;
-  imgResultBeforeCompress: string;
-  imgResultAfterCompress: string;
-  localUrl: any;
-  sizeOfOriginalImage: number;
-  localCompressedURl: any;
-  sizeOFCompressedImage:number;
-  private windowWidth: any;
-  private dialogWidth: number;
-  private dialogWidthDisplay: string;
-
-  // Interface for Profile data
-  profile: IuserProfile;
-
-  userProfile: Observable<IuserProfile>;
+  // profileImageUploaded:File = null;
+  // profileImageUpdated: any;
+  // profileImageTempUrl = './../../../../assets/images/no-profile-pic.jpg';
+  // profileCompressedImage:File = null;
+  // imgResultBeforeCompress: string;
+  // imgResultAfterCompress: string;
+  // localUrl: any;
+  // sizeOfOriginalImage: number;
+  // localCompressedURl: any;
+  // sizeOFCompressedImage:number;
 
 
   // Spinner is for initial load from the database only.
@@ -154,6 +144,17 @@ export class PersonalComponent implements OnInit {
     {value: 'WY', viewValue: 'profile.component.list.homestate.wy'}
     ];
 
+
+  private windowWidth: any;
+  private dialogWidth: number;
+  private dialogWidthDisplay: string;
+  private backPath: string;
+
+  // Interface for Profile data
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
+
+
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
   @HostListener('window:beforeunload', ['$event'])
@@ -163,15 +164,7 @@ export class PersonalComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.windowWidth = window.innerWidth;
-    if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
-      } else {
-        this.dialogWidth = this.windowWidth * .95;
-      }
-      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
-    }
+    this.setDialogWindowDimensions();
   }
 
   constructor(private translate: TranslateService,
@@ -203,34 +196,80 @@ export class PersonalComponent implements OnInit {
     }
 
   ngOnInit() {
-
-    // Get window size to determine how to present dialog windows
-    this.windowWidth = window.innerWidth;
-    if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
-      } else {
-        this.dialogWidth = this.windowWidth * .95;
-      }
-      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
-    }
-
-    this.form.disable();
-
     // If user got to this page without logging in (i.e. a bookmark or attack), send
     // them to the signin page and set the back path to the page they wanted to go
-    this.showSpinner = true;
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
 
+    this.setDialogWindowDimensions();
+
+    this.form.disable();
+
+    this.showSpinner = true;
+
+    this.listenForUserProfile();
+  }
+
+  ngOnDestroy() {};
+
+  // Form validation error handling
+  errorHandling = (control: string, error: string) => {
+    return this.form.controls[control].hasError(error);
+  }
+
+
+  // Give user more space to enter their story
+  onMyStory() {
+    this.openMyStoryDialog(this.profile.myStory);
+  }
+
+
+  // Compress Image and offer up for user to crop
+  onProfileImageSelected(event: any) {
+    this.showSpinner = true;
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        this.openImageCropperDialog(uploadedFileUrl);
+      });
+    });
+  }
+
+
+  /**** Field auto-update processing ****/
+  onUpdateDataPoint(control: string) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (this.form.controls[control].value === '') {
+      this.profile[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      this.profile[control] = this.form.controls[control].value;
+    }
+    this.updatePersonal(control);
+  }
+
+  onUpdateSelectItem(control: string, event) {
+    let SaveIcon = 'show' + control + 'SaveIcon';
+    this[SaveIcon] = true;
+    if (event === '') {
+      this.profile[control] = null;
+      this.form.patchValue({ [control]: null });
+    } else {
+      this.profile[control] = event;
+    }
+    this.updatePersonal(control);
+  }
+
+
+  // Listen for user profile and then take action
+  private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('PersonalComponent:ngOnInit: got new profile data=', data);
       this.profile = data;
       if (data) {
         if (!data.displayName) { this.profile.displayName = this.profile.firstName }
@@ -253,32 +292,14 @@ export class PersonalComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       this.showSpinner = false;
-      console.error(error);
-    });
-  }
-
-  ngOnDestroy() {};
-
-
-  // Give user more space to enter their story
-  onMyStory() {
-    this.openMyStoryDialog(this.profile.myStory);
-  }
-
-
-  // Compress Image and offer up for user to crop
-  onProfileImageSelected(event: any) {
-    this.showSpinner = true;
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
-        this.openImageCropperDialog(uploadedFileUrl);
-      });
+      console.error('PersonalComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
     });
   }
 
 
   // Present image for user to crop
-  openImageCropperDialog(imageSource: string): void {
+  private openImageCropperDialog(imageSource: string): void {
     let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: this.dialogWidthDisplay,
@@ -312,7 +333,7 @@ export class PersonalComponent implements OnInit {
 
 
   // Let user update their story in a dialog with a lot more space to comfortably enter
-  openMyStoryDialog(myStory: string): void {
+  private openMyStoryDialog(myStory: string): void {
     const dialogRef = this.dialog.open(MyStoryDialogComponent, {
       width: this.dialogWidthDisplay,
       height: '80%',
@@ -326,14 +347,14 @@ export class PersonalComponent implements OnInit {
       if (result) {
         if (result !== 'canceled') {
           this.form.patchValue({'myStory': result});
-          this.updateDataPoint('myStory');
+          this.onUpdateDataPoint('myStory');
         } else {
           this.showSpinner = false;
         }
       } else {
         if (this.profile.myStory) {
           this.form.patchValue({'myStory': result});
-          this.updateDataPoint('myStory');
+          this.onUpdateDataPoint('myStory');
         }
         this.showSpinner = false;
       }
@@ -341,32 +362,22 @@ export class PersonalComponent implements OnInit {
   }
 
 
-  /**** Field auto-update processing ****/
-  updateDataPoint(control: string) {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    if (this.form.controls[control].value === '') {
-      this.profile[control] = null;
-      this.form.patchValue({ [control]: null });
-    } else {
-      this.profile[control] = this.form.controls[control].value;
+  // Get window size to determine how to present dialog windows
+  private setDialogWindowDimensions() {
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
     }
-    this.updatePersonal(control);
   }
 
-  updateSelectItem(control: string, event) {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    if (event === '') {
-      this.profile[control] = null;
-      this.form.patchValue({ [control]: null });
-    } else {
-      this.profile[control] = event;
-    }
-    this.updatePersonal(control);
-  }
 
-  updatePersonal(control: string) {
+  // Update data in profile document on database
+  private updatePersonal(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
@@ -382,14 +393,10 @@ export class PersonalComponent implements OnInit {
 
 
   // Validate year of birth entered is a number
-  yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
+  private yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
     if (control.value !== undefined && (isNaN(control.value))) {
       return { birthYear: true };
     }
     return null;
-  }
-
-  errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
   }
 }

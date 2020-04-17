@@ -28,11 +28,6 @@ export interface AboutMe {
 })
 export class ProfileComponent implements OnInit {
   form: FormGroup;
-  showSpinner = false;
-  showAboutMeSaveIcon = false;
-  showLanguageSaveIcon = false;
-  aboutMeOther: string;
-  aboutMeFormValue = '';
 
   percentPersonal: number;
   personalProgressBarColor: string;
@@ -46,6 +41,11 @@ export class ProfileComponent implements OnInit {
   interestsIndicator: string;
   interestsIndClass: string;
 
+  showSpinner = false;
+  showAboutMeSaveIcon = false;
+  showLanguageSaveIcon = false;
+
+  // TODO: Store the attribute data in database or in code?
   // About me is part of lifestyle, but is duplicated here because it is so important and because I'm hoping
   // users will see it on this page and select it and see they have already made progress in filling out
   // their profile!
@@ -57,18 +57,15 @@ export class ProfileComponent implements OnInit {
     {value: 'other', viewValue: 'profile.component.list.aboutme.other'}
   ];
 
+  private aboutMeOther: string;
+  private aboutMeFormValue = '';
+
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
 
   private backPath = '';
-  private totalPersonalFieldsWithData = 0;
-  private totalPersonalNbrOfFields = 8;
   private totalLifestyleFieldsWithData = 0;
   private totalLifestyleNbrOfFields = 6;
-
-  private totalRigFieldsWithData = 0;
-  private totalRigNbrOfFields = 5;
-
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -168,20 +165,25 @@ export class ProfileComponent implements OnInit {
 
   // Determine the percent complete for each type of data in the form and display appropriate data
   private determinePercentComplete(profile) {
-    this.totalPersonalFieldsWithData = 0;
+    let totalPersonalFieldsWithData = 0;
+    let totalPersonalNbrOfFields = 8;
+
+    let totalRigFieldsWithData = 0;
+    let totalRigNbrOfFields = 5;
+    totalPersonalFieldsWithData = 0;
     this.totalLifestyleFieldsWithData = 0;
-    this.totalRigFieldsWithData = 0;
+    totalRigFieldsWithData = 0;
 
     // Personal data
-    if (profile.firstName) { this.totalPersonalFieldsWithData++; };
-    if (profile.lastName) { this.totalPersonalFieldsWithData++; };
-    if (profile.displayName) { this.totalPersonalFieldsWithData++; };
-    if (profile.yearOfBirth) { this.totalPersonalFieldsWithData++; };
-    if (profile.homeCountry) { this.totalPersonalFieldsWithData++; };
-    if (profile.homeState) { this.totalPersonalFieldsWithData++; };
-    if (profile.gender) { this.totalPersonalFieldsWithData++; };
-    if (profile.myStory) { this.totalPersonalFieldsWithData++; };
-    this.percentPersonal = (this.totalPersonalFieldsWithData / this.totalPersonalNbrOfFields) * 100;
+    if (profile.firstName) { totalPersonalFieldsWithData++; };
+    if (profile.lastName) { totalPersonalFieldsWithData++; };
+    if (profile.displayName) { totalPersonalFieldsWithData++; };
+    if (profile.yearOfBirth) { totalPersonalFieldsWithData++; };
+    if (profile.homeCountry) { totalPersonalFieldsWithData++; };
+    if (profile.homeState) { totalPersonalFieldsWithData++; };
+    if (profile.gender) { totalPersonalFieldsWithData++; };
+    if (profile.myStory) { totalPersonalFieldsWithData++; };
+    this.percentPersonal = (totalPersonalFieldsWithData / totalPersonalNbrOfFields) * 100;
     if (this.percentPersonal < 13) {
       this.personalProgressBarColor = 'warn'
     } else {
@@ -209,12 +211,12 @@ export class ProfileComponent implements OnInit {
     }
 
     // Rig data
-    if (profile.rigType) { this.totalRigFieldsWithData++; };
-    if (profile.rigYear) { this.totalRigFieldsWithData++; };
-    if (profile.rigManufacturer) { this.totalRigFieldsWithData++; };
-    if (profile.rigBrand) { this.totalRigFieldsWithData++; };
-    if (profile.rigModel) { this.totalRigFieldsWithData++; };
-    this.percentRig = (this.totalRigFieldsWithData / this.totalRigNbrOfFields) * 100;
+    if (profile.rigType) { totalRigFieldsWithData++; };
+    if (profile.rigYear) { totalRigFieldsWithData++; };
+    if (profile.rigManufacturer) { totalRigFieldsWithData++; };
+    if (profile.rigBrand) { totalRigFieldsWithData++; };
+    if (profile.rigModel) { totalRigFieldsWithData++; };
+    this.percentRig = (totalRigFieldsWithData / totalRigNbrOfFields) * 100;
     if (this.percentRig < 13) {
       this.rigProgressBarColor = 'warn'
     } else {
@@ -339,7 +341,7 @@ export class ProfileComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;
-      // this.profileSvc.distributeProfileUpdate(this.profile);
+
       if (this.form.controls.aboutMe.value) {
         this.totalLifestyleFieldsWithData++;
       } else {

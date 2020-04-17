@@ -61,12 +61,6 @@ and I can't notify them. */
 })
 export class LifestyleComponent implements OnInit {
   form: FormGroup;
-  helpMsg = '';
-  backPath: string;
-
-  profile: IuserProfile;
-
-  userProfile: Observable<IuserProfile>;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -152,6 +146,10 @@ export class LifestyleComponent implements OnInit {
     {value: 'other', viewValue: 'profile.component.list.traveling.other'},
   ];
 
+  private backPath: string;
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
+
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
   @HostListener('window:beforeunload', ['$event'])
@@ -161,7 +159,6 @@ export class LifestyleComponent implements OnInit {
 
   constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
-              private shared: SharedComponent,
               private dialog: MatDialog,
               private location: Location,
               private router: Router,
@@ -179,8 +176,6 @@ export class LifestyleComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.form.disable();
-
     // If user got to this page without logging in (i.e. a bookmark or attack), send
     // them to the signin page and set the back path to the page they wanted to go
     this.showSpinner = true;
@@ -190,8 +185,40 @@ export class LifestyleComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    this.userProfile = this.profileSvc.profile;
+    this.form.disable();
 
+    this.listenForUserProfile();
+   }
+
+  ngOnDestroy() {};
+
+
+  // Automatically pop-up the 'other' dialog with the correct
+  // control and name when use clicks on select if other
+  onActivateSelectItem(control: string, controlDesc: string) {
+    if (this[control]) {
+      this.openOtherDialog(control, controlDesc, 'other');
+    }
+  }
+
+
+  // Form Select option processing
+  onSelectedSelectItem(control: string, controlDesc: string, event: string) {
+
+    // If user chose other, set description for dialog
+    if (event === 'other') {
+      this.openOtherDialog(control, controlDesc, event);
+    } else {
+
+      // If user did not choose other, call the correct update processor for the field selected
+      this[control] = '';
+      this.updateDataPoint(event, control);
+    }
+  }
+
+
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
@@ -244,28 +271,14 @@ export class LifestyleComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       this.showSpinner = false;
-      console.error(error);
+      console.error('LifestyleComponent:listeForUserProfile: error getting profile ', error);
+      throw new Error(error);
     });
   }
 
-  ngOnDestroy() {};
-
-  // Automatically pop-up the 'other' dialog with the correct
-  // control and name when use clicks on select if other
-  activatedSelectItem(control: string, controlDesc: string) {
-    if (this[control]) {
-      this.openDialog(control, controlDesc, 'other');
-    }
-  }
-
-  // Help pop-up text
-  formFieldHelp(controlDesc: string) {
-    this.helpMsg = this.translate.instant(controlDesc);
-    this.shared.openSnackBar(this.helpMsg, 'message');
-  }
 
   // Select form 'Other' Dialog
-  openDialog(control: string, name: string, event: string): void {
+  private openOtherDialog(control: string, name: string, event: string): void {
     let other = '';
     let selection = '';
     other = this[control];
@@ -305,7 +318,7 @@ export class LifestyleComponent implements OnInit {
 
 
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
-  otherData(control: string): boolean {
+  private otherData(control: string): boolean {
     let result = false;
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
@@ -317,23 +330,8 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-  // Form Select option processing
-  selectedSelectItem(control: string, controlDesc: string, event: string) {
-
-    // If user chose other, set description for dialog
-    if (event === 'other') {
-      this.openDialog(control, controlDesc, event);
-    } else {
-
-      // If user did not choose other, call the correct update processor for the field selected
-      this[control] = '';
-      this.updateDataPoint(event, control);
-    }
-  }
-
-
   /**** Field auto-update processing ****/
-  updateDataPoint(event: string, control: string) {
+  private updateDataPoint(event: string, control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     if (event === '') {
@@ -347,7 +345,7 @@ export class LifestyleComponent implements OnInit {
     this.updateLifestyle(control);
   }
 
-  updateLifestyle(control: string) {
+  private updateLifestyle(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))

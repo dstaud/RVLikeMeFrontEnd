@@ -27,7 +27,7 @@
                   formControlName="firstName"
                   autocomplete="name"
                   required
-                  (blur)="updateDataPoint('firstName')">
+                  (blur)="onUpdateDataPoint('firstName')">
           <mat-error *ngIf="errorHandling('firstName', 'required')">
             {{ "personal.component.firstNameRequired" | translate }} <strong>{{ "personal.component.firstName" | translate }}</strong>
           </mat-error>
@@ -43,7 +43,7 @@
                   placeholder="Last name"
                   formControlName="lastName"
                   autocomplete="name"
-                  (blur)="updateDataPoint('lastName')">
+                  (blur)="onUpdateDataPoint('lastName')">
         </mat-form-field>
         <mat-icon class="icon" *ngIf="showlastNameSaveIcon">save</mat-icon>
       </div>
@@ -56,7 +56,7 @@
                   placeholder="Display name"
                   formControlName="displayName"
                   required
-                  (blur)="updateDataPoint('displayName')">
+                  (blur)="onUpdateDataPoint('displayName')">
           <mat-error *ngIf="errorHandling('displayName', 'required')">
             {{ "personal.component.displayNameRequired" | translate }} <strong>{{ "personal.component.displayName" | translate }}</strong>
           </mat-error>
@@ -73,7 +73,7 @@
                     placeholder="My story"
                     formControlName="myStory"
                     (click)="onMyStory()"
-                    (blur)="updateDataPoint('myStory')">
+                    (blur)="onUpdateDataPoint('myStory')">
           </textarea>
         </mat-form-field>
         <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
@@ -85,7 +85,7 @@
                   type="text"
                   placeholder="Year of birth"
                   formControlName="yearOfBirth"
-                  (blur)="updateDataPoint('yearOfBirth')">
+                  (blur)="onUpdateDataPoint('yearOfBirth')">
         </mat-form-field>
         <mat-icon class="icon" *ngIf="showyearOfBirthSaveIcon">save</mat-icon>
       </div>
@@ -94,7 +94,7 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.gender" | translate }}</mat-label>
           <mat-select matNativeControl
-                      (selectionChange)="updateSelectItem('gender', $event.source.value)"
+                      (selectionChange)="onUpdateSelectItem('gender', $event.source.value)"
                       formControlName="gender">
             <mat-option aria-placeholder="gender"
                         *ngFor="let Gender of Genders"
@@ -110,7 +110,7 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.homeCountry" | translate }}</mat-label>
           <mat-select matNativeControl
-                      (selectionChange)="updateSelectItem('homeCountry', $event.source.value)"
+                      (selectionChange)="onUpdateSelectItem('homeCountry', $event.source.value)"
                       formControlName="homeCountry">
             <mat-option aria-placeholder="country"
                         *ngFor="let Country of Countries" [value]="Country.value">
@@ -125,7 +125,7 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.homeState" | translate }}</mat-label>
           <mat-select matNativeControl
-                      (selectionChange)="updateSelectItem('homeState', $event.source.value)"
+                      (selectionChange)="onUpdateSelectItem('homeState', $event.source.value)"
                       formControlName="homeState">
             <mat-option aria-placeholder="state"
                         *ngFor="let State of States" [value]="State.value">

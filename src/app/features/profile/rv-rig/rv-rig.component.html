@@ -7,8 +7,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="selectedSelectItem('rigType', 'rig.component.rigTypeDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('rigType', 'rig.component.rigTypeDesc')"
+                    (selectionChange)="onSelectedSelectItem('rigType', 'rig.component.rigTypeDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('rigType', 'rig.component.rigTypeDesc')"
                     formControlName="rigType">
           <mat-option aria-placeholder="Rig Type"
                       *ngFor="let RigType of RigTypes" [value]="RigType.value">
@@ -26,7 +26,7 @@
                 type="text"
                 placeholder="Rig Year"
                 formControlName="rigYear"
-                (blur)="updateDataPoint('rigYear')">
+                (blur)="onUpdateDataPoint('rigYear')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigYearSaveIcon">save</mat-icon>
     </div>
@@ -38,7 +38,7 @@
                 type="text"
                 placeholder="Rig manufacturer"
                 formControlName="rigManufacturer"
-                (blur)="updateDataPoint('rigManufacturer')">
+                (blur)="onUpdateDataPoint('rigManufacturer')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigManufacturerSaveIcon">save</mat-icon>
     </div>
@@ -50,7 +50,7 @@
                 type="text"
                 placeholder="Rig brand"
                 formControlName="rigBrand"
-                (blur)="updateDataPoint('rigBrand')">
+                (blur)="onUpdateDataPoint('rigBrand')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigBrandSaveIcon">save</mat-icon>
     </div>
@@ -62,7 +62,7 @@
                 type="text"
                 placeholder="Rig model"
                 formControlName="rigModel"
-                (blur)="updateDataPoint('rigModel')">
+                (blur)="onUpdateDataPoint('rigModel')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigModelSaveIcon">save</mat-icon>
     </div>

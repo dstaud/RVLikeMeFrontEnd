@@ -7,8 +7,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.aboutMeDesc" | translate }}</mat-label>
         <mat-select formControlName="aboutMe"
-                    (selectionChange)="selectedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc')"
+                    (selectionChange)="onSelectedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc')"
                     aria-label="my rv experience">
           <mat-option aria-placeholder="About Me"
                       *ngFor="let AboutMe of AboutMes"
@@ -24,8 +24,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="selectedSelectItem('rvUse', 'lifestyle.component.rvUseDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('rvUse', 'lifestyle.component.rvUseDesc')"
+                    (selectionChange)="onSelectedSelectItem('rvUse', 'lifestyle.component.rvUseDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('rvUse', 'lifestyle.component.rvUseDesc')"
                     formControlName="rvUse">
           <mat-option aria-placeholder="RV Lifestyle"
                       *ngFor="let RvLifestyle of RvLifestyles" [value]="RvLifestyle.value">
@@ -40,8 +40,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.worklifeDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="selectedSelectItem('worklife', 'lifestyle.component.worklifeDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('worklife', 'lifestyle.component.worklifeDesc')"
+                    (selectionChange)="onSelectedSelectItem('worklife', 'lifestyle.component.worklifeDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('worklife', 'lifestyle.component.worklifeDesc')"
                     formControlName="worklife">
           <mat-option aria-placeholder="work life"
                       *ngFor="let Worklife of Worklives" [value]="Worklife.value">
@@ -56,8 +56,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.campsWithMeDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="selectedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc')"
+                    (selectionChange)="onSelectedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc')"
                     formControlName="campsWithMe">
           <mat-option aria-placeholder="Camps with me"
                       *ngFor="let CampsWithMe of CampsWithMes" [value]="CampsWithMe.value">
@@ -72,8 +72,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.boondockingDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="selectedSelectItem('boondocking', 'lifestyle.component.boondockingDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('boondocking', 'lifestyle.component.boondockingDesc')"
+                    (selectionChange)="onSelectedSelectItem('boondocking', 'lifestyle.component.boondockingDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('boondocking', 'lifestyle.component.boondockingDesc')"
                     formControlName="boondocking">
           <mat-option aria-placeholder="Boondocking"
                       *ngFor="let Boondocking of Boondockings" [value]="Boondocking.value">
@@ -88,8 +88,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.travelingDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="selectedSelectItem('traveling', 'lifestyle.component.travelingDesc', $event.source.value)"
-                    (openedChange) = "activatedSelectItem('traveling', 'lifestyle.component.travelingDesc')"
+                    (selectionChange)="onSelectedSelectItem('traveling', 'lifestyle.component.travelingDesc', $event.source.value)"
+                    (openedChange) = "onActivateSelectItem('traveling', 'lifestyle.component.travelingDesc')"
                     formControlName="traveling">
           <mat-option aria-placeholder="Traveling"
                       *ngFor="let Traveling of Travelings" [value]="Traveling.value">
