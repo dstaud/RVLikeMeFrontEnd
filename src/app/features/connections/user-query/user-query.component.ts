@@ -26,15 +26,15 @@ export class UserQueryComponent implements OnInit {
 
   @Output() onCancelQuery = new EventEmitter()
 
-  showSpinner = false;
-  showAllMatches = false;
-  showQueryResults = false;
-  showSingleMatchForumOffer = true;
-  disableSingleMatchForumOffer = true;
-  showMultiMatchQuery = false;
-  showQueryCancel = false;
-  showNoConnections = false;
-  queryMatches = false;
+  showSpinner: boolean = false;
+  showAllMatches: boolean = false;
+  showQueryResults: boolean = false;
+  showSingleMatchForumOffer: boolean = true;
+  showMultiMatchQuery: boolean = false;
+  showQueryCancel: boolean = false;
+  showNoConnections: boolean = false;
+  disableSingleMatchForumOffer: boolean = true;
+  queryMatches: boolean = false;
   queryResultMessagePrefix: string;
   matchResults = [];
   theme: string;
@@ -42,7 +42,6 @@ export class UserQueryComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private backPath: string;
-  // private queryParam: string;
 
   constructor(private translate: TranslateService,
               private auth: AuthenticationService,
@@ -61,19 +60,48 @@ export class UserQueryComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    console.log('UserQueryComponent:ngOnInit: matches input=', this.matches);
-    // Listen for changes in color theme;
-    console.log('ForumsListComponent:ngOnInit: getting theme');
-    this.themeSvc.defaultGlobalColorTheme
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(themeData => {
-      this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
-    });
-
     this.showSpinner = true;
 
-    // Look for matches with user-selected query parameters
+    this.listenForColorTheme();
+
+    this.getQueryResults();
+
+    this.listenForUserProfile();
+  }
+
+  ngOnDestroy() {}
+
+
+  // If user selects cancel
+  onCancel() {
+    this.onCancelQuery.emit();
+  }
+
+
+  // When user selects the forum group, save the parameters in a shared data service
+  onSelectForumGroup() {
+    let name: string;
+    let value: any;
+
+    let queryParams = '{';
+    name = this.matches[0].name;
+    value = this.matches[0].value;
+    queryParams = queryParams + '"' + name + '":"' + value + '"';
+    for (let i=1; i < this.matches.length; i++) {
+      name = this.matches[i].name;
+      value = this.matches[i].value;
+      queryParams = queryParams + ',"' + name + '":"' + value + '"';
+    }
+    queryParams = queryParams + '}'
+
+    this.shareDataSvc.setData(queryParams);
+    this.activateBackArrowSvc.setBackRoute('connections');
+    this.router.navigateByUrl('/forums');
+  }
+
+
+  // Look for matches with user-selected query parameters
+  private getQueryResults() {
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
     .subscribe(matchResults => {
       this.matchQueryParams(matchResults);
@@ -81,10 +109,22 @@ export class UserQueryComponent implements OnInit {
       console.log('UserQueryComponent:ngOnInit: throw error ', error);
       throw new Error(error);
     });
+  }
 
-    this.showSpinner = true;
 
-    // Get user's profile
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    });
+  }
+
+
+  // Get user's profile and save
+  private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
@@ -96,8 +136,6 @@ export class UserQueryComponent implements OnInit {
       throw new Error(error);
     });
   }
-
-  ngOnDestroy() {}
 
 
   private matchQueryParams(matchResults) {
@@ -149,29 +187,5 @@ export class UserQueryComponent implements OnInit {
     }
     // this.queryParam = this.queryParam + '"theme":"' + this.theme + '"}';
     this.showSpinner = false;
-  }
-  onCancel() {
-    this.onCancelQuery.emit();
-  }
-
-  onForum() {
-    let name: string;
-    let value: any;
-
-    let queryParams = '{';
-    name = this.matches[0].name;
-    value = this.matches[0].value;
-    queryParams = queryParams + '"' + name + '":"' + value + '"';
-    for (let i=1; i < this.matches.length; i++) {
-      name = this.matches[i].name;
-      value = this.matches[i].value;
-      queryParams = queryParams + ',"' + name + '":"' + value + '"';
-    }
-    queryParams = queryParams + '}'
-    console.log('UserQueryComponent:onForum: navigate to forums with ', queryParams)
-
-    this.shareDataSvc.setData(queryParams);
-    this.activateBackArrowSvc.setBackRoute('connections');
-    this.router.navigateByUrl('/forums');
   }
 }

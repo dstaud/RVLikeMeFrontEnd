@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -18,13 +17,13 @@ import { SharedComponent } from '@shared/shared.component';
 export class CredentialsComponent implements OnInit {
   credentials: ItokenPayload;
   form: FormGroup;
-  showSpinner = false;
   httpError = false;
   httpErrorText = '';
 
+  showSpinner = false;
+
   constructor(private authSvc: AuthenticationService,
               private shared: SharedComponent,
-              private router: Router,
               fb: FormBuilder) {
               this.form = fb.group({
                 username: new FormControl({value: ''}, [Validators.required, Validators.email])
@@ -36,23 +35,20 @@ export class CredentialsComponent implements OnInit {
   ngOnInit() {
     this.form.disable();
     this.showSpinner = true;
-    this.authSvc.getUsername()
-    .pipe(take(1))
-    .subscribe(credentials => {
-      this.credentials = credentials;
-      this.form.patchValue({
-        username: this.credentials.email
-      });
-      this.showSpinner = false;
-      this.form.enable();
-    }, (err) => {
-      this.showSpinner = false;
-      console.error(err);
-    });
+
+    this.getCredentials();
   }
 
   ngOnDestroy() {};
 
+
+  // Form validation error handling
+  errorHandling = (control: string, error: string) => {
+    return this.form.controls[control].hasError(error);
+  }
+
+
+  // Update user name in database
   onSubmit() {
     this.credentials.email = this.form.controls.username.value;
     this.credentials.email = this.credentials.email.toLowerCase();
@@ -76,7 +72,22 @@ export class CredentialsComponent implements OnInit {
     });
   }
 
-  public errorHandling = (control: string, error: string) => {
-    return this.form.controls[control].hasError(error);
+
+  // Get username from database
+  private getCredentials() {
+    this.authSvc.getUsername()
+    .pipe(take(1))
+    .subscribe(credentials => {
+      this.credentials = credentials;
+      this.form.patchValue({
+        username: this.credentials.email
+      });
+      this.showSpinner = false;
+      this.form.enable();
+    }, error => {
+      this.showSpinner = false;
+      console.error('CredentialsComponent:getCredentials: error getting user credentials ', error);
+      throw new Error(error);
+    });
   }
 }

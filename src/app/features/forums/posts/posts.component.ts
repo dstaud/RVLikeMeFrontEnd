@@ -141,6 +141,35 @@ export class PostsComponent implements OnInit {
   }
 
 
+  // Open dialog for user to update their post
+  onOpenUpdatePostDialog(row: number): void {
+    const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
+      width: this.dialogWidthDisplay,
+      height: '80%',
+      disableClose: true,
+      data: { post: this.posts[row].body }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result !== 'canceled') {
+        this.forumSvc.updatePost(this.posts[row]._id, result)
+        .subscribe(postResult => {
+          this.posts[row].body = postResult.body;
+          this.showSpinner = false;
+        }, error => {
+          this.showSpinner = false;
+          console.log('PostsComponent:openUpdatePostDialog: throw error ', error);
+          throw new Error(error);
+        });
+      } else {
+        this.showSpinner = false;
+      }
+    });
+  }
+
+
   // After submits their post, this is called from child component
   postAddComplete(newPost: any): void {
     if (newPost !== 'canceled') {
@@ -309,35 +338,6 @@ export class PostsComponent implements OnInit {
     }, (error) => {
       console.error('PostsComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
-    });
-  }
-
-
-  // Open dialog for user to update their post
-  private openUpdatePostDialog(row: number): void {
-    const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
-      width: this.dialogWidthDisplay,
-      height: '80%',
-      disableClose: true,
-      data: { post: this.posts[row].body }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result !== 'canceled') {
-        this.forumSvc.updatePost(this.posts[row]._id, result)
-        .subscribe(postResult => {
-          this.posts[row].body = postResult.body;
-          this.showSpinner = false;
-        }, error => {
-          this.showSpinner = false;
-          console.log('PostsComponent:openUpdatePostDialog: throw error ', error);
-          throw new Error(error);
-        });
-      } else {
-        this.showSpinner = false;
-      }
     });
   }
 

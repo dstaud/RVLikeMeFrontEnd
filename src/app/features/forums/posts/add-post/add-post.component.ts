@@ -33,6 +33,11 @@ export class AddPostComponent implements OnInit {
   ngOnInit() {
   }
 
+  // Whether canceled or posted, send the appropriate data back up the chain
+  onDoneWithAdd(post: any) {
+    this.postAddComplete.emit(post);
+  }
+
 
   // When user clicks post, update the database
   onPost() {
@@ -41,18 +46,12 @@ export class AddPostComponent implements OnInit {
     let postText = this.form.controls.post.value;
     this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl)
     .subscribe(post => {
-      this.doneWithAdd(post);
+      this.onDoneWithAdd(post);
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
       console.log('AddPostComponent:onPost: throw error ', error);
       throw new Error(error);
     });
-  }
-
-
-  // Whether canceled or posted, send the appropriate data back up the chain
-  private doneWithAdd(post: any) {
-    this.postAddComplete.emit(post);
   }
 }

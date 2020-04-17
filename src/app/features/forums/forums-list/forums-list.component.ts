@@ -19,8 +19,6 @@ import { ShareDataService } from '@services/share-data.service';
 })
 export class ForumsListComponent implements OnInit {
   groupListDisplayAttributes = [];
-  groupsListFromUserProfile = [];
-  groupProfileDisplayAttributesFromGroup = [];
   theme: string;
 
   showSpinner: boolean = false;
@@ -28,6 +26,8 @@ export class ForumsListComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private backPath: string;
+  private groupsListFromUserProfile = [];
+  private groupProfileDisplayAttributesFromGroup = [];
 
   constructor(private router: Router,
               private auth: AuthenticationService,
@@ -46,33 +46,12 @@ export class ForumsListComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
-    // Listen for changes in color theme;
-    console.log('ForumsListComponent:ngOnInit: getting theme');
-    this.themeSvc.defaultGlobalColorTheme
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(themeData => {
-      this.theme = themeData.valueOf();
-    });
+    this.listenForColorTheme();
 
-    // Listen for changes in Profile
-    this.userProfile = this.profileSvc.profile;
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      console.log('ForumsListComponent:ngOnInit: got new profile', data)
-      this.profile = data;
-      if (this.profile._id) {
-        console.log('ForumsListComponent:ngOnInit: getting groups')
-        this.groupListDisplayAttributes = this.getGroups();
-      }
-    }, (error) => {
-      console.error(error);
-    });
+    this.listenForUserProfile();
   }
 
   ngOnDestroy() {
-    console.log('ForumslistComponent:ngOnDestroy:')
-    // this.elementRef.nativeElement.remove();
   }
 
   // If user likes the comment, add to the total for likes for the comment
@@ -136,4 +115,32 @@ export class ForumsListComponent implements OnInit {
     return groupProfileDisplayAttributesFromGroup;
   }
 
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    console.log('ForumsListComponent:ngOnInit: getting theme');
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    });
+  }
+
+
+  // Listen for changes in Profile and take action
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      console.log('ForumsListComponent:ngOnInit: got new profile', data)
+      this.profile = data;
+      if (this.profile._id) {
+        console.log('ForumsListComponent:ngOnInit: getting groups')
+        this.groupListDisplayAttributes = this.getGroups();
+      }
+    }, (error) => {
+      console.error(error);
+    });
+  }
 }

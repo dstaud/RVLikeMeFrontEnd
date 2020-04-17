@@ -52,7 +52,6 @@ export class ConnectionsComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private routeSubscription: any;
-  private navSubscription: any;
   private allUsersCount: number;
   private queryParams: string;
   private allCountsReceived: boolean = false;
@@ -82,70 +81,23 @@ export class ConnectionsComponent implements OnInit {
 
     this.showSpinner = true;
 
-    this.navSubscription = this.router.events
-    .pipe(
-      filter(event => event instanceof NavigationEnd)
-    )
-    .subscribe(() => window.scrollTo(0,0));
+    this.listenForColorTheme();
 
-    // Listen for changes in color theme;
-    console.log('ForumsListComponent:ngOnInit: getting theme');
-    this.themeSvc.defaultGlobalColorTheme
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(themeData => {
-      this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
-    }, error => {
-      console.error(error);
-    });
+    this.listenForUserProfile();
 
-    // Get user's profile
-    this.userProfile = this.profileSvc.profile;
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      console.log('ConnectionsComponent:ngOnInit: got new profile data=', data);
-      this.profile = data;
-    }, error => {
-      console.error(error);
-    });
-
-    // If coming from a link on the home page, will have a param which will be one of the checkbox
-    // items on this page and it should be checked (taken care of in the template based on param below)
-    this.routeSubscription = this.route
-    .queryParams
-    .subscribe(params => {
-      if (params.item) {
-        this.param = params.item;
-        this.showSingleMatchForumOffer = true;
-        this.disableSingleMatchForumOffer = false;
-        this.checkArray = this.form.get('likeMe') as FormArray;
-        this.checkArray.push(new FormControl(this.param));
-      }
-    }, error => {
-      console.error(error);
-    });
+    this.listenForParameters();
 
     // Get all of the rest of the counts not obtained by app-component.
     // TODO: figure out how to deactivate the checkboxes until secondary is complete
     this.likeMeCountsSvc.getLikeMeCountsSecondary();
 
-    // Get object containing counts of all other users that match this user's profile items
-    this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
-    this.likeMeCounts
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(counts => {
-      this.displayMatches(counts);
-    }, (error) => {
-      this.showSpinner = false;
-      console.error(error);
-    });
+    this.listenForLikeMeCounts();
   }
 
   ngOnDestroy() {
     this.routeSubscription.unsubscribe();
-    this.navSubscription.unsubscribe();
   }
+
 
   // Called from child component if user clicks on the cancel button there.
   // In this case, clear the array of checked items and hide query child component.
@@ -157,7 +109,7 @@ export class ConnectionsComponent implements OnInit {
   }
 
 
-  // Display matches
+  // Display user-readable matches with counts
   private displayMatches(counts) {
     this.allUsersCount = counts.allUsersCount;
 
@@ -329,6 +281,66 @@ export class ConnectionsComponent implements OnInit {
       this.disableSingleMatchForumOffer = true;
     }
   }
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  // If coming from a link on the home page, will have a param which will be one of the checkbox
+  // items on this page and it should be checked (taken care of in the template based on param below)
+  private listenForParameters() {
+    this.routeSubscription = this.route
+    .queryParams
+    .subscribe(params => {
+      if (params.item) {
+        this.param = params.item;
+        this.showSingleMatchForumOffer = true;
+        this.disableSingleMatchForumOffer = false;
+        this.checkArray = this.form.get('likeMe') as FormArray;
+        this.checkArray.push(new FormControl(this.param));
+      }
+    }, error => {
+      console.error(error);
+    });
+  }
+
+
+  // Get object containing counts of all other users that match this user's profile items
+  // And then takes action
+  private listenForLikeMeCounts() {
+    this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
+    this.likeMeCounts
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(counts => {
+      this.displayMatches(counts);
+    }, (error) => {
+      this.showSpinner = false;
+      console.error(error);
+    });
+  }
+
+
+  // Get user's profile and save
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      this.profile = data;
+    }, error => {
+      console.error('ConnectionsComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
+  }
+
 
   private processMatch(key: string, value: string) {
     this.foundMatch = true;
