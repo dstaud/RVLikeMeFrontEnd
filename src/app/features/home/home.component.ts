@@ -5,7 +5,6 @@ import { Location } from '@angular/common';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ProfileService } from '@services/data-services/profile.service';
 
 
 @Component({
@@ -14,13 +13,12 @@ import { ProfileService } from '@services/data-services/profile.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  backPath = '';
+  private backPath = '';
 
   constructor(public translate: TranslateService,
               private auth: AuthenticationService,
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private profileSvc: ProfileService,
               private router: Router) { }
 
   ngOnInit() {
@@ -29,9 +27,5 @@ export class HomeComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-  }
-
-  throwError() {
-    throw new Error('test Sentry error handling');
   }
 }

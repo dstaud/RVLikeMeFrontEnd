@@ -37,45 +37,59 @@ export class ProfilePercentComponent implements OnInit {
     this.showSpinner = true;
     this.userProfile = this.profileSvc.profile;
 
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      console.log('ProfilePercent:ngOnInit: got new profile data=', data);
-      this.profile = data;
-      this.totalProfileFieldsWithData = 0;
-
-      if (data.firstName) {
-        this.totalProfileFieldsWithData++;
-        this.showSpinner = false;}
-      if (data.lastName) { this.totalProfileFieldsWithData++; }
-      if (data.displayName) { this.totalProfileFieldsWithData++; }
-      if (data.yearOfBirth) { this.totalProfileFieldsWithData++; }
-      if (data.homeCountry) { this.totalProfileFieldsWithData++; }
-      if (data.homeState) { this.totalProfileFieldsWithData++; }
-      if (data.gender) { this.totalProfileFieldsWithData++; }
-      if (data.aboutMe) { this.totalProfileFieldsWithData++; }
-      if (data.myStory) { this.totalProfileFieldsWithData++; }
-      if (data.rvUse) { this.totalProfileFieldsWithData++; }
-      if (data.worklife) { this.totalProfileFieldsWithData++; }
-      if (data.campsWithMe) { this.totalProfileFieldsWithData++; }
-      if (data.boondocking) { this.totalProfileFieldsWithData++; }
-      if (data.traveling) { this.totalProfileFieldsWithData++; }
-      if (data.rigType) { this.totalProfileFieldsWithData++; }
-      if (data.rigYear) { this.totalProfileFieldsWithData++; }
-      if (data.rigManufacturer) { this.totalProfileFieldsWithData++; }
-      if (data.rigBrand) { this.totalProfileFieldsWithData++; }
-      if (data.rigModel) { this.totalProfileFieldsWithData++; }
-      this.percentProfileComplete = Math.round((this.totalProfileFieldsWithData / this.totalPersonalNbrOfFields) * 100);
-
-      this.profileMessages();
-    }, (error) => {
-      console.error(error);
-    });
+    this.listenForUserProfile();
   }
 
   ngOnDestroy() { }
 
-  profileMessages() {
+
+  onPercentProfile() {
+    this.activateBackArrowSvc.setBackRoute('home');
+    this.router.navigateByUrl('/profile');
+  }
+
+
+  // Listen for user profile and take action
+  private listenForUserProfile() {
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profileResult => {
+      this.profile = profileResult;
+      this.totalProfileFieldsWithData = 0;
+
+      if (profileResult.firstName) {
+        this.totalProfileFieldsWithData++;
+        this.showSpinner = false;}
+      if (profileResult.lastName) { this.totalProfileFieldsWithData++; }
+      if (profileResult.displayName) { this.totalProfileFieldsWithData++; }
+      if (profileResult.yearOfBirth) { this.totalProfileFieldsWithData++; }
+      if (profileResult.homeCountry) { this.totalProfileFieldsWithData++; }
+      if (profileResult.homeState) { this.totalProfileFieldsWithData++; }
+      if (profileResult.gender) { this.totalProfileFieldsWithData++; }
+      if (profileResult.aboutMe) { this.totalProfileFieldsWithData++; }
+      if (profileResult.myStory) { this.totalProfileFieldsWithData++; }
+      if (profileResult.rvUse) { this.totalProfileFieldsWithData++; }
+      if (profileResult.worklife) { this.totalProfileFieldsWithData++; }
+      if (profileResult.campsWithMe) { this.totalProfileFieldsWithData++; }
+      if (profileResult.boondocking) { this.totalProfileFieldsWithData++; }
+      if (profileResult.traveling) { this.totalProfileFieldsWithData++; }
+      if (profileResult.rigType) { this.totalProfileFieldsWithData++; }
+      if (profileResult.rigYear) { this.totalProfileFieldsWithData++; }
+      if (profileResult.rigManufacturer) { this.totalProfileFieldsWithData++; }
+      if (profileResult.rigBrand) { this.totalProfileFieldsWithData++; }
+      if (profileResult.rigModel) { this.totalProfileFieldsWithData++; }
+      this.percentProfileComplete = Math.round((this.totalProfileFieldsWithData / this.totalPersonalNbrOfFields) * 100);
+
+      this.determineProfileMessages();
+    }, error => {
+      console.error('ProfilePercentComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  // Based on % complete, set the appropriate user message and color-coding
+  private determineProfileMessages() {
     if (this.percentProfileComplete < 6) {
       this.percentCompleteMsg = this.translate.instant('home.component.progressBar0');
       this.progressBarColor = 'warn';
@@ -100,9 +114,5 @@ export class ProfilePercentComponent implements OnInit {
       this.percentCompleteMsg = this.translate.instant('home.component.progressBar75');
       this.progressBarColor = 'primary';
     }
-  }
-  onPercentProfile() {
-    this.activateBackArrowSvc.setBackRoute('home');
-    this.router.navigateByUrl('/profile');
   }
 }

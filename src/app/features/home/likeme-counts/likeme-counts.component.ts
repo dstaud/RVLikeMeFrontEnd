@@ -3,7 +3,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
@@ -23,9 +22,7 @@ import { SharedComponent } from '@shared/shared.component';
 export class LikemeCountsComponent implements OnInit {
   form: FormGroup;
   allUsersCount: number;
-  aboutMeCount: number;
-  rigTypeCount: number;
-  rvUseCount: number;
+
   aboutMe: string;
   rigType: string;
   rvUse: string;
@@ -36,6 +33,9 @@ export class LikemeCountsComponent implements OnInit {
   showRigType = false;
   showRvUse = false;
 
+  private aboutMeCount: number;
+  private rigTypeCount: number;
+  private rvUseCount: number;
   private likeMeDesc: string;
   private likeMeAnswer: string;
   private profile: IuserProfile;
@@ -51,22 +51,30 @@ export class LikemeCountsComponent implements OnInit {
               private shared: SharedComponent) { }
 
   ngOnInit() {
-    // this.profileSvc.getProfile();
-    this.userProfile = this.profileSvc.profile;
 
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      this.profile = data;
-      console.log('LikeMeCountsComponent:ngOnInit: got new profile data=', data);
-    });
+    this.showSpinner = true;
 
+    this.listenForUserProfile();
+
+    this.listenForLikeMeCounts();
+  }
+
+  ngOnDestroy() {}
+
+
+  // If user clicks on one of the displayed Like Me counts on the home page, navigate to the Connections page in context.
+  onSelectLikeMeCount(clickedItem: string) {
+    this.activateBackArrowSvc.setBackRoute('home');
+    this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a bug and won't accept queryParams
+  }
+
+
+  // Listen for Like Me counts to display on the home page
+  private listenForLikeMeCounts() {
     this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
-
     this.likeMeCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('LikeMeCountsComponent:ngOnInit: got new counts=', data);
       this.showSpinner = true;
       this.allUsersCount = data.allUsersCount;
       this.aboutMeCount = data.aboutMe;
@@ -113,11 +121,19 @@ export class LikemeCountsComponent implements OnInit {
     });
   }
 
-  ngOnDestroy() {}
 
-  onClick(clickedItem: string) {
-    this.activateBackArrowSvc.setBackRoute('home');
-    console.log('NAVIGATING FROM HOME TO CONNECTIONS');
-    this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a bug and won't accept queryParams
+  // Listen for user profile and save
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profileResult => {
+      console.log('ProfilePercent:ngOnInit: got new profile data=', profileResult);
+      this.profile = profileResult;
+
+    }, error => {
+      console.error('ProfilePercentComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
   }
 }

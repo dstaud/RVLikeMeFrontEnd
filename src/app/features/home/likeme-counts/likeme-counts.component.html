@@ -3,15 +3,15 @@
     *ngIf="showAllUsersCount">
     {{ "home.component.allUserCount1" | translate }} {{ this.allUsersCount }} {{ "home.component.allUserCount2" | translate }}
   </button>
-  <button mat-button (click)="onClick('aboutMe')"
+  <button mat-button (click)="onSelectLikeMeCount('aboutMe')"
     *ngIf="showAboutMe" class="user-count">
     {{ aboutMe }}
   </button>
-  <button mat-button (click)="onClick('rvUse')"
+  <button mat-button (click)="onSelectLikeMeCount('rvUse')"
     *ngIf="showRvUse" class="user-count">
       {{ rvUse }}
   </button>
-  <button mat-button (click)="onClick('rigType')"
+  <button mat-button (click)="onSelectLikeMeCount('rigType')"
   *ngIf="showRigType" class="user-count">
     {{ rigType }}
 </button>
