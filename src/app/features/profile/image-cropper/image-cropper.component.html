@@ -3,8 +3,8 @@
     <img #image class="image-source" [src]="imageSource" crossorigin>
   </div>
   <div class="rotate">
-    <mat-icon class="rotate-icon" (click)="rotateImage(-90)">rotate_left</mat-icon>
-    <mat-icon class="rotate-icon" (click)="rotateImage(90)">rotate_right</mat-icon>
+    <mat-icon class="rotate-icon" (click)="onRotateImage(-90)">rotate_left</mat-icon>
+    <mat-icon class="rotate-icon" (click)="onRotateImage(90)">rotate_right</mat-icon>
   </div>
   <div>
     <img [src]="imageDestination" class="img-preview">

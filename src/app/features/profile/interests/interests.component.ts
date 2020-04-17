@@ -23,8 +23,6 @@ import { SharedComponent } from '@shared/shared.component';
 })
 export class InterestsComponent implements OnInit {
   form: FormGroup;
-  backPath: string;
-
 
   atv: boolean = false;
   motorcycle: boolean = false;
@@ -47,6 +45,7 @@ export class InterestsComponent implements OnInit {
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private backPath: string;
 
   constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
@@ -72,8 +71,6 @@ export class InterestsComponent implements OnInit {
 }
 
 ngOnInit() {
-  this.form.disable();
-
   // If user got to this page without logging in (i.e. a bookmark or attack), send
   // them to the signin page and set the back path to the page they wanted to go
   this.showSpinner = true;
@@ -83,40 +80,16 @@ ngOnInit() {
     this.router.navigateByUrl('/signin');
   }
 
-  this.userProfile = this.profileSvc.profile;
+  this.form.disable();
 
-  this.userProfile
-  .pipe(untilComponentDestroyed(this))
-  .subscribe(data => {
-    this.profile = data;
-
-    this.form.patchValue ({
-      atv: this.profile.atv,
-      motorcycle: this.profile.motorcycle,
-      travel: this.profile.travel,
-      quilting: this.profile.quilting,
-      cooking: this.profile.cooking,
-      painting: this.profile.painting,
-      blogging: this.profile.blogging,
-      livingFrugally: this.profile.livingFrugally,
-      gaming: this.profile.gaming,
-      musicalInstrument: this.profile.musicalInstrument,
-      programming: this.profile.programming,
-      mobileInternet: this.profile.mobileInternet
-    });
-
-    this.showSpinner = false;
-    this.form.enable();
-  }, (error) => {
-    this.showSpinner = false;
-    console.error(error);
-  });
+  this.listenForUserProfile();
 }
 
   ngOnDestroy() {};
 
 
-  updateLifestyle(control: string, event: any) {
+  // Update profile on server when user checks an interest
+  onUpdateInterest(control: string, event: any) {
     this.showSaveIcon = true;
     this.profile[control] = event.checked;
     this.profileSvc.updateProfile(this.profile)
@@ -131,4 +104,35 @@ ngOnInit() {
     });
   }
 
+
+  // Listen for user profile and take action when get results
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profileResult => {
+      this.profile = profileResult;
+
+      this.form.patchValue ({
+        atv: this.profile.atv,
+        motorcycle: this.profile.motorcycle,
+        travel: this.profile.travel,
+        quilting: this.profile.quilting,
+        cooking: this.profile.cooking,
+        painting: this.profile.painting,
+        blogging: this.profile.blogging,
+        livingFrugally: this.profile.livingFrugally,
+        gaming: this.profile.gaming,
+        musicalInstrument: this.profile.musicalInstrument,
+        programming: this.profile.programming,
+        mobileInternet: this.profile.mobileInternet
+      });
+
+      this.showSpinner = false;
+      this.form.enable();
+    }, (error) => {
+      this.showSpinner = false;
+      console.error(error);
+    });
+  }
 }

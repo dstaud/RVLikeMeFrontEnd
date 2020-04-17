@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 
 import Cropper from 'cropperjs';
-import { FakeMissingTranslationHandler } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-image-cropper',
@@ -18,22 +17,36 @@ export class ImageCropperComponent implements OnInit {
 
   // Send updated image back to the dialog through the reference obtained through the selector
   @Output() updatedImage = new EventEmitter()
-  public imageDestination: string;
+  public imageDestination: string = '';
 
   private cropper: Cropper;
 
-  // TODO: don't show destination image until originl image is ready, but turning this to true in ngAfterViewInit() doesn't work
+  // TODO: don't show destination image until original image is ready, but turning this to true in ngAfterViewInit() doesn't work
   private showDestination = false;
 
 
   constructor() {
-    this.imageDestination = '';
    }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
+    this.createImageCropperObject();
+  }
+
+  onRotateImage(degrees: number) {
+    this.cropper.rotate(degrees);
+  }
+
+  // Called from dialog container when user clicks OK on the dialog, so updated image can be sent back up the chain
+  notifyDone() {
+    this.updatedImage.emit(this.imageDestination);
+  }
+
+
+  // Use third-party image cropper
+  private createImageCropperObject() {
     this.cropper = new Cropper(this.imageElement.nativeElement, {
       zoomable: false,
       scalable: false,
@@ -48,14 +61,5 @@ export class ImageCropperComponent implements OnInit {
         this.showDestination = true;
       }
     });
-  }
-
-  rotateImage(degrees: number) {
-    this.cropper.rotate(degrees);
-  }
-
-  // Called from dialog container when user clicks OK on the dialog, so updated image can be sent back up the chain
-  notifyDone() {
-    this.updatedImage.emit(this.imageDestination);
   }
 }

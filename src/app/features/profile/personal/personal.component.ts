@@ -269,10 +269,10 @@ export class PersonalComponent implements OnInit {
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      this.profile = data;
-      if (data) {
-        if (!data.displayName) { this.profile.displayName = this.profile.firstName }
+    .subscribe(profileResult => {
+      this.profile = profileResult;
+      if (profileResult) {
+        if (!profileResult.displayName) { this.profile.displayName = this.profile.firstName }
         this.form.patchValue ({
           firstName: this.profile.firstName,
           lastName: this.profile.lastName,
@@ -283,8 +283,8 @@ export class PersonalComponent implements OnInit {
           homeState: this.profile.homeState,
           myStory: this.profile.myStory
         });
-        if (data.profileImageUrl) {
-          this.profileImageUrl = data.profileImageUrl;
+        if (profileResult.profileImageUrl) {
+          this.profileImageUrl = profileResult.profileImageUrl;
           this.profileImageLabel = 'personal.component.changeProfilePic'
         }
       }
