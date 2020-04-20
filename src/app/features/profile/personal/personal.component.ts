@@ -227,7 +227,19 @@ export class PersonalComponent implements OnInit {
   // Compress Image and offer up for user to crop
   onProfileImageSelected(event: any) {
     this.showSpinner = true;
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+    this.uploadImageSvc.compressFile(event, (compressedFile: File) => {
+      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        this.openImageCropperDialog(uploadedFileUrl, 'profile');
+      });
+    });
+  }
+
+
+  // Upload, compress and orient the image and offer up for user to crop
+  getImage() {
+    let fileType: string = 'profile';
+    this.showSpinner = true;
+    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
         this.openImageCropperDialog(uploadedFileUrl, 'profile');
       });

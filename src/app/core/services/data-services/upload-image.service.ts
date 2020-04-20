@@ -13,12 +13,25 @@ export class UploadImageService {
   constructor(private imageCompress: NgxImageCompressService,
               private imageSvc: ImageService) { }
 
-  // Get image selected from file system or device or camera, compress and upload
-  compressImageFile(event: any, cb: CallableFunction) {
-    this.processFile(event, (imageFile: File) => {
-      cb(imageFile);
+
+  // Use ngx-Image-Compress to upload a file, compress and orient the image
+  compressFile(fileType: string, cb: CallableFunction) {
+    this.imageCompress.uploadFile().then(({image, orientation}) => {
+      let compressedImageFile:File = null;
+      console.warn('Size in bytes was:', this.imageCompress.byteCount(image));
+
+      this.imageCompress.compressFile(image, orientation, 50, 50).then(
+        result => {
+          console.warn('Size in bytes is now:', this.imageCompress.byteCount(result));
+          const imageBlob = this.dataURItoBlob(result.split(',')[1]);
+          compressedImageFile = new File([imageBlob], fileType, { type: 'image/jpeg' });
+          cb(compressedImageFile);
+        }
+      );
+
     });
   }
+
 
   // Upload image file to server
   uploadImage(imageFile: File, cb: CallableFunction) {
@@ -56,40 +69,6 @@ export class UploadImageService {
     });
   }
 
-  /**** Compress image file before sending to server ****/
-  private processFile(event: any, cb: CallableFunction) {
-    let fileName: string;
-    let reader = new FileReader();
-    let imageFromSource: File;
-
-    // Extract image file from event
-    imageFromSource = <File>event.target.files[0];
-    fileName = imageFromSource['name'];
-
-    // Compress file before uploading to server
-    reader.onload = (event: any) => {
-      this.compressFile(event.target.result, fileName, (imageFile: File) => {
-        cb(imageFile);
-      });
-    }
-    reader.readAsDataURL(event.target.files[0]);
-  }
-
-  private compressFile(imageFile: File,  fileName: string, cb: CallableFunction) {
-    const orientation = -1;
-    let compressedImageFile:File = null;
-
-    console.warn('File size before:',  this.imageCompress.byteCount(imageFile)/(1024*1024));
-
-    this.imageCompress.compressFile(imageFile, orientation, 50, 50)
-    .then(result => {
-        // Creates a blob from dataUri
-        const imageBlob = this.dataURItoBlob(result.split(',')[1]);
-        compressedImageFile = new File([imageBlob], fileName, { type: 'image/jpeg' });
-        cb(compressedImageFile);
-      }
-    );
-  }
 
   // Convert dataUri to a blob so that a File can be created
   private dataURItoBlob(dataURI) {

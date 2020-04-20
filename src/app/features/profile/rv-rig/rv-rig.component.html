@@ -1,27 +1,31 @@
 <div class="mat-app-background background">
-<!--   <div>
-    <p class="mat-body">{{ "rig.component.explanation" | translate}}</p>
-  </div> -->
-  <div>
-<!--     <h3>Result:</h3>
-    <h4>Base64 encoded:</h4>
-    <p>{{image?.replace("data:image/png;base64,", "")}}</p>
-    <h4>Image:</h4> -->
-    <img id="uploadedImage" src="{{image}}" alt="">
-    <canvas #canvas width="400" height="400"></canvas>
-  </div>
-  <div id="rigImage" class="rig-image">
-    <img class="image"
-          [src]="rigImageUrl">
-  </div>
   <div class="rig-images">
-    <button mat-button (click)="fileInput.click()">
+<!--     <div *ngFor="let rigImageUrl of rigImageUrls">
+      <div class="row" >
+        <img class="column" [src]="rigImageUrl" style="width:100%">
+      </div>
+    </div> -->
+    <div class="row">
+      <div *ngFor="let rigImageUrl of rigImageUrls" class="img-container">
+          <img [src]="rigImageUrl" style="width:100%">
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <img [src]="rigImageUrls[0]" style="width:100%">
+      </div>
+      <div class="column">
+        <img [src]="rigImageUrls[1]" style="width:100%">
+      </div>
+      <div class="column">
+        <img [src]="rigImageUrls[2]" style="width:100%">
+      </div>
+    </div>
+  </div>
+  <div class="get-image">
+    <button mat-button (click)="getImage()">
       <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
-      <input #fileInput type="file"
-              (change)="onRigImageSelected($event)"
-              accept = "image/*"
-              style="display:none;"/>
-        <span>Upload pics of your rig</span>
+      Upload pics of your rig
     </button>
   </div>
   <form [formGroup]="form">

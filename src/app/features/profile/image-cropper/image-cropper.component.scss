@@ -6,18 +6,6 @@
   max-width: 100%;
 }
 
-.rotate {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.rotate-icon {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
 .img-preview-ready {
   width: 80px;
   height: 80px;
@@ -27,6 +15,10 @@
 .img-preview {
   width: 0;
   height: 0;
+}
+
+.destination {
+  margin-top: 10px;
 }
 
 .cropper-crop-box, .cropper-view-box {

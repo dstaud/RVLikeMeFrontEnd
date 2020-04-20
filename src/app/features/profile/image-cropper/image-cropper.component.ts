@@ -37,14 +37,12 @@ export class ImageCropperComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log('ImageCropperComponent:ngAfterViewInit: imagetype=', this.imageType);
+    this.createImageCropperObject();
+/*     console.log('ImageCropperComponent:ngAfterViewInit: imagetype=', this.imageType);
     if (this.imageType === 'profile') {
       this.showImageDestination = true;
-      this.createImageCropperObjectForProfile();
-    } else {
-      this.showImageDestination = false;
       this.createImageCropperObject();
-    }
+    } */
   }
 
   onRotateImage(degrees: number) {
@@ -58,7 +56,7 @@ export class ImageCropperComponent implements OnInit {
 
 
   // Use third-party image cropper
-  private createImageCropperObjectForProfile() {
+  private createImageCropperObject() {
     this.cropper = new Cropper(this.imageElement.nativeElement, {
       zoomable: false,
       scalable: false,
@@ -71,26 +69,6 @@ export class ImageCropperComponent implements OnInit {
       },
       ready: function(event) {
         console.log('in profile version');
-      }
-    });
-  }
-
-  // Use third-party image cropper
-  private createImageCropperObject() {
-    this.cropper = new Cropper(this.imageElement.nativeElement, {
-      zoomable: false,
-      scalable: false,
-      aspectRatio: 1,
-      viewMode: 1,
-      rotatable: true,
-      autoCrop: true,
-       crop: () => {
-        const canvas = this.cropper.getCroppedCanvas();
-        this.imageDestination = canvas.toDataURL("image/png");
-        console.log('in crop, destination=', this.imageDestination);
-      },
-      ready: function(event) {
-        console.log('in ready');
       }
     });
   }

@@ -1,12 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import * as exifr from 'exifr/dist/mini.legacy.umd';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -15,7 +14,6 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { OrientImageService } from '@services/orient-image.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
 // TODO: Add rig database and hook to this component
 
@@ -30,13 +28,9 @@ export interface RigType {
   styleUrls: ['./rv-rig.component.scss']
 })
 export class RvRigComponent implements OnInit {
-
-  @ViewChild('canvas', {static: false}) canvas: ElementRef;
-  public context: CanvasRenderingContext2D;
-
   form: FormGroup;
   rigType:string = '';
-  rigImageUrl: string = '';
+  rigImageUrls: Array<string> = [];
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -71,7 +65,7 @@ export class RvRigComponent implements OnInit {
   private windowWidth: any;
   private dialogWidth: number;
   private dialogWidthDisplay: string;
-  image;
+
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -125,21 +119,23 @@ export class RvRigComponent implements OnInit {
     this.listenForUserProfile();
   }
 
-  ngAfterViewInit() {
-    this.context = (this.canvas.nativeElement as HTMLCanvasElement).getContext('2d');
-  }
-
   ngOnDestroy() {}
 
-  private draw() {
-    this.context.font = "30px Arial";
-    this.context.textBaseline = 'middle';
-    this.context.textAlign = 'center';
 
-    const x = (this.canvas.nativeElement as HTMLCanvasElement).width / 2;
-    const y = (this.canvas.nativeElement as HTMLCanvasElement).height / 2;
-    this.context.fillText("@realappie", x, y);
+  // As user to upload image, compress and orient the image and upload to server to store
+  getImage() {
+    let fileType: string = 'rig';
+    this.showSpinner = true;
+    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
+      console.log('uploading compressed oriented file')
+      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        console.log('RigComponent:onRigImageSelected: URL=', uploadedFileUrl);
+        this.updateProfileRigImageUrls(uploadedFileUrl);
+        this.showSpinner = false;
+      });
+    });
   }
+
 
   // Automatically pop-up the 'other' dialog with the correct
   // control and name when use clicks on select if other
@@ -149,173 +145,6 @@ export class RvRigComponent implements OnInit {
     }
   }
 
-  onRigImageSelected(event: any) {
-    // let imageFromSource: File;
-        // Extract image file from event
-        // imageFromSource = <File>event.target.files[0];
-
-        // Compress file before uploading to server
-    var myReader:FileReader = new FileReader();
-    this.showSpinner = true;
-    myReader.readAsDataURL(event.target.files[0]);
-    myReader.onloadend = (e) => {
-      console.log('BASE64=', myReader.result);
-      // this code took the uploaded file and displayed it on the canvas so drawImage worked!  Why won't it work in the orientation service?
-      var img = new Image();   // Create new img element
-      let self = this;
-      img.onload = function(){
-        // (self.canvas.nativeElement as HTMLCanvasElement).width = img.width;
-        // (self.canvas.nativeElement as HTMLCanvasElement).height = img.height;
-        // self.context.drawImage(img,0,0);
-        exifr.orientation(event.target.files[0]).catch(err => undefined).then(orientation => {
-          console.log('orientation=', orientation);
-          let cw: number = img.width;
-          let ch: number = img.height;
-          let cx: number = 0;
-          let cy: number = 0;
-          let deg: number = 0;
-          switch (orientation) {
-              case 3:
-              case 4:
-                  cx = -img.width;
-                  cy = -img.height;
-                  deg = 180;
-                  break;
-              case 5:
-              case 6:
-                  cw = img.height;
-                  ch = img.width;
-                  cy = -img.height;
-                  deg = 90;
-                  break;
-              case 7:
-              case 8:
-                  cw = img.height;
-                  ch = img.width;
-                  cx = -img.width;
-                  deg = 270;
-                  break;
-              default:
-                  break;
-          }
-
-          (self.canvas.nativeElement as HTMLCanvasElement).width = cw;
-          (self.canvas.nativeElement as HTMLCanvasElement).height = ch;
-          if ([2, 4, 5, 7].indexOf(orientation) > -1) {
-              //flip image
-               self.context.translate(cw, 0);
-               self.context.scale(-1, 1);
-          }
-          self.context.rotate(deg * Math.PI / 180);
-          self.context.drawImage(img, cx, cy);
-          img = document.createElement("img");
-          img.width = cw;
-          img.height = ch;
-          self.showSpinner = false;
-        })
-      }
-      const csv: string | ArrayBuffer = myReader.result;
-      if (typeof csv === 'string') {img.src = csv}
-      else {img.src = csv.toString()};
-      // this.getOrientedImage(img)
-      // .then((image) => {
-/*         this.uploadImageSvc.compressImageFile(img, (compressedFile: File) => {
-          this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
-            console.log('RigComponent:onRigImageSelected: URL=', uploadedFileUrl);
-            // this.openImageCropperDialog(uploadedFileUrl, 'rig');
-            this.showSpinner = false;
-          });
-        }); */
-      // })
-    }
-  }
-
-  public getOrientedImage(image:HTMLImageElement):Promise<HTMLImageElement> {
-    let self=this;
-
-    return new Promise<HTMLImageElement>(resolve => {
-        let img:any;
-        exifr.orientation(image).catch(err => undefined).then(orientation => {
-          console.log('orientation=', orientation);
-            if (orientation != 1) {
-/*                 let canvas:HTMLCanvasElement = document.createElement("canvas"),
-                    ctx:CanvasRenderingContext2D = <CanvasRenderingContext2D> canvas.getContext("2d"),
-                    cw:number = image.width,
-                    ch:number = image.height,
-                    cx:number = 0,
-                    cy:number = 0,
-                    deg:number = 0; */
-                let cw: number = image.width;
-                let ch: number = image.height;
-                let cx: number = 0;
-                let cy: number = 0;
-                let deg: number = 0;
-                switch (orientation) {
-                    case 3:
-                    case 4:
-                        cx = -image.width;
-                        cy = -image.height;
-                        deg = 180;
-                        break;
-                    case 5:
-                    case 6:
-                        cw = image.height;
-                        ch = image.width;
-                        cy = -image.height;
-                        deg = 90;
-                        break;
-                    case 7:
-                    case 8:
-                        cw = image.height;
-                        ch = image.width;
-                        cx = -image.width;
-                        deg = 270;
-                        break;
-                    default:
-                        break;
-                }
-
-                (self.canvas.nativeElement as HTMLCanvasElement).width = cw;
-                (self.canvas.nativeElement as HTMLCanvasElement).height = ch;
-                if ([2, 4, 5, 7].indexOf(orientation) > -1) {
-                    //flip image
-                     self.context.translate(cw, 0);
-                     self.context.scale(-1, 1);
-                }
-                self.context.rotate(deg * Math.PI / 180);
-                self.context.drawImage(image, cx, cy);
-                img = document.createElement("img");
-                img.width = cw;
-                img.height = ch;
-                img.addEventListener('load', function () {
-                    resolve(img);
-                });
-                img.src = (self.canvas.nativeElement as HTMLCanvasElement).toDataURL("image/png");
-            } else {
-                resolve(image);
-            }
-        });
-    });
-  }
-/*     setImgOrientation(file, inputBase64String) {
-      console.log('In setImageOrientation');
-      return new Promise((resolve, reject) => {
-        const that = this;
-        EXIF.getData(file, function () {
-          if (this && this.exifdata && this.exifdata.Orientation) {
-            that.resetOrientation(inputBase64String, this.exifdata.Orientation, function
-          (resetBase64Image) {
-              inputBase64String = resetBase64Image;
-              console.log('part 1 resolving image');
-              resolve(inputBase64String);
-            });
-          } else {
-            console.log('part 2 resolving image');
-            resolve(inputBase64String);
-          }
-          });
-        });
-      } */
 
   // Form Select option processing
   onSelectedSelectItem(control: string, controlDesc: string, event: string) {
@@ -384,7 +213,7 @@ export class RvRigComponent implements OnInit {
         });
       }
 
-      this.rigImageUrl = this.profile.rigImageUrls[0];
+      this.rigImageUrls = this.profile.rigImageUrls;
 
       this.showSpinner = false;
       this.form.enable();
@@ -392,39 +221,6 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
       console.error('RigComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
-    });
-  }
-
-
-  // Present image for user to crop
-  private openImageCropperDialog(imageSource: string, imageType: string): void {
-    let croppedImageBase64: string;
-    const dialogRef = this.dialog.open(ImageDialogComponent, {
-      width: this.dialogWidthDisplay,
-      height: '90%',
-      disableClose: true,
-      data: { image: imageSource, imageType: imageType }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result) {
-        if (result !== 'canceled') {
-          console.log('RVRigComponent:openImageCropperDialog: returned from dialog');
-          croppedImageBase64 = result;
-          this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
-            console.log('RvRigComponent:openIageCropperDialog: image url=', uploadedFileUrl);
-            this.profile.rigImageUrls.push(uploadedFileUrl);
-            this.showSpinner = false;
-            // this.profileSvc.distributeProfileUpdate(this.profile); //TODO: it seems that this is causing jump to profile page?
-          })
-        } else {
-          this.showSpinner = false;
-        }
-      } else {
-        this.showSpinner = false;
-      }
     });
   }
 
@@ -525,48 +321,5 @@ export class RvRigComponent implements OnInit {
       this.profile[control] = event;
     }
     this.updateRig(control);
-  }
-
-
-
-
-  resetOrientation(srcBase64, srcOrientation, callback) {
-     const img = new Image();
-
-     img.onload = function () {
-     const width = img.width,
-       height = img.height,
-       canvas = document.createElement('canvas'),
-       ctx = canvas.getContext('2d');
-
-     // set proper canvas dimensions before transform & export
-     if (4 < srcOrientation && srcOrientation < 9) {
-       canvas.width = height;
-       canvas.height = width;
-     } else {
-       canvas.width = width;
-       canvas.height = height;
-     }
-
-     // transform context before drawing image
-     switch (srcOrientation) {
-       case 2: ctx.transform(-1, 0, 0, 1, width, 0); break;
-       case 3: ctx.transform(-1, 0, 0, -1, width, height); break;
-       case 4: ctx.transform(1, 0, 0, -1, 0, height); break;
-       case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
-       case 6: ctx.transform(0, 1, -1, 0, height, 0); break;
-       case 7: ctx.transform(0, -1, -1, 0, height, width); break;
-       case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
-       default: break;
-     }
-
-     // draw image
-     ctx.drawImage(img, 0, 0);
-
-     // export base64
-     callback(canvas.toDataURL());
-   };
-
-     img.src = srcBase64;
   }
 }
