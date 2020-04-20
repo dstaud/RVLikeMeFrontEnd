@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import * as exifr from 'exifr/dist/mini.legacy.umd';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -159,29 +160,143 @@ export class RvRigComponent implements OnInit {
     myReader.readAsDataURL(event.target.files[0]);
     myReader.onloadend = (e) => {
       console.log('BASE64=', myReader.result);
+      // this code took the uploaded file and displayed it on the canvas so drawImage worked!  Why won't it work in the orientation service?
       var img = new Image();   // Create new img element
       let self = this;
       img.onload = function(){
-        (self.canvas.nativeElement as HTMLCanvasElement).width = img.width;
-        (self.canvas.nativeElement as HTMLCanvasElement).height = img.height;
-        self.context.drawImage(img,0,0);
+        // (self.canvas.nativeElement as HTMLCanvasElement).width = img.width;
+        // (self.canvas.nativeElement as HTMLCanvasElement).height = img.height;
+        // self.context.drawImage(img,0,0);
+        exifr.orientation(event.target.files[0]).catch(err => undefined).then(orientation => {
+          console.log('orientation=', orientation);
+          let cw: number = img.width;
+          let ch: number = img.height;
+          let cx: number = 0;
+          let cy: number = 0;
+          let deg: number = 0;
+          switch (orientation) {
+              case 3:
+              case 4:
+                  cx = -img.width;
+                  cy = -img.height;
+                  deg = 180;
+                  break;
+              case 5:
+              case 6:
+                  cw = img.height;
+                  ch = img.width;
+                  cy = -img.height;
+                  deg = 90;
+                  break;
+              case 7:
+              case 8:
+                  cw = img.height;
+                  ch = img.width;
+                  cx = -img.width;
+                  deg = 270;
+                  break;
+              default:
+                  break;
+          }
+
+          (self.canvas.nativeElement as HTMLCanvasElement).width = cw;
+          (self.canvas.nativeElement as HTMLCanvasElement).height = ch;
+          if ([2, 4, 5, 7].indexOf(orientation) > -1) {
+              //flip image
+               self.context.translate(cw, 0);
+               self.context.scale(-1, 1);
+          }
+          self.context.rotate(deg * Math.PI / 180);
+          self.context.drawImage(img, cx, cy);
+          img = document.createElement("img");
+          img.width = cw;
+          img.height = ch;
+          self.showSpinner = false;
+        })
       }
       const csv: string | ArrayBuffer = myReader.result;
       if (typeof csv === 'string') {img.src = csv}
       else {img.src = csv.toString()};
-      this.orientImageSvc.getOrientedImage(event.target.files[0])
-      .then((image) => {
-        this.uploadImageSvc.compressImageFile(image, (compressedFile: File) => {
+      // this.getOrientedImage(img)
+      // .then((image) => {
+/*         this.uploadImageSvc.compressImageFile(img, (compressedFile: File) => {
           this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
             console.log('RigComponent:onRigImageSelected: URL=', uploadedFileUrl);
             // this.openImageCropperDialog(uploadedFileUrl, 'rig');
             this.showSpinner = false;
           });
-        });
-      })
+        }); */
+      // })
     }
   }
 
+  public getOrientedImage(image:HTMLImageElement):Promise<HTMLImageElement> {
+    let self=this;
+
+    return new Promise<HTMLImageElement>(resolve => {
+        let img:any;
+        exifr.orientation(image).catch(err => undefined).then(orientation => {
+          console.log('orientation=', orientation);
+            if (orientation != 1) {
+/*                 let canvas:HTMLCanvasElement = document.createElement("canvas"),
+                    ctx:CanvasRenderingContext2D = <CanvasRenderingContext2D> canvas.getContext("2d"),
+                    cw:number = image.width,
+                    ch:number = image.height,
+                    cx:number = 0,
+                    cy:number = 0,
+                    deg:number = 0; */
+                let cw: number = image.width;
+                let ch: number = image.height;
+                let cx: number = 0;
+                let cy: number = 0;
+                let deg: number = 0;
+                switch (orientation) {
+                    case 3:
+                    case 4:
+                        cx = -image.width;
+                        cy = -image.height;
+                        deg = 180;
+                        break;
+                    case 5:
+                    case 6:
+                        cw = image.height;
+                        ch = image.width;
+                        cy = -image.height;
+                        deg = 90;
+                        break;
+                    case 7:
+                    case 8:
+                        cw = image.height;
+                        ch = image.width;
+                        cx = -image.width;
+                        deg = 270;
+                        break;
+                    default:
+                        break;
+                }
+
+                (self.canvas.nativeElement as HTMLCanvasElement).width = cw;
+                (self.canvas.nativeElement as HTMLCanvasElement).height = ch;
+                if ([2, 4, 5, 7].indexOf(orientation) > -1) {
+                    //flip image
+                     self.context.translate(cw, 0);
+                     self.context.scale(-1, 1);
+                }
+                self.context.rotate(deg * Math.PI / 180);
+                self.context.drawImage(image, cx, cy);
+                img = document.createElement("img");
+                img.width = cw;
+                img.height = ch;
+                img.addEventListener('load', function () {
+                    resolve(img);
+                });
+                img.src = (self.canvas.nativeElement as HTMLCanvasElement).toDataURL("image/png");
+            } else {
+                resolve(image);
+            }
+        });
+    });
+  }
 /*     setImgOrientation(file, inputBase64String) {
       console.log('In setImageOrientation');
       return new Promise((resolve, reject) => {
