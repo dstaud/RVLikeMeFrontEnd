@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,9 +10,11 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { UploadImageService } from '@services/data-services/upload-image.service';
+import { OrientImageService } from '@services/orient-image.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-
+import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
 // TODO: Add rig database and hook to this component
 
@@ -27,8 +29,13 @@ export interface RigType {
   styleUrls: ['./rv-rig.component.scss']
 })
 export class RvRigComponent implements OnInit {
+
+  @ViewChild('canvas', {static: false}) canvas: ElementRef;
+  public context: CanvasRenderingContext2D;
+
   form: FormGroup;
-  rigType = '';
+  rigType:string = '';
+  rigImageUrl: string = '';
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -59,8 +66,11 @@ export class RvRigComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private backPath: string;
-  private rigTypeFormValue = '';
-
+  private rigTypeFormValue: string = '';
+  private windowWidth: any;
+  private dialogWidth: number;
+  private dialogWidthDisplay: string;
+  image;
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -69,11 +79,18 @@ export class RvRigComponent implements OnInit {
     $event.returnValue = true;
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.setDialogWindowDimensions();
+  }
+
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private dialog: MatDialog,
               private router: Router,
               private location: Location,
+              private uploadImageSvc: UploadImageService,
+              private orientImageSvc: OrientImageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -98,13 +115,30 @@ export class RvRigComponent implements OnInit {
       this.router.navigateByUrl('/signin');
     }
 
+    this.setDialogWindowDimensions();
+
     this.form.disable();
+
     this.showSpinner = true;
 
     this.listenForUserProfile();
   }
 
+  ngAfterViewInit() {
+    this.context = (this.canvas.nativeElement as HTMLCanvasElement).getContext('2d');
+  }
+
   ngOnDestroy() {}
+
+  private draw() {
+    this.context.font = "30px Arial";
+    this.context.textBaseline = 'middle';
+    this.context.textAlign = 'center';
+
+    const x = (this.canvas.nativeElement as HTMLCanvasElement).width / 2;
+    const y = (this.canvas.nativeElement as HTMLCanvasElement).height / 2;
+    this.context.fillText("@realappie", x, y);
+  }
 
   // Automatically pop-up the 'other' dialog with the correct
   // control and name when use clicks on select if other
@@ -113,6 +147,60 @@ export class RvRigComponent implements OnInit {
       this.openOtherDialog(control, controlDesc, 'other');
     }
   }
+
+  onRigImageSelected(event: any) {
+    // let imageFromSource: File;
+        // Extract image file from event
+        // imageFromSource = <File>event.target.files[0];
+
+        // Compress file before uploading to server
+    var myReader:FileReader = new FileReader();
+    this.showSpinner = true;
+    myReader.readAsDataURL(event.target.files[0]);
+    myReader.onloadend = (e) => {
+      console.log('BASE64=', myReader.result);
+      var img = new Image();   // Create new img element
+      let self = this;
+      img.onload = function(){
+        (self.canvas.nativeElement as HTMLCanvasElement).width = img.width;
+        (self.canvas.nativeElement as HTMLCanvasElement).height = img.height;
+        self.context.drawImage(img,0,0);
+      }
+      const csv: string | ArrayBuffer = myReader.result;
+      if (typeof csv === 'string') {img.src = csv}
+      else {img.src = csv.toString()};
+      this.orientImageSvc.getOrientedImage(event.target.files[0])
+      .then((image) => {
+        this.uploadImageSvc.compressImageFile(image, (compressedFile: File) => {
+          this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+            console.log('RigComponent:onRigImageSelected: URL=', uploadedFileUrl);
+            // this.openImageCropperDialog(uploadedFileUrl, 'rig');
+            this.showSpinner = false;
+          });
+        });
+      })
+    }
+  }
+
+/*     setImgOrientation(file, inputBase64String) {
+      console.log('In setImageOrientation');
+      return new Promise((resolve, reject) => {
+        const that = this;
+        EXIF.getData(file, function () {
+          if (this && this.exifdata && this.exifdata.Orientation) {
+            that.resetOrientation(inputBase64String, this.exifdata.Orientation, function
+          (resetBase64Image) {
+              inputBase64String = resetBase64Image;
+              console.log('part 1 resolving image');
+              resolve(inputBase64String);
+            });
+          } else {
+            console.log('part 2 resolving image');
+            resolve(inputBase64String);
+          }
+          });
+        });
+      } */
 
   // Form Select option processing
   onSelectedSelectItem(control: string, controlDesc: string, event: string) {
@@ -127,6 +215,7 @@ export class RvRigComponent implements OnInit {
       this.updateSelectItem(control, event);
     }
   }
+
 
   /**** Field auto-update processing ****/
   onUpdateDataPoint(control: string) {
@@ -180,12 +269,47 @@ export class RvRigComponent implements OnInit {
         });
       }
 
+      this.rigImageUrl = this.profile.rigImageUrls[0];
+
       this.showSpinner = false;
       this.form.enable();
     }, (error) => {
       this.showSpinner = false;
       console.error('RigComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
+    });
+  }
+
+
+  // Present image for user to crop
+  private openImageCropperDialog(imageSource: string, imageType: string): void {
+    let croppedImageBase64: string;
+    const dialogRef = this.dialog.open(ImageDialogComponent, {
+      width: this.dialogWidthDisplay,
+      height: '90%',
+      disableClose: true,
+      data: { image: imageSource, imageType: imageType }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result) {
+        if (result !== 'canceled') {
+          console.log('RVRigComponent:openImageCropperDialog: returned from dialog');
+          croppedImageBase64 = result;
+          this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
+            console.log('RvRigComponent:openIageCropperDialog: image url=', uploadedFileUrl);
+            this.profile.rigImageUrls.push(uploadedFileUrl);
+            this.showSpinner = false;
+            // this.profileSvc.distributeProfileUpdate(this.profile); //TODO: it seems that this is causing jump to profile page?
+          })
+        } else {
+          this.showSpinner = false;
+        }
+      } else {
+        this.showSpinner = false;
+      }
     });
   }
 
@@ -230,6 +354,36 @@ export class RvRigComponent implements OnInit {
   }
 
 
+  // Get window size to determine how to present dialog windows
+  private setDialogWindowDimensions() {
+    this.windowWidth = window.innerWidth;
+    if (this.windowWidth > 600) {
+      if (this.windowWidth > 1140) {
+        this.dialogWidth = 1140 * .95;
+      } else {
+        this.dialogWidth = this.windowWidth * .95;
+      }
+      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
+    }
+  }
+
+
+  // Update rig image url array in user's profile with new uploaded rig image.
+  private updateProfileRigImageUrls(rigImageUrl: string) {
+    console.log('RvRigComponent:updateProfileRigImageUrls: calling server ', rigImageUrl, ' to profile for ', this.profile._id);
+    this.profileSvc.addRigImageUrlToProfile(this.profile._id, rigImageUrl)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this.profileSvc.getProfile();
+      this.showSpinner = false;
+    }, error => {
+      this.showSpinner = false;
+      console.error('RvRigComponent:updateProfileRigImageUrls: throw error ', error);
+      throw new Error(error);
+    });
+  }
+
+
   // Update form field data on server
   private updateRig(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
@@ -256,5 +410,48 @@ export class RvRigComponent implements OnInit {
       this.profile[control] = event;
     }
     this.updateRig(control);
+  }
+
+
+
+
+  resetOrientation(srcBase64, srcOrientation, callback) {
+     const img = new Image();
+
+     img.onload = function () {
+     const width = img.width,
+       height = img.height,
+       canvas = document.createElement('canvas'),
+       ctx = canvas.getContext('2d');
+
+     // set proper canvas dimensions before transform & export
+     if (4 < srcOrientation && srcOrientation < 9) {
+       canvas.width = height;
+       canvas.height = width;
+     } else {
+       canvas.width = width;
+       canvas.height = height;
+     }
+
+     // transform context before drawing image
+     switch (srcOrientation) {
+       case 2: ctx.transform(-1, 0, 0, 1, width, 0); break;
+       case 3: ctx.transform(-1, 0, 0, -1, width, height); break;
+       case 4: ctx.transform(1, 0, 0, -1, 0, height); break;
+       case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+       case 6: ctx.transform(0, 1, -1, 0, height, 0); break;
+       case 7: ctx.transform(0, -1, -1, 0, height, width); break;
+       case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
+       default: break;
+     }
+
+     // draw image
+     ctx.drawImage(img, 0, 0);
+
+     // export base64
+     callback(canvas.toDataURL());
+   };
+
+     img.src = srcBase64;
   }
 }

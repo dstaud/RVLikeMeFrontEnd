@@ -15,9 +15,14 @@ export class ImageCropperComponent implements OnInit {
   // Original image passed from the dialog through this component's selector in the dialog compoment template
   @Input('originalImage') imageSource: string;
 
+  // Image may be a profile image or other image like a pic of their rig or any image they want to upload for apost.
+  @Input('imageType') imageType: string;
+
   // Send updated image back to the dialog through the reference obtained through the selector
   @Output() updatedImage = new EventEmitter()
-  public imageDestination: string = '';
+
+  imageDestination: string = '';
+  showImageDestination: boolean = false;
 
   private cropper: Cropper;
 
@@ -32,7 +37,14 @@ export class ImageCropperComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.createImageCropperObject();
+    console.log('ImageCropperComponent:ngAfterViewInit: imagetype=', this.imageType);
+    if (this.imageType === 'profile') {
+      this.showImageDestination = true;
+      this.createImageCropperObjectForProfile();
+    } else {
+      this.showImageDestination = false;
+      this.createImageCropperObject();
+    }
   }
 
   onRotateImage(degrees: number) {
@@ -46,7 +58,7 @@ export class ImageCropperComponent implements OnInit {
 
 
   // Use third-party image cropper
-  private createImageCropperObject() {
+  private createImageCropperObjectForProfile() {
     this.cropper = new Cropper(this.imageElement.nativeElement, {
       zoomable: false,
       scalable: false,
@@ -58,7 +70,27 @@ export class ImageCropperComponent implements OnInit {
         this.imageDestination = canvas.toDataURL("image/png");
       },
       ready: function(event) {
-        this.showDestination = true;
+        console.log('in profile version');
+      }
+    });
+  }
+
+  // Use third-party image cropper
+  private createImageCropperObject() {
+    this.cropper = new Cropper(this.imageElement.nativeElement, {
+      zoomable: false,
+      scalable: false,
+      aspectRatio: 1,
+      viewMode: 1,
+      rotatable: true,
+      autoCrop: true,
+       crop: () => {
+        const canvas = this.cropper.getCroppedCanvas();
+        this.imageDestination = canvas.toDataURL("image/png");
+        console.log('in crop, destination=', this.imageDestination);
+      },
+      ready: function(event) {
+        console.log('in ready');
       }
     });
   }

@@ -18,10 +18,15 @@
   padding-right: 20px;
 }
 
-.img-preview {
+.img-preview-ready {
   width: 80px;
   height: 80px;
   border-radius: 50%;
+}
+
+.img-preview {
+  width: 0;
+  height: 0;
 }
 
 .cropper-crop-box, .cropper-view-box {
@@ -32,4 +37,3 @@
   box-shadow: 0 0 0 1px #39f;
   outline: 0;
 }
-

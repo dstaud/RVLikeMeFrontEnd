@@ -8,7 +8,7 @@ import { ImageCropperComponent } from './../../features/profile/image-cropper/im
 /* Dialog component specifically for hosting the image cropper component */
 export interface DialogData {
   image: string;
-  updatedImage: string;
+  imageType: string;
 }
 
 @Component({
@@ -21,6 +21,7 @@ export class ImageDialogComponent implements OnInit {
   // Inject reference to the image cropper component
   @ViewChild('imageCropper', {static: false })
   private imageCropper: ImageCropperComponent;
+  private updatedImage: string;
 
   constructor(private focusMonitor: FocusMonitor,
               public dialogRef: MatDialogRef<ImageDialogComponent>,
@@ -36,11 +37,11 @@ export class ImageDialogComponent implements OnInit {
   }
 
 
-  // Call notifyDone() function on the image cropper compoment when user clicks the OK button on this dialog and then close the dialog 
+  // Call notifyDone() function on the image cropper compoment when user clicks the OK button on this dialog and then close the dialog
   // sending back the updated image obtained from the image cropper compoment
   onOK() {
     this.imageCropper.notifyDone();
-    this.dialogRef.close(this.data.updatedImage);
+    this.dialogRef.close(this.updatedImage);
   }
 
 
@@ -51,7 +52,7 @@ export class ImageDialogComponent implements OnInit {
 
 
   // Update data object when image component sends updated image, so can send back up to originating component
-  updatedImage(event: string): void {
-    this.data.updatedImage = event;
+  updatedImageResult(event: string): void {
+    this.updatedImage = event;
   }
 }

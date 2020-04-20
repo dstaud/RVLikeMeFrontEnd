@@ -44,6 +44,7 @@ export interface IuserProfile {
   mobileInternet: boolean;
   forums: Array<string>;
   notifySubscription: string;
+  rigImageUrls: Array<string>;
 }
 
 @Injectable({
@@ -89,7 +90,8 @@ export class ProfileService {
     programming: null,
     mobileInternet: null,
     forums: [],
-    notifySubscription: null
+    notifySubscription: null,
+    rigImageUrls: []
   };
   private profileSubscription: any;
 
@@ -141,6 +143,7 @@ export class ProfileService {
       this.dataStore.profile.mobileInternet = null;
       this.dataStore.profile.forums = [];
       this.dataStore.profile.notifySubscription = null;
+      this.dataStore.profile.rigImageUrls = [];
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       console.log('ProfileService:getProfile: Getting Profile');
@@ -183,6 +186,13 @@ export class ProfileService {
     let groupJSON = JSON.parse(group);
     console.log('updateProfile: params=', groupJSON)
     return this.http.put(`/api/profile-forums`, groupJSON, {});
+  }
+
+  addRigImageUrlToProfile(profileID: string, rigImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    console.log('updateProfile: params=', imageUrlJSON)
+    return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
   }
 
   public dispose() {

@@ -6,7 +6,8 @@
   <app-image-cropper
     #imageCropper
     [originalImage]="data.image"
-    (updatedImage)="updatedImage($event)">
+    [imageType]="data.imageType"
+    (updatedImage)="updatedImageResult($event)">
   </app-image-cropper>
 </div>
 <div mat-dialog-actions class="dialog-actions">

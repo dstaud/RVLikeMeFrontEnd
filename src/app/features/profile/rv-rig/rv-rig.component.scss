@@ -12,10 +12,27 @@
   margin-top: 50px;
 }
 
+.profile-image {
+  float: left;
+  max-width: 100%;
+}
+
 .icon {
   margin-left: 10px;
 }
 
 mat-form-field {
   line-height: 1.4;
+}
+
+.rig-images {
+  margin-bottom: 15px;
+}
+
+.add-pic {
+  padding-right: 5px;
+}
+
+.image {
+  width: 150px;
 }

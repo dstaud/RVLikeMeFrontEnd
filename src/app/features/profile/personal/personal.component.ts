@@ -229,7 +229,7 @@ export class PersonalComponent implements OnInit {
     this.showSpinner = true;
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
-        this.openImageCropperDialog(uploadedFileUrl);
+        this.openImageCropperDialog(uploadedFileUrl, 'profile');
       });
     });
   }
@@ -296,13 +296,13 @@ export class PersonalComponent implements OnInit {
 
 
   // Present image for user to crop
-  private openImageCropperDialog(imageSource: string): void {
+  private openImageCropperDialog(imageSource: string, imageType: string): void {
     let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: this.dialogWidthDisplay,
       height: '90%',
       disableClose: true,
-      data: { image: imageSource }
+      data: { image: imageSource, imageType: imageType }
     });
 
     dialogRef.afterClosed()
