@@ -14,6 +14,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { OrientImageService } from '@services/orient-image.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 // TODO: Add rig database and hook to this component
 
@@ -123,14 +124,19 @@ export class RvRigComponent implements OnInit {
 
 
   // As user to upload image, compress and orient the image and upload to server to store
-  getImage() {
+  // If row is passed, this means being called to get a new image to replace an existing image
+  getImage(row?: number) {
     let fileType: string = 'rig';
-    this.showSpinner = true;
     this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
+      this.showSpinner = true;
       console.log('uploading compressed oriented file')
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
         console.log('RigComponent:onRigImageSelected: URL=', uploadedFileUrl);
-        this.updateProfileRigImageUrls(uploadedFileUrl);
+        if (row) {
+          this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], uploadedFileUrl);
+        } else {
+          this.updateProfileRigImageUrls(uploadedFileUrl);
+        }
         this.showSpinner = false;
       });
     });
@@ -172,6 +178,24 @@ export class RvRigComponent implements OnInit {
       this.profile[control] = this.form.controls[control].value;
     }
     this.updateRig(control);
+  }
+
+
+  viewFullImage(row) {
+    this.openImageViewDialog(row);
+  }
+
+
+  private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
+    this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
+    .subscribe(imageResult => {
+      console.log('profile updated ', imageResult);
+      if (newImageFileUrl) {
+        this.updateProfileRigImageUrls(newImageFileUrl);
+      } else {
+        this.profileSvc.getProfile();
+      }
+    })
   }
 
 
@@ -221,6 +245,30 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
       console.error('RigComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
+    });
+  }
+
+
+  // View rig image larger
+  private openImageViewDialog(row: number): void {
+    let imageUrl = this.rigImageUrls[row];
+
+    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
+      width: '95%',
+      maxWidth: 600,
+      data: {imageUrl: imageUrl, alter: true }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result === 'change') {
+        console.log('delete ', this.rigImageUrls[row], ' and add new one');
+        this.getImage(row);
+      } else if (result === 'delete') {
+        console.log('delete ', this.rigImageUrls[row]);
+        this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], '');
+      }
     });
   }
 

@@ -28,8 +28,8 @@ export class UploadImageService {
           cb(compressedImageFile);
         }
       );
-
     });
+    console.log('out of compress file');
   }
 
 

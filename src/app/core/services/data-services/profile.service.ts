@@ -195,6 +195,13 @@ export class ProfileService {
     return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
   }
 
+  deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    console.log('updateProfile: params=', imageUrlJSON)
+    return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
+  }
+
   public dispose() {
     this.profileSubscription.unsubscribe();
   }

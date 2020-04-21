@@ -1,31 +1,17 @@
 <div class="mat-app-background background">
   <div class="rig-images">
-<!--     <div *ngFor="let rigImageUrl of rigImageUrls">
-      <div class="row" >
-        <img class="column" [src]="rigImageUrl" style="width:100%">
-      </div>
-    </div> -->
     <div class="row">
-      <div *ngFor="let rigImageUrl of rigImageUrls" class="img-container">
-          <img [src]="rigImageUrl" style="width:100%">
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <img [src]="rigImageUrls[0]" style="width:100%">
-      </div>
-      <div class="column">
-        <img [src]="rigImageUrls[1]" style="width:100%">
-      </div>
-      <div class="column">
-        <img [src]="rigImageUrls[2]" style="width:100%">
+      <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">
+        <div class="img-container">
+          <img [src]="rigImageUrl" style="width:95%" (click)="viewFullImage(i)">
+        </div>
       </div>
     </div>
   </div>
   <div class="get-image">
-    <button mat-button (click)="getImage()">
+    <button [disabled]="rigImageUrls.length === 3" mat-button (click)="getImage()">
       <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
-      Upload pics of your rig
+      Upload up to 3 pics of your rig
     </button>
   </div>
   <form [formGroup]="form">

@@ -34,12 +34,14 @@ import { ProfileService } from '@services/data-services/profile.service';
 import { WindowService } from '@services/window.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-import { InstallDialogComponent } from './dialogs/install-dialog/install-dialog.component';
-import { MyStoryDialogComponent } from './dialogs/my-story-dialog/my-story-dialog.component';
-import { DesktopDialogComponent } from './dialogs/desktop-dialog/desktop-dialog.component';
+import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
+import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
+import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
+import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
+import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
-import { UpdatePostDialogComponent } from './dialogs/update-post-dialog/update-post-dialog.component';
+
 
 
 Sentry.init({
@@ -79,6 +81,7 @@ export function getErrorHandler(): ErrorHandler {
     InstallDialogComponent,
     MyStoryDialogComponent,
     DesktopDialogComponent,
+    ImageViewDialogComponent,
     ForumsListComponent,
     UpdatePostDialogComponent
   ],

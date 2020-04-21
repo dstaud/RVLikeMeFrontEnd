@@ -1,11 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { TranslateService } from '@ngx-translate/core';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+
+import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 @Component({
   selector: 'app-your-story',
@@ -21,11 +25,13 @@ export class YourStoryComponent implements OnInit {
   userRvUse: string;
   userDisplayName: string;
   userIdViewer: string;
+  rigImageUrls: Array<string> = [];
 
   private paramsForMessaging: string;
 
   constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
+              private dialog: MatDialog,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
@@ -33,6 +39,8 @@ export class YourStoryComponent implements OnInit {
   ngOnInit(): void {
     this.getParameters();
   }
+
+  ngOnDestroy() {}
 
   // TODO: maintain data if user goes back to this component from Send Messages
 
@@ -43,6 +51,11 @@ export class YourStoryComponent implements OnInit {
     console.log('YourStoryComponent:onMessage: params for messaging=', this.paramsForMessaging);
     this.shareDataSvc.setData(this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');
+  }
+
+
+  viewFullImage(row) {
+    this.openImageViewDialog(row);
   }
 
 
@@ -107,9 +120,29 @@ export class YourStoryComponent implements OnInit {
       } else {
         this.userRigType = 'not entered yet';
       }
+
+      this.rigImageUrls = profileResult.rigImageUrls;
     }, error => {
       console.log('YourStoryComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }
+
+
+    // View rig image larger
+    private openImageViewDialog(row: number): void {
+      let imageUrl = this.rigImageUrls[row];
+
+      const dialogRef = this.dialog.open(ImageViewDialogComponent, {
+        width: '95%',
+        maxWidth: 600,
+        data: {imageUrl: imageUrl, Alter: false }
+      });
+
+      dialogRef.afterClosed()
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(result => {
+        console.log('closed dialog')
+      });
+    }
 }

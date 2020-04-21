@@ -28,6 +28,7 @@
 mat-form-field {
   line-height: 1.4;
 }
+
 .row {
   display: flex;
 }
@@ -38,14 +39,14 @@ mat-form-field {
   padding: 5px;
 }
 
+// .img-container {
+//   display:flex;
+//   flex-wrap: wrap;
+//   align-content: space-evenly;
+// }
+
 .img-container {
-  display:flex;
-  flex-wrap: wrap;
-  align-content: space-evenly;
-}
-.img-container img{
-  width:30%;
-  padding: 5px;
+  width: 90px;
 }
 
 .rig-images {
