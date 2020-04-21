@@ -198,8 +198,8 @@ export class ProfileService {
     return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
   }
 
-  deleteRigImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + lifestyleImageUrl + '"}';
+  deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
     console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
@@ -217,6 +217,13 @@ export class ProfileService {
     let imageUrlJSON = JSON.parse(imageUrl);
     console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
+  }
+
+  deleteTempProfileImage(imageUrl: string): Observable<any> {
+    let image = '{"imageUrl":"' + imageUrl + '"}';
+    let imageUrlJSON = JSON.parse(image);
+    console.log('updateProfile: params=', imageUrlJSON)
+    return this.http.put(`/api/profile-delete-temp-image`, imageUrlJSON, {});
   }
 
   public dispose() {

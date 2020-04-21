@@ -187,7 +187,7 @@ export class RvRigComponent implements OnInit {
   private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
     this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
     .subscribe(imageResult => {
-      console.log('profile updated ', imageResult);
+      console.log('profile updated with delete, result=', imageResult);
       if (newImageFileUrl) {
         this.updateProfileRigImageUrls(newImageFileUrl);
       } else {
@@ -331,6 +331,7 @@ export class RvRigComponent implements OnInit {
     this.profileSvc.addRigImageUrlToProfile(this.profile._id, rigImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
+      console.log('RvRigComponent:updateProfileRigImageUrl: back from delete, profile=', responseData);
       this.profileSvc.getProfile();
       this.showSpinner = false;
     }, error => {

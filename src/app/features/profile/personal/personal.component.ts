@@ -50,16 +50,7 @@ export class PersonalComponent implements OnInit {
   form: FormGroup;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
-  // profileImageUploaded:File = null;
-  // profileImageUpdated: any;
-  // profileImageTempUrl = './../../../../assets/images/no-profile-pic.jpg';
-  // profileCompressedImage:File = null;
-  // imgResultBeforeCompress: string;
-  // imgResultAfterCompress: string;
-  // localUrl: any;
-  // sizeOfOriginalImage: number;
-  // localCompressedURl: any;
-  // sizeOFCompressedImage:number;
+  tempProfileImage: string;
 
 
   // Spinner is for initial load from the database only.
@@ -225,15 +216,17 @@ export class PersonalComponent implements OnInit {
 
 
   // Compress Image and offer up for user to crop
-  onProfileImageSelected(event: any) {
+/*   onProfileImageSelected(event: any) {
     this.showSpinner = true;
     this.uploadImageSvc.compressFile(event, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
         this.openImageCropperDialog(uploadedFileUrl, 'profile');
       });
     });
-  }
+  } */
 
+
+  // TODO: Run code auditor for security and anything else that may be helpful
 
   // Upload, compress and orient the image and offer up for user to crop
   getImage() {
@@ -241,6 +234,7 @@ export class PersonalComponent implements OnInit {
     this.showSpinner = true;
     this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        this.tempProfileImage = uploadedFileUrl;
         this.openImageCropperDialog(uploadedFileUrl, 'profile');
       });
     });
@@ -330,6 +324,10 @@ export class PersonalComponent implements OnInit {
             this.profileImageLabel = 'personal.component.changeProfilePic'
             this.showSpinner = false;
             this.profileSvc.distributeProfileUpdate(this.profile); //TODO: it seems that this is causing jump to profile page?
+            this.profileSvc.deleteTempProfileImage(this.tempProfileImage)
+            .subscribe(responseData => {
+              console.log('PersonalComponent:OpenImageCropperDialog: deleted temp profile image, data=', responseData);
+            })
           })
         } else {
           this.showSpinner = false;
