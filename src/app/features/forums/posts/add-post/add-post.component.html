@@ -9,14 +9,22 @@
           <textarea matInput
                     rows="4"
                     cdkTextareaAutosize
+                    (ngModelChange)="onTextEntered()"
                     type="text"
                     placeholder="{{ 'add-post.component.whatToSay' | translate }}"
                     formControlName="post">
           </textarea>
         </mat-form-field>
+        <div *ngIf="postPhotoUrl">
+          <img [src]="postPhotoUrl" class="image">
+        </div>
+        <button class="photo" mat-button (click)="onPhoto()">
+          <mat-icon matPrefix fontSet="material-icons-outlined">insert_photo</mat-icon>
+          Photo
+        </button>
       </div>
       <div class="button">
-        <button [disabled]="!form.valid"
+        <button [disabled]="!formCompleted"
                 class="mat-raised-button mat-primary"
                 (click)="onPost()">
                 {{ 'add-post.component.post' | translate }}

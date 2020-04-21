@@ -1,3 +1,4 @@
+import { UploadImageService } from '@services/data-services/upload-image.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
@@ -19,14 +20,16 @@ export class AddPostComponent implements OnInit {
 
   @Output() postAddComplete = new EventEmitter<string>();
 
+  form: FormGroup;
+  postPhotoUrl: string;
+  formCompleted: boolean = false;
   showSpinner = false;
 
-  form: FormGroup;
-
   constructor(private forumSvc: ForumService,
+              private uploadImageSvc: UploadImageService,
               fb: FormBuilder) {
               this.form = fb.group({
-                post: new FormControl('', Validators.required)
+                post: new FormControl('')
               });
   }
 
@@ -39,12 +42,28 @@ export class AddPostComponent implements OnInit {
   }
 
 
+  // As user to upload image, compress and orient the image and upload to server to store.  Save the URL to store with the post
+  onPhoto() {
+    let fileType: string = 'post';
+    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
+      this.showSpinner = true;
+      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        console.log('AddPostComponent:onPhoto: URL=', uploadedFileUrl);
+        this.postPhotoUrl = uploadedFileUrl;
+        this.formCompleted = true;
+        this.showSpinner = false;
+      });
+    });
+  }
+
+
+
   // When user clicks post, update the database
   onPost() {
     this.showSpinner = true;
     // let postTitle = this.form.controls.title.value;
     let postText = this.form.controls.post.value;
-    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl)
+    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl)
     .subscribe(post => {
       this.onDoneWithAdd(post);
       this.showSpinner = false;
@@ -53,5 +72,10 @@ export class AddPostComponent implements OnInit {
       console.log('AddPostComponent:onPost: throw error ', error);
       throw new Error(error);
     });
+  }
+
+
+  onTextEntered() {
+    this.formCompleted = true;
   }
 }

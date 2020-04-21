@@ -65,6 +65,9 @@
               </div>
             </div>
             <div class="body">
+              <div *ngIf="posts[i].postPhotoUrl">
+                <img class="postImage" [src]="posts[i].postPhotoUrl">
+              </div>
               {{ posts[i].body }}
             </div>
             <div class="response hyperlink">

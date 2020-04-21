@@ -248,6 +248,7 @@ export class PostsComponent implements OnInit {
     '"body":"' + bodyEscaped + '",' +
     '"displayName":"' + post.userDisplayName + '",' +
     '"profileImageUrl":"' + post.userProfileUrl + '",' +
+    '"postPhotoUrl":"' + post.photoUrl + '",' +
     '"commentCount":"' + post.comments.length + '",' +
     '"reactionCount":"' + post.reactions.length + '",' +
     '"createdAt":"' + post.createdAt + '"}';

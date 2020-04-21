@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ForumService {
 
+  // TODO: Add interface for groups and posts
 
   constructor(private http: HttpClient) { }
 
@@ -54,7 +55,7 @@ export class ForumService {
     return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
   }
 
-  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string): Observable<any> {
+  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string, postPhotoUrl: string): Observable<any> {
     // let titleEscaped = this.escapeJsonReservedCharacters(title);
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"groupID":"' + groupID +
@@ -62,6 +63,7 @@ export class ForumService {
                 '","body":"' + postEscaped +
                 '","displayName":"' + displayName +
                 '","profileImageUrl":"' + profileImageUrl +
+                '","postPhotoUrl":"' + postPhotoUrl +
                 '"}'
     console.log('BODY=', body)
     let bodyJSON = JSON.parse(body);
