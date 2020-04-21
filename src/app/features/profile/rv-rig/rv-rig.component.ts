@@ -11,7 +11,6 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
-import { OrientImageService } from '@services/orient-image.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -86,7 +85,6 @@ export class RvRigComponent implements OnInit {
               private router: Router,
               private location: Location,
               private uploadImageSvc: UploadImageService,
-              private orientImageSvc: OrientImageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({

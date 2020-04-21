@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as exifr from 'exifr/dist/mini.legacy.umd';
 
+// Not used, as using 3rd party library, but has useful information about how to orient an image
+
 @Injectable({
   providedIn: 'root'
 })

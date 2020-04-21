@@ -26,6 +26,7 @@ export class YourStoryComponent implements OnInit {
   userDisplayName: string;
   userIdViewer: string;
   rigImageUrls: Array<string> = [];
+  lifestyleImageUrls: Array<string> = [];
 
   private paramsForMessaging: string;
 
@@ -54,8 +55,8 @@ export class YourStoryComponent implements OnInit {
   }
 
 
-  viewFullImage(row) {
-    this.openImageViewDialog(row);
+  viewFullImage(imageUrl: string) {
+    this.openImageViewDialog(imageUrl);
   }
 
 
@@ -122,6 +123,7 @@ export class YourStoryComponent implements OnInit {
       }
 
       this.rigImageUrls = profileResult.rigImageUrls;
+      this.lifestyleImageUrls = profileResult.lifestyleImageUrls;
     }, error => {
       console.log('YourStoryComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
@@ -130,8 +132,7 @@ export class YourStoryComponent implements OnInit {
 
 
     // View rig image larger
-    private openImageViewDialog(row: number): void {
-      let imageUrl = this.rigImageUrls[row];
+    private openImageViewDialog(imageUrl: string): void {
 
       const dialogRef = this.dialog.open(ImageViewDialogComponent, {
         width: '95%',

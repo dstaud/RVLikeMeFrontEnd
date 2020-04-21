@@ -11,6 +11,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { LanguageService } from '@services/language.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { ShareDataService } from '@services/share-data.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 // import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -80,6 +81,7 @@ export class ProfileComponent implements OnInit {
               private language: LanguageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private shareDataSvc: ShareDataService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -132,6 +134,17 @@ export class ProfileComponent implements OnInit {
     this.router.navigateByUrl('/profile-rig');
   }
 
+  // View your story as other users will see it
+  onYourStory() {
+    let userParams = this.packageParamsForMessaging();
+    let params = '{"userID":"' + this.profile.userID + '",' +
+                      '"userIdViewer":"' + this.profile.userID + '",' +
+                      '"params":' + userParams + '}';
+    console.log('ProfileComponent:onYourStory: params=', params);
+    this.activateBackArrowSvc.setBackRoute('profile');
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/mystory');
+  }
 
   // On user selection of Other from aboutMe control, open dialog to collection information. If not other, update database.
   onSelectedAboutMe(event: string) {
@@ -306,6 +319,21 @@ export class ProfileComponent implements OnInit {
         }
       }
     });
+  }
+
+
+  private packageParamsForMessaging(): string {
+    let params: string;
+    console.log('ProfileComponent:navigateToMessages: displayName=', this.profile.displayName);
+    params = '{"fromUserID":"' + this.profile.userID + '",' +
+              '"fromDisplayName":"' + this.profile.displayName + '",' +
+              '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
+              '"toUserID":"' + '' + '",' +
+              '"toDisplayName":"' + '' + '",' +
+              '"toProfileImageUrl":"' + '' + '"}';
+
+    console.log('PostsComponent:navigateToMessages: params=', params);
+    return params;
   }
 
 

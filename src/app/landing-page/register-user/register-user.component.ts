@@ -85,7 +85,8 @@ export class RegisterUserComponent implements OnInit {
     mobileInternet: null,
     forums: [],
     notifySubscription: null,
-    rigImageUrls: []
+    rigImageUrls: [],
+    lifestyleImageUrls: []
   };
 
   constructor(private authSvc: AuthenticationService,

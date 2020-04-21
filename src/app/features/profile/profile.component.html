@@ -84,7 +84,9 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showLanguageSaveIcon">save</mat-icon>
     </div>
-
   </form>
+  <div>
+    <span class="hyperlink" (click)="onYourStory()">View your story as others will see it</span>
+  </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

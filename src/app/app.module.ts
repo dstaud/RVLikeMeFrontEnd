@@ -27,6 +27,7 @@ import { ForumsListComponent } from './features/forums/forums-list/forums-list.c
 
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
+import { YourStoryComponent } from './features/profile/your-story/your-story.component';
 
 import { ThemeService } from '@services/theme.service';
 import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
@@ -83,7 +84,8 @@ export function getErrorHandler(): ErrorHandler {
     DesktopDialogComponent,
     ImageViewDialogComponent,
     ForumsListComponent,
-    UpdatePostDialogComponent
+    UpdatePostDialogComponent,
+    YourStoryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

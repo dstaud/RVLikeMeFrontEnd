@@ -10,8 +10,10 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { UploadImageService } from '@services/data-services/upload-image.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
+import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 
 /**** Interfaces for data for form selects ****/
@@ -59,6 +61,7 @@ and I can't notify them. */
 })
 export class LifestyleComponent implements OnInit {
   form: FormGroup;
+  lifestyleImageUrls: Array<string> = [];
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -160,6 +163,7 @@ export class LifestyleComponent implements OnInit {
               private location: Location,
               private router: Router,
               private authSvc: AuthenticationService,
+              private uploadImageSvc: UploadImageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -190,6 +194,26 @@ export class LifestyleComponent implements OnInit {
   ngOnDestroy() {};
 
 
+    // As user to upload image, compress and orient the image and upload to server to store
+  // If row is passed, this means being called to get a new image to replace an existing image
+  getImage(row?: number) {
+    let fileType: string = 'lifestyle';
+    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
+      this.showSpinner = true;
+      console.log('uploading compressed oriented file')
+      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+        console.log('LifestyleComponent:onLifestyleImageSelected: URL=', uploadedFileUrl);
+        if (row) {
+          this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], uploadedFileUrl);
+        } else {
+          this.updateProfileLifestyleImageUrls(uploadedFileUrl);
+        }
+        this.showSpinner = false;
+      });
+    });
+  }
+
+
   // Automatically pop-up the 'other' dialog with the correct
   // control and name when use clicks on select if other
   onActivateSelectItem(control: string, controlDesc: string) {
@@ -211,6 +235,24 @@ export class LifestyleComponent implements OnInit {
       this[control] = '';
       this.updateDataPoint(event, control);
     }
+  }
+
+
+  viewFullImage(row) {
+    this.openImageViewDialog(row);
+  }
+
+
+  private deleteLifestyleImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
+    this.profileSvc.deleteLifestyleImageUrlFromProfile(this.profile._id, imageUrl)
+    .subscribe(imageResult => {
+      console.log('profile updated ', imageResult);
+      if (newImageFileUrl) {
+        this.updateProfileLifestyleImageUrls(newImageFileUrl);
+      } else {
+        this.profileSvc.getProfile();
+      }
+    })
   }
 
 
@@ -263,6 +305,8 @@ export class LifestyleComponent implements OnInit {
         traveling: this.travelingFormValue
       });
 
+      this.lifestyleImageUrls = this.profile.lifestyleImageUrls;
+
       this.showSpinner = false;
       this.form.enable();
     }, (error) => {
@@ -272,6 +316,29 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
+
+  // View lifestyle image larger
+  private openImageViewDialog(row: number): void {
+    let imageUrl = this.lifestyleImageUrls[row];
+
+    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
+      width: '95%',
+      maxWidth: 600,
+      data: {imageUrl: imageUrl, alter: true }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result === 'change') {
+        console.log('delete ', this.lifestyleImageUrls[row], ' and add new one');
+        this.getImage(row);
+      } else if (result === 'delete') {
+        console.log('delete ', this.lifestyleImageUrls[row]);
+        this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], '');
+      }
+    });
+  }
 
   // Select form 'Other' Dialog
   private openOtherDialog(control: string, name: string, event: string): void {
@@ -351,6 +418,22 @@ export class LifestyleComponent implements OnInit {
     }, error => {
       this[SaveIcon] = false;
       console.log('LifestyleComponent:updateLifestyle: throw error ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  // Update lifestyle image url array in user's profile with new uploaded lifestyle image.
+  private updateProfileLifestyleImageUrls(lifestyleImageUrl: string) {
+    console.log('LifestyleComponent:updateProfileLifestyleImageUrls: calling server ', lifestyleImageUrl, ' to profile for ', this.profile._id);
+    this.profileSvc.addLifestyleImageUrlToProfile(this.profile._id, lifestyleImageUrl)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this.profileSvc.getProfile();
+      this.showSpinner = false;
+    }, error => {
+      this.showSpinner = false;
+      console.error('LifestyleComponent:updateProfileLifestyleImageUrls: throw error ', error);
       throw new Error(error);
     });
   }

@@ -1,6 +1,18 @@
 <div class="background">
-  <div>
-    <p class="mat-body">{{ "lifestyle.component.explanation" | translate}}</p>
+  <div class="lifestyle-images">
+    <div class="row">
+      <div *ngFor="let lifeStyleImageUrl of lifestyleImageUrls; let i=index">
+        <div class="img-container">
+          <img [src]="lifeStyleImageUrl" style="width:95%" (click)="viewFullImage(i)">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="get-image">
+    <button [disabled]="lifestyleImageUrls.length === 3" mat-button (click)="getImage()">
+      <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
+      Upload 3 pics about your RV Lifestyle
+    </button>
   </div>
   <form [formGroup]="form">
     <div>

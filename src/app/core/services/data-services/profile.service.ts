@@ -45,6 +45,7 @@ export interface IuserProfile {
   forums: Array<string>;
   notifySubscription: string;
   rigImageUrls: Array<string>;
+  lifestyleImageUrls: Array<string>;
 }
 
 @Injectable({
@@ -91,7 +92,8 @@ export class ProfileService {
     mobileInternet: null,
     forums: [],
     notifySubscription: null,
-    rigImageUrls: []
+    rigImageUrls: [],
+    lifestyleImageUrls: []
   };
   private profileSubscription: any;
 
@@ -144,6 +146,7 @@ export class ProfileService {
       this.dataStore.profile.forums = [];
       this.dataStore.profile.notifySubscription = null;
       this.dataStore.profile.rigImageUrls = [];
+      this.dataStore.profile.lifestyleImageUrls = [];
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       console.log('ProfileService:getProfile: Getting Profile');
@@ -195,11 +198,25 @@ export class ProfileService {
     return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
   }
 
-  deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
+  deleteRigImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + lifestyleImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
     console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
+  }
+
+  addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    console.log('updateProfile: params=', imageUrlJSON)
+    return this.http.put(`/api/profile-lifestyle-image`, imageUrlJSON, {});
+  }
+
+  deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    console.log('updateProfile: params=', imageUrlJSON)
+    return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
   }
 
   public dispose() {
