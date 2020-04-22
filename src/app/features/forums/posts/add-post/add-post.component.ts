@@ -43,11 +43,11 @@ export class AddPostComponent implements OnInit {
 
 
   // As user to upload image, compress and orient the image and upload to server to store.  Save the URL to store with the post
-  onPhoto() {
+  onPhoto(event: any) {
     let fileType: string = 'post';
-    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;
-      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         console.log('AddPostComponent:onPhoto: URL=', uploadedFileUrl);
         this.postPhotoUrl = uploadedFileUrl;
         this.formCompleted = true;
@@ -55,7 +55,6 @@ export class AddPostComponent implements OnInit {
       });
     });
   }
-
 
 
   // When user clicks post, update the database

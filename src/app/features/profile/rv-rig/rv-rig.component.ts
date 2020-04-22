@@ -121,32 +121,46 @@ export class RvRigComponent implements OnInit {
   ngOnDestroy() {}
 
 
-  // As user to upload image, compress and orient the image and upload to server to store
-  // If row is passed, this means being called to get a new image to replace an existing image
-  getImage(row?: number) {
-    let fileType: string = 'rig';
-    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
-      this.showSpinner = true;
-      console.log('uploading compressed oriented file')
-      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
-        console.log('RigComponent:onRigImageSelected: URL=', uploadedFileUrl);
-        if (row) {
-          this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], uploadedFileUrl);
-        } else {
-          this.updateProfileRigImageUrls(uploadedFileUrl);
-        }
-        this.showSpinner = false;
-      });
-    });
-  }
-
-
   // Automatically pop-up the 'other' dialog with the correct
   // control and name when use clicks on select if other
   onActivateSelectItem(control: string, controlDesc: string) {
     if (this[control]) {
       this.openOtherDialog(control, controlDesc, 'other');
     }
+  }
+
+
+  // If user selects change, then have the user select a new file and then delete the old one before uploading the new one
+  changeImage(row: number, event: any) {
+    let fileType: string = 'rig';
+
+    this.showSpinner = true;
+    console.log('RvRigComponent:changeImage: compressing file event=', event)
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      console.log('RvRigComponent:changeImage: back from compress, upload compressed file to server')
+      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+        this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], uploadedFileUrl);
+        this.showSpinner = false;
+        console.log('RvRigComponent:changeImage: File uploaded completely url=', uploadedFileUrl);
+      });
+    });
+  }
+
+
+  // When user opts to upload an image compress and upload to server and update the profile with new URL
+  onRigImageSelected(event: any) {
+    let fileType: string = 'rig';
+
+    this.showSpinner = true;
+    console.log('RvRigComponent:onRigImageSelected: compressing file')
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      console.log('RvRigComponent:onRigImageSelected: back from compress, upload compressed file to server')
+      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+        this.updateProfileRigImageUrls(uploadedFileUrl);
+        this.showSpinner = false;
+        console.log('RvRigComponent:onRigImageSelected: File uploaded completely url=', uploadedFileUrl);
+      });
+    });
   }
 
 
@@ -179,11 +193,7 @@ export class RvRigComponent implements OnInit {
   }
 
 
-  viewFullImage(row) {
-    this.openImageViewDialog(row);
-  }
-
-
+  // Delete the image url from the user's profile
   private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
     this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
     .subscribe(imageResult => {
@@ -194,6 +204,30 @@ export class RvRigComponent implements OnInit {
         this.profileSvc.getProfile();
       }
     })
+  }
+
+
+  // View rig image larger
+  openImageViewDialog(row: number): void {
+    let imageUrl = this.rigImageUrls[row];
+
+    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
+      width: '95%',
+      maxWidth: 600,
+      data: {imageUrl: imageUrl, alter: true }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result === 'delete') {
+        console.log('delete ', this.rigImageUrls[row]);
+        this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], '');
+      } else {
+        console.log('change ', this.rigImageUrls[row], ' and add new one');
+        this.changeImage(row, result);
+      }
+    });
   }
 
 
@@ -243,30 +277,6 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
       console.error('RigComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
-    });
-  }
-
-
-  // View rig image larger
-  private openImageViewDialog(row: number): void {
-    let imageUrl = this.rigImageUrls[row];
-
-    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
-      width: '95%',
-      maxWidth: 600,
-      data: {imageUrl: imageUrl, alter: true }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result === 'change') {
-        console.log('delete ', this.rigImageUrls[row], ' and add new one');
-        this.getImage(row);
-      } else if (result === 'delete') {
-        console.log('delete ', this.rigImageUrls[row]);
-        this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], '');
-      }
     });
   }
 

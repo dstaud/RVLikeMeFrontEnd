@@ -26,8 +26,6 @@ import { NewMessageCountService } from '@services/new-msg-count.service';
 // TODO: Make sure unsubscribing to all subscriptions appropriately
 // TODO: Add push notifications and location information
 // TODO: Can the side-to-side shimmy because web page on IOS be handled?
-// TODO: Reduce size of image storage.  Right now storing twice.
-// TODO: Clean up all ngOnInits by moving everything to specific functions
 // TODO: For 'other' dialogs, when user clicks OK, pops up again
 
 @Component({

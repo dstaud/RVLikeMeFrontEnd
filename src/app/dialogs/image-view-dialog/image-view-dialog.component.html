@@ -3,6 +3,12 @@
 </div>
 <div mat-dialog-actions class="dialog-actions">
   <button mat-button (click)="dialogRef.close('ok')">OK</button>
-  <button *ngIf="data.alter" mat-button (click)="dialogRef.close('change')">Change</button>
+  <button *ngIf="data.alter" mat-button (click)="fileInput.click()">
+    <input #fileInput type="file"
+            accept = "image/*"
+            (change)="dialogRef.close($event)"
+            style="display:none;"/>
+      <span>Change</span>
+  </button>
   <button *ngIf="data.alter" mat-button (click)="dialogRef.close('delete')">Delete</button>
 </div>

@@ -9,9 +9,13 @@
     </div>
   </div>
   <div class="get-image">
-    <button [disabled]="lifestyleImageUrls.length === 3" mat-button (click)="getImage()">
+    <button [disabled]="lifestyleImageUrls.length === 3" mat-button (click)="fileInput.click()">
       <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
-      Upload 3 pics about your RV Lifestyle
+      <input #fileInput type="file"
+              (change)="onLifestyleImageSelected($event)"
+              accept = "image/*"
+              style="display:none;"/>
+        <span>Upload 3 pics about your RV Lifestyle</span>
     </button>
   </div>
   <form [formGroup]="form">

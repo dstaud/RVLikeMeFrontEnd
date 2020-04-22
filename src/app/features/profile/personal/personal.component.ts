@@ -228,12 +228,16 @@ export class PersonalComponent implements OnInit {
 
   // TODO: Run code auditor for security and anything else that may be helpful
 
-  // Upload, compress and orient the image and offer up for user to crop
-  getImage() {
+
+  // When user opts to upload an image compress and upload to server and update the profile with new URL
+  onProfileImageSelected(event: any) {
     let fileType: string = 'profile';
+
     this.showSpinner = true;
-    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
+    console.log('PersonalComponent:onRigImageSelected: compressing file')
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      console.log('PersonalComponent:onRigImageSelected: back from compress, upload compressed file to server')
+      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.tempProfileImage = uploadedFileUrl;
         this.openImageCropperDialog(uploadedFileUrl, 'profile');
       });
@@ -300,6 +304,7 @@ export class PersonalComponent implements OnInit {
     });
   }
 
+  // TODO: can we feed the compressed file directly to image cropper without having to save temp image on S3 and then delete it?
 
   // Present image for user to crop
   private openImageCropperDialog(imageSource: string, imageType: string): void {

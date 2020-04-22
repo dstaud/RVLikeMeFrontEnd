@@ -6,8 +6,12 @@
             style="width:80px;height:80px;">
     </div>
     <div>
-      <button mat-button (click)="getImage()">
+      <button mat-button (click)="fileInput.click()">
         <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
+        <input #fileInput type="file"
+                (change)="onProfileImageSelected($event)"
+                accept = "image/*"
+                style="display:none;"/>
         {{ profileImageLabel | translate }}
       </button>
     </div>

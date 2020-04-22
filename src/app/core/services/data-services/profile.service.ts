@@ -229,4 +229,5 @@ export class ProfileService {
   public dispose() {
     this.profileSubscription.unsubscribe();
   }
+
 }

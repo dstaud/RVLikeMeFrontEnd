@@ -194,21 +194,35 @@ export class LifestyleComponent implements OnInit {
   ngOnDestroy() {};
 
 
-    // As user to upload image, compress and orient the image and upload to server to store
-  // If row is passed, this means being called to get a new image to replace an existing image
-  getImage(row?: number) {
+  // If user selects change, then have the user select a new file and then delete the old one before uploading the new one
+  changeImage(row: number, event: any) {
     let fileType: string = 'lifestyle';
-    this.uploadImageSvc.compressFile(fileType, (compressedFile: File) => {
-      this.showSpinner = true;
-      console.log('uploading compressed oriented file')
-      this.uploadImageSvc.uploadImage(compressedFile, (uploadedFileUrl: string) => {
-        console.log('LifestyleComponent:onLifestyleImageSelected: URL=', uploadedFileUrl);
-        if (row) {
-          this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], uploadedFileUrl);
-        } else {
-          this.updateProfileLifestyleImageUrls(uploadedFileUrl);
-        }
+
+    this.showSpinner = true;
+    console.log('RvRigComponent:changeImage: compressing file event=', event)
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      console.log('RvRigComponent:changeImage: back from compress, upload compressed file to server')
+      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+        this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], uploadedFileUrl);
         this.showSpinner = false;
+        console.log('RvRigComponent:changeImage: File uploaded completely url=', uploadedFileUrl);
+      });
+    });
+  }
+
+
+  // When user opts to upload an image compress and upload to server and update the profile with new URL
+  onLifestyleImageSelected(event: any) {
+    let fileType: string = 'lifestyle';
+
+    this.showSpinner = true;
+    console.log('RvRigComponent:onRigImageSelected: compressing file')
+    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+      console.log('RvRigComponent:onRigImageSelected: back from compress, upload compressed file to server')
+      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+        this.updateProfileLifestyleImageUrls(uploadedFileUrl);
+        this.showSpinner = false;
+        console.log('RvRigComponent:onRigImageSelected: File uploaded completely url=', uploadedFileUrl);
       });
     });
   }
@@ -330,12 +344,12 @@ export class LifestyleComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      if (result === 'change') {
-        console.log('delete ', this.lifestyleImageUrls[row], ' and add new one');
-        this.getImage(row);
-      } else if (result === 'delete') {
+      if (result === 'delete') {
         console.log('delete ', this.lifestyleImageUrls[row]);
         this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], '');
+      } else {
+        console.log('change ', this.lifestyleImageUrls[row], ' and add new one');
+        this.changeImage(row, result);
       }
     });
   }
