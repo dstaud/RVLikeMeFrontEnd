@@ -199,13 +199,10 @@ export class LifestyleComponent implements OnInit {
     let fileType: string = 'lifestyle';
 
     this.showSpinner = true;
-    console.log('RvRigComponent:changeImage: compressing file event=', event)
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      console.log('RvRigComponent:changeImage: back from compress, upload compressed file to server')
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], uploadedFileUrl);
         this.showSpinner = false;
-        console.log('RvRigComponent:changeImage: File uploaded completely url=', uploadedFileUrl);
       });
     });
   }
@@ -216,13 +213,10 @@ export class LifestyleComponent implements OnInit {
     let fileType: string = 'lifestyle';
 
     this.showSpinner = true;
-    console.log('RvRigComponent:onRigImageSelected: compressing file')
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      console.log('RvRigComponent:onRigImageSelected: back from compress, upload compressed file to server')
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.updateProfileLifestyleImageUrls(uploadedFileUrl);
         this.showSpinner = false;
-        console.log('RvRigComponent:onRigImageSelected: File uploaded completely url=', uploadedFileUrl);
       });
     });
   }
@@ -252,15 +246,32 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-  viewFullImage(row) {
-    this.openImageViewDialog(row);
+  // View lifestyle image larger
+  openImageViewDialog(row: number): void {
+    let imageUrl = this.lifestyleImageUrls[row];
+
+    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
+      width: '95%',
+      maxWidth: 600,
+      data: {imageUrl: imageUrl, alter: true }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      if (result === 'delete') {
+        this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], '');
+      } else if (result !== 'ok') {
+        this.changeImage(row, result);
+      }
+    });
   }
+
 
 
   private deleteLifestyleImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
     this.profileSvc.deleteLifestyleImageUrlFromProfile(this.profile._id, imageUrl)
     .subscribe(imageResult => {
-      console.log('profile updated ', imageResult);
       if (newImageFileUrl) {
         this.updateProfileLifestyleImageUrls(newImageFileUrl);
       } else {
@@ -330,29 +341,6 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
-
-  // View lifestyle image larger
-  private openImageViewDialog(row: number): void {
-    let imageUrl = this.lifestyleImageUrls[row];
-
-    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
-      width: '95%',
-      maxWidth: 600,
-      data: {imageUrl: imageUrl, alter: true }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result === 'delete') {
-        console.log('delete ', this.lifestyleImageUrls[row]);
-        this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], '');
-      } else {
-        console.log('change ', this.lifestyleImageUrls[row], ' and add new one');
-        this.changeImage(row, result);
-      }
-    });
-  }
 
   // Select form 'Other' Dialog
   private openOtherDialog(control: string, name: string, event: string): void {

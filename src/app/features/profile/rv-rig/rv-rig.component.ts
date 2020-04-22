@@ -221,10 +221,8 @@ export class RvRigComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
       if (result === 'delete') {
-        console.log('delete ', this.rigImageUrls[row]);
         this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], '');
-      } else {
-        console.log('change ', this.rigImageUrls[row], ' and add new one');
+      } else if (result !== 'ok') {
         this.changeImage(row, result);
       }
     });
@@ -337,11 +335,9 @@ export class RvRigComponent implements OnInit {
 
   // Update rig image url array in user's profile with new uploaded rig image.
   private updateProfileRigImageUrls(rigImageUrl: string) {
-    console.log('RvRigComponent:updateProfileRigImageUrls: calling server ', rigImageUrl, ' to profile for ', this.profile._id);
     this.profileSvc.addRigImageUrlToProfile(this.profile._id, rigImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      console.log('RvRigComponent:updateProfileRigImageUrl: back from delete, profile=', responseData);
       this.profileSvc.getProfile();
       this.showSpinner = false;
     }, error => {

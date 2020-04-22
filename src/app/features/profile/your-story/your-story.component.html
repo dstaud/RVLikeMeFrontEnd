@@ -17,32 +17,34 @@
                   class="message-button"
                   (click)="onMessageUser()">
               <mat-icon fontSet="material-icons-outlined">messages</mat-icon>
-              Message
+              {{ 'yourstory.component.message' | translate }}
           </button>
         </div>
       </div>
     </div>
   </div>
   <div class="attributes">
-    <p><span class="attribute-label">RV Experience: </span>{{ userAboutMe | translate }}</p>
-    <p><span class="attribute-label">How Rvs: </span>{{ userRvUse | translate }}</p>
-    <p><span class="attribute-label">Rig type: </span>{{ userRigType | translate }}</p>
-    <p><span class="attribute-label">Rig Pics: </span><span *ngIf="rigImageUrls.length === 0">no pics uploaded yet</span></p>
+    <p><span class="attribute-label">{{ 'yourstory.component.experience' | translate }}: </span>{{ userAboutMe | translate }}</p>
+    <p><span class="attribute-label">{{ 'yourstory.component.howrv' | translate }}: </span>{{ userRvUse | translate }}</p>
+    <p><span class="attribute-label">{{ 'yourstory.component.rigtype' | translate }}: </span>{{ userRigType | translate }}</p>
+    <p><span class="attribute-label">{{ 'yourstory.component.rigpics' | translate }}: </span>
+        <span *ngIf="rigImageUrls.length === 0">{{ 'yourstory.component.nopics' | translate }}</span></p>
     <div class="rig-images">
       <div class="row">
         <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">
           <div class="img-container">
-            <img [src]="rigImageUrl" style="width:95%" (click)="viewFullImage(rigImageUrl)">
+            <img [src]="rigImageUrl" style="width:95%" (click)="openImageViewDialog(rigImageUrl)">
           </div>
         </div>
       </div>
     </div>
-    <p><span class="attribute-label">Lifestyle Pics: </span><span *ngIf="lifestyleImageUrls.length === 0">no pics uploaded yet</span></p>
+    <p><span class="attribute-label">{{ 'yourstory.component.lifestylepics' | translate }}: </span>
+        <span *ngIf="lifestyleImageUrls.length === 0">{{ 'yourstory.component.nopics' | translate }}</span></p>
     <div class="rig-images">
       <div class="row">
         <div *ngFor="let lifestyleImageUrl of lifestyleImageUrls; let i=index">
           <div class="img-container">
-            <img [src]="lifestyleImageUrl" style="width:95%" (click)="viewFullImage(lifestyleImageUrl)">
+            <img [src]="lifestyleImageUrl" style="width:95%" (click)="openImageViewDialog(lifestyleImageUrl)">
           </div>
         </div>
       </div>
@@ -50,7 +52,7 @@
   </div>
   <div>
     <div class="story-heading mat-title">
-      Story of {{ userDisplayName }}
+      {{ userDisplayName }} {{ 'yourstory.component.story' | translate }}
     </div>
     <div class="story">
       {{ userMyStory }}

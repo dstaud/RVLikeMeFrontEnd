@@ -86,7 +86,7 @@
     </div>
   </form>
   <div>
-    <span class="hyperlink" (click)="onYourStory()">View your story as others will see it</span>
+    <span class="hyperlink" (click)="onYourStory()">{{ 'profile.component.viewpic' | translate }}</span>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

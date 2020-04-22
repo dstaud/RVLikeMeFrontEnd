@@ -2,13 +2,13 @@
   <img class="image" [src]="data.imageUrl">
 </div>
 <div mat-dialog-actions class="dialog-actions">
-  <button mat-button (click)="dialogRef.close('ok')">OK</button>
+  <button mat-button (click)="dialogRef.close('ok')">{{ 'imageviewdialog.component.ok' | translate }}</button>
   <button *ngIf="data.alter" mat-button (click)="fileInput.click()">
     <input #fileInput type="file"
             accept = "image/*"
             (change)="dialogRef.close($event)"
             style="display:none;"/>
-      <span>Change</span>
+      <span>{{ 'imageviewdialog.component.change' | translate }}</span>
   </button>
-  <button *ngIf="data.alter" mat-button (click)="dialogRef.close('delete')">Delete</button>
+  <button *ngIf="data.alter" mat-button (click)="dialogRef.close('delete')">{{ 'imageviewdialog.component.delete' | translate }}</button>
 </div>

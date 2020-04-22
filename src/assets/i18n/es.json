@@ -11,6 +11,7 @@
     "home": "casa",
     "about": "acerca de RV Like Me",
     "more": "más",
+    "newbie": "rincón de novato",
     "profile": "perfil",
     "settings": "ajustes",
     "install": "instalar aplicación",
@@ -251,6 +252,7 @@
     "interests": "Mi intereses",
     "aboutMe": "Describete",
     "yearOfBirth": "alrededor de tu edad (+/- 5años)",
+    "viewpic": "Vea su historia como otros la verán",
     "list": {
       "aboutme": {
         "dreamer": "soñando con RVing",
@@ -411,7 +413,8 @@
     "worklifeDesc": "Vida laboral",
     "campsWithMeDesc": "Campamentos conmigo",
     "boondockingDesc": "Boondocking",
-    "travelingDesc": "Cómo viajo en mi RV"
+    "travelingDesc": "Cómo viajo en mi RV",
+    "uploadpics": "Sube 3 fotos sobre tu estilo de vida RV"
   },
   "rig.component": {
     "explanation": "Esta información se usará para otras personas con RV similares para obtener respuestas más relevantes. ¡Cuanto más completo, mejores serán sus resultados!",
@@ -419,7 +422,8 @@
     "rigYearDesc": "RV año",
     "rigManufacturer": "Fabricante de RV",
     "rigBrand": "Marca RV",
-    "rigModel": "Modelo de RV"
+    "rigModel": "Modelo de RV",
+    "uploadpics": "Sube hasta 3 fotos de tu plataforma"
   },
   "interests.component": {
     "explanation": "Esta información se utilizará para ayudar a encontrar otras personas que compartan sus intereses. Por favor marque todo lo que le interesa.",
@@ -464,7 +468,8 @@
     "postTitle": "Título de la entrada",
     "title": "Título",
     "body": "Enviar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "photo": "Foto"
   },
   "comments.component": {
     "showAll": "mostrar todos los comentarios"
@@ -472,5 +477,20 @@
   "add-component.component": {
     "comment": "Comentario",
     "post": "Enviar"
+  },
+  "yourstory.component": {
+    "experience": "Experiencia RV",
+    "howrv": "Cómo RVs",
+    "rigtype": "Tipo de plataforma",
+    "rigpics": "Fotos del aparejo",
+    "lifestylepics": "Fotos de estilo de vida",
+    "story": "historia",
+    "message": "Mensaje",
+    "nopics": "no hay fotos subidas yet"
+  },
+  "imageviewdialog.component": {
+    "ok": "Okay",
+    "delete": "Eliminar",
+    "change": "Cambio"
   }
 }

@@ -11,6 +11,7 @@
     "home": "home",
     "about": "about RV Like Me",
     "more": "more",
+    "newbie": "newbie corner",
     "profile": "profile",
     "settings": "settings",
     "install": "install app",
@@ -251,6 +252,7 @@
     "interests": "My interests",
     "aboutMe": "Describe yourself",
     "yearOfBirth": "around your age (+/- 5yrs)",
+    "viewpic": "View your story as others will see it",
     "list": {
       "aboutme": {
         "dreamer": "dreaming of RVing",
@@ -411,7 +413,8 @@
     "worklifeDesc": "Work life",
     "campsWithMeDesc": "RVs with me",
     "boondockingDesc": "Boondocking",
-    "travelingDesc": "How I travel in my RV"
+    "travelingDesc": "How I travel in my RV",
+    "uploadpics": "Upload 3 pics about your RV Lifestyle"
  },
   "rig.component": {
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
@@ -419,7 +422,8 @@
     "rigYearDesc": "Rig year",
     "rigManufacturer": "Rig manufacturer",
     "rigBrand": "Rig brand",
-    "rigModel": "rig model"
+    "rigModel": "rig model",
+    "uploadpics": "Upload up to 3 pics of your rig"
   },
   "interests.component": {
     "explanation": "This information will be used to help find others that share your interests.  Please check all that you are interested in.",
@@ -464,7 +468,8 @@
     "postTitle": "Post Title",
     "title": "Title",
     "body": "Post",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "photo": "Photo"
   },
   "comments.component": {
     "showAll": "show all comments"
@@ -472,5 +477,20 @@
   "add-comment.component": {
     "comment": "Comment",
     "post": "Post"
+  },
+  "yourstory.component": {
+    "experience": "RV experience",
+    "howrv": "How RVs",
+    "rigtype": "Rig type",
+    "rigpics": "Rig pics",
+    "lifestylepics": "Lifestyle Pics",
+    "story": "story",
+    "message": "Message",
+    "nopics": "no pics uploaded yet"
+  },
+  "imageviewdialog.component": {
+    "ok": "OK",
+    "delete": "Delete",
+    "change": "Change"
   }
 }

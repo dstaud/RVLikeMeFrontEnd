@@ -48,7 +48,6 @@ export class AddPostComponent implements OnInit {
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        console.log('AddPostComponent:onPhoto: URL=', uploadedFileUrl);
         this.postPhotoUrl = uploadedFileUrl;
         this.formCompleted = true;
         this.showSpinner = false;

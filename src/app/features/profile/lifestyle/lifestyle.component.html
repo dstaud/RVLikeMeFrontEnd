@@ -3,7 +3,7 @@
     <div class="row">
       <div *ngFor="let lifeStyleImageUrl of lifestyleImageUrls; let i=index">
         <div class="img-container">
-          <img [src]="lifeStyleImageUrl" style="width:95%" (click)="viewFullImage(i)">
+          <img [src]="lifeStyleImageUrl" style="width:95%" (click)="openImageViewDialog(i)">
         </div>
       </div>
     </div>
@@ -15,7 +15,7 @@
               (change)="onLifestyleImageSelected($event)"
               accept = "image/*"
               style="display:none;"/>
-        <span>Upload 3 pics about your RV Lifestyle</span>
+        <span>{{ 'lifestyle.component.uploadpics' | translate }}</span>
     </button>
   </div>
   <form [formGroup]="form">

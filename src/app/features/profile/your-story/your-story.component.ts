@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-
 import { TranslateService } from '@ngx-translate/core';
+
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService } from '@services/data-services/profile.service';
@@ -31,8 +31,8 @@ export class YourStoryComponent implements OnInit {
   private paramsForMessaging: string;
 
   constructor(private profileSvc: ProfileService,
-              private translate: TranslateService,
               private dialog: MatDialog,
+              private translate: TranslateService,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
@@ -55,8 +55,20 @@ export class YourStoryComponent implements OnInit {
   }
 
 
-  viewFullImage(imageUrl: string) {
-    this.openImageViewDialog(imageUrl);
+  // View rig image larger
+  openImageViewDialog(imageUrl: string): void {
+
+    const dialogRef = this.dialog.open(ImageViewDialogComponent, {
+      width: '95%',
+      maxWidth: 600,
+      data: {imageUrl: imageUrl, Alter: false }
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      console.log('closed dialog')
+    });
   }
 
 
@@ -99,7 +111,7 @@ export class YourStoryComponent implements OnInit {
           this.userAboutMe = 'profile.component.list.aboutme.' + profileResult.aboutMe.toLowerCase();
         }
       } else {
-        this.userAboutMe = 'not entered yet';
+        this.userAboutMe = this.translate.instant('not entered yet');
       }
 
       if (profileResult.rvUse) {
@@ -109,7 +121,7 @@ export class YourStoryComponent implements OnInit {
           this.userRvUse = 'profile.component.list.rvuse.' + profileResult.rvUse.toLowerCase();
         }
       } else {
-        this.userRvUse = 'not entered yet';
+        this.userRvUse = this.translate.instant('not entered yet');
       }
 
       if (profileResult.rigType) {
@@ -119,7 +131,7 @@ export class YourStoryComponent implements OnInit {
           this.userRigType = 'profile.component.list.rigtype.' + profileResult.rigType.toLowerCase();
         }
       } else {
-        this.userRigType = 'not entered yet';
+        this.userRigType = this.translate.instant('not entered yet');
       }
 
       this.rigImageUrls = profileResult.rigImageUrls;
@@ -129,21 +141,4 @@ export class YourStoryComponent implements OnInit {
       throw new Error(error);
     });
   }
-
-
-    // View rig image larger
-    private openImageViewDialog(imageUrl: string): void {
-
-      const dialogRef = this.dialog.open(ImageViewDialogComponent, {
-        width: '95%',
-        maxWidth: 600,
-        data: {imageUrl: imageUrl, Alter: false }
-      });
-
-      dialogRef.afterClosed()
-      .pipe(untilComponentDestroyed(this))
-      .subscribe(result => {
-        console.log('closed dialog')
-      });
-    }
 }

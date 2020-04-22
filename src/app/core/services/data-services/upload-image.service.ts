@@ -28,9 +28,8 @@ export class UploadImageService {
               private imageSvc: ImageService) { }
 
 
-
+  // Pre-process and then compress file
   compressImageFile(event: any, cb: CallableFunction) {
-    console.log('UploadImageService:compressImageFile: processing file')
     this.processFile(event, (imageFile: File) => {
       cb(imageFile);
     })
@@ -52,7 +51,7 @@ export class UploadImageService {
           cb(imageFileUrl);
       }
     }, error => {
-      console.log('UploadImageService:uploadImage: throw error ', error);
+      console.error('UploadImageService:uploadImage: throw error ', error);
       throw new Error(error);
     });
   }
@@ -68,28 +67,24 @@ export class UploadImageService {
         cb(profileImageUrl);
       }
     }, error => {
-      console.log('UploadImageService:uploadImagebase64: throw error ', error);
+      console.error('UploadImageService:uploadImagebase64: throw error ', error);
       throw new Error(error);
     });
   }
 
 
   private compressFile(imageFile: File,  fileName: string, orientation: DOC_ORIENTATION, cb: CallableFunction) {
-    console.log('UploadImageService:compressTheFile:')
     let compressedImageFile:File = null;
-
-    console.log('UploadImageService:compressTheFile: Orientation = ', orientation)
-    console.warn('File size before:',  this.imageCompress.byteCount(imageFile)/(1024*1024));
 
     this.imageCompress.compressFile(imageFile, orientation, 50, 50)
     .then(result => {
-      console.log('UploadImageService:compressTheFile: back from compress')
-        // Creates a blob from dataUri
         const imageBlob = this.dataURItoBlob(result.split(',')[1]);
         compressedImageFile = new File([imageBlob], fileName, { type: 'image/jpeg' });
         cb(compressedImageFile);
-      }
-    );
+    })
+    .catch(error => {
+      console.error('UploadImageService:compressFile: error compressing file:', error);
+    });
   }
 
 
@@ -121,17 +116,11 @@ export class UploadImageService {
 
     // Get image orientation so can adjust it when compressing
     exifr.orientation(imageFromSource).catch(err => undefined).then(orient => {
-      console.log('UploadImageService:ProcessFile: got orientation ONE=', orient, ' now compressing file');
       orientation = orient;
     });
 
-    console.log('UploadImageService:ProcessFile: got orientation=', orientation);
-
     // Compress file before uploading to server
     reader.onload = (event: any) => {
-      // Determine image orientation
-      console.log('UploadImageService:ProcessFile: got file from user, getting Orientation ', fileName)
-
       this.compressFile(event.target.result, fileName, orientation, (imageFile: File) => {
         cb(imageFile);
       });
