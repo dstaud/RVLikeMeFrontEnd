@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
 
+import { Observable } from 'rxjs';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
@@ -13,11 +17,17 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  newbie: boolean = false;
+  experiencedHelp: boolean = false;
+
   private backPath = '';
+  private userProfile: Observable<IuserProfile>;
+  private profile: IuserProfile;
 
   constructor(public translate: TranslateService,
               private auth: AuthenticationService,
               private location: Location,
+              private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
@@ -27,5 +37,36 @@ export class HomeComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
+
+    this.listenForUserProfile();
+  }
+
+  ngOnDestroy() {}
+
+
+  onNewbieTopics() {
+    this.activateBackArrowSvc.setBackRoute('home');
+    this.router.navigateByUrl('/newbie/newbie-topics');
+  }
+
+
+  // Get user profile
+  private listenForUserProfile() {
+    this.userProfile = this.profileSvc.profile;
+    this.userProfile
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(profile => {
+      this.profile = profile;
+      if (this.profile.aboutMe === 'newbie' || this.profile.aboutMe === 'dreamer') {
+        this.newbie = true;
+      } else if (this.profile.aboutMe === 'experienced' && this.profile.helpNewbies) {
+        this.experiencedHelp = true;
+      } else {
+        this.experiencedHelp = false;
+      }
+    }, (error) => {
+      console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
   }
 }

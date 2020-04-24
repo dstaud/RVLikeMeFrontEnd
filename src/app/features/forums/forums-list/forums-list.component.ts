@@ -67,8 +67,6 @@ export class ForumsListComponent implements OnInit {
 
     params = '{"_id":"' + group._id + '",' + '"theme":"' + this.theme + '"}';
 
-    console.log('ForumsListComponent:onGroupSelect: params=', params);
-
     this.shareDataSvc.setData(params);
     this.activateBackArrowSvc.setBackRoute('forums-list');
     this.router.navigateByUrl('/forums');
@@ -118,7 +116,6 @@ export class ForumsListComponent implements OnInit {
 
   // Listen for changes in color theme;
   private listenForColorTheme() {
-    console.log('ForumsListComponent:ngOnInit: getting theme');
     this.themeSvc.defaultGlobalColorTheme
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
@@ -133,10 +130,8 @@ export class ForumsListComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      console.log('ForumsListComponent:ngOnInit: got new profile', data)
       this.profile = data;
       if (this.profile._id) {
-        console.log('ForumsListComponent:ngOnInit: getting groups')
         this.groupListDisplayAttributes = this.getGroups();
       }
     }, (error) => {

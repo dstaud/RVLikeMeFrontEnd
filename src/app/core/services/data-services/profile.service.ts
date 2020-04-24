@@ -19,6 +19,7 @@ export interface IuserProfile {
   language: string;
   colorThemePreference: string;
   aboutMe: string;
+  helpNewbies: boolean;
   rvUse: string;
   worklife: string;
   campsWithMe: string;
@@ -67,6 +68,7 @@ export class ProfileService {
     language: 'en',
     colorThemePreference: 'light-theme',
     aboutMe: null,
+    helpNewbies: false,
     rvUse: null,
     worklife: null,
     campsWithMe: null,
@@ -105,7 +107,6 @@ export class ProfileService {
               private http: HttpClient) { }
 
   getProfile(reset?: boolean) {
-    console.log('ProfileService:getProfile:');
     if (reset) {
       this.dataStore.profile._id = null;
       this.dataStore.profile.userID = null;
@@ -120,6 +121,7 @@ export class ProfileService {
       this.dataStore.profile.language = 'en';
       this.dataStore.profile.colorThemePreference = 'light-theme';
       this.dataStore.profile.aboutMe = null;
+      this.dataStore.profile.helpNewbies = false;
       this.dataStore.profile.rvUse = null;
       this.dataStore.profile.worklife = null;
       this.dataStore.profile.campsWithMe = null;
@@ -149,14 +151,12 @@ export class ProfileService {
       this.dataStore.profile.lifestyleImageUrls = [];
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
-      console.log('ProfileService:getProfile: Getting Profile');
       this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)
       .subscribe(data => {
         this.dataStore.profile = data;
-        console.log('ProfileService:getProfile: Profile=', this.dataStore.profile);
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, (error) => {
-        console.log('ProfileService:getProfile: throw error ', error);
+        console.error('ProfileService:getProfile: throw error ', error);
         throw new Error(error);
       });
     }
@@ -165,8 +165,6 @@ export class ProfileService {
   // Get profile for a user based on user ID
   getUserProfile(userID: string): Observable<any> {
     let param = JSON.parse('{"userID":"' + userID + '"}');
-    console.log('ProfileService:getMyStory: params=', param);
-
     return this.http.get(`/api/profile-user`, { params: param });
   }
 
@@ -180,49 +178,42 @@ export class ProfileService {
   }
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
-    console.log('updateProfile: for profile ', userProfile)
     return this.http.put(`/api/profile`, userProfile, {});
   }
 
   addGroupToProfile(profileID: string, groupID: string): Observable<any> {
     let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
     let groupJSON = JSON.parse(group);
-    console.log('updateProfile: params=', groupJSON)
     return this.http.put(`/api/profile-forums`, groupJSON, {});
   }
 
   addRigImageUrlToProfile(profileID: string, rigImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
-    console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
   }
 
   deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
-    console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
   }
 
   addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
-    console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-lifestyle-image`, imageUrlJSON, {});
   }
 
   deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
-    console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
   }
 
   deleteTempProfileImage(imageUrl: string): Observable<any> {
     let image = '{"imageUrl":"' + imageUrl + '"}';
     let imageUrlJSON = JSON.parse(image);
-    console.log('updateProfile: params=', imageUrlJSON)
     return this.http.put(`/api/profile-delete-temp-image`, imageUrlJSON, {});
   }
 

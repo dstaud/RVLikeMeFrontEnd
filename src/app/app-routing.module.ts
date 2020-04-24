@@ -55,7 +55,12 @@ const routes: Routes = [
   loadChildren: () =>
   import('./features/settings/settings.module')
   .then(m => m.SettingsModule)
-},
+  },
+  { path: 'newbie',
+  loadChildren: () =>
+  import('./features/newbie/newbie.module')
+  .then(m => m.NewbieModule)
+  },
   { path: 'signin', component: SigninComponent },
   { path: 'register', component: RegisterUserComponent },
   { path: 'learn-more', component: LearnMoreComponent },

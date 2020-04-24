@@ -87,7 +87,7 @@ export class ForumsComponent implements OnInit {
       this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
     }, error => {
       this.showSpinner = false;
-      console.log('ForumsComponentcreateGroupForum: throw error ', error);
+      console.error('ForumsComponentcreateGroupForum: throw error ', error);
       throw new Error(error);
     });
   }
@@ -105,7 +105,6 @@ export class ForumsComponent implements OnInit {
     let paramData: any;
 
     if (!this.shareDataSvc.getData()) {
-      console.log('ForumsComponent:getGroup: no parameters');
       this.router.navigateByUrl('/forums-list');
     } else {
       paramData = JSON.parse(this.shareDataSvc.getData());
@@ -217,7 +216,7 @@ export class ForumsComponent implements OnInit {
         this.createGroupForum(names, values);
       } else {
         this.showSpinner = false;
-        console.log('ForumsComponent:getGroup: throw error ', error);
+        console.error('ForumsComponent:getGroup: throw error ', error);
         throw new Error(error);
       }
     });
@@ -311,7 +310,6 @@ export class ForumsComponent implements OnInit {
       }
     }
     if (!groupFound) {
-      console.log('ForumsComponent:updateProfileGroups: group not in profile, calling add ', this.groupID, ' to profile for ', this.profile._id);
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
@@ -319,7 +317,7 @@ export class ForumsComponent implements OnInit {
         this.showSpinner = false;
       }, error => {
         this.showSpinner = false;
-        console.log('ForumsComponent:updateProfileGroups: throw error ', error);
+        console.error('ForumsComponent:updateProfileGroups: throw error ', error);
         throw new Error(error);
       });
     }

@@ -35,7 +35,6 @@ export class HttpInterceptorService implements HttpInterceptor {
         authReq = request;
     }
 
-    console.log('http-interceptor: getting request for url ', request.url);
     return next.handle(authReq).pipe(retry(3),
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {
@@ -68,7 +67,6 @@ export class HttpInterceptorService implements HttpInterceptor {
       // dataSvcURL = 'http://localhost:3000/' + 'api/posts';
       dataSvcURL = 'http://localhost:3000';
     }
-    console.log('request data length=', dataSvcURL.length);
     if (dataSvcURL.substring(dataSvcURL.length - 1, dataSvcURL.length) === '/') {
       dataSvcURL = dataSvcURL.substring(0, dataSvcURL.length - 1);
     }

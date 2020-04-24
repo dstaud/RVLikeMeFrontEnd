@@ -91,7 +91,7 @@ export class SendMessageComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
         this.showSpinner = false;
-        console.log('SendMessageComponent:onSubmit: error sending message ', error);
+        console.error('SendMessageComponent:onSubmit: error sending message ', error);
         throw new Error(error);
     });
   }
@@ -165,7 +165,6 @@ export class SendMessageComponent implements OnInit {
       this.router.navigateByUrl('/messages/message-list');
     } else {
       paramData = this.shareDataSvc.getData();
-      console.log('SendMessageComponent:ngOnInit: params=', paramData);
       this.fromUserID = paramData.fromUserID;
       this.fromDisplayName = paramData.fromDisplayName;
       if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {
@@ -217,7 +216,7 @@ export class SendMessageComponent implements OnInit {
     .subscribe(conversationResult => {
       this.messagesSvc.getConversations(); // Get updated conversation into behaviorSubject
     }, error => {
-      console.log('SendMessageComponent:updateConversation: throw error ', error);
+      console.error('SendMessageComponent:updateConversation: throw error ', error);
       throw new Error(error);
     })
   }

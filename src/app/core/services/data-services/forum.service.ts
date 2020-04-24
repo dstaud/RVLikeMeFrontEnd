@@ -23,15 +23,12 @@ export class ForumService {
     keyValues = keyValues + '}';
 
     let param = JSON.parse(keyValues);
-    console.log('ForumService:getGroup: Key values=', keyValues);
 
     return this.http.get(`/api/forum-group`, { params: param });
   }
 
   getGroupByID(groupID: string): Observable<any> {
     let param = JSON.parse('{"groupID":"' + groupID + '"}');
-
-    console.log('ForumService:getGroup: param =', param);
 
     return this.http.get(`/api/forum-group-id`, { params: param });
   }
@@ -46,7 +43,6 @@ export class ForumService {
     }
     keyValues = keyValues + '}';
     keyValues = JSON.parse(keyValues);
-    console.log('KEY VALUES ADD=', keyValues);
 
     return this.http.post(`/api/forum-group`, keyValues, {});
   }
@@ -65,9 +61,7 @@ export class ForumService {
                 '","profileImageUrl":"' + profileImageUrl +
                 '","postPhotoUrl":"' + postPhotoUrl +
                 '"}'
-    console.log('BODY=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('BODYJSON=', body);
     return this.http.post(`/api/forum-post`, bodyJSON, {});
   }
 
@@ -78,9 +72,7 @@ export class ForumService {
                 // '","title":"' + titleEscaped +
                 '","body":"' + postEscaped +
                 '"}'
-    console.log('BODY=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('BODYJSON=', body);
     return this.http.put(`/api/forum-post`, bodyJSON, {});
   }
 
@@ -90,9 +82,7 @@ export class ForumService {
                 '"displayName":"' + displayName + '",' +
                 '"profileImageUrl":"' + profileImageUrl + '",' +
                 '"comment":"' + commentEscaped + '"}'
-    console.log('COMMENT BODY=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('COMMENT BODYJSON=', bodyJSON);
     return this.http.post(`/api/forum-post-comment`, bodyJSON, {});
   }
 
@@ -101,9 +91,7 @@ export class ForumService {
                 '"displayName":"' + displayName + '",' +
                 '"profileImageUrl":"' + profileImageUrl + '",' +
                 '"reaction":"' + reaction + '"}'
-    console.log('REACTION BODY=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('REACTION BODYJSON=', bodyJSON);
     return this.http.post(`/api/forum-post-reaction`, bodyJSON, {});
   }
 
@@ -112,7 +100,6 @@ export class ForumService {
     newString = newString.replace(/"/g, "'").trim();
     newString = newString.replace(/\\/g, "|");
     newString = newString.replace(/\n/g, "\\n");
-    console.log(string, newString);
     return newString;
   }
 

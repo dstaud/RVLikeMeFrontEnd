@@ -9,7 +9,11 @@ import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageListComponent } from './message-list/message-list.component';
 
 @NgModule({
-  declarations: [MessagesComponent, SendMessageComponent, MessageListComponent],
+  declarations: [
+    MessagesComponent,
+    SendMessageComponent,
+    MessageListComponent
+  ],
   imports: [
     CommonModule,
     MessagesRoutingModule,

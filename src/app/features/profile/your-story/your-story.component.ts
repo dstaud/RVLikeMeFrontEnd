@@ -49,7 +49,6 @@ export class YourStoryComponent implements OnInit {
   // Navigate to send messages for the user whose story viewing
   onMessageUser() {
     this.activateBackArrowSvc.setBackRoute('mystory');
-    console.log('YourStoryComponent:onMessage: params for messaging=', this.paramsForMessaging);
     this.shareDataSvc.setData(this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');
   }
@@ -137,7 +136,7 @@ export class YourStoryComponent implements OnInit {
       this.rigImageUrls = profileResult.rigImageUrls;
       this.lifestyleImageUrls = profileResult.lifestyleImageUrls;
     }, error => {
-      console.log('YourStoryComponent:listenForUserProfile: error getting profile ', error);
+      console.error('YourStoryComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }

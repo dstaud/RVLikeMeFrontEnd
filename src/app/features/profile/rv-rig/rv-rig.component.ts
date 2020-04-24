@@ -135,13 +135,10 @@ export class RvRigComponent implements OnInit {
     let fileType: string = 'rig';
 
     this.showSpinner = true;
-    console.log('RvRigComponent:changeImage: compressing file event=', event)
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      console.log('RvRigComponent:changeImage: back from compress, upload compressed file to server')
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], uploadedFileUrl);
         this.showSpinner = false;
-        console.log('RvRigComponent:changeImage: File uploaded completely url=', uploadedFileUrl);
       });
     });
   }
@@ -152,13 +149,10 @@ export class RvRigComponent implements OnInit {
     let fileType: string = 'rig';
 
     this.showSpinner = true;
-    console.log('RvRigComponent:onRigImageSelected: compressing file')
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      console.log('RvRigComponent:onRigImageSelected: back from compress, upload compressed file to server')
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.updateProfileRigImageUrls(uploadedFileUrl);
         this.showSpinner = false;
-        console.log('RvRigComponent:onRigImageSelected: File uploaded completely url=', uploadedFileUrl);
       });
     });
   }
@@ -197,7 +191,6 @@ export class RvRigComponent implements OnInit {
   private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
     this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
     .subscribe(imageResult => {
-      console.log('profile updated with delete, result=', imageResult);
       if (newImageFileUrl) {
         this.updateProfileRigImageUrls(newImageFileUrl);
       } else {
@@ -357,7 +350,7 @@ export class RvRigComponent implements OnInit {
       this[SaveIcon] = false;
     }, error => {
       this[SaveIcon] = false;
-      console.log('PersonalComponent:updateRig: throw error ', error);
+      console.error('PersonalComponent:updateRig: throw error ', error);
       throw new Error(error);
     });
   }

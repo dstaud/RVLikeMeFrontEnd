@@ -231,7 +231,6 @@ export class AppComponent implements OnInit {
     this.userConversations
     // .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
-      console.log('AppComponent:conversations: got conversations', conversations);
       if (conversations.length === 0) {
         this.newMessageCount = null;
       } else {
@@ -242,7 +241,6 @@ export class AppComponent implements OnInit {
     this.newMsgCountSvc.newMessageCount$
     .pipe(untilComponentDestroyed(this))
     .subscribe(count => {
-      console.log('AppComponent:newMsgCount: got a count=', count);
       if (count.valueOf() === 0) {
         this.newMessageCount = null;
       } else {
@@ -273,7 +271,6 @@ export class AppComponent implements OnInit {
 
       // When we have actual profile data from the database, then go get the counts that will be used on the home page
       if (profile._id) {
-        console.log('AppComponent:ngOnInit: Get counts for profile change ', profile);
         this.likeMeCountsSvc.getLikeMeCountsPriority();
         this.userID = profile.userID;
         this.messagesSvc.getConversations();

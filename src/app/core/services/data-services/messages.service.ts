@@ -62,34 +62,30 @@ export class MessagesService {
     .pipe(untilComponentDestroyed(this), retry(3))
     .subscribe(conversationResult => {
       this.dataStore.conversation = conversationResult;
-      console.log('MessagesService:getConversations: got conversations=', this.dataStore.conversation);
       this._conversation.next(Object.assign({}, this.dataStore).conversation);
     }, (error) => {
       if (error.status === 404) {
         console.log('MessagesService:getConversations: no conversations found');
       } else {
-        console.log('MessagesService:getConversations: throw error ', error);
+        console.error('MessagesService:getConversations: throw error ', error);
         throw new Error(error);
       }
     });
   }
 
   getConversationsNotRead(userIdType: string): Observable<any> {
-    console.log('MessagesService:getConversationsNotRead: userIdType=', userIdType);
     let param = JSON.parse('{"userIdType":"' + userIdType + '"}');
     return this.http.get<number>(`/api/conversations-not-read`, { params: param  });
   }
 
   getConversation(fromUserID: string, toUserID: string): Observable<any> {
     let param = JSON.parse('{"fromUserID":"' + fromUserID + '","toUserID":"' + toUserID + '"}');
-    console.log('MessagesService:getConversation: param=', param);
+    console.error('MessagesService:getConversation: param=', param);
 
     return this.http.get(`/api/conversation`, { params: param  });
   }
 
   updateConversation(conversationID: string, userIdType: string, action: string) {
-    console.log('MessagesService:updateMessagesRead:', conversationID, userIdType, action);
-
     let update = '{"conversationID":"' + conversationID + '",' +
                   '"userIdType":"' + userIdType + '",' +
                   '"action":"' + action + '"}';
@@ -107,9 +103,7 @@ export class MessagesService {
                 '"toDisplayName":"' + toDisplayName + '",' +
                 '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
                 '"message":"' + messageEscaped + '"}'
-    console.log('MessagesService:sendMessage: body=', body)
     let bodyJSON = JSON.parse(body);
-    console.log('MessagesService:sendMessage: bodyJson=', bodyJSON);
     return this.http.post(`/api/message-send`, bodyJSON, {});
   }
 
@@ -118,7 +112,6 @@ export class MessagesService {
     newString = newString.replace(/"/g, "'").trim();
     newString = newString.replace(/\\/g, "|");
     newString = newString.replace(/\n/g, "\\n");
-    console.log(string, newString);
     return newString;
   }
 

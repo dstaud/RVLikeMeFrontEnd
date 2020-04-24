@@ -6,10 +6,10 @@ import { MessageListComponent } from './message-list/message-list.component';
 
 const routes: Routes = [
   { path: '', component: MessagesComponent,
-  children: [
-    { path: 'send-message', component: SendMessageComponent },
-    { path: 'message-list', component: MessageListComponent }
-  ]
+    children: [
+      { path: 'send-message', component: SendMessageComponent },
+      { path: 'message-list', component: MessageListComponent }
+    ]
 }
 ];
 

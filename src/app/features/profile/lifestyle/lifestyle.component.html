@@ -36,6 +36,22 @@
       <mat-icon class="icon" *ngIf="showaboutMeSaveIcon">save</mat-icon>
     </div>
 
+    <div *ngIf="aboutMeExperienced" class="newbie">
+        <p>As an experienced RVer, are you interested in helping newbies?</p>
+        <input type="radio"
+                formControlName="helpNewbies"
+                value="true"
+                name="helpNewbies"
+                (change)="onHelpNewbies($event)">Yes
+        <input type="radio"
+                formControlName="helpNewbies"
+                value="false"
+                name="helpNewbies"
+                (change)="onHelpNewbies($event)">No
+      <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'true'">insert_emoticon</mat-icon>
+      <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'false'">save</mat-icon>
+    </div>
+
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>

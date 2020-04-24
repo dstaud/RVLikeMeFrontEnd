@@ -55,7 +55,7 @@ export class AddCommentComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.log('AddCommentComponent:onSubmit: throw error ', error);
+      console.error('AddCommentComponent:onSubmit: throw error ', error);
       throw new Error(error);
     });
   }

@@ -21,7 +21,7 @@ export class AddPostComponent implements OnInit {
   @Output() postAddComplete = new EventEmitter<string>();
 
   form: FormGroup;
-  postPhotoUrl: string;
+  postPhotoUrl: string = '';
   formCompleted: boolean = false;
   showSpinner = false;
 
@@ -67,7 +67,7 @@ export class AddPostComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.log('AddPostComponent:onPost: throw error ', error);
+      console.error('AddPostComponent:onPost: throw error ', error);
       throw new Error(error);
     });
   }

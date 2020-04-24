@@ -21,20 +21,15 @@ export class NewMessageCountService {
   getNewMessageCount(userID: string, conversations: Iconversation[]): void {
     let count: number = 0;
 
-    console.log('NewMsgCountService:getNewMessageCount: getting new message count');
-
     for (let i=0; i < conversations.length; i++) {
       if (conversations[i].createdBy === userID) {
         count = count + conversations[i].createdByUnreadMessages;
-        console.log('NewMsgCountService:getNewMessageCount: createdBy count=', conversations[i].createdByUnreadMessages, count);
       }
       if (conversations[i].withUserID === userID) {
         count = count + conversations[i].withUserUnreadMessages;
-        console.log('NewMsgCountService:getNewMessageCount: withUser count=', conversations[i].withUserUnreadMessages, count);
       }
     }
     this.messageCount = count;
-    console.log('NewMsgCountService:getNewMessageCount: count=', this.messageCount);
 
     this._newMessageCount.next(this.messageCount);
   }
@@ -43,7 +38,6 @@ export class NewMessageCountService {
     let newCount;
 
     newCount = this.messageCount - count;
-    console.log('NewMessageCountService:updateMessageCount: original count=', this.messageCount, ' new count=', newCount);
 
     this.messageCount = newCount;
     this._newMessageCount.next(this.messageCount);

@@ -29,6 +29,7 @@ export interface AboutMe {
 export class ProfileComponent implements OnInit {
   form: FormGroup;
 
+  aboutMeExperienced: boolean = false;
   percentPersonal: number;
   personalProgressBarColor: string;
   personalEnteredMostInfo: boolean = false;
@@ -43,6 +44,7 @@ export class ProfileComponent implements OnInit {
 
   showSpinner = false;
   showAboutMeSaveIcon = false;
+  showhelpNewbiesSaveIcon = false;
   showLanguageSaveIcon = false;
 
   // TODO: Store the attribute data in database or in code?
@@ -86,7 +88,8 @@ export class ProfileComponent implements OnInit {
               fb: FormBuilder) {
                 this.form = fb.group({
                   language: ['en', Validators.required],
-                  aboutMe: ['']
+                  aboutMe: [''],
+                  helpNewbies: ['false']
                 });
             }
 
@@ -110,6 +113,23 @@ export class ProfileComponent implements OnInit {
     if (this.aboutMeOther) {
       this.openOtherDialog('other');
     }
+  }
+
+
+  // Offer chance for experienced RVer to help out newbies
+  onHelpNewbies(event: any) {
+    this.showhelpNewbiesSaveIcon = true;
+    this.profile.helpNewbies = event.target.value;
+
+    this.profileSvc.updateProfile(this.profile)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this.showhelpNewbiesSaveIcon = false;
+    }, error => {
+      this.showhelpNewbiesSaveIcon = false;
+      console.error('ProfileComponent:onHelpNewbies: throw error ', error);
+      throw new Error(error);
+    });
   }
 
 
@@ -140,7 +160,6 @@ export class ProfileComponent implements OnInit {
     let params = '{"userID":"' + this.profile.userID + '",' +
                       '"userIdViewer":"' + this.profile.userID + '",' +
                       '"params":' + userParams + '}';
-    console.log('ProfileComponent:onYourStory: params=', params);
     this.activateBackArrowSvc.setBackRoute('profile');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/mystory');
@@ -168,7 +187,7 @@ export class ProfileComponent implements OnInit {
       this.language.setLanguage(entry);
     }, error => {
       this.showLanguageSaveIcon = false;
-      console.log('ProfileComponent:setLanguage: throw error ', error);
+      console.error('ProfileComponent:setLanguage: throw error ', error);
       throw new Error(error);
     });
   }
@@ -252,20 +271,33 @@ export class ProfileComponent implements OnInit {
 
   // Listen for profile data and then take actions based on that data
   private listenForUserProfile() {
+    let helpNewbies: string
+
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
-      console.log('ProfileComponent:ngOnInit: got new profile data=', profileResult);
       this.profile = profileResult;
 
       this.readyAboutMeFormFieldData();
 
+      if (profileResult.helpNewbies) {
+        helpNewbies = profileResult.helpNewbies.toString();
+      } else {
+        helpNewbies = 'false';
+      }
+
       this.form.patchValue ({
         language: profileResult.language,
-        aboutMe: this.aboutMeFormValue
+        aboutMe: this.aboutMeFormValue,
+        helpNewbies: helpNewbies,
       });
 
+      if (profileResult.aboutMe === 'experienced') {
+        this.aboutMeExperienced = true;
+      }
+
+      console.log('ProfileComponent:listenForUserProfile: ', this.profile)
       this.determinePercentComplete(profileResult);
 
       this.showSpinner = false;
@@ -324,7 +356,6 @@ export class ProfileComponent implements OnInit {
 
   private packageParamsForMessaging(): string {
     let params: string;
-    console.log('ProfileComponent:navigateToMessages: displayName=', this.profile.displayName);
     params = '{"fromUserID":"' + this.profile.userID + '",' +
               '"fromDisplayName":"' + this.profile.displayName + '",' +
               '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
@@ -332,7 +363,7 @@ export class ProfileComponent implements OnInit {
               '"toDisplayName":"' + '' + '",' +
               '"toProfileImageUrl":"' + '' + '"}';
 
-    console.log('PostsComponent:navigateToMessages: params=', params);
+
     return params;
   }
 
@@ -381,7 +412,7 @@ export class ProfileComponent implements OnInit {
       }
     }, error => {
       this.showAboutMeSaveIcon = false;
-      console.log('ProfileComponent:updateAboutMe: throw error ', error);
+      console.error('ProfileComponent:updateAboutMe: throw error ', error);
       throw new Error(error);
     });
   }

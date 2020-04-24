@@ -15,7 +15,6 @@ export class SubscribeNotificationsService {
     let update = '{"profileID":"' + profileID + '",' +
                 '"subscription":' + JSON.stringify(subscription) + '}';
 
-    console.log('subscribeToNotifications: JSON params=', JSON.parse(update));
     return this.http.post('/api/subscribe', JSON.parse(update));
   }
 
@@ -24,14 +23,12 @@ export class SubscribeNotificationsService {
   unsubscribeFromNotifications(profileID: string): Observable<any> {
     let update = '{"profileID":"' + profileID + '"}'
 
-    console.log('unsubscribeToNotifications: JSON params=', JSON.parse(update));
     return this.http.post('/api/unsubscribe', JSON.parse(update));
   }
 
 
   // Send notificaiton to a specific person
   sendNotificationTest(subscription: string) {
-    console.log('sendNotificationTest:', subscription);
     return this.http.post('/api/notify', subscription);
   }
 }

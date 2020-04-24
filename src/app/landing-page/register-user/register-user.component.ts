@@ -60,6 +60,7 @@ export class RegisterUserComponent implements OnInit {
     language: 'en',
     colorThemePreference: 'light-theme',
     aboutMe: null,
+    helpNewbies: false,
     rvUse: null,
     worklife: null,
     campsWithMe: null,

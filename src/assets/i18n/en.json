@@ -90,7 +90,8 @@
     "gaming": "interested in gaming",
     "musicalInstrument": "who play a musical instrument",
     "programming": "interested in computer programming",
-    "mobileInternet": "interested in mobile internet",
+    "mobileInternet": "interested in internet connectivity",
+    "search": "search",
     "list": {
       "aboutme": {
         "dreamer": "dreaming of RVing",
@@ -438,7 +439,7 @@
     "gaming": "gaming",
     "musicalInstrument": "playing a musical instrument",
     "programming": "computer programming",
-    "mobileInternet": "mobile internet"
+    "mobileInternet": "internet connectivity"
   },
   "landing-page.component": {
     "header": "RV Like Me"
@@ -458,7 +459,7 @@
   },
   "posts.component": {
     "addHeader": "Add post as",
-    "firstPost": "Be the first to add a post for this group!",
+    "firstPost": "Be the first to post in this group!",
     "comments": "comments",
     "like": "like"
   },

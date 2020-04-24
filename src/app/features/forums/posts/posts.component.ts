@@ -92,7 +92,6 @@ export class PostsComponent implements OnInit {
 
   // When user clicks like, send update to server and turn off their ability to like again
   onLike(row: number): void {
-    console.log('row=', row);
     let reaction = 'like';
 
     this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
@@ -102,7 +101,7 @@ export class PostsComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.log('PostsComponent:onLike: throw error ', error);
+      console.error('PostsComponent:onLike: throw error ', error);
       throw new Error(error);
     });
   }
@@ -120,7 +119,6 @@ export class PostsComponent implements OnInit {
     let params = '{"userID":"' + toUserID + '",' +
                       '"userIdViewer":"' + this.userID + '",' +
                       '"params":' + userParams + '}';
-    console.log('PostsComponent:onYourStory: params=', params);
     this.activateBackArrowSvc.setBackRoute('forums-list');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/mystory');
@@ -160,7 +158,7 @@ export class PostsComponent implements OnInit {
           this.showSpinner = false;
         }, error => {
           this.showSpinner = false;
-          console.log('PostsComponent:openUpdatePostDialog: throw error ', error);
+          console.error('PostsComponent:openUpdatePostDialog: throw error ', error);
           throw new Error(error);
         });
       } else {
@@ -219,7 +217,6 @@ export class PostsComponent implements OnInit {
   private checkIfLiked(reactions: any): boolean {
     let reactionMatch = false;
 
-    console.log('PostsComponent:checkIfLiked: reactions=', reactions);
     for (let i=0; i < reactions.length; i++) {
       if (reactions[i].createdBy === this.userID) {
         reactionMatch = true;
@@ -242,13 +239,17 @@ export class PostsComponent implements OnInit {
 
   private createPostsArrayEntry(post): JSON {
     let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
+    let photoUrl: string = '';
 
+    if (post.photoUrl !== 'undefined') {
+      photoUrl = post.photoUrl;
+    }
     let newPost = '{"_id":"' + post._id + '",' +
     '"createdBy":"' + post.createdBy + '",' +
     '"body":"' + bodyEscaped + '",' +
     '"displayName":"' + post.userDisplayName + '",' +
     '"profileImageUrl":"' + post.userProfileUrl + '",' +
-    '"postPhotoUrl":"' + post.photoUrl + '",' +
+    '"postPhotoUrl":"' + photoUrl + '",' +
     '"commentCount":"' + post.comments.length + '",' +
     '"reactionCount":"' + post.reactions.length + '",' +
     '"createdAt":"' + post.createdAt + '"}';
@@ -261,7 +262,6 @@ export class PostsComponent implements OnInit {
     newString = newString.replace(/"/g, "'").trim();
     newString = newString.replace(/\\/g, "|");
     newString = newString.replace(/\n/g, "\\n");
-    console.log(string, newString);
     return newString;
   }
 
@@ -281,6 +281,7 @@ export class PostsComponent implements OnInit {
         this.showFirstPost = true;
         this.showSpinner = false;
       } else {
+        console.log('PostsComponent:getPostsFromDatabase: post=', postResult);
         this.comments= [];
         for (let j=0; j < postResult[0].comments.length; j++) {
           comment = this.createCommentsArrayEntry(postResult[0].comments[j]);
@@ -321,7 +322,7 @@ export class PostsComponent implements OnInit {
       }
     }, error => {
       this.showSpinner = false;
-      console.log('PostsComponent:getPosts: throw error ', error);
+      console.error('PostsComponent:getPosts: throw error ', error);
       throw new Error(error);
     });
   }
@@ -345,7 +346,6 @@ export class PostsComponent implements OnInit {
 
   private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): string {
     let params: string;
-    console.log('PostsComponent:navigateToMessages: displayName=', this.displayName);
     params = '{"fromUserID":"' + this.userID + '",' +
               '"fromDisplayName":"' + this.displayName + '",' +
               '"fromProfileImageUrl":"' + this.profileImageUrl + '",' +
@@ -353,7 +353,6 @@ export class PostsComponent implements OnInit {
               '"toDisplayName":"' + toDisplayName + '",' +
               '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
 
-    console.log('PostsComponent:navigateToMessages: params=', params);
     return params;
   }
 

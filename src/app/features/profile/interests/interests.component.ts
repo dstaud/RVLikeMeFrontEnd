@@ -92,7 +92,7 @@ ngOnInit() {
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this.showSaveIcon = false;
-      console.log('InterestsComponent:updateLifestyle: throw error ', error);
+      console.error('InterestsComponent:updateLifestyle: throw error ', error);
       throw new Error(error);
     });
   }

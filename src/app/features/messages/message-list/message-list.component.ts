@@ -83,7 +83,6 @@ export class MessageListComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.profile = data;
-      console.log('MessageListComponent:ngOnInit: got profile =', this.profile.userID);
       if (this.profile.userID) {
         this.userID = this.profile.userID;
         this.displayName = this.profile.displayName;

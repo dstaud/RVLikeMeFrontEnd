@@ -106,7 +106,7 @@ export class UserQueryComponent implements OnInit {
     .subscribe(matchResults => {
       this.matchQueryParams(matchResults);
     }, error => {
-      console.log('UserQueryComponent:ngOnInit: throw error ', error);
+      console.error('UserQueryComponent:ngOnInit: throw error ', error);
       throw new Error(error);
     });
   }
@@ -130,9 +130,8 @@ export class UserQueryComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       this.profile = data;
-      console.log('User-QueryComponent:ngOnInit: got new profile data=', data);
     }, error => {
-      console.log('UserQueryComponent:ngOnInit: throw error ', error);
+      console.error('UserQueryComponent:ngOnInit: throw error ', error);
       throw new Error(error);
     });
   }

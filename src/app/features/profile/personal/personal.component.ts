@@ -385,7 +385,7 @@ export class PersonalComponent implements OnInit {
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this[SaveIcon] = false;
-      console.log('PersonalComponent:updatePersonal: throw error ', error);
+      console.error('PersonalComponent:updatePersonal: throw error ', error);
       throw new Error(error);
     });
   }

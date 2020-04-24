@@ -90,7 +90,8 @@
     "gaming": "Interesado en juegos",
     "musicalInstrument": "quien toca un instrumento musical",
     "programming": "interesado en la programación de computadoras",
-    "mobileInternet": "interesado en internet móvil",
+    "mobileInternet": "interesado en conectividad a Internet",
+    "search": "buscar",
     "list": {
       "aboutme": {
         "dreamer": "soñando con RVing",
@@ -438,7 +439,7 @@
     "gaming": "juego de azar",
     "musicalInstrument": "instrumento musical",
     "programming": "programación de computadoras",
-    "mobileInternet": "internet móvil"
+    "mobileInternet": "conectividad a Internet"
   },
   "landing-page.component": {
     "header": "RV como yo"
@@ -458,7 +459,7 @@
   },
   "posts.component": {
     "addHeader": "Agregar publicación como",
-    "firstPost": "¡Sé el primero en añadir una publicación para este grupo!",
+    "firstPost": "¡Sé el primero en publicar en este grupo!",
     "comments": "Comentarios",
     "like": "me gusta"
   },

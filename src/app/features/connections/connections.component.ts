@@ -147,7 +147,6 @@ export class ConnectionsComponent implements OnInit {
         } else {
           if (!isNumber(this.profile[this.profileKeys[i]])) {
             if (this.profileKeys[i] !== 'allCounts') {
-              console.log('ConnectionsComponent:ngOnInit: will substring blow?=',this.profileKeys[i], this.profileValues[i], this.profile[this.profileKeys[i]])
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
                 if (this.profileValues[i] === 1) {
                   this.likeMeDesc = this.translate.instant(
@@ -185,7 +184,6 @@ export class ConnectionsComponent implements OnInit {
 
     // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
     // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
-    console.log('allCounts=', counts.allCounts)
     if (this.allUsersCount > 0 && this.allCountsReceived) {
       this.form.get('likeMe').disable({onlySelf: true});
       this.showSpinner = false;

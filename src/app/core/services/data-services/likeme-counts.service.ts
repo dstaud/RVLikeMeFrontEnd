@@ -87,25 +87,22 @@ export class LikemeCountsService {
               private shared: SharedComponent) { }
 
   getLikeMeCountsPriority() {
-    console.log('getLikeMeCountsPriority:');
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-priority`)
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
       this.dataStore.likeMeCounts.rvUse = counts.rvUse;
       this.dataStore.likeMeCounts.rigType = counts.rigType;
-      console.log('getLikeMeCountsPriority:, counts returned=', this.dataStore.likeMeCounts);
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
 
     }, error => {
-      console.log('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
+      console.error('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
       throw new Error(error);
     });
   }
 
   getLikeMeCountsSecondary() {
-    console.log('getLikeMeCountsSecondary:');
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-secondary`)
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
@@ -138,12 +135,10 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.yearOfBirth = counts.yearOfBirth;
       this.dataStore.likeMeCounts.allCounts = true;
 
-      console.log('getLikeMeCountsSecondary: counts returned=', this.dataStore.likeMeCounts);
-
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
 
     }, (error) => {
-      console.log('LikeMeCountsService:getLikeMeCountsSecondary: throw error ', error);
+      console.error('LikeMeCountsService:getLikeMeCountsSecondary: throw error ', error);
       throw new Error(error);
     });
   }

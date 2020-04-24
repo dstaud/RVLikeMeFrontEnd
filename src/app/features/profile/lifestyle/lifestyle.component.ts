@@ -62,11 +62,13 @@ and I can't notify them. */
 export class LifestyleComponent implements OnInit {
   form: FormGroup;
   lifestyleImageUrls: Array<string> = [];
+  aboutMeExperienced: boolean = false;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
   showSpinner = false;
   showaboutMeSaveIcon = false;
+  showhelpNewbiesSaveIcon = false;
   showrvUseSaveIcon = false;
   showworklifeSaveIcon = false;
   showcampsWithMeSaveIcon = false;
@@ -168,6 +170,7 @@ export class LifestyleComponent implements OnInit {
               fb: FormBuilder) {
               this.form = fb.group({
                 aboutMe: new FormControl(''),
+                helpNewbies: new FormControl(false),
                 rvUse: new FormControl(''),
                 worklife: new FormControl(''),
                 campsWithMe: new FormControl(''),
@@ -207,6 +210,22 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
+  // Automatically pop-up the 'other' dialog with the correct
+  // control and name when use clicks on select if other
+  onActivateSelectItem(control: string, controlDesc: string) {
+    if (this[control]) {
+      this.openOtherDialog(control, controlDesc, 'other');
+    }
+  }
+
+
+  // Offer chance for experienced RVer to help out newbies
+  onHelpNewbies(event: any) {
+    this.showhelpNewbiesSaveIcon = true;
+    this.profile.helpNewbies = event.target.value;
+    this.updateLifestyle('helpNewbies');
+  }
+
 
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onLifestyleImageSelected(event: any) {
@@ -222,17 +241,14 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-  // Automatically pop-up the 'other' dialog with the correct
-  // control and name when use clicks on select if other
-  onActivateSelectItem(control: string, controlDesc: string) {
-    if (this[control]) {
-      this.openOtherDialog(control, controlDesc, 'other');
-    }
-  }
-
-
   // Form Select option processing
   onSelectedSelectItem(control: string, controlDesc: string, event: string) {
+
+    console.log('LifestyleComponent:onSelectedSelectItem: control=', control, 'event=', event)
+    if (control === "aboutMe" && event !== 'experienced') {
+      this.profile.helpNewbies = false;
+      this.form.patchValue({ helpNewbies: 'false'});
+    }
 
     // If user chose other, set description for dialog
     if (event === 'other') {
@@ -268,7 +284,6 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-
   private deleteLifestyleImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
     this.profileSvc.deleteLifestyleImageUrlFromProfile(this.profile._id, imageUrl)
     .subscribe(imageResult => {
@@ -282,6 +297,8 @@ export class LifestyleComponent implements OnInit {
 
 
   private listenForUserProfile() {
+    let helpNewbies: string;
+
     this.userProfile = this.profileSvc.profile;
     this.userProfile
     .pipe(untilComponentDestroyed(this))
@@ -321,8 +338,15 @@ export class LifestyleComponent implements OnInit {
         this.travelingFormValue = this.profile.traveling;
       }
 
+      if (profileResult.helpNewbies) {
+        helpNewbies = profileResult.helpNewbies.toString();
+      } else {
+        helpNewbies = 'false';
+      }
+
       this.form.patchValue ({
         aboutMe: this.aboutMeFormValue,
+        helpNewbies: helpNewbies,
         rvUse: this.rvUseFormValue,
         worklife: this.worklifeFormValue,
         campsWithMe: this.campsWithMeFormValue,
@@ -331,6 +355,10 @@ export class LifestyleComponent implements OnInit {
       });
 
       this.lifestyleImageUrls = this.profile.lifestyleImageUrls;
+
+      if (this.profile.aboutMe === 'experienced') {
+        this.aboutMeExperienced = true;
+      }
 
       this.showSpinner = false;
       this.form.enable();
@@ -410,6 +438,9 @@ export class LifestyleComponent implements OnInit {
     this.updateLifestyle(control);
   }
 
+
+  // TODO: don't update whole profile.  Just update specific field updated here.
+
   private updateLifestyle(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.profileSvc.updateProfile(this.profile)
@@ -417,9 +448,16 @@ export class LifestyleComponent implements OnInit {
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
       // this.profileSvc.distributeProfileUpdate(this.profile);
+      if (control === 'aboutMe') {
+        if (this.profile.aboutMe === 'experienced') {
+          this.aboutMeExperienced = true;
+        } else {
+          this.aboutMeExperienced = false;
+        }
+      }
     }, error => {
       this[SaveIcon] = false;
-      console.log('LifestyleComponent:updateLifestyle: throw error ', error);
+      console.error('LifestyleComponent:updateLifestyle: throw error ', error);
       throw new Error(error);
     });
   }
@@ -427,12 +465,12 @@ export class LifestyleComponent implements OnInit {
 
   // Update lifestyle image url array in user's profile with new uploaded lifestyle image.
   private updateProfileLifestyleImageUrls(lifestyleImageUrl: string) {
-    console.log('LifestyleComponent:updateProfileLifestyleImageUrls: calling server ', lifestyleImageUrl, ' to profile for ', this.profile._id);
     this.profileSvc.addLifestyleImageUrlToProfile(this.profile._id, lifestyleImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.profileSvc.getProfile();
       this.showSpinner = false;
+
     }, error => {
       this.showSpinner = false;
       console.error('LifestyleComponent:updateProfileLifestyleImageUrls: throw error ', error);

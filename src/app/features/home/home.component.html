@@ -1,5 +1,6 @@
 <div class="mat-app-background background mat-body-1">
   <app-rvlm-profile-percent></app-rvlm-profile-percent>
   <app-rvlm-likeme-counts></app-rvlm-likeme-counts>
-  <br>
+  <p *ngIf="newbie" class="hyperlink" (click)="onNewbieTopics()">Popular RV Newbie Topics</p>
+  <p *ngIf="experiencedHelp">helping Newbies!</p>
 </div>
