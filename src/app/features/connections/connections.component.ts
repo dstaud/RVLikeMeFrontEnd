@@ -312,7 +312,7 @@ export class ConnectionsComponent implements OnInit {
 
 
   // Get object containing counts of all other users that match this user's profile items
-  // And then takes action
+  // and then takes action
   private listenForLikeMeCounts() {
     this.likeMeCounts = this.likeMeCountsSvc.likeMeCounts;
     this.likeMeCounts

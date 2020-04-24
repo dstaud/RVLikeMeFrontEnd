@@ -23,10 +23,10 @@ export class ImageCropperComponent implements OnInit {
 
   imageDestination: string = '';
   showImageDestination: boolean = false;
+  showSpinner: boolean = false;
 
   private cropper: Cropper;
 
-  // TODO: don't show destination image until original image is ready, but turning this to true in ngAfterViewInit() doesn't work
   private showDestination = false;
 
 
@@ -38,11 +38,6 @@ export class ImageCropperComponent implements OnInit {
 
   ngAfterViewInit() {
     this.createImageCropperObject();
-/*     console.log('ImageCropperComponent:ngAfterViewInit: imagetype=', this.imageType);
-    if (this.imageType === 'profile') {
-      this.showImageDestination = true;
-      this.createImageCropperObject();
-    } */
   }
 
   onRotateImage(degrees: number) {
@@ -57,6 +52,9 @@ export class ImageCropperComponent implements OnInit {
 
   // Use third-party image cropper
   private createImageCropperObject() {
+    this.showSpinner = true;
+    let self = this;
+
     this.cropper = new Cropper(this.imageElement.nativeElement, {
       zoomable: false,
       scalable: false,
@@ -68,7 +66,8 @@ export class ImageCropperComponent implements OnInit {
         this.imageDestination = canvas.toDataURL("image/png");
       },
       ready: function(event) {
-        console.log('in profile version');
+        self.showImageDestination = true;
+        self.showSpinner = false;
       }
     });
   }

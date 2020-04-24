@@ -2,7 +2,8 @@
   <div>
     <img #image class="image-source" [src]="imageSource" crossorigin>
   </div>
-  <div class="destination">
+  <div *ngIf="showImageDestination" class="destination">
     <img [src]="imageDestination" class="img-preview-ready">
   </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

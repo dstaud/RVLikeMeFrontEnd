@@ -226,6 +226,7 @@ export class PersonalComponent implements OnInit {
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.tempProfileImage = uploadedFileUrl;
+        this.showSpinner = false;
         this.openImageCropperDialog(uploadedFileUrl, 'profile');
       });
     });
