@@ -33,6 +33,13 @@ export class ForumService {
     return this.http.get(`/api/forum-group-id`, { params: param });
   }
 
+  getGroupByTopic(topic: string): Observable<any> {
+    let param = JSON.parse('{"topic":"' + topic + '"}');
+
+    return this.http.get(`/api/forum-group-topic`, { params: param });
+  }
+
+
   addGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');
     let kValues = values.split('|');
@@ -47,8 +54,10 @@ export class ForumService {
     return this.http.post(`/api/forum-group`, keyValues, {});
   }
 
-  getPosts(groupID: string): Observable<any> {
-    return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
+  addGroupTopic(topic: string, topicDesc: string): Observable<any> {
+    let keyValues = '{"topic":"' + topic + '","topicDesc":"' + topicDesc + '"}';
+
+    return this.http.post(`/api/forum-topic`, JSON.parse(keyValues), {});
   }
 
   addPost(groupID: string, post:string, displayName: string, profileImageUrl: string, postPhotoUrl: string): Observable<any> {
@@ -63,6 +72,10 @@ export class ForumService {
                 '"}'
     let bodyJSON = JSON.parse(body);
     return this.http.post(`/api/forum-post`, bodyJSON, {});
+  }
+
+  getPosts(groupID: string): Observable<any> {
+    return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
   }
 
   updatePost(postID: string, post:string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.

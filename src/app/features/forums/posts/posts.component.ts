@@ -45,6 +45,8 @@ export class PostsComponent implements OnInit {
   comments: Array<Array<JSON>> = [];
   currentPostRow: number;
   liked: Array<boolean> = [];
+  userNewbie: boolean = false;
+  forumType: string;
 
   showSpinner = false;
   showAddPost = false;
@@ -78,9 +80,10 @@ export class PostsComponent implements OnInit {
 
 
   // Get all posts for group passed from forums component.
-  getPosts(groupID: string, profileImageUrl: string, displayName: string): void {
+  getPosts(groupID: string, forumType: string, profileImageUrl: string, displayName: string): void {
     this.showSpinner = true;
     this.groupID = groupID;
+    this.forumType = forumType;
     if (profileImageUrl) {
       this.profileImageUrl = profileImageUrl;
     }
@@ -337,6 +340,10 @@ export class PostsComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
       this.userID = profile.userID;
+
+      if (this.profile.aboutMe === 'newbie' || this.profile.aboutMe === 'dreamer') {
+        this.userNewbie = true;
+      }
     }, (error) => {
       console.error('PostsComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);

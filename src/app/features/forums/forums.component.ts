@@ -29,6 +29,9 @@ export class ForumsComponent implements OnInit {
 
   groupProfileDisplayAttributesFromGroup = [];
   theme: string;
+  forumType: string;
+  topicID: string;
+  topicDesc: string;
 
   showSpinner = false;
   showLessMatches = true;
@@ -84,7 +87,7 @@ export class ForumsComponent implements OnInit {
     .subscribe(group => {
       this.groupID = group._id;
       this.updateProfileGroups();
-      this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+      this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
     }, error => {
       this.showSpinner = false;
       console.error('ForumsComponentcreateGroupForum: throw error ', error);
@@ -107,16 +110,56 @@ export class ForumsComponent implements OnInit {
     if (!this.shareDataSvc.getData()) {
       this.router.navigateByUrl('/forums-list');
     } else {
+      console.log('ForumsComponent:getGroup: getdata=', this.shareDataSvc.getData());
       paramData = JSON.parse(this.shareDataSvc.getData());
+      this.forumType = paramData.forumType;
 
       this.showSpinner = true;
-
-      if (paramData._id) {
-        this.groupID = paramData._id;
-        this.forumSvc.getGroupByID(paramData._id)
+      console.log('ForumsComponent:getGroup: type=', paramData.forumType);
+      if (paramData.forumType === 'topic') {
+        this.forumSvc.getGroupByTopic(paramData.topic)
         .subscribe(groupFromServer => {
-          this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
-          this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
+          this.groupID = groupFromServer._id;
+          this.topicID = groupFromServer.topic;
+          this.topicDesc = groupFromServer.topicDesc;
+          console.log('ForumsComponent:getGroup: TopicID=', this.topicID, 'TopicDesc=', this.topicDesc);
+          this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+          this.showSpinner = false;
+        }, error => {
+          if (error.status === 404) {
+            this.forumSvc.addGroupTopic(paramData.topic, paramData.topicDesc)
+            .subscribe(groupTopic => {
+              this.groupID = groupTopic._id;
+              this.topicID = groupTopic.topic;
+              this.topicDesc = groupTopic.topicDesc;
+              console.log('ForumsComponent:getGroup: TopicID=', this.topicID, 'TopicDesc=', this.topicDesc);
+              this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+              this.showSpinner = false;
+            })
+          }
+        });
+      } else {
+        if (paramData._id) {
+          this.groupID = paramData._id;
+          this.forumSvc.getGroupByID(paramData._id)
+          .subscribe(groupFromServer => {
+            this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
+            this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
+
+            // If there are more than 3 attributes, show only three with ...more on the template.
+            if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
+              this.showMoreOption = true;
+            } else {
+              this.showMoreOption = false;
+            }
+
+            this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+            this.showSpinner = false;
+
+          });
+        } else {
+          this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
+          this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
 
           // If there are more than 3 attributes, show only three with ...more on the template.
           if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -125,26 +168,12 @@ export class ForumsComponent implements OnInit {
             this.showMoreOption = false;
           }
 
-          this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
-          this.showSpinner = false;
+          keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
+          names = keyValue[0];
+          values = keyValue[1];
 
-        });
-      } else {
-        this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
-        this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
-
-        // If there are more than 3 attributes, show only three with ...more on the template.
-        if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
-          this.showMoreOption = true;
-        } else {
-          this.showMoreOption = false;
+          this.checkIfUserProfileHasGroupAndUpdate(names, values);
         }
-
-        keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
-        names = keyValue[0];
-        values = keyValue[1];
-
-        this.checkIfUserProfileHasGroupAndUpdate(names, values);
       }
     }
   }
@@ -205,7 +234,7 @@ export class ForumsComponent implements OnInit {
 
       // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
-        this.posts.getPosts(this.groupID, this.profile.profileImageUrl, this.profile.displayName);
+        this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
         this.showSpinner = false;
       } else {
         this.createGroupForum(names, values);

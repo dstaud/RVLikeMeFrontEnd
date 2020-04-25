@@ -1,12 +1,8 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Observable, throwError } from 'rxjs';
-import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { NewbieTopicsService } from '@services/data-services/newbie-topics.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
 
 export interface Itopics {
@@ -16,36 +12,39 @@ export interface Itopics {
 }
 
 @Component({
-  selector: 'app-rvlm-newbie-topics',
-  templateUrl: './newbie-topics.component.html',
-  styleUrls: ['./newbie-topics.component.scss']
+  selector: 'app-rvlm-help-newbie',
+  templateUrl: './help-newbie.component.html',
+  styleUrls: ['./help-newbie.component.scss']
 })
-export class NewbieTopicsComponent implements OnInit {
-  @Input('userType') userType: string;
 
+export class HelpNewbieComponent implements OnInit {
+  displayName: string;
+  profileImageUrl: string;
   authorizedTopics: Array<Itopics> = [];
 
-  showSpinner: boolean= false;
-
-  // Interface for profile data
-  private profile: IuserProfile;
-  private userProfile: Observable<IuserProfile>;
-
   constructor(private newbieTopicsSvc: NewbieTopicsService,
-              private profileSvc: ProfileService,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
   ngOnInit(): void {
-    this.listenForUserProfile();
+    let paramData: any;
+
+    if (!this.shareDataSvc.getData()) {
+      console.log('HelpNewbieTopics:ngOnInit: data=', this.shareDataSvc.getData());
+      this.router.navigateByUrl('/home');
+    } else {
+      console.log('HelpNewbieTopics:ngOnInit: data=', this.shareDataSvc.getData());
+      paramData = JSON.parse(this.shareDataSvc.getData());
+      this.displayName = paramData.displayName;
+      this.profileImageUrl = paramData.profileImageUrl;
+    }
 
     this.getAuthorizedTopics();
 
     this.getTopics();
-  }
 
-  ngOnDestroy() {}
+  }
 
   onTopic(topicID: string, topicDesc: string) {
     let params: string;
@@ -53,7 +52,7 @@ export class NewbieTopicsComponent implements OnInit {
     console.log('HelpNewbieTopics:onTopic: checking topic=', topicID);
     if (!this.findTopic(topicID)) {
       console.log('HelpNewbieTopics:onTopic: topic not found, adding topic=', topicID);
-      this.newbieTopicsSvc.addNewbieTopic(topicID,  topicDesc, this.profile.displayName, this.profile.profileImageUrl)
+      this.newbieTopicsSvc.addNewbieTopic(topicID,  topicDesc, this.displayName, this.profileImageUrl)
       .subscribe(topicResult => {
         console.log('HelpNewbieTopics:onTopic: topic added=', topicResult);
       }, error => {
@@ -64,53 +63,13 @@ export class NewbieTopicsComponent implements OnInit {
         }
       });
     }
-    if (this.userType === 'newbie') {
-      switch(topicID) {
-        case 'internet': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/internet');
-          break;
-        }
-        case 'insurance': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/insurance');
-          break;
-        }
-        case 'costFullTimeTravel': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/cost-ft-travel');
-          break;
-        }
-        case 'makingMoneyOnTheRoad': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/making-money');
-          break;
-        }
-        case 'savingMoney': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/saving-money');
-          break;
-        }
-        case 'sellingHouse': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/selling-house');
-          break;
-        }
-        case 'thingsYouNeedFullTime': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/things-need-ft');
-          break;
-        }
-      }
-    } else {
-      params = '{"forumType":"topic","topic":"' + topicID + '","topicDesc":"' + topicDesc + '" }'
-      this.shareDataSvc.setData(params);
-      this.activateBackArrowSvc.setBackRoute('newbie/help-newbie');
-      this.router.navigateByUrl('/forums');
-    }
 
-
+    params = '{"forumType":"topic","topic":"' + topicID + '","topicDesc":"' + topicDesc + '" }'
+    this.shareDataSvc.setData(params);
+    this.activateBackArrowSvc.setBackRoute('newbie/help-newbie');
+    this.router.navigateByUrl('/forums');
   }
+
 
   private findTopic(topicID: string): boolean {
     let foundTopic: boolean = false;
@@ -126,6 +85,7 @@ export class NewbieTopicsComponent implements OnInit {
     return foundTopic;
   }
 
+
   private getAuthorizedTopics() {
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"internet","topicDesc":"Internet Connectivity"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"insurance","topicDesc":"Insuring an RV"}'));
@@ -138,31 +98,14 @@ export class NewbieTopicsComponent implements OnInit {
 
 
   private getTopics() {
-    this.showSpinner = true;
-
     this.newbieTopicsSvc.getNewbieTopics()
     .subscribe(topicsResult => {
       console.log('HelpNewbieTopicsComponent:getTopics: result=', topicsResult);
       for (let i=0; i < topicsResult.length; i++) {
         this.updateAuthorizedTopics(topicsResult[i].topicID, topicsResult[i]._id);
       }
-      this.showSpinner = false;
       console.log('HelpNewbieTopicsComponent:getTopics: auth=', this.authorizedTopics);
     })
-  }
-
-
-  // Get user profile
-  private listenForUserProfile() {
-    this.userProfile = this.profileSvc.profile;
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(profile => {
-      this.profile = profile;
-    }, (error) => {
-      console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
-    });
   }
 
 

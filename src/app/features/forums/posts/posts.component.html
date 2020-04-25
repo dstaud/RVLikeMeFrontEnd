@@ -1,5 +1,5 @@
 <div class="container mat-body-1">
-  <div>
+  <div [hidden]="userNewbie">
     <div id="profileImage" class="profile-image">
       <img class="image"
         [src]="profileImageUrl"
@@ -21,9 +21,12 @@
     </app-rvlm-add-post>
   </div>
   <div class="posts-container">
-    <mat-divider></mat-divider>
-    <div *ngIf="showFirstPost" class="first-post">
+    <mat-divider *ngIf="posts.length > 0"></mat-divider>
+    <div *ngIf="showFirstPost && forumType === 'group'" class="first-post">
       {{ 'posts.component.firstPost' | translate }}
+    </div>
+    <div *ngIf="showFirstPost && forumType === 'topic'" class="first-post">
+      {{ 'posts.component.firstPostTopic' | translate }}
     </div>
     <div [hidden]="!showPosts">
         <div *ngFor="let post of posts; let i=index">

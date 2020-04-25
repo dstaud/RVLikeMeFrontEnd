@@ -9,6 +9,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { ShareDataService } from '@services/share-data.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit {
               private auth: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
+              private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
@@ -44,9 +46,19 @@ export class HomeComponent implements OnInit {
   ngOnDestroy() {}
 
 
-  onNewbieTopics() {
+  onHelpNewbieTopic() {
+    let params: string;
+
     this.activateBackArrowSvc.setBackRoute('home');
-    this.router.navigateByUrl('/newbie/newbie-topics');
+    this.router.navigateByUrl('/newbie/help-newbie');
+  }
+
+
+  onNewbieTopics() {
+    let params = '{"displayName":"' + this.profile.displayName + '","profileImageUrl":"' + this.profile.profileImageUrl + '"}'
+    this.shareDataSvc.setData(params);
+    this.activateBackArrowSvc.setBackRoute('home');
+    this.router.navigateByUrl('/newbie/need-help-newbie');
   }
 
 

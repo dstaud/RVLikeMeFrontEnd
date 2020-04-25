@@ -5,11 +5,11 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ShareDataService } from '@services/share-data.service';
 
 @Component({
-  selector: 'app-rvlm-internet',
-  templateUrl: './internet.component.html',
-  styleUrls: ['./internet.component.scss']
+  selector: 'app-things-need-ft',
+  templateUrl: './things-need-ft.component.html',
+  styleUrls: ['./things-need-ft.component.scss']
 })
-export class InternetComponent implements OnInit {
+export class ThingsNeedFtComponent implements OnInit {
 
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
@@ -21,8 +21,8 @@ export class InternetComponent implements OnInit {
   onGroup() {
     let params: string;
 
-    this.activateBackArrowSvc.setBackRoute('newbie/internet');
-    params = '{"forumType":"topic","topic":"internet","topicDesc":"Internet Connectivity" }'
+    this.activateBackArrowSvc.setBackRoute('newbie/selling-house');
+    params = '{"forumType":"topic","topic":"thingsYouNeedFullTime","topicDesc":"Things you need when going full-time" }'
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/forums');
   }

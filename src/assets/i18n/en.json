@@ -71,6 +71,7 @@
   "forums.component": {
     "header": "Forums",
     "heading": "Group forum for people",
+    "headingTopic": "Experienced RVers advise on",
     "myGroups": "My Groups",
     "noGroups1": "You have not selected any group forums yet",
     "noGroups2": "Go to",
@@ -460,6 +461,7 @@
   "posts.component": {
     "addHeader": "Add post as",
     "firstPost": "Be the first to post in this group!",
+    "firstPostTopic": "Experienced RVers have not yet posted",
     "comments": "comments",
     "like": "like"
   },

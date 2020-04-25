@@ -65,7 +65,9 @@ export class ForumsListComponent implements OnInit {
     let group = this.groupsListFromUserProfile[groupItem];
     let params: string;
 
-    params = '{"_id":"' + group._id + '",' + '"theme":"' + this.theme + '"}';
+    params = '{"_id":"' + group._id + '",' +
+              '"forumType":"group",' +
+              '"theme":"' + this.theme + '"}';
 
     this.shareDataSvc.setData(params);
     this.activateBackArrowSvc.setBackRoute('forums-list');

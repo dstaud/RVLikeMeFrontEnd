@@ -1,12 +1,21 @@
 <mat-nav-list>
-  <a id="routeProfile"
-    mat-list-item routerLink="/newbie"
-    (click)="closeSideNav()"
-    routerLinkActive="active-menu-item">
+  <a mat-menu-item id="routeNewbieCorner" (click)="onNewbieCorner()">
     <mat-icon fontSet="material-icons-outlined" >accessibility_new</mat-icon>
     <span class="nav-caption">{{ "menu.newbie" | translate }}</span>
   </a>
-  <a id="routeProfile"
+  <a mat-menu-item id="routeProfile" (click)="onProfile()">
+    <mat-icon fontSet="material-icons-outlined" >person</mat-icon>
+    <span class="nav-caption">{{ "menu.profile" | translate }}</span>
+  </a>
+  <a mat-menu-item id="routeAbout" (click)="onAbout()">
+    <mat-icon fontSet="material-icons-outlined" >rv_hookup</mat-icon>
+    <span class="nav-caption">{{ "menu.about" | translate }}</span>
+  </a>
+  <a mat-menu-item id="routeSetting" (click)="onSettings()">
+    <mat-icon fontSet="material-icons-outlined" >settings</mat-icon>
+    <span class="nav-caption">{{ "menu.settings" | translate }}</span>
+  </a>
+<!--   <a id="routeProfile"
     mat-list-item routerLink="/profile"
     (click)="closeSideNav()"
     routerLinkActive="active-menu-item">
@@ -26,5 +35,5 @@
     routerLinkActive="active-menu-item">
     <mat-icon fontSet="material-icons-outlined" >settings</mat-icon>
     <span class="nav-caption">{{ "menu.settings" | translate }}</span>
-  </a>
+  </a> -->
 </mat-nav-list>

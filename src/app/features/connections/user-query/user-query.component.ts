@@ -92,6 +92,7 @@ export class UserQueryComponent implements OnInit {
       value = this.matches[i].value;
       queryParams = queryParams + ',"' + name + '":"' + value + '"';
     }
+    queryParams = queryParams + ',"forumType":"group"';
     queryParams = queryParams + '}'
 
     this.shareDataSvc.setData(queryParams);

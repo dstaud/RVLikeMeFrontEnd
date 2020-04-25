@@ -2,5 +2,7 @@
   <app-rvlm-profile-percent></app-rvlm-profile-percent>
   <app-rvlm-likeme-counts></app-rvlm-likeme-counts>
   <p *ngIf="newbie" class="hyperlink" (click)="onNewbieTopics()">Popular RV Newbie Topics</p>
-  <p *ngIf="experiencedHelp">helping Newbies!</p>
+  <div *ngIf="experiencedHelp">
+    <p class="hyperlink" (click)="onHelpNewbieTopic()">helping Newbies!</p>
+  </div>
 </div>

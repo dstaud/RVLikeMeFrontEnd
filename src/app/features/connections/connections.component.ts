@@ -88,7 +88,6 @@ export class ConnectionsComponent implements OnInit {
     this.listenForParameters();
 
     // Get all of the rest of the counts not obtained by app-component.
-    // TODO: figure out how to deactivate the checkboxes until secondary is complete
     this.likeMeCountsSvc.getLikeMeCountsSecondary();
 
     this.listenForLikeMeCounts();
@@ -243,6 +242,7 @@ export class ConnectionsComponent implements OnInit {
       this.queryParams = this.queryParams + '"' + name + '":"' + value + '",';
       i++;
     });
+    this.queryParams = this.queryParams + '"forumType":"group",';
     this.queryParams = this.queryParams + '"theme":"' + this.theme + '"}'
 
     this.shareDataSvc.setData(this.queryParams);

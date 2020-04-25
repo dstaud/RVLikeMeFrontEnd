@@ -71,6 +71,7 @@
   "forums.component": {
     "header": "Foros",
     "heading": "Foro grupal para personas",
+    "headingTopic": "RVers expertos aconsejan sobre",
     "myGroups": "Mis grupos",
     "noGroups1": "Aún no has seleccionado ningún foro grupal",
     "noGroups2": "Ir",
@@ -460,6 +461,7 @@
   "posts.component": {
     "addHeader": "Agregar publicación como",
     "firstPost": "¡Sé el primero en publicar en este grupo!",
+    "firstPostTopic": "RVers experimentados aún no han publicado",
     "comments": "Comentarios",
     "like": "me gusta"
   },
