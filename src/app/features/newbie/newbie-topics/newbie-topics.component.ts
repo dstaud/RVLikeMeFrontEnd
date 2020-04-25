@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { TranslateService } from '@ngx-translate/core';
 
 import { NewbieTopicsService } from '@services/data-services/newbie-topics.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -33,6 +34,7 @@ export class NewbieTopicsComponent implements OnInit {
 
   constructor(private newbieTopicsSvc: NewbieTopicsService,
               private profileSvc: ProfileService,
+              private translate: TranslateService,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
@@ -127,13 +129,13 @@ export class NewbieTopicsComponent implements OnInit {
   }
 
   private getAuthorizedTopics() {
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"internet","topicDesc":"Internet Connectivity"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"insurance","topicDesc":"Insuring an RV"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"costFullTimeTravel","topicDesc":"How much does it cost to full-time travel?"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"makingMoneyOnTheRoad","topicDesc":"Making money on the road"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"savingMoney","topicDesc":"Money-saving ideas"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"sellingHouse","topicDesc":"Selling house and possessions to go full-time"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTime","topicDesc":"Things you need when going full-time"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"internet","topicDesc":"' + this.translate.instant('newbie-topics.component.internet') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"insurance","topicDesc":"' + this.translate.instant('newbie-topics.component.insurance') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"costFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.costFullTimeTravel') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"makingMoneyOnTheRoad","topicDesc":"' + this.translate.instant('newbie-topics.component.makingMoneyOnTheRoad') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"savingMoney","topicDesc":"' + this.translate.instant('newbie-topics.component.savingMoney') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"sellingHouse","topicDesc":"' + this.translate.instant('newbie-topics.component.sellingHouse') +'"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTime","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTime') + '"}'));
   }
 
 

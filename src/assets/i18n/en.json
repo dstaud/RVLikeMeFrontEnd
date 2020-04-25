@@ -495,5 +495,31 @@
     "ok": "OK",
     "delete": "Delete",
     "change": "Change"
+  },
+  "help-newbie.component": {
+    "header": "Help Newbies"
+  },
+  "need-help-newbie.component": {
+    "header": "Newbie Corner"
+  },
+  "newbie-topics.component": {
+    "groupForum": "group forum",
+    "MIRC": "Mobile Internet Resource Center",
+    "internet": "Internet Connectivity",
+    "internetHeader": "See what experience RVers are saying about internet connectivity in this",
+    "internetMIRC1": "What if there were fellow-RVers that spend all their time keeping up with mobile internet options and want to tell you about it?  Well, there is!  Cherrie and Chris host the",
+    "internetMIRC2": "Check them out for the latest information!",
+    "insurance": "Insuring an RV",
+    "insuranceHeader": "See what experience RVers are saying about insuring an RV in this",
+    "costFullTimeTravel": "How much does it cost to full-time travel?",
+    "costFullTimeTravelHeader": "See what experience RVers are saying about the cost of full-time travel in this",
+    "makingMoneyOnTheRoad": "Making money on the road",
+    "makingMoneyOnTheRoadHeader": "See what experience RVers are saying about making money on the road in this",
+    "savingMoney": "Money-saving ideas",
+    "savingMoneyHeader": "See what experience RVers are saying about money-saving ideas in this",
+    "sellingHouse": "Selling house and possessions to go full-time",
+    "sellingHouseHeader": "See what experience RVers are saying about selling your house and possessions to go full-time in this",
+    "thingsYouNeedFullTime": "Things you need when going full-time",
+    "thingsYouNeedFullTimeHeader": "See what experience RVers are saying about thinigs you need when going full-time in this"
   }
 }

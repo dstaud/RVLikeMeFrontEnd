@@ -1,9 +1,9 @@
 <div class="mat-app-background container mat-body-1">
-  <p class=mat-title>Internet Connectivity</p>
-  <p>What if there were fellow-RVers that spend all their time keeping up with mobile internet options and want to tell you about it?
-      Well, there is!  Cherrie and Chris host the
-      <a href="https://www.rvmobileinternet.com/" target="_blank" class="hyperlink external">Mobile Internet Resource Center</a>.
-      Check them out for the latest information!
+  <p class=mat-title>{{ 'newbie-topics.component.internet' | translate }}</p>
+  <p>{{ 'newbie-topics.component.internetMIRC1' | translate }}
+      <a href="https://www.rvmobileinternet.com/" target="_blank" class="hyperlink external">{{ 'newbie-topics.component.MIRC' | translate }}</a>.
+      {{ 'newbie-topics.component.internetMIRC2' | translate }}
   </p>
-  <p>See what experience RVers are saying about internet connectivity in this <span class="hyperlink" (click)="onGroup()">group forum</span>.</p>
+  <p>{{ 'newbie-topics.component.internetHeader' | translate }}
+    <span class="hyperlink" (click)="onGroup()">{{ 'newbie-topics.component.groupForum' | translate }}</span>.</p>
 </div>

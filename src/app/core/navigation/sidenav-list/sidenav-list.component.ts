@@ -52,7 +52,7 @@ export class SidenavListComponent implements OnInit {
   onNewbieCorner() {
     let params = '{"displayName":"Dave","profileImageUrl":""}'
     this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/newbie/newbie-topics');
+    this.router.navigateByUrl('/newbie/need-help-newbie');
     this.closeSideNav();
   }
 
