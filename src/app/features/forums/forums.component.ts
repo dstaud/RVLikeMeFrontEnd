@@ -353,7 +353,7 @@ export class ForumsComponent implements OnInit {
   }
 
   private reservedField(name: string): boolean {
-    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' || name === '__v' || name === 'theme') {
+    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' || name === '__v' || name === 'theme' || name === 'forumType') {
       return true;
     } else { return false }
   }

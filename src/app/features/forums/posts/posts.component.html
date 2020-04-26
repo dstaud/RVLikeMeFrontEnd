@@ -1,5 +1,5 @@
 <div class="container mat-body-1">
-  <div [hidden]="userNewbie">
+  <div [hidden]="forumType === 'topic' && userNewbie">
     <div id="profileImage" class="profile-image">
       <img class="image"
         [src]="profileImageUrl"

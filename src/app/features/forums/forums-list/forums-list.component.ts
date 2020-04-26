@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -36,8 +36,7 @@ export class ForumsListComponent implements OnInit {
               public translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private themeSvc: ThemeService,
-              private shareDataSvc: ShareDataService,
-              private elementRef: ElementRef) { }
+              private shareDataSvc: ShareDataService) { }
 
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
@@ -98,7 +97,7 @@ export class ForumsListComponent implements OnInit {
     let groupProfileDisplayAttributesFromGroup = [];
 
     for (name in group) {
-      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v') {
+      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v' && name !== 'forumType') {
         value = group[name];
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;

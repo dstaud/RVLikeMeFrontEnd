@@ -12,6 +12,17 @@ export interface InewbieTopics {
   createdAt: Date;
 }
 
+export interface InewbieLinks {
+  _id: string;
+  topicID: string;
+  linkName: string;
+  link: string;
+  createdBy: string;
+  createdByDisplayName: string;
+  createdByProfileImageUrl: string;
+  createdAt: Date;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,6 +53,22 @@ export class NewbieTopicsService {
                     '"body":"' + postEscaped + '"}'
 
     return this.http.put(`/api/newbie-topic-post`, JSON.parse(keyValues), {});
+  }
+
+  getNewbieLinks(topicID: string): Observable<any> {
+    let param = JSON.parse('{"topicID":"' + topicID + '"}');
+    console.log('NewbieTopicsService:getNewbieLinks: param=', param);
+    return this.http.get(`/api/newbie-links`, { params: param  });
+  }
+
+  addNewbieLink(topicID: string, linkName: string, link: string, displayName: string, profileImageUrl: string): Observable<any> {
+    let keyValues = '{"topicID":"' + topicID + '",' +
+                    '"linkName":"' + linkName + '",' +
+                    '"link":"' + link + '",' +
+                    '"displayName":"' + displayName + '",' +
+                    '"profileImageUrl":"' + profileImageUrl + '"}'
+
+    return this.http.post(`/api/newbie-link`, JSON.parse(keyValues), {});
   }
 
   private escapeJsonReservedCharacters(string: string): string {

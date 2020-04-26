@@ -1,0 +1,49 @@
+@import './../../../../../styles/_variables';
+
+.container {
+  clear: left;
+  margin-top: 10px;
+}
+
+.button {
+  margin-right: 10px;
+}
+
+.resources {
+  font-weight: bold;
+}
+
+.hyperlink {
+  color: $primary-color;
+}
+
+.profile-image {
+  float: left;
+}
+
+.image {
+  border-radius: 50%;
+}
+
+.add-link {
+  clear: left;
+  margin-top: 10px;
+}
+
+.external {
+  text-decoration: none; // Don't show underline on link
+}
+
+.links {
+  clear: left;
+  margin-top: 10px;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

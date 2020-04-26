@@ -67,43 +67,8 @@ export class NewbieTopicsComponent implements OnInit {
       });
     }
     if (this.userType === 'newbie') {
-      switch(topicID) {
-        case 'internet': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/internet');
-          break;
-        }
-        case 'insurance': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/insurance');
-          break;
-        }
-        case 'costFullTimeTravel': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/cost-ft-travel');
-          break;
-        }
-        case 'makingMoneyOnTheRoad': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/making-money');
-          break;
-        }
-        case 'savingMoney': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/saving-money');
-          break;
-        }
-        case 'sellingHouse': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/selling-house');
-          break;
-        }
-        case 'thingsYouNeedFullTime': {
-          this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-          this.router.navigateByUrl('/newbie/things-need-ft');
-          break;
-        }
-      }
+      this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
+      this.router.navigate(['/newbie/topic'], { queryParams: { topicID: topicID, topicDesc: topicDesc }});
     } else {
       params = '{"forumType":"topic","topic":"' + topicID + '","topicDesc":"' + topicDesc + '" }'
       this.shareDataSvc.setData(params);
