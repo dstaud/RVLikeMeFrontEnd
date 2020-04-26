@@ -1,7 +1,7 @@
   <div class="container">
     <br><p class="mat-subheader-2 resources">Helpful Resources</p>
     <p>
-      If you've found some good resources about {{ topicDescSentence | translate }}, you can add a link which will show up below.
+      {{ 'newbie-links.component.helpfulResources1' | translate }} {{ topicDescSentence | translate }}, {{ 'newbie-links.component.helpfulResources2' | translate }}.
     </p>
     <div id="profileImage" class="profile-image">
       <img class="image"
@@ -11,14 +11,14 @@
     <div>
       <button mat-button (click)="onAddLink()" class="hyperlink">
         <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
-        <span>Add link as {{ profile.displayName }}</span>
+        <span>{{ 'newbie-links.component.addLink' | translate}} {{ profile.displayName }}</span>
       </button>
     </div>
     <div *ngIf="showAddLink" class="add-link">
       <div [formGroup]="form">
         <div>
           <mat-form-field appearance="outline">
-            <mat-label>Link description</mat-label>
+            <mat-label>{{ 'newbie-links.component.linkDesc' | translate }}</mat-label>
             <input matInput
                     type="text"
                     placeholder="Link description"
@@ -27,7 +27,7 @@
         </div>
         <div>
           <mat-form-field appearance="outline">
-            <mat-label>Link</mat-label>
+            <mat-label>{{ 'newbie-links.component.link' | translate }}</mat-label>
             <input matInput
                     type="url"
                     placeholder="http://www.example.com"
@@ -39,11 +39,11 @@
                   class="mat-raised-button mat-primary button"
                   [disabled]="!form.valid"
                   (click)="onSubmit()">
-                  Submit
+                  {{ 'newbie-links.component.submit' | translate }}
           </button>
           <button class="mat-raised-button"
                   (click)="onCancel()">
-                  Cancel
+                  {{ 'newbie-links.component.cancel' | translate }}
           </button>
         </div>
       </div>
