@@ -463,7 +463,8 @@
     "firstPost": "Be the first to post in this group!",
     "firstPostTopic": "Experienced RVers have not yet posted",
     "comments": "comments",
-    "like": "like"
+    "like": "like",
+    "update": "Update post"
   },
   "add-post.component": {
     "post": "Post",
@@ -503,6 +504,7 @@
     "header": "Newbie Corner"
   },
   "newbie-topics.component": {
+    "heading": "Check out these popular newbie RV topics",
     "groupForum": "group forum",
     "internet": "Internet Connectivity",
     "internet2": "internet connectivity",
@@ -533,6 +535,9 @@
     "linkDesc": "Link description",
     "link": "Link",
     "submit": "Submit",
-    "cancel": "cancel"
+    "cancel": "cancel",
+    "showAuthor": "Show who posted links",
+    "noShowAuthor": "Hide who posted links"
+
   }
 }

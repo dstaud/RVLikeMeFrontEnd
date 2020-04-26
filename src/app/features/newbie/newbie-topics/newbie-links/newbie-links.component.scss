@@ -25,18 +25,41 @@
   border-radius: 50%;
 }
 
+.profile-image-post {
+  float: left;
+}
+
+.author {
+  margin-left: 15px;
+}
+
 .add-link {
   clear: left;
   margin-top: 10px;
+}
+
+.name-and-date {
+  margin-left: 50px;
+  font-size: 80%;
+  line-height: 1.5;
 }
 
 .external {
   text-decoration: none; // Don't show underline on link
 }
 
+.menu {
+  float: right;
+}
+
 .links {
   clear: left;
   margin-top: 10px;
+  margin-left: 10px;
+}
+
+.link {
+  line-height: 2;
 }
 
 .spinner {

@@ -3,6 +3,23 @@
     <p>
       {{ 'newbie-links.component.helpfulResources1' | translate }} {{ topicDescSentence | translate }}, {{ 'newbie-links.component.helpfulResources2' | translate }}.
     </p>
+    <div *ngIf="showMenu">
+      <mat-icon class="menu"
+                matPrefix
+                [matMenuTriggerFor]="beforeMenu">
+        more_horiz
+      </mat-icon>
+    </div>
+  <div>
+    <mat-menu #beforeMenu="matMenu"
+              xPosition="before">
+      <button mat-menu-item (click)="showLinkAuthor = !showLinkAuthor">
+        <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
+        <span *ngIf="!showLinkAuthor">{{ 'newbie-links.component.showAuthor' | translate }}</span>
+        <span *ngIf="showLinkAuthor">{{ 'newbie-links.component.noShowAuthor' | translate }}</span>
+      </button>
+    </mat-menu>
+  </div>
     <div id="profileImage" class="profile-image">
       <img class="image"
         [src]="profile.profileImageUrl"
@@ -49,9 +66,27 @@
       </div>
     </div>
     <div class="links">
-      <p *ngFor="let link of newbieLinks">
-        <a href="{{ link.link }}" class="hyperlink external" target="_blank">{{ link.linkName }}</a>
-      </p>
+      <div *ngFor="let link of newbieLinks">
+        <a href="{{ link.link }}" class="hyperlink external link" target="_blank">
+          <span>{{ link.linkName }}</span>
+        </a>
+        <div *ngIf="showLinkAuthor" class="author">
+          <div>
+            <img class="image profile-image-post"
+                  [src]="link.createdByProfileImageUrl"
+                  style="width:40px;height:40px;">
+          </div>
+          <div class="name-and-date">
+            <div class="display-name">
+              Added by {{ link.createdByDisplayName }} on
+            </div>
+            <div>
+              {{ link.createdAt | date:'short'}}
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
     </div>
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
   </div>

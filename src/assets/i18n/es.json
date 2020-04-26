@@ -463,7 +463,8 @@
     "firstPost": "¡Sé el primero en publicar en este grupo!",
     "firstPostTopic": "RVers experimentados aún no han publicado",
     "comments": "Comentarios",
-    "like": "me gusta"
+    "like": "me gusta",
+    "update": "Actualizar publicación"
   },
   "add-post.component": {
     "post": "Enviar",
@@ -503,6 +504,7 @@
     "header": "Rincón del novato"
   },
   "newbie-topics.component": {
+    "heading": "Echa un vistazo a estos populares temas de RV para novatos",
     "groupForum": "foro grupal",
     "internet": "Conectividad a Internet",
     "internet2": "conectividad a Internet",
@@ -533,6 +535,8 @@
     "linkDesc": "Direccion de enlace en la descripcion",
     "link": "Enlace",
     "submit": "Enviar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "showAuthor": "Mostrar quién publicó el enlace",
+    "noShowAuthor": "Ocultar quién publicó el enlace"
   }
 }

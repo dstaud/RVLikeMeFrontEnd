@@ -26,6 +26,8 @@ export class NewbieLinksComponent implements OnInit {
 
   showSpinner: boolean = false;
   showAddLink: boolean = false;
+  showLinkAuthor: boolean = false;
+  showMenu: boolean = false;
 
   // Interface for profile data
   private userProfile: Observable<IuserProfile>;
@@ -100,6 +102,11 @@ export class NewbieLinksComponent implements OnInit {
 
     this.newbieTopicsSvc.getNewbieLinks(this.topicID)
     .subscribe(linkResult => {
+      if (linkResult.length > 0) {
+        this.showMenu = true;
+      } else {
+        this.showMenu = false;
+      }
       console.log('NewbieLinksComponent:getNewbieLinks: got links=', linkResult);
       this.newbieLinks = linkResult;
       console.log('NewbieLinksComponent:getNewbieLinks: newbieLInks=', this.newbieLinks);

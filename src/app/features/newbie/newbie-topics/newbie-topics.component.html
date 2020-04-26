@@ -1,5 +1,8 @@
+<div>
+  <p>{{ 'newbie-topics.component.heading' | translate }}</p>
+</div>
 <div *ngFor="let topic of authorizedTopics; let i=index">
-  <p class="hyperlink" (click)="onTopic(topic.topicID, topic.topicDesc)">{{ topic.topicDesc }}</p>
+  <p class="hyperlink topic" (click)="onTopic(topic.topicID, topic.topicDesc)">{{ topic.topicDesc }}</p>
 </div>
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 
