@@ -1,6 +1,8 @@
-<div class="container mat-body-1" (click)="onPercentProfile()">
+<div class="container mat-body-1"
+      (click)="onPercentProfile()"
+      [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
   <div class="welcome">
-    <p>Hi {{ profile.firstName }}, welcome to RV Like Me</p>
+    <p><span class="hi">{{ 'home.component.hi' | translate }} {{ profile.firstName }}</span>, {{ 'home.component.welcome' | translate}}</p>
   </div>
   <button mat-button>
     <mat-progress-bar

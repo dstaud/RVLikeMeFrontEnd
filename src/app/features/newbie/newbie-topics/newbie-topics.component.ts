@@ -10,6 +10,7 @@ import { NewbieTopicsService } from '@services/data-services/newbie-topics.servi
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
+import { UserTypeService } from '@services/user-type.service';
 
 import { SuggestTopicDialogComponent } from '@dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 
@@ -27,9 +28,8 @@ export interface Itopics {
   styleUrls: ['./newbie-topics.component.scss']
 })
 export class NewbieTopicsComponent implements OnInit {
-  @Input('userType') userType: string;
-
   authorizedTopics: Array<Itopics> = [];
+  userType: string;
 
   showSpinner: boolean= false;
 
@@ -43,11 +43,15 @@ export class NewbieTopicsComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private dialog: MatDialog,
               private shared: SharedComponent,
+              private userTypeSvc: UserTypeService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
   ngOnInit(): void {
+    console.log('NewbieTopicsComponent:ngOnInit')
     this.listenForUserProfile();
+
+    this.listenForUserType();
 
     this.getAuthorizedTopics();
 
@@ -102,17 +106,11 @@ export class NewbieTopicsComponent implements OnInit {
         }
       });
     }
-    if (this.userType === 'experienced') {
-      this.activateBackArrowSvc.setBackRoute('newbie/help-newbie');
-      this.router.navigateByUrl('/forums');
-    } else {
-      let params = '{"topicID":"' + topicID + '","topicDesc":"' + topicDesc + '"}';
-      this.shareDataSvc.setData(params);
-      this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-      this.router.navigateByUrl('/newbie/topic');
-    }
 
-
+    params = '{"topicID":"' + topicID + '","topicDesc":"' + topicDesc + '"}';
+    this.shareDataSvc.setData(params);
+    this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
+    this.router.navigateByUrl('/newbie/topic');
   }
 
   private findTopic(topicID: string): boolean {
@@ -146,12 +144,10 @@ export class NewbieTopicsComponent implements OnInit {
 
     this.newbieTopicsSvc.getNewbieTopics()
     .subscribe(topicsResult => {
-      console.log('HelpNewbieTopicsComponent:getTopics: result=', topicsResult);
       for (let i=0; i < topicsResult.length; i++) {
         this.updateAuthorizedTopics(topicsResult[i].topicID, topicsResult[i]._id);
       }
       this.showSpinner = false;
-      console.log('HelpNewbieTopicsComponent:getTopics: auth=', this.authorizedTopics);
     })
   }
 
@@ -164,7 +160,19 @@ export class NewbieTopicsComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
     }, (error) => {
-      console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
+      console.error('NewbieTopicsComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  private listenForUserType() {
+    this.userTypeSvc.userType
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(type => {
+      this.userType = type;
+    }, (error) => {
+      console.error('NewbieTopicsComponent:listenForUserType: error ', error);
       throw new Error(error);
     });
   }
@@ -172,11 +180,9 @@ export class NewbieTopicsComponent implements OnInit {
 
   private updateAuthorizedTopics(topicID: string, _id: string) {
     for (let i=0; i < this.authorizedTopics.length; i++) {
-      console.log('HelpNewbieTopicsComponent:updateAuthorizedTopics: looking for topic ', topicID)
       if (topicID === this.authorizedTopics[i].topicID) {
-        console.log('HelpNewbieTopicsComponent:updateAuthorizedTopics: found id ', topicID)
         this.authorizedTopics[i]._id = _id;
-        console.log('HelpNewbieTopicsComponent:updateAuthorizedTopics: updated array=', this.authorizedTopics[i]);
+        console.log('NewbieTopicsComponent:updateAuthorizedTopics: updated array=', this.authorizedTopics[i]);
       }
     }
   }

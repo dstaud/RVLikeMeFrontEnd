@@ -14,6 +14,18 @@
   color: $primary-color;
 }
 
+.start-connecting {
+  font-weight: bold;
+}
+
+.box-background-light {
+  background-color: $light-mode-group;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-group;
+}
+
 .spinner {
   margin: auto;
 }

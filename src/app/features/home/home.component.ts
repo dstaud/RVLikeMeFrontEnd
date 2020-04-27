@@ -10,6 +10,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService } from '@services/share-data.service';
+import { ThemeService } from '@services/theme.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { ShareDataService } from '@services/share-data.service';
 export class HomeComponent implements OnInit {
   newbie: boolean = false;
   experiencedHelp: boolean = false;
+  theme: string = 'light-theme';
 
   private backPath = '';
   private userProfile: Observable<IuserProfile>;
@@ -30,6 +32,7 @@ export class HomeComponent implements OnInit {
               private location: Location,
               private profileSvc: ProfileService,
               private shareDataSvc: ShareDataService,
+              private themeSvc: ThemeService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
@@ -39,6 +42,8 @@ export class HomeComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
+
+    this.listenForColorTheme();
 
     this.listenForUserProfile();
   }
@@ -79,6 +84,18 @@ export class HomeComponent implements OnInit {
     }, (error) => {
       console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
+    });
+  }
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+    }, error => {
+      console.error(error);
     });
   }
 }

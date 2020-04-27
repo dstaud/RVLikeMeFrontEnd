@@ -1,11 +1,15 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { NewbieTopicsService, InewbieLinks } from '@services/data-services/newbie-topics.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { UserTypeService } from '@services/user-type.service';
+import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
+import { ShareDataService } from '@services/share-data.service';
 
 @Component({
   selector: 'app-rvlm-newbie-links',
@@ -23,6 +27,7 @@ export class NewbieLinksComponent implements OnInit {
   profile: IuserProfile;
   newbieLinks: Array<InewbieLinks> = [];
   topicDescSentence: string;
+  userType: string;
 
   showSpinner: boolean = false;
   showAddLink: boolean = false;
@@ -35,6 +40,10 @@ export class NewbieLinksComponent implements OnInit {
 
   constructor(private newbieTopicsSvc: NewbieTopicsService,
               private profileSvc: ProfileService,
+              private userTypeSvc: UserTypeService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private shareDataSvc: ShareDataService,
+              private router: Router,
               fb: FormBuilder) {
               this.form = fb.group({
                 linkName: new FormControl('',
@@ -46,6 +55,8 @@ export class NewbieLinksComponent implements OnInit {
 
   ngOnInit(): void {
     this.listenForUserProfile();
+
+    this.listenForUserType();
 
     this.getNewbieLinks();
 
@@ -95,6 +106,20 @@ export class NewbieLinksComponent implements OnInit {
   }
 
 
+  // When user clicks to see the story of another user, navigate to myStory page
+  onYourStory(row: string) {
+    let userParams = this.packageParamsForMessaging(row);
+    let params = '{"userID":"' + this.newbieLinks[row].createdBy + '",' +
+                      '"userIdViewer":"' + this.profile._id + '",' +
+                      '"params":' + userParams + ',' +
+                      '"topicID":"' + this.topicID + '",' +
+                      '"topicDesc":"' + this.topicDesc + '"}';
+    console.log('NewbieLinksComponent:onYourStory: parmas=', params);
+    this.activateBackArrowSvc.setBackRoute('newbie/topic');
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/mystory');
+  }
+
   private getNewbieLinks() {
     this.newbieLinks = [];
 
@@ -107,9 +132,7 @@ export class NewbieLinksComponent implements OnInit {
       } else {
         this.showMenu = false;
       }
-      console.log('NewbieLinksComponent:getNewbieLinks: got links=', linkResult);
       this.newbieLinks = linkResult;
-      console.log('NewbieLinksComponent:getNewbieLinks: newbieLInks=', this.newbieLinks);
       this.showSpinner = false;
     }, error => {
       console.log('NewbieLinksComponent:getNewbieLinks: error=', error);
@@ -130,5 +153,30 @@ export class NewbieLinksComponent implements OnInit {
       console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
+  }
+
+
+  private listenForUserType() {
+    this.userTypeSvc.userType
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(type => {
+      this.userType = type;
+    }, (error) => {
+      console.error('TopicComponent:listenForUserType: error ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  private packageParamsForMessaging(row): string {
+    let params: string;
+    params = '{"fromUserID":"' + this.profile._id + '",' +
+              '"fromDisplayName":"' + this.profile.displayName + '",' +
+              '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
+              '"toUserID":"' + this.newbieLinks[row].createdBy + '",' +
+              '"toDisplayName":"' + this.newbieLinks[row].createdByDisplayName + '",' +
+              '"toProfileImageUrl":"' + this.newbieLinks[row].createdByProfileImageUrl + '"}';
+
+    return params;
   }
 }

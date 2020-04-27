@@ -21,6 +21,7 @@ import { BeforeInstallEventService } from '@services/before-install-event.servic
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
+import { UserTypeService } from './core/services/user-type.service';
 
 
 // TODO: Make sure unsubscribing to all subscriptions appropriately
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
               private messagesSvc: MessagesService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private newMsgCountSvc: NewMessageCountService,
+              private userTypeSvc: UserTypeService,
               private swUpdate: SwUpdate,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -268,6 +270,17 @@ export class AppComponent implements OnInit {
         this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
       } else {
         this.themeSvc.setGlobalColorTheme('light-theme');
+      }
+
+      // If user has indicated they are an expert or newbie, this information is used throughout the app
+      if (profile.aboutMe) {
+        if (profile.aboutMe === 'experienced') {
+          this.userTypeSvc.setUserType('expert');
+        } else {
+          this.userTypeSvc.setUserType('newbie');
+        }
+      } else {
+        this.userTypeSvc.setUserType('newbie');
       }
 
       // When we have actual profile data from the database, then go get the counts that will be used on the home page

@@ -1,6 +1,6 @@
-import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
@@ -20,8 +20,11 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./likeme-counts.component.scss']
 })
 export class LikemeCountsComponent implements OnInit {
+  @Input('theme') theme: string;
+
   form: FormGroup;
   allUsersCount: number;
+  matches: boolean = false;
 
   aboutMe: string;
   rigType: string;
@@ -80,6 +83,15 @@ export class LikemeCountsComponent implements OnInit {
       this.aboutMeCount = data.aboutMe;
       this.rigTypeCount = data.rigType;
       this.rvUseCount = data.rvUse;
+
+      if ((this.profile.aboutMe && this.aboutMeCount > 0) ||
+          (this.profile.rigType && this.rigTypeCount > 0) ||
+          (this.profile.rvUse && this.rvUseCount > 0)) {
+          this.matches = true;
+      } else {
+        this.matches = false;
+      }
+
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
         this.showSpinner = false;

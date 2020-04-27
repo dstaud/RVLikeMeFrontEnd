@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable, throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService } from '@services/share-data.service';
+import { UserTypeService } from '@services/user-type.service';
 
 @Component({
   selector: 'app-rvlm-topic',
@@ -14,12 +15,12 @@ import { ShareDataService } from '@services/share-data.service';
   styleUrls: ['./topic.component.scss']
 })
 export class TopicComponent implements OnInit {
-
   profile: IuserProfile;
   topicID: string;
   topicDesc: string;
   title: string;
   header: string;
+  userType: string;
 
   private userProfile: Observable<IuserProfile>;
 
@@ -27,16 +28,13 @@ export class TopicComponent implements OnInit {
               private profileSvc: ProfileService,
               private route: ActivatedRoute,
               private router: Router,
+              private userTypeSvc: UserTypeService,
               private shareDataSvc: ShareDataService) { }
 
   ngOnInit(): void {
     this.listenForUserProfile();
 
-    let params = JSON.parse(this.shareDataSvc.getData());
-    this.topicID = params.topicID;
-    this.topicDesc = params.topicDesc;
-    this.title = 'newbie-topics.component.' + this.topicID;
-    this.header = 'newbie-topics.component.' + this.topicID + 'Header';
+    this.listenForUserType();
   }
 
   ngOnDestroy() {}
@@ -52,7 +50,7 @@ export class TopicComponent implements OnInit {
   }
 
   onLinkAdded(event: any) {
-    console.log('SuggestTopicComponent:onLinkAdded: =', event);
+    console.log('TopicComponent:onLinkAdded: =', event);
   }
 
 
@@ -64,7 +62,39 @@ export class TopicComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
     }, (error) => {
-      console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
+      console.error('TopicComponent:listenForUserProfile: error getting profile ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  private listenForUserType() {
+    this.userTypeSvc.userType
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(type => {
+      this.userType = type;
+
+      if (!this.shareDataSvc.getData()) {
+        if (type = 'expert') {
+          this.router.navigateByUrl('/newbie/help-newbie');
+        } else {
+          this.router.navigateByUrl('/newbie/need-help-newbie');
+        }
+      }
+
+      let params = JSON.parse(this.shareDataSvc.getData());
+      this.topicID = params.topicID;
+      this.topicDesc = params.topicDesc;
+
+      this.title = 'newbie-topics.component.' + this.topicID;
+      if (type === 'expert') {
+        this.header = 'newbie-topics.component.' + this.topicID + 'HeaderExpert';
+      } else {
+        this.header = 'newbie-topics.component.' + this.topicID + 'HeaderNewbie';
+      }
+
+    }, (error) => {
+      console.error('TopicComponent:listenForUserType: error ', error);
       throw new Error(error);
     });
   }

@@ -10,8 +10,20 @@
   margin-left: 15px;
 }
 
+.hi {
+  font-weight: bold;
+}
+
 .pctCompleteMsg {
   color: $primary-color;
+}
+
+.box-background-light {
+  background-color: $light-mode-group;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-group;
 }
 
 .spinner {

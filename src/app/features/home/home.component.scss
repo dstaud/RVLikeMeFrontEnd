@@ -9,8 +9,23 @@
   color: $primary-color;
 }
 
+.bold-hyperlink {
+  font-weight: bold;
+}
+
 .newbie {
   border-radius: 25px;
   padding: 10px;
+}
+
+.newbie-header {
+  font-weight: bold;
+}
+
+.box-background-light {
   background-color: $light-mode-group;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-group;
 }

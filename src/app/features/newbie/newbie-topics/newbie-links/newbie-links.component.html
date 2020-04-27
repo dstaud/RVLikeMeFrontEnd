@@ -66,11 +66,11 @@
       </div>
     </div>
     <div class="links">
-      <div *ngFor="let link of newbieLinks">
+      <div *ngFor="let link of newbieLinks; let i=index">
         <a href="{{ link.link }}" class="hyperlink external link" target="_blank">
           <span>{{ link.linkName }}</span>
         </a>
-        <div *ngIf="showLinkAuthor" class="author">
+        <div *ngIf="showLinkAuthor" class="author" (click)="onYourStory(i)">
           <div>
             <img class="image profile-image-post"
                   [src]="link.createdByProfileImageUrl"

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -16,6 +16,8 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./profile-percent.component.scss']
 })
 export class ProfilePercentComponent implements OnInit {
+  @Input('theme') theme: string;
+
   percentProfileComplete: number;
   percentCompleteMsg: string;
   progressBarColor: string;

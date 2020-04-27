@@ -1,6 +1,6 @@
-<div class="container mat-body-1">
+<div *ngIf="matches" class="container mat-body-1" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
   <div class="welcome">
-    <p>Some counts based on your profile</p>
+    <p class="start-connecting">{{ 'home.component.countsHeader' | translate }}</p>
   </div>
   <button mat-button
     *ngIf="showAllUsersCount">
