@@ -80,7 +80,6 @@ export class ForumsListComponent implements OnInit {
 
     if (this.profile.forums.length > 0) {
       this.groupsListFromUserProfile = this.profile.forums;
-
       for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
         this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(this.groupsListFromUserProfile[i]);
         groupsAttributes.push(this.groupProfileDisplayAttributesFromGroup);
@@ -102,7 +101,7 @@ export class ForumsListComponent implements OnInit {
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;
         } else {
-          if (name === 'yearOfBirth') {
+          if (name === 'yearOfBirth' || name === 'rigLength') {
             forumItem = 'forums.component.' + name;
           } else {
             forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();

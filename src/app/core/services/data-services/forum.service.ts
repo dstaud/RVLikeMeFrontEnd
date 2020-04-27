@@ -50,7 +50,7 @@ export class ForumService {
     }
     keyValues = keyValues + '}';
     keyValues = JSON.parse(keyValues);
-
+    console.log('ForumService:addGroup: keyvalues=', keyValues);
     return this.http.post(`/api/forum-group`, keyValues, {});
   }
 

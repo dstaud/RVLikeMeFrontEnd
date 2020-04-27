@@ -40,6 +40,7 @@ export class RvRigComponent implements OnInit {
   showrigBrandSaveIcon = false;
   showrigModelSaveIcon = false;
   showrigYearSaveIcon = false;
+  showrigLengthSaveIcon = false;
 
   /**** Select form select field option data. ****/
   RigTypes: RigType[] = [
@@ -65,7 +66,7 @@ export class RvRigComponent implements OnInit {
   private windowWidth: any;
   private dialogWidth: number;
   private dialogWidthDisplay: string;
-
+  private regPattern = '^[0-9]*$';
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -89,6 +90,7 @@ export class RvRigComponent implements OnInit {
               fb: FormBuilder) {
               this.form = fb.group({
                 rigType: new FormControl('', Validators.required),
+                rigLength: new FormControl('', Validators.pattern(this.regPattern)),
                 rigManufacturer: new FormControl(''),
                 rigBrand: new FormControl(''),
                 rigModel: new FormControl(''),
@@ -176,6 +178,7 @@ export class RvRigComponent implements OnInit {
   /**** Field auto-update processing ****/
   onUpdateDataPoint(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
+    console.log('RigComponent:onUpdateDataPoint: save icon=', SaveIcon)
     this[SaveIcon] = true;
     if (this.form.controls[control].value === '') {
       this.profile[control] = null;
@@ -183,6 +186,7 @@ export class RvRigComponent implements OnInit {
     } else {
       this.profile[control] = this.form.controls[control].value;
     }
+    console.log('RigComponent:onUpdateDataPoint: profile=', this.profile.rigLength);
     this.updateRig(control);
   }
 
@@ -254,6 +258,7 @@ export class RvRigComponent implements OnInit {
         this.form.patchValue ({
           rigType: this.rigTypeFormValue,
           rigYear: this.profile.rigYear,
+          rigLength: this.profile.rigLength,
           rigManufacturer: this.profile.rigManufacturer,
           rigBrand: this.profile.rigBrand,
           rigModel: this.profile.rigModel
@@ -344,13 +349,14 @@ export class RvRigComponent implements OnInit {
   // Update form field data on server
   private updateRig(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
+    console.log('RigComponent:updateRig: profile before update=', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
     }, error => {
       this[SaveIcon] = false;
-      console.error('PersonalComponent:updateRig: throw error ', error);
+      console.error('RigComponent:updateRig: throw error ', error);
       throw new Error(error);
     });
   }

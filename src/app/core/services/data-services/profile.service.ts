@@ -26,6 +26,7 @@ export interface IuserProfile {
   boondocking: string;
   traveling: string;
   rigType: string;
+  rigLength: number;
   rigManufacturer: string;
   rigBrand: string;
   rigModel: string;
@@ -75,6 +76,7 @@ export class ProfileService {
     boondocking: null,
     traveling: null,
     rigType: null,
+    rigLength: null,
     rigManufacturer: null,
     rigBrand: null,
     rigModel: null,
@@ -128,6 +130,7 @@ export class ProfileService {
       this.dataStore.profile.boondocking = null;
       this.dataStore.profile.traveling = null;
       this.dataStore.profile.rigType = null;
+      this.dataStore.profile.rigLength = null;
       this.dataStore.profile.rigManufacturer = null;
       this.dataStore.profile.rigBrand = null;
       this.dataStore.profile.rigModel = null;
@@ -178,6 +181,7 @@ export class ProfileService {
   }
 
   updateProfile(userProfile: IuserProfile): Observable<any> {
+    console.log('ProfileService:updateProfile: profile=', userProfile);
     return this.http.put(`/api/profile`, userProfile, {});
   }
 

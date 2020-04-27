@@ -46,6 +46,7 @@ export class RegisterUserComponent implements OnInit {
     password: '',
     active: true,
     nbrLogins: 0,
+    admin: false,
     tokenExpire: 0
   };
   private profile: IuserProfile = {
@@ -69,6 +70,7 @@ export class RegisterUserComponent implements OnInit {
     boondocking: null,
     traveling: null,
     rigType: null,
+    rigLength: null,
     rigManufacturer: null,
     rigBrand: null,
     rigModel: null,

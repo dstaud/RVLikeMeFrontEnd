@@ -1,0 +1,24 @@
+<div class="mat-app-background mat-body-1 container">
+  <p class="mat-title">Admin</p>
+  <div class="load-rv-file">
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline" class="message-input">
+        <mat-label>JSON RV File Name</mat-label>
+
+          <input matInput
+                  type="text"
+                  placeholder="JSON file name"
+                  formControlName="rvFileName"
+                  cdkFocusInitial>
+      </mat-form-field>
+
+      <div>
+        <button [disabled]="!form.valid"
+                class="mat-raised-button mat-primary"
+                (click)="onSubmit()">
+                Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

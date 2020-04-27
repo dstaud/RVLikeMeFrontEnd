@@ -73,6 +73,7 @@ export class ConnectionsComponent implements OnInit {
               }
 
   ngOnInit() {
+    console.log('ConnectionsComponent:ngOnInit');
     if (!this.auth.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
@@ -101,6 +102,7 @@ export class ConnectionsComponent implements OnInit {
   // Called from child component if user clicks on the cancel button there.
   // In this case, clear the array of checked items and hide query child component.
   onCancelQuery(event: boolean) {
+    this.param = '';
     for (let i = this.checkArray.length; i >= 0; i--) {
       this.checkArray.removeAt(i);
     }
@@ -267,6 +269,7 @@ export class ConnectionsComponent implements OnInit {
       this.matches.push(this.likeMeItem);
       i++;
     });
+    console.log('ConnectionsComponent:onQuery check Array=', this.checkArray);
     this.showQueryResults = true;
   }
 
@@ -318,6 +321,7 @@ export class ConnectionsComponent implements OnInit {
     this.likeMeCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
+      console.log('ConnectionsComponent:listenForLikeMeCounts: Got counts=', counts);
       this.displayMatches(counts);
     }, (error) => {
       this.showSpinner = false;

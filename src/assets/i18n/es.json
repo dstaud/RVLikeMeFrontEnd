@@ -67,6 +67,8 @@
     "traveling1": "otros viajes",
     "rigType": "otros cuya plataforma es una",
     "rigType1": "otro cuya plataforma es un",
+    "rigLength": "otros",
+    "rigLength1": "otro",
     "interest": "Otros estan interesados ​​en",
     "interest1": "otro está interesado en"
   },
@@ -82,6 +84,7 @@
     "more": "más",
     "less": "menos",
     "yearOfBirth": "tu edad (+/- 5anos)",
+    "rigLength": "con una longitud de plataforma similar a la tuya (+/- 3ft)",
     "atv": "interesado en todoterreno",
     "motorcycle": "interesado en motociclismo",
     "travel": "interesado en viajar",
@@ -237,7 +240,7 @@
     "welcome": "Bienvenido a RV Like Me",
     "helpNewbies": "Ayuda a los novatos de RV",
     "newbieNeedsHelp": "RV novatos",
-    "expert1": "Todos éramos novatos RVers al mismo tiempo y tenía muchas preguntas y un RVer experimentado lo ayudó. Gracias por ofrecerte a ayudar a los novatos de RV. Hacer clic",
+    "expert1": "Todos éramos novatos RVers a la vez y en algún lugar a lo largo de la línea un RVer experimentado nos ayudó. Hacer clic",
     "expert2": "aquí",
     "expert3": "para ver cómo puedes ayudar"
   },
@@ -264,6 +267,7 @@
     "interests": "Mi intereses",
     "aboutMe": "Describete",
     "yearOfBirth": "alrededor de tu edad (+/- 5años)",
+    "rigLength": "con un aparejo de longitud similar (+/- 3ft)",
     "viewpic": "Vea su historia como otros la verán",
     "list": {
       "aboutme": {
@@ -432,6 +436,7 @@
     "explanation": "Esta información se usará para otras personas con RV similares para obtener respuestas más relevantes. ¡Cuanto más completo, mejores serán sus resultados!",
     "rigTypeDesc": "Tipo de RV",
     "rigYearDesc": "RV año",
+    "rigLength": "Longitud de la plataforma (en pies)",
     "rigManufacturer": "Fabricante de RV",
     "rigBrand": "Marca RV",
     "rigModel": "Modelo de RV",

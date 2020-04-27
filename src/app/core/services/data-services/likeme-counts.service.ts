@@ -14,6 +14,7 @@ export interface IlikeMeCounts {
   rigType: number;
   worklife: number;
   yearOfBirth: number;
+  rigLength: number;
   rigManufacturer: number;
   rigBrand: number;
   rigModel: number;
@@ -50,6 +51,7 @@ export class LikemeCountsService {
     rigType: 0,
     worklife: 0,
     yearOfBirth: 0,
+    rigLength: 0,
     rigManufacturer: 0,
     rigBrand: 0,
     rigModel: 0,
@@ -125,6 +127,7 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.painting = counts.painting;
       this.dataStore.likeMeCounts.programming = counts.programming;
       this.dataStore.likeMeCounts.quilting = counts.quilting;
+      this.dataStore.likeMeCounts.rigLength = counts.rigLength;
       this.dataStore.likeMeCounts.rigBrand = counts.rigBrand;
       this.dataStore.likeMeCounts.rigManufacturer = counts.rigManufacturer;
       this.dataStore.likeMeCounts.rigModel = counts.rigModel;

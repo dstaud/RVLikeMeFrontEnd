@@ -169,9 +169,10 @@ export class ForumsComponent implements OnInit {
           }
 
           keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
+          console.log('ForumsComponent:getGroup: keyValues=', keyValue);
           names = keyValue[0];
           values = keyValue[1];
-
+          console.log('ForumsComponent:getGroup: names=', names, ' values=', values);
           this.checkIfUserProfileHasGroupAndUpdate(names, values);
         }
       }
@@ -263,7 +264,7 @@ export class ForumsComponent implements OnInit {
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;
         } else {
-          if (name === 'yearOfBirth') {
+          if (name === 'yearOfBirth' || name === 'rigLength') {
             forumItem = 'forums.component.' + name;
           } else {
             forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();

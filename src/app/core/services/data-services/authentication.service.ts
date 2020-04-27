@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ProfileService } from '@services/data-services/profile.service';
@@ -14,6 +14,7 @@ export interface ItokenPayload {
   password: string;
   active: boolean;
   nbrLogins: number;
+  admin: boolean;
   tokenExpire: number;
 }
 
@@ -26,8 +27,12 @@ export interface ItokenResponse {
 })
 export class AuthenticationService {
   private token: string;
+
   private userAuth = new Subject<boolean>();
   userAuth$ = this.userAuth.asObservable();
+
+  private _userAdmin = new BehaviorSubject<boolean>(false);
+  userAdmin = this._userAdmin.asObservable();
 
   constructor(private http: HttpClient,
               private profileSvc: ProfileService,
@@ -81,6 +86,7 @@ export class AuthenticationService {
 
   logout(): void {
     this.token = '';
+    this.setUserToAdmin(false);
     window.localStorage.removeItem('rvlikeme-token');
     this.profileSvc.getProfile(true);
   }
@@ -104,6 +110,9 @@ export class AuthenticationService {
     this.userAuth.next(auth);
   }
 
+  setUserToAdmin(admin): void {
+    this._userAdmin.next(admin);
+  }
   updateLoginCount(): Observable<any> {
     return this.http.put(`/api/login-count`, {});
   }

@@ -47,6 +47,7 @@ export class SigninComponent implements OnInit {
     password: '',
     active: true,
     nbrLogins: 0,
+    admin: false,
     tokenExpire: 0
   };
 
@@ -105,6 +106,10 @@ export class SigninComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       // Once logged in, get the users profile for distribution throughout the app
+      console.log('SigninComponent:onSubmit response=', responseData);
+      if (responseData.admin) {
+        this.authSvc.setUserToAdmin(true);
+      }
       this.profileSvc.getProfile();
       this.listenForUserProfile();
     }, error => {

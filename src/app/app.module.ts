@@ -43,6 +43,7 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
 
 import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
+import { AdminComponent } from './features/admin/admin.component';
 
 
 
@@ -87,7 +88,8 @@ export function getErrorHandler(): ErrorHandler {
     ForumsListComponent,
     UpdatePostDialogComponent,
     YourStoryComponent,
-    SuggestTopicDialogComponent
+    SuggestTopicDialogComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

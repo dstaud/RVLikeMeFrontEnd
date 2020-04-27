@@ -67,6 +67,8 @@
     "traveling1": "other travels",
     "rigType": "others with a",
     "rigType1": "other with a",
+    "rigLength": "others",
+    "rigLength1": "other",
     "interest": "others interested in",
     "interest1": "other interested in"
   },
@@ -82,6 +84,7 @@
     "more": "more",
     "less": "less",
     "yearOfBirth": "your age (+/- 5yrs)",
+    "rigLength": "with rig length similar to yours (+/- 3ft)",
     "atv": "interested in ATV off-roading",
     "motorcycle": "interested in motorcycling",
     "travel": "interested in traveling",
@@ -239,7 +242,7 @@
     "newbieNeedsHelp": "RV Newbie",
     "newbieTopics1": "Check out these",
     "newbieTopics2": "popular RV newbie topics",
-    "expert1": "We were all newbie RVers at one time and you had a lot of questions and an experienced RVer helped you out. Thanks for offering to help RV newbies.  Click",
+    "expert1": "We were all newbie RVers at one time and somewhere along the line an experienced RVer helped us out. Click",
     "expert2": "here",
     "expert3": "to see how you might help"
   },
@@ -266,6 +269,7 @@
     "interests": "My interests",
     "aboutMe": "Describe yourself",
     "yearOfBirth": "around your age (+/- 5yrs)",
+    "rigLength": "with similar length rig (+/- 3ft)",
     "viewpic": "View your story as others will see it",
     "list": {
       "aboutme": {
@@ -434,6 +438,7 @@
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
     "rigTypeDesc": "Type of rig",
     "rigYearDesc": "Rig year",
+    "rigLength": "Rig length",
     "rigManufacturer": "Rig manufacturer",
     "rigBrand": "Rig brand",
     "rigModel": "rig model",
