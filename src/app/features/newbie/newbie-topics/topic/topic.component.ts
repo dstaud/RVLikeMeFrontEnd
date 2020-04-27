@@ -22,7 +22,6 @@ export class TopicComponent implements OnInit {
   header: string;
 
   private userProfile: Observable<IuserProfile>;
-  private routeSubscription: any;
 
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
@@ -33,39 +32,27 @@ export class TopicComponent implements OnInit {
   ngOnInit(): void {
     this.listenForUserProfile();
 
-    this.listenForParameters();
+    let params = JSON.parse(this.shareDataSvc.getData());
+    this.topicID = params.topicID;
+    this.topicDesc = params.topicDesc;
+    this.title = 'newbie-topics.component.' + this.topicID;
+    this.header = 'newbie-topics.component.' + this.topicID + 'Header';
   }
 
-  ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
-  }
+  ngOnDestroy() {}
 
 
   onGroup() {
     let params: string;
 
     this.activateBackArrowSvc.setBackRoute('newbie/topic');
-    params = '{"forumType":"topic","topic":"' + this.topicID + '","topicDesc":"' + this.topicDesc + '" }'
+    params = '{"forumType":"topic","topicID":"' + this.topicID + '","topicDesc":"' + this.topicDesc + '" }'
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/forums');
   }
 
   onLinkAdded(event: any) {
     console.log('SuggestTopicComponent:onLinkAdded: =', event);
-  }
-
-
-  private listenForParameters() {
-    this.routeSubscription = this.route
-    .queryParams
-    .subscribe(params => {
-      this.topicID = params.topicID;
-      this.topicDesc = params.topicDesc;
-      this.title = 'newbie-topics.component.' + this.topicID;
-      this.header = 'newbie-topics.component.' + this.topicID + 'Header';
-    }, error => {
-      console.error(error);
-    });
   }
 
 

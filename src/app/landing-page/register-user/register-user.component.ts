@@ -44,6 +44,8 @@ export class RegisterUserComponent implements OnInit {
     _id: '',
     email: '',
     password: '',
+    active: true,
+    nbrLogins: 0,
     tokenExpire: 0
   };
   private profile: IuserProfile = {

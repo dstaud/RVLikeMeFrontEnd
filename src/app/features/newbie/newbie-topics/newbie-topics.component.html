@@ -1,12 +1,13 @@
 <div>
-  <p>{{ 'newbie-topics.component.heading' | translate }}</p>
+  <p *ngIf="userType === 'newbie'">{{ 'newbie-topics.component.headingNewbie' | translate }}</p>
+  <p *ngIf="userType === 'expert'">{{ 'newbie-topics.component.headingExpert' | translate }}</p>
 </div>
 <div *ngFor="let topic of authorizedTopics; let i=index">
   <p class="hyperlink topic" (click)="onTopic(topic.topicID, topic.topicDesc)">{{ topic.topicDesc }}</p>
 </div>
 <mat-divider></mat-divider>
 <div class="suggest">
-  <p class="hyperlink" (click)="onOpenSuggestTopicDialog()">Suggest a new useful RV-related topic</p>
+  <p class="hyperlink" (click)="onOpenSuggestTopicDialog()">{{ 'newbie-topics.component.suggestTopicText' | translate }}</p>
 </div>
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 

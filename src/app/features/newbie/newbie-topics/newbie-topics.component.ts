@@ -102,14 +102,14 @@ export class NewbieTopicsComponent implements OnInit {
         }
       });
     }
-    if (this.userType === 'newbie') {
-      this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
-      this.router.navigate(['/newbie/topic'], { queryParams: { topicID: topicID, topicDesc: topicDesc }});
-    } else {
-      params = '{"forumType":"topic","topic":"' + topicID + '","topicDesc":"' + topicDesc + '" }'
-      this.shareDataSvc.setData(params);
+    if (this.userType === 'experienced') {
       this.activateBackArrowSvc.setBackRoute('newbie/help-newbie');
       this.router.navigateByUrl('/forums');
+    } else {
+      let params = '{"topicID":"' + topicID + '","topicDesc":"' + topicDesc + '"}';
+      this.shareDataSvc.setData(params);
+      this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
+      this.router.navigateByUrl('/newbie/topic');
     }
 
 

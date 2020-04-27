@@ -19,10 +19,10 @@ export class ProfilePercentComponent implements OnInit {
   percentProfileComplete: number;
   percentCompleteMsg: string;
   progressBarColor: string;
+  profile: IuserProfile;
 
   showSpinner = false;
 
-  private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private totalProfileFieldsWithData: number;
   private totalPersonalNbrOfFields = 19;

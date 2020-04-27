@@ -506,7 +506,8 @@
     "header": "Newbie Corner"
   },
   "newbie-topics.component": {
-    "heading": "Check out these popular newbie RV topics",
+    "headingNewbie": "Check out these popular newbie RV topics",
+    "headingExpert": "If you want to offer advice to newbies on any of these topics, click the topic.",
     "groupForum": "group forum",
     "internet": "Internet Connectivity",
     "internet2": "internet connectivity",
@@ -533,7 +534,8 @@
     "thingsYouNeedFullTimeHeader": "See what experience RVers are saying about thinigs you need when going full-time in this",
     "cancel": "Cancel",
     "ok": "OK",
-    "suggestTopic": "Please describe the topic you are suggesting"
+    "suggestTopic": "Please describe the topic you are suggesting",
+    "suggestTopicText": "Suggest a new useful RV-related topic"
   },
   "newbie-links.component": {
     "helpfulResources1": "If you've found some good resources about",

@@ -1,5 +1,8 @@
-<div class="mat-body-1" (click)="onPercentProfile()">
-  <button mat-button >
+<div class="container mat-body-1" (click)="onPercentProfile()">
+  <div class="welcome">
+    <p>Hi {{ profile.firstName }}, welcome to RV Like Me</p>
+  </div>
+  <button mat-button>
     <mat-progress-bar
       mode="determinate"
       color="{{ progressBarColor }}"

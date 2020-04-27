@@ -11,6 +11,7 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
+import { ShareDataService } from '@services/share-data.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -44,6 +45,8 @@ export class SigninComponent implements OnInit {
     _id: '',
     email: '',
     password: '',
+    active: true,
+    nbrLogins: 0,
     tokenExpire: 0
   };
 
@@ -52,6 +55,7 @@ export class SigninComponent implements OnInit {
               private profileSvc: ProfileService,
               private headerVisibleSvc: HeaderVisibleService,
               private shared: SharedComponent,
+              private ShareDataSvc: ShareDataService,
               private router: Router,
               private themeSvc: ThemeService,
               private language: LanguageService,
@@ -110,6 +114,8 @@ export class SigninComponent implements OnInit {
       this.httpError = true;
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
+      } else if (error.status === 403) {
+        this.httpErrorText = 'This account was deactivated';
       } else {
         this.httpErrorText = 'Please connect to Internet and retry';
         console.warn('ERROR: ', error);
@@ -136,6 +142,8 @@ export class SigninComponent implements OnInit {
         this.formComplete.emit(this.formCompleted);
       } else {
         // After user authorizied go to home page
+        let params = '{"nbrLogins":"' + this.credentials.nbrLogins + '"}';
+        this.ShareDataSvc.setData(params);
         this.router.navigateByUrl('/home');
         this.activateBackArrowSvc.setBackRoute('');
       }

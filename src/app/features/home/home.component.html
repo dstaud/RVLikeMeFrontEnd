@@ -1,8 +1,13 @@
 <div class="mat-app-background background mat-body-1">
   <app-rvlm-profile-percent></app-rvlm-profile-percent>
+  <br>
   <app-rvlm-likeme-counts></app-rvlm-likeme-counts>
-  <p *ngIf="newbie" class="hyperlink" (click)="onNewbieTopics()">Popular RV Newbie Topics</p>
-  <div *ngIf="experiencedHelp">
-    <p class="hyperlink" (click)="onHelpNewbieTopic()">helping Newbies!</p>
+  <br>
+  <div *ngIf="newbie" class="newbie">
+    <p class="hyperlink" (click)="onNewbieTopics()">Popular RV Newbie Topics</p>
+  </div>
+  <div *ngIf="experiencedHelp" class="newbie">
+    <p>Thanks for offering to help RV newbies.  Click
+      <span class="hyperlink" (click)="onHelpNewbieTopic()">here</span> to see how you might help.</p>
   </div>
 </div>

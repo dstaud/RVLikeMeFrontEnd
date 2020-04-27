@@ -12,7 +12,8 @@ export interface ItokenPayload {
   _id: string;
   email: string;
   password: string;
-  firstName?: string;
+  active: boolean;
+  nbrLogins: number;
   tokenExpire: number;
 }
 
@@ -103,8 +104,12 @@ export class AuthenticationService {
     this.userAuth.next(auth);
   }
 
+  updateLoginCount(): Observable<any> {
+    return this.http.put(`/api/login-count`, {});
+  }
+
   updateUsername(user: ItokenPayload): Observable<any> {
-    return this.http.patch(`/api/username`, user, {});
+    return this.http.put(`/api/username`, user, {});
   }
 
   private getToken(): string {

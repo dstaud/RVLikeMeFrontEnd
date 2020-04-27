@@ -506,7 +506,8 @@
     "header": "Rincón del novato"
   },
   "newbie-topics.component": {
-    "heading": "Echa un vistazo a estos populares temas de RV para novatos",
+    "headingNewbie": "Echa un vistazo a estos populares temas de RV para novatos",
+    "headingExpert": "Si desea ofrecer consejos a los novatos sobre cualquiera de estos temas, haga clic en el tema.",
     "groupForum": "foro grupal",
     "internet": "Conectividad a Internet",
     "internet2": "conectividad a Internet",
@@ -533,7 +534,8 @@
     "thingsYouNeedFullTimeHeader": "Vea qué experiencia están diciendo los RVers sobre los thinigs que necesita cuando va a tiempo completo en este",
     "cancel": "Cancelar",
     "ok": "Okay",
-    "suggestTopic": "Sugerir tema"
+    "suggestTopic": "Sugerir tema",
+    "suggestTopicText": "Sugerir un nuevo tema útil relacionado con RV"
   },
   "newbie-links.component": {
     "helpfulResources1": "Si ha encontrado algunos buenos recursos sobre",

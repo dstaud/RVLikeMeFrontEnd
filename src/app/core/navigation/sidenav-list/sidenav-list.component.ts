@@ -16,8 +16,6 @@ export class SidenavListComponent implements OnInit {
 
   @Output() sideNavClosed = new EventEmitter();
 
-  private backPath: string = '';
-
   constructor(private location: Location,
               private focusMonitor: FocusMonitor,
               private shareDataSvc: ShareDataService,
@@ -37,8 +35,9 @@ export class SidenavListComponent implements OnInit {
   ngOnDestroy() {}
 
   closeSideNav = () => {
-    this.backPath = this.location.path().substring(1, this.location.path().length);
-    this.activateBackArrowSvc.setBackRoute(this.backPath);
+    let backPath: string = '';
+    backPath = this.location.path().substring(1, this.location.path().length);
+    this.activateBackArrowSvc.setBackRoute(backPath);
     this.sideNavClosed.emit();
   }
 
@@ -50,8 +49,6 @@ export class SidenavListComponent implements OnInit {
 
 
   onNewbieCorner() {
-    let params = '{"displayName":"Dave","profileImageUrl":""}'
-    this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/newbie/need-help-newbie');
     this.closeSideNav();
   }
