@@ -4,5 +4,9 @@
 <div *ngFor="let topic of authorizedTopics; let i=index">
   <p class="hyperlink topic" (click)="onTopic(topic.topicID, topic.topicDesc)">{{ topic.topicDesc }}</p>
 </div>
+<mat-divider></mat-divider>
+<div class="suggest">
+  <p class="hyperlink" (click)="onOpenSuggestTopicDialog()">Suggest a new useful RV-related topic</p>
+</div>
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 

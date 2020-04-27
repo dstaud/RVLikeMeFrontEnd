@@ -1,0 +1,19 @@
+<div class="mat-app-background">
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'newbie-topics.component.suggestTopic' | translate }}</mat-label>
+      <textarea matInput
+          type="text"
+          class="text"
+          rows="8"
+          placeholder="{{ 'newbie-topics.component.suggestTopic' | translate }}"
+          formControlName="topic"
+          cdkFocusInitial>
+      </textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onNoClick()">{{ 'newbie-topics.component.cancel' | translate }}</button>
+  <button [disabled]="!form.valid"  id="btnOK" mat-button (click)="onOK()">{{ 'newbie-topics.component.ok' | translate }}</button>
+</div>

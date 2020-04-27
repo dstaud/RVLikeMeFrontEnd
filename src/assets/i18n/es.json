@@ -31,7 +31,9 @@
     "send": "Enviar",
     "noMessages1": "Aún no tienes ninguna conversación iniciada. Puede enviar un mensaje a cualquier persona de un grupo desde",
     "noMessages2": "grupos",
-    "noMessages3": "página"
+    "noMessages3": "página",
+    "cancel": "Cancelar",
+    "ok": "Okay"
   },
   "connections.component": {
     "header": "Como yo",
@@ -521,12 +523,17 @@
     "savingMoney": "Ideas para ahorrar dinero",
     "savingMoney2": "ideas para ahorrar dinero",
     "savingMoneyHeader": "Vea lo que dicen los RVers sobre las ideas para ahorrar dinero en este",
-    "sellingHouse": "Venta de casa y posesiones para ir a tiempo completo",
-    "sellingHouse2": "venta de casa y posesiones para ir a tiempo completo",
+    "sellingHouse": "Ir a tiempo completo: deshacerse de las cosas",
+    "sellingHouse2": "deshacerse de todas tus cosas para ir a tiempo completo",
     "sellingHouseHeader": "Vea qué experiencia están diciendo los RVers sobre la venta de su casa y sus posesiones a tiempo completo en este",
-    "thingsYouNeedFullTime": "Cosas que necesitas cuando vas a tiempo completoe",
-    "thingsYouNeedFullTime2": "cosas que necesitas cuando vas a tiempo completoe",
-    "thingsYouNeedFullTimeHeader": "Vea qué experiencia están diciendo los RVers sobre los thinigs que necesita cuando va a tiempo completo en este"
+    "thingsYouNeedFullTimeTravel": "Viaje a tiempo completo: cosas que necesita",
+    "thingsYouNeedFullTimeTravel2": "cosas que necesitas cuando viajas a tiempo completo",
+    "thingsYouNeedFullTimeStationary": "Estacionario a tiempo completo - cosas que necesitas(",
+    "thingsYouNeedFullTimeStationary2": "cosas que necesitas cuando estás parado a tiempo completo",
+    "thingsYouNeedFullTimeHeader": "Vea qué experiencia están diciendo los RVers sobre los thinigs que necesita cuando va a tiempo completo en este",
+    "cancel": "Cancelar",
+    "ok": "Okay",
+    "suggestTopic": "Sugerir tema"
   },
   "newbie-links.component": {
     "helpfulResources1": "Si ha encontrado algunos buenos recursos sobre",

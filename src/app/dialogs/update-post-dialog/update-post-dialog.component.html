@@ -1,10 +1,10 @@
 <div class="mat-app-background">
   <form [formGroup]="form">
     <mat-form-field appearance="outline">
-      <mat-label>{{ "posts.component.post" | translate }}</mat-label>
+      <mat-label>{{ 'posts.component.post' | translate }}</mat-label>
       <textarea matInput
           type="text"
-          placeholder="What do you want to say?"
+          placeholder="{{ 'messages.component.whatsay' | translate }}"
           [style.height]="fieldHeight"
           formControlName="post"
           cdkFocusInitial>
@@ -13,6 +13,6 @@
   </form>
 </div>
 <div mat-dialog-actions class="dialog-actions">
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button id="btnOK" mat-button (click)="onOK()">OK</button>
+  <button mat-button (click)="onNoClick()">{{ 'messages.component.cancel' | translate }}</button>
+  <button id="btnOK" mat-button (click)="onOK()">{{ 'messages.component.ok' | translate }}</button>
 </div>

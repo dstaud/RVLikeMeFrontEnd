@@ -42,6 +42,7 @@ import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
+import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 
 
 
@@ -85,7 +86,8 @@ export function getErrorHandler(): ErrorHandler {
     ImageViewDialogComponent,
     ForumsListComponent,
     UpdatePostDialogComponent,
-    YourStoryComponent
+    YourStoryComponent,
+    SuggestTopicDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

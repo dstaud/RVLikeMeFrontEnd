@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -9,6 +10,10 @@ import { NewbieTopicsService } from '@services/data-services/newbie-topics.servi
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
+
+import { SuggestTopicDialogComponent } from '@dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
+
+import { SharedComponent } from '@shared/shared.component';
 
 export interface Itopics {
   _id: string;
@@ -36,6 +41,8 @@ export class NewbieTopicsComponent implements OnInit {
               private profileSvc: ProfileService,
               private translate: TranslateService,
               private shareDataSvc: ShareDataService,
+              private dialog: MatDialog,
+              private shared: SharedComponent,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
@@ -48,6 +55,35 @@ export class NewbieTopicsComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  // Open dialog for user to update their post
+  onOpenSuggestTopicDialog(): void {
+    const dialogRef = this.dialog.open(SuggestTopicDialogComponent, {
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+      this.showSpinner = true;
+      if (result !== 'canceled') {
+        this.newbieTopicsSvc.addNewbieSuggestTopic(result, this.profile.displayName, this.profile.profileImageUrl)
+        .subscribe(suggestResult => {
+          this.showSpinner = false;
+          console.error('NewbieTopicsComponent:onOpenSuggestTopicDialog: suggestion= ', suggestResult);
+        }, error => {
+          this.showSpinner = false;
+          console.error('NewbieTopicsComponent:onOpenSuggestTopicDialog: throw error ', error);
+        });
+
+        this.shared.openSnackBar('Thank you for your suggestion! The information has been sent on','message', 4000);
+      } else {
+        this.showSpinner = false;
+      }
+    });
+  }
+
 
   onTopic(topicID: string, topicDesc: string) {
     let params: string;
@@ -100,7 +136,8 @@ export class NewbieTopicsComponent implements OnInit {
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"makingMoneyOnTheRoad","topicDesc":"' + this.translate.instant('newbie-topics.component.makingMoneyOnTheRoad') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"savingMoney","topicDesc":"' + this.translate.instant('newbie-topics.component.savingMoney') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"sellingHouse","topicDesc":"' + this.translate.instant('newbie-topics.component.sellingHouse') +'"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTime","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTime') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeTravel') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeStationary","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeStationary') + '"}'));
   }
 
 
