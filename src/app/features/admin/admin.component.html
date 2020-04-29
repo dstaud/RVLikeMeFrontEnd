@@ -13,12 +13,15 @@
       </mat-form-field>
 
       <div>
-        <button [disabled]="!form.valid"
-                class="mat-raised-button mat-primary"
-                (click)="onSubmit()">
-                Submit
-        </button>
+        <div class="button">
+          <button [disabled]="!form.valid"
+                  class="mat-raised-button mat-primary"
+                  (click)="onBrandsByManufacturer()">
+                  Load Brands by Manufacturer
+          </button>
+        </div>
       </div>
     </form>
   </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

@@ -5,12 +5,14 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
+import { RigService, IrigData } from '@services/data-services/rig.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -28,9 +30,16 @@ export interface RigType {
   styleUrls: ['./rv-rig.component.scss']
 })
 export class RvRigComponent implements OnInit {
-  form: FormGroup;
-  rigType:string = '';
+  rigBrand = new FormControl('');
+  rigType = new FormControl('', Validators.required);
+  rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
+  rigModel = new FormControl('');
+  rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
+
   rigImageUrls: Array<string> = [];
+  rigData: Array<IrigData> = [];
+  rigBrands: Array<string> = [];
+  filteredBrands: Observable<IrigData[]>;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -66,7 +75,6 @@ export class RvRigComponent implements OnInit {
   private windowWidth: any;
   private dialogWidth: number;
   private dialogWidthDisplay: string;
-  private regPattern = '^[0-9]*$';
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -86,21 +94,8 @@ export class RvRigComponent implements OnInit {
               private router: Router,
               private location: Location,
               private uploadImageSvc: UploadImageService,
-              private activateBackArrowSvc: ActivateBackArrowService,
-              fb: FormBuilder) {
-              this.form = fb.group({
-                rigType: new FormControl('', Validators.required),
-                rigLength: new FormControl('', Validators.pattern(this.regPattern)),
-                rigManufacturer: new FormControl(''),
-                rigBrand: new FormControl(''),
-                rigModel: new FormControl(''),
-                rigYear: new FormControl('',
-                                [Validators.minLength(4),
-                                Validators.maxLength(4)])
-              },
-                { updateOn: 'blur' }
-              );
-}
+              private rigSvc: RigService,
+              private activateBackArrowSvc: ActivateBackArrowService) {}
 
   ngOnInit() {
     // If user got to this page without logging in (i.e. a bookmark or attack), send
@@ -113,11 +108,15 @@ export class RvRigComponent implements OnInit {
 
     this.setDialogWindowDimensions();
 
-    this.form.disable();
-
     this.showSpinner = true;
 
     this.listenForUserProfile();
+
+    this.filteredBrands = this.rigBrand.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
   }
 
   ngOnDestroy() {}
@@ -175,34 +174,18 @@ export class RvRigComponent implements OnInit {
   }
 
 
-  /**** Field auto-update processing ****/
+  // Field auto-update processing
   onUpdateDataPoint(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    console.log('RigComponent:onUpdateDataPoint: save icon=', SaveIcon)
     this[SaveIcon] = true;
-    if (this.form.controls[control].value === '') {
+    if (this[control].value === '') {
       this.profile[control] = null;
-      this.form.patchValue({ [control]: null });
+      this[control] = null;
     } else {
-      this.profile[control] = this.form.controls[control].value;
+      this.profile[control] = this[control].value;
     }
-    console.log('RigComponent:onUpdateDataPoint: profile=', this.profile.rigLength);
     this.updateRig(control);
   }
-
-
-  // Delete the image url from the user's profile
-  private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
-    this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
-    .subscribe(imageResult => {
-      if (newImageFileUrl) {
-        this.updateProfileRigImageUrls(newImageFileUrl);
-      } else {
-        this.profileSvc.getProfile();
-      }
-    })
-  }
-
 
   // View rig image larger
   openImageViewDialog(row: number): void {
@@ -226,6 +209,51 @@ export class RvRigComponent implements OnInit {
   }
 
 
+  // Update brand / Manufacturer data
+  updateBrand() {
+    this.showrigBrandSaveIcon = true;
+    this.profile.rigBrand = this.rigBrand.value;
+    this.updateRig('rigBrand');
+  }
+
+
+  // Auto-complete for Brand/Manufacturer field
+  private _filter(value: string): IrigData[] {
+    const filterValue = value.toLowerCase();
+
+    return this.rigData.filter(brand => brand.brand.toLowerCase().includes(filterValue)); // Match anywhere in the brand string.
+    // return this.rigData.filter(brand => brand.brand.toLowerCase().indexOf(filterValue) === 0); // Just match beginning of brands. This is faster but not as nice
+  }
+
+
+  // Delete the image url from the user's profile
+  private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
+    this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
+    .subscribe(imageResult => {
+      if (newImageFileUrl) {
+        this.updateProfileRigImageUrls(newImageFileUrl);
+      } else {
+        this.profileSvc.getProfile();
+      }
+    })
+  }
+
+
+  private getRigData() {
+    this.rigSvc.getRigData()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(rigData => {
+      this.rigData = rigData;
+      this.rigBrand.patchValue(this.profile.rigBrand);
+      this.showSpinner = false;
+    }, error => {
+      console.log('RVRigComponent:getRigData: error=', error);
+      this.showSpinner = false;
+      throw new Error(error);
+    })
+  }
+
+
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
   private handleOtherData(control: string): boolean {
     let result = false;
@@ -245,30 +273,24 @@ export class RvRigComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
-      this.profile = profileResult;
+      if (profileResult.firstName) {
+        this.profile = profileResult;
 
-      // If user selected other on a form field, need to get the data they entered
-      if (this.handleOtherData('rigType')) {
-        this.rigTypeFormValue = 'other';
-      } else {
-        this.rigTypeFormValue = this.profile.rigType;
+        // If user selected other on a form field, need to get the data they entered
+        if (this.handleOtherData('rigType')) {
+          this.rigTypeFormValue = 'other';
+        } else {
+          this.rigTypeFormValue = this.profile.rigType;
+        }
+
+        this.rigType.patchValue (this.rigTypeFormValue);
+        this.rigYear.patchValue(this.profile.rigYear);
+        this.rigLength.patchValue(this.profile.rigLength);
+        this.rigModel.patchValue(this.profile.rigModel);
+        this.rigImageUrls = this.profile.rigImageUrls;
+
+        this.getRigData();
       }
-
-      if (profileResult) {
-        this.form.patchValue ({
-          rigType: this.rigTypeFormValue,
-          rigYear: this.profile.rigYear,
-          rigLength: this.profile.rigLength,
-          rigManufacturer: this.profile.rigManufacturer,
-          rigBrand: this.profile.rigBrand,
-          rigModel: this.profile.rigModel
-        });
-      }
-
-      this.rigImageUrls = this.profile.rigImageUrls;
-
-      this.showSpinner = false;
-      this.form.enable();
     }, (error) => {
       this.showSpinner = false;
       console.error('RigComponent:listenForUserProfile: error getting profile ', error);
@@ -305,12 +327,12 @@ export class RvRigComponent implements OnInit {
           this[control] = '';
           this.profile[control] = null;
           this.updateSelectItem(control, event);
-          this.form.patchValue({[control]: null});
+          this[control].patchValue(null);
         } else {
           if (this.profile[control]) {
             selection = this.profile[control];
           }
-          this.form.patchValue({[control]: selection});
+          this[control].patchValue(selection);
         }
       }
     });
@@ -349,7 +371,6 @@ export class RvRigComponent implements OnInit {
   // Update form field data on server
   private updateRig(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    console.log('RigComponent:updateRig: profile before update=', this.profile);
     this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
@@ -368,7 +389,7 @@ export class RvRigComponent implements OnInit {
     this[SaveIcon] = true;
     if (event === '') {
       this.profile[control] = null;
-      this.form.patchValue({ [control]: null });
+      this[control].patchValue(null);
     } else {
       this.profile[control] = event;
     }

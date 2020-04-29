@@ -18,14 +18,14 @@
         <span>{{ 'rig.component.uploadpics' | translate }}</span>
     </button>
   </div>
-  <form [formGroup]="form">
+  <form>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
         <mat-select matNativeControl
                     (selectionChange)="onSelectedSelectItem('rigType', 'rig.component.rigTypeDesc', $event.source.value)"
                     (openedChange) = "onActivateSelectItem('rigType', 'rig.component.rigTypeDesc')"
-                    formControlName="rigType">
+                    [formControl]="rigType">
           <mat-option aria-placeholder="Rig Type"
                       *ngFor="let RigType of RigTypes" [value]="RigType.value">
             {{ RigType.viewValue | translate }}
@@ -41,7 +41,7 @@
         <input matInput
                 type="text"
                 placeholder="{{ 'rig.component.rigYearDesc' | translate }}"
-                formControlName="rigYear"
+                [formControl]="rigYear"
                 (blur)="onUpdateDataPoint('rigYear')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigYearSaveIcon">save</mat-icon>
@@ -53,35 +53,29 @@
         <input matInput
                 type="text"
                 placeholder="{{ 'rig.component.rigLength' | translate }}"
-                formControlName="rigLength"
+                [formControl]="rigLength"
                 (blur)="onUpdateDataPoint('rigLength')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigLengthSaveIcon">save</mat-icon>
     </div>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'rig.component.rigManufacturer' | translate }}</mat-label>
-        <input matInput
-                type="text"
-                placeholder="{{ 'rig.component.rigManufacturer' | translate }}"
-                formControlName="rigManufacturer"
-                (blur)="onUpdateDataPoint('rigManufacturer')">
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrigManufacturerSaveIcon">save</mat-icon>
-    </div>
-
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'rig.component.rigBrand' | translate }}</mat-label>
-        <input matInput
-                type="text"
-                placeholder="{{ 'rig.component.rigBrand' | translate }}"
-                formControlName="rigBrand"
-                (blur)="onUpdateDataPoint('rigBrand')">
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrigBrandSaveIcon">save</mat-icon>
-    </div>
+    <mat-form-field appearance="outline" class="brand">
+      <mat-label>{{ 'rig.component.rigBrand' | translate }}</mat-label>
+      <input matInput
+              type="text"
+              placeholder="Rig brand"
+              aria-label="RV Brand"
+              [formControl]="rigBrand"
+              spellcheck="false"
+              [matAutocomplete]="auto"
+              (blur)="updateBrand()">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brand">
+          {{brand.brand}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-icon class="icon" *ngIf="showrigBrandSaveIcon">save</mat-icon>
 
     <div>
       <mat-form-field appearance="outline">
@@ -89,7 +83,7 @@
         <input matInput
                 type="text"
                 placeholder="{{ 'rig.component.rigModel' | translate }}"
-                formControlName="rigModel"
+                [formControl]="rigModel"
                 (blur)="onUpdateDataPoint('rigModel')">
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrigModelSaveIcon">save</mat-icon>

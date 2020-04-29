@@ -10,6 +10,12 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  extractRVBrands(jsonFileName: string): Observable<any> {
+    let params = '{"jsonFileName":"' + jsonFileName + '"}';
+
+    return this.http.post(`/api/admin-extract-brands`, params, {});
+  }
+
   loadRvData(jsonFileName: string): Observable<any> {
     let params = '{"jsonFileName":"' + jsonFileName + '"}';
 

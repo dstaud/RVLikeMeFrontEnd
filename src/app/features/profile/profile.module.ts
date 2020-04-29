@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { ImageCropperComponent } from './image-cropper/image-cropper.component';
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
@@ -28,7 +29,8 @@ import { InterestsComponent } from './interests/interests.component';
     CommonModule,
     SharedModule,
     ProfileRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class ProfileModule { }

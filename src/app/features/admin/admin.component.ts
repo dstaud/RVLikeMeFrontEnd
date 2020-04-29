@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -6,6 +7,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AdminService } from '@services/data-services/admin.service';
+import { IrigData } from '@services/data-services/rig.service';
 
 import { SharedComponent } from './../../shared/shared.component';
 
@@ -16,6 +18,10 @@ import { SharedComponent } from './../../shared/shared.component';
 })
 export class AdminComponent implements OnInit {
   form: FormGroup;
+
+  brands: Array<string> = [];
+
+  showSpinner: boolean = false;
 
   constructor(private authSvc: AuthenticationService,
               private location: Location,
@@ -46,14 +52,17 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onBrandsByManufacturer() {
+    this.showSpinner = true;
     this.adminSvc.loadRvData(this.form.controls.rvFileName.value)
     .subscribe(rvData => {
-      console.log('AdminComponent:onSubmit: rvData=', rvData);
+      console.log('AdminComponent:onBrandsByManufacturer: rvData=', rvData);
       this.shared.openSnackBar('RV Data in file ' + this.form.controls.rvFileName.value + ' loaded to collection', 'message', 3000);
       this.form.controls.rvFileName = null;
+      this.showSpinner = false;
     }, error => {
-      console.log('AdminComponent:onSubmit: error loading RV data file=', error);
+      console.log('AdminComponent:onBrandsByManufacturer: error loading RV data file=', error);
+      this.showSpinner = false;
       throw new Error(error);
     })
   }
