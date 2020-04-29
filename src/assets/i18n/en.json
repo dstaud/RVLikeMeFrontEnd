@@ -67,6 +67,8 @@
     "traveling1": "other travels",
     "rigType": "others with a",
     "rigType1": "other with a",
+    "rigManufacturer": "others with a",
+    "rigManufacturer1": "other with a",
     "rigLength": "others",
     "rigLength1": "other",
     "interest": "others interested in",
@@ -439,7 +441,6 @@
     "rigTypeDesc": "Type of rig",
     "rigYearDesc": "Rig year",
     "rigLength": "Rig length",
-    "rigManufacturer": "Rig manufacturer",
     "rigBrand": "Rig brand",
     "rigModel": "rig model",
     "uploadpics": "Upload up to 3 pics of your rig"

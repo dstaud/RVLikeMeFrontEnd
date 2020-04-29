@@ -72,6 +72,7 @@ export class RegisterUserComponent implements OnInit {
     rigType: null,
     rigLength: null,
     rigManufacturer: null,
+    rigBrandID: null,
     rigBrand: null,
     rigModel: null,
     rigYear: null,

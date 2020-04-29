@@ -27,7 +27,7 @@ export class ProfilePercentComponent implements OnInit {
 
   private userProfile: Observable<IuserProfile>;
   private totalProfileFieldsWithData: number;
-  private totalPersonalNbrOfFields = 19;
+  private totalPersonalNbrOfFields = 18;
 
 
   constructor(private profileSvc: ProfileService,
@@ -77,7 +77,6 @@ export class ProfilePercentComponent implements OnInit {
       if (profileResult.traveling) { this.totalProfileFieldsWithData++; }
       if (profileResult.rigType) { this.totalProfileFieldsWithData++; }
       if (profileResult.rigYear) { this.totalProfileFieldsWithData++; }
-      if (profileResult.rigManufacturer) { this.totalProfileFieldsWithData++; }
       if (profileResult.rigBrand) { this.totalProfileFieldsWithData++; }
       if (profileResult.rigModel) { this.totalProfileFieldsWithData++; }
       this.percentProfileComplete = Math.round((this.totalProfileFieldsWithData / this.totalPersonalNbrOfFields) * 100);

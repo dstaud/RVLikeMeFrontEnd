@@ -196,7 +196,7 @@ export class ProfileComponent implements OnInit {
   // Determine the percent complete for each type of data in the form and display appropriate data
   private determinePercentComplete(profile) {
     let totalPersonalFieldsWithData = 0;
-    let totalPersonalNbrOfFields = 8;
+    let totalPersonalNbrOfFields = 7;
 
     let totalRigFieldsWithData = 0;
     let totalRigNbrOfFields = 5;
@@ -243,7 +243,6 @@ export class ProfileComponent implements OnInit {
     // Rig data
     if (profile.rigType) { totalRigFieldsWithData++; };
     if (profile.rigYear) { totalRigFieldsWithData++; };
-    if (profile.rigManufacturer) { totalRigFieldsWithData++; };
     if (profile.rigBrand) { totalRigFieldsWithData++; };
     if (profile.rigModel) { totalRigFieldsWithData++; };
     this.percentRig = (totalRigFieldsWithData / totalRigNbrOfFields) * 100;

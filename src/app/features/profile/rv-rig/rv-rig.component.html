@@ -69,7 +69,7 @@
               spellcheck="false"
               [matAutocomplete]="auto"
               (blur)="updateBrand()">
-      <mat-autocomplete #auto="matAutocomplete">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onBrandSelected($event.option.value)">
         <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brand">
           {{brand.brand}}
         </mat-option>

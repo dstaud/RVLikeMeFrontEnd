@@ -12,12 +12,12 @@ export interface IlikeMeCounts {
   aboutMe: number;
   rvUse: number;
   rigType: number;
-  worklife: number;
-  yearOfBirth: number;
-  rigLength: number;
   rigManufacturer: number;
   rigBrand: number;
   rigModel: number;
+  rigLength: number;
+  worklife: number;
+  yearOfBirth: number;
   campsWithMe: number;
   boondocking: number;
   traveling: number;
@@ -49,12 +49,12 @@ export class LikemeCountsService {
     aboutMe: 0,
     rvUse: 0,
     rigType: 0,
-    worklife: 0,
-    yearOfBirth: 0,
-    rigLength: 0,
     rigManufacturer: 0,
     rigBrand: 0,
     rigModel: 0,
+    rigLength: 0,
+    worklife: 0,
+    yearOfBirth: 0,
     campsWithMe: 0,
     boondocking: 0,
     traveling: 0,
@@ -95,6 +95,7 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
       this.dataStore.likeMeCounts.rvUse = counts.rvUse;
       this.dataStore.likeMeCounts.rigType = counts.rigType;
+      this.dataStore.likeMeCounts.rigManufacturer = counts.rigManufacturer;
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
 
@@ -129,7 +130,6 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.quilting = counts.quilting;
       this.dataStore.likeMeCounts.rigLength = counts.rigLength;
       this.dataStore.likeMeCounts.rigBrand = counts.rigBrand;
-      this.dataStore.likeMeCounts.rigManufacturer = counts.rigManufacturer;
       this.dataStore.likeMeCounts.rigModel = counts.rigModel;
       this.dataStore.likeMeCounts.rigYear = counts.rigYear;
       this.dataStore.likeMeCounts.travel = counts.travel;

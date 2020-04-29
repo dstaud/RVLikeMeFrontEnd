@@ -22,7 +22,11 @@
 }
 
 .icon {
-  margin-left: 10px;
+  margin-left: 5px;
+}
+
+.input-clear {
+  float: right;
 }
 
 mat-form-field {
@@ -50,6 +54,6 @@ mat-form-field {
 }
 
 .brand {
-  width: 80%;
+  width: 85%;
   max-width: 300px;
 }

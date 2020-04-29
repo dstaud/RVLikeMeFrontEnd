@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -24,17 +25,28 @@ export interface RigType {
   viewValue: string;
 }
 
+export interface RigBrandManufacturer {
+  brandID: string;
+  manufacturer: string;
+}
+
 @Component({
   selector: 'app-rvlm-rv-rig',
   templateUrl: './rv-rig.component.html',
   styleUrls: ['./rv-rig.component.scss']
 })
 export class RvRigComponent implements OnInit {
+
+  @Output()
+  optionSelected: EventEmitter<MatAutocompleteSelectedEvent>
+
+
   rigBrand = new FormControl('');
   rigType = new FormControl('', Validators.required);
   rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
   rigModel = new FormControl('');
   rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
+  brandSelected: string = null;
 
   rigImageUrls: Array<string> = [];
   rigData: Array<IrigData> = [];
@@ -45,7 +57,6 @@ export class RvRigComponent implements OnInit {
   // SaveIcons are shown next to each field as users leave the field, while doing the update
   showSpinner = false;
   showrigTypeSaveIcon = false;
-  showrigManufacturerSaveIcon = false;
   showrigBrandSaveIcon = false;
   showrigModelSaveIcon = false;
   showrigYearSaveIcon = false;
@@ -131,6 +142,12 @@ export class RvRigComponent implements OnInit {
   }
 
 
+  onBrandSelected(brand: string) {
+    console.log('RVRigComponent:onBrandSelected: optionSelected=', brand);
+    this.brandSelected = brand;
+  }
+
+
   // If user selects change, then have the user select a new file and then delete the old one before uploading the new one
   changeImage(row: number, event: any) {
     let fileType: string = 'rig';
@@ -211,8 +228,28 @@ export class RvRigComponent implements OnInit {
 
   // Update brand / Manufacturer data
   updateBrand() {
+    let brandInfo: RigBrandManufacturer;
+
+    console.log('RVRigComponent:updateBrand: brandSelected=', this.brandSelected);
     this.showrigBrandSaveIcon = true;
     this.profile.rigBrand = this.rigBrand.value;
+
+    if (this.brandSelected) {
+      if (this.rigBrand.value === this.brandSelected) {
+        brandInfo = this.getBrandInfo(this.brandSelected);
+        this.profile.rigBrandID = brandInfo.brandID;
+        this.profile.rigManufacturer = brandInfo.manufacturer;
+        console.log('RVRigComponent:updateBrand: input=selected. ID=', this.profile.rigBrandID);
+      } else {
+        console.log('RVRigComponent:updateBrand: input<>selected', this.brandSelected);
+        this.profile.rigBrandID = null;
+        this.profile.rigManufacturer = null;
+      }
+    } else {
+      this.profile.rigBrandID = null;
+      this.profile.rigManufacturer = null;
+    }
+    console.log('RVRigComponent:updateBrand: update profile=', this.profile.rigBrand, ',', this.profile.rigBrandID, ',', this.profile.rigManufacturer);
     this.updateRig('rigBrand');
   }
 
@@ -239,12 +276,31 @@ export class RvRigComponent implements OnInit {
   }
 
 
+  private getBrandInfo(brand: string): RigBrandManufacturer {
+    let brandID: string = null;
+    let manufacturer: string = null;
+    let result: any;
+
+    for (let i=0; i < this.rigData.length; i++) {
+      if (this.rigData[i].brand === brand) {
+        brandID = this.rigData[i]._id;
+        manufacturer = this.rigData[i].manufacturer;
+        break;
+      }
+    }
+
+    result = JSON.parse('{"brandID":"' + brandID + '","manufacturer":"' + manufacturer + '"}');
+
+    return result;
+  }
+
   private getRigData() {
     this.rigSvc.getRigData()
     .pipe(untilComponentDestroyed(this))
     .subscribe(rigData => {
       this.rigData = rigData;
       this.rigBrand.patchValue(this.profile.rigBrand);
+      this.brandSelected = null;
       this.showSpinner = false;
     }, error => {
       console.log('RVRigComponent:getRigData: error=', error);

@@ -15,8 +15,12 @@
       {{ rvUse }}
   </button>
   <button mat-button (click)="onSelectLikeMeCount('rigType')"
-  *ngIf="showRigType" class="user-count">
-    {{ rigType }}
-</button>
+    *ngIf="showRigType" class="user-count">
+      {{ rigType }}
+  </button>
+  <button mat-button (click)="onSelectLikeMeCount('rigManufacturer')"
+    *ngIf="showRigManufacturer" class="user-count">
+      {{ rigManufacturer }}
+  </button>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

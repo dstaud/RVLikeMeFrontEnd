@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 export interface IrigData {
   _id: string;
   brand: string;
+  manufacturer: string;
 }
 
 @Injectable({

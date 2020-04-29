@@ -29,16 +29,19 @@ export class LikemeCountsComponent implements OnInit {
   aboutMe: string;
   rigType: string;
   rvUse: string;
+  rigManufacturer
 
   showSpinner = false;
   showAllUsersCount = false;
   showAboutMe = false;
   showRigType = false;
   showRvUse = false;
+  showRigManufacturer = false;
 
   private aboutMeCount: number;
   private rigTypeCount: number;
   private rvUseCount: number;
+  private rigManufacturerCount: number;
   private likeMeDesc: string;
   private likeMeAnswer: string;
   private profile: IuserProfile;
@@ -83,10 +86,12 @@ export class LikemeCountsComponent implements OnInit {
       this.aboutMeCount = data.aboutMe;
       this.rigTypeCount = data.rigType;
       this.rvUseCount = data.rvUse;
+      this.rigManufacturerCount = data.rigManufacturer;
 
       if ((this.profile.aboutMe && this.aboutMeCount > 0) ||
           (this.profile.rigType && this.rigTypeCount > 0) ||
-          (this.profile.rvUse && this.rvUseCount > 0)) {
+          (this.profile.rvUse && this.rvUseCount > 0) ||
+          (this.profile.rigManufacturer && this.rigManufacturerCount > 0)) {
           this.matches = true;
       } else {
         this.matches = false;
@@ -126,6 +131,16 @@ export class LikemeCountsComponent implements OnInit {
         }
         this.likeMeAnswer = this.translate.instant('profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase());
         this.rvUse = this.rvUseCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
+      }
+      if (this.profile.rigManufacturer && this.rigManufacturerCount > 0  && this.profile.rigManufacturer.substring(0, 1) !== '@') {
+        this.showRigManufacturer = true;
+        if (this.rigManufacturerCount === 1) {
+          this.likeMeDesc = this.translate.instant('connections.component.rigManufacturer1');
+        } else {
+          this.likeMeDesc = this.translate.instant('connections.component.rigManufacturer');
+        }
+        this.likeMeAnswer = this.profile.rigManufacturer.toLowerCase();
+        this.rigManufacturer = this.rigManufacturerCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
     }, (error) => {
       this.showSpinner = false;

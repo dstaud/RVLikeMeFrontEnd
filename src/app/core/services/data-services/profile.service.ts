@@ -28,6 +28,7 @@ export interface IuserProfile {
   rigType: string;
   rigLength: number;
   rigManufacturer: string;
+  rigBrandID: string;
   rigBrand: string;
   rigModel: string;
   rigYear: number;
@@ -78,6 +79,7 @@ export class ProfileService {
     rigType: null,
     rigLength: null,
     rigManufacturer: null,
+    rigBrandID: null,
     rigBrand: null,
     rigModel: null,
     rigYear: null,
@@ -132,6 +134,7 @@ export class ProfileService {
       this.dataStore.profile.rigType = null;
       this.dataStore.profile.rigLength = null;
       this.dataStore.profile.rigManufacturer = null;
+      this.dataStore.profile.rigBrandID = null;
       this.dataStore.profile.rigBrand = null;
       this.dataStore.profile.rigModel = null;
       this.dataStore.profile.rigYear = null;
@@ -169,6 +172,10 @@ export class ProfileService {
   getUserProfile(userID: string): Observable<any> {
     let param = JSON.parse('{"userID":"' + userID + '"}');
     return this.http.get(`/api/profile-user`, { params: param });
+  }
+
+  getNewBrands(): Observable<any> {
+    return this.http.get(`/api/profile-new-brands`);
   }
 
   addProfile(userProfile: IuserProfile): Observable<any> {

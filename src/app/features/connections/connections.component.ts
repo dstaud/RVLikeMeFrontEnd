@@ -129,6 +129,7 @@ export class ConnectionsComponent implements OnInit {
     // If have a match, create a new array of nicely worded results that can be displayed
     // with checkboxes on the template.
     for (let i = 1; i < this.profileKeys.length; i++ ) {
+      console.log('ConnectionsComponent:displayMatches: key=', this.profileKeys[i])
       if (this.profileValues[i] && this.profileValues[i] !== null && this.profileValues[i] !== 'null') {
         if (this.profile[this.profileKeys[i]] === true) {
           this.foundMatch = true;
@@ -158,10 +159,15 @@ export class ConnectionsComponent implements OnInit {
                     'connections.component.' + this.profileKeys[i]
                     );
                 }
-                this.likeMeAnswer = this.translate.instant(
-                  'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
-                  );
+                if (this.profileKeys[i] === 'rigManufacturer') {
+                  this.likeMeAnswer = this.profile[this.profileKeys[i]];
                   this.processMatch(this.profileKeys[i], this.profileValues[i]);
+                } else {
+                  this.likeMeAnswer = this.translate.instant(
+                    'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
+                    );
+                    this.processMatch(this.profileKeys[i], this.profileValues[i]);
+                }
               }
             }
           } else {
@@ -321,7 +327,7 @@ export class ConnectionsComponent implements OnInit {
     this.likeMeCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
-      console.log('ConnectionsComponent:listenForLikeMeCounts: Got counts=', counts);
+      console.log('ConnectionsComponent:listenForLikeMeCounts: counts=', counts);
       this.displayMatches(counts);
     }, (error) => {
       this.showSpinner = false;
