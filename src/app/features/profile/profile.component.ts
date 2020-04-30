@@ -160,6 +160,11 @@ export class ProfileComponent implements OnInit {
 
   // On user selection of Other from aboutMe control, open dialog to collection information. If not other, update database.
   onSelectedAboutMe(event: string) {
+    if (event !== 'experienced') {
+      this.profile.helpNewbies = false;
+      this.form.patchValue({ helpNewbies: 'false'});
+    }
+
     if (event === 'other') {
       this.openOtherDialog(event);
     } else {
@@ -396,11 +401,19 @@ export class ProfileComponent implements OnInit {
       } else {
         this.totalLifestyleFieldsWithData--;
       }
+
       this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+
       if (this.percentLifestyle> 65) {
         this.lifestyleEnteredMostInfo = true;
       } else {
         this.lifestyleEnteredMostInfo = false;
+      }
+
+      if (this.profile.aboutMe === 'experienced') {
+        this.aboutMeExperienced = true;
+      } else {
+        this.aboutMeExperienced = false;
       }
     }, error => {
       this.showAboutMeSaveIcon = false;

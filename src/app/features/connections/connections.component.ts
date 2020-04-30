@@ -159,7 +159,7 @@ export class ConnectionsComponent implements OnInit {
                     'connections.component.' + this.profileKeys[i]
                     );
                 }
-                if (this.profileKeys[i] === 'rigManufacturer') {
+                if (this.profileKeys[i] === 'rigManufacturer' || this.profileKeys[i] === 'rigBrand') {
                   this.likeMeAnswer = this.profile[this.profileKeys[i]];
                   this.processMatch(this.profileKeys[i], this.profileValues[i]);
                 } else {

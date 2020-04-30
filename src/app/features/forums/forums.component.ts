@@ -264,13 +264,21 @@ export class ForumsComponent implements OnInit {
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;
         } else {
-          if (name === 'yearOfBirth' || name === 'rigLength') {
-            forumItem = 'forums.component.' + name;
+          if (name === 'rigManufacturer' || name === 'rigBrand') {
+            forumItem = this.translate.instant('forums.component.' + name) + ' ' + value;
           } else {
-            forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
+            if (name === 'yearOfBirth' || name === 'rigLength') {
+              forumItem = 'forums.component.' + name;
+            } else {
+              forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
+            }
           }
         }
-        groupProfileDisplayAttributesFromGroup.push(this.translate.instant(forumItem));
+        if (name === 'rigManufacturer' || name === 'rigBrand') {
+          groupProfileDisplayAttributesFromGroup.push(forumItem);
+        } else {
+          groupProfileDisplayAttributesFromGroup.push(this.translate.instant(forumItem));
+        }
       }
     }
     return groupProfileDisplayAttributesFromGroup;
