@@ -22,6 +22,9 @@ export class YourStoryComponent implements OnInit {
   userProfileImage: string;
   userAboutMe: string;
   userRigType: string;
+  userRigBrand: string;
+  userRigYear: number;
+  userRigModel: string;
   userRvUse: string;
   userDisplayName: string;
   userIdViewer: string;
@@ -132,7 +135,9 @@ export class YourStoryComponent implements OnInit {
       } else {
         this.userRigType = this.translate.instant('not entered yet');
       }
-
+      this.userRigBrand = profileResult.rigBrand;
+      this.userRigYear = profileResult.rigYear;
+      this.userRigModel = profileResult.rigModel;
       this.rigImageUrls = profileResult.rigImageUrls;
       this.lifestyleImageUrls = profileResult.lifestyleImageUrls;
     }, error => {

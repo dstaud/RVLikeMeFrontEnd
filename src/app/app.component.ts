@@ -27,7 +27,6 @@ import { UserTypeService } from './core/services/user-type.service';
 // TODO: Make sure unsubscribing to all subscriptions appropriately
 // TODO: Add push notifications and location information
 // TODO: Can the side-to-side shimmy because web page on IOS be handled?
-// TODO: For 'other' dialogs, when user clicks OK, pops up again
 // TODO: On iphone, after SW detects new version and user opts to upgrade, it crashes with 504 timeout getting profile
 // TODO: Nested back arrows
 

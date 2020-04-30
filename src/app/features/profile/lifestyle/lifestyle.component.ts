@@ -210,14 +210,6 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
-  // Automatically pop-up the 'other' dialog with the correct
-  // control and name when use clicks on select if other
-  onActivateSelectItem(control: string, controlDesc: string) {
-    if (this[control]) {
-      this.openOtherDialog(control, controlDesc, 'other');
-    }
-  }
-
 
   // Offer chance for experienced RVer to help out newbies
   onHelpNewbies(event: any) {

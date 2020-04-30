@@ -23,11 +23,11 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
         <mat-select matNativeControl
-                    (selectionChange)="onSelectedSelectItem('rigType', 'rig.component.rigTypeDesc', $event.source.value)"
-                    (openedChange) = "onActivateSelectItem('rigType', 'rig.component.rigTypeDesc')"
                     [formControl]="rigType">
           <mat-option aria-placeholder="Rig Type"
-                      *ngFor="let RigType of RigTypes" [value]="RigType.value">
+                      *ngFor="let RigType of RigTypes"
+                      [value]="RigType.value"
+                      (click)="onSelectedSelectItem('rigType', 'rig.component.rigTypeDesc', RigType.value)">
             {{ RigType.viewValue | translate }}
           </mat-option>
         </mat-select>
@@ -63,7 +63,7 @@
       <mat-label>{{ 'rig.component.rigBrand' | translate }}</mat-label>
       <input matInput
               type="text"
-              placeholder="Rig brand"
+              placeholder="Rig brand by manufacturer"
               aria-label="RV Brand"
               [formControl]="rigBrand"
               spellcheck="false"

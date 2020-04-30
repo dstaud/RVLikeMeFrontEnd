@@ -9,9 +9,6 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 
 import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
 
-// TODO: more interesting thigns on landing page
-// TODO: newbie corner to help newbies
-
 @Component({
   selector: 'app-rvlm-landing-page',
   templateUrl: './landing-page.component.html',

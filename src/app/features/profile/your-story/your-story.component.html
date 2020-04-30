@@ -26,7 +26,14 @@
   <div class="attributes">
     <p><span class="attribute-label">{{ 'yourstory.component.experience' | translate }}: </span>{{ userAboutMe | translate }}</p>
     <p><span class="attribute-label">{{ 'yourstory.component.howrv' | translate }}: </span>{{ userRvUse | translate }}</p>
-    <p><span class="attribute-label">{{ 'yourstory.component.rigtype' | translate }}: </span>{{ userRigType | translate }}</p>
+    <div class="row">
+      <div class="attribute-label column">
+        {{ 'yourstory.component.rigtype' | translate }}:
+      </div>
+      <div class="column">{{ userRigType | translate }}<br>
+                          {{ userRigYear }} {{ userRigBrand }} - {{ userRigModel }}
+      </div>
+    </div>
     <p><span class="attribute-label">{{ 'yourstory.component.rigpics' | translate }}: </span>
         <span *ngIf="rigImageUrls.length === 0">{{ 'yourstory.component.nopics' | translate }}</span></p>
     <div class="rig-images">

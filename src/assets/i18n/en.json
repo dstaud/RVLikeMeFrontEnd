@@ -206,16 +206,16 @@
         "none": "do not travel"
       },
       "rigtype": {
-        "a": "with a class A motorhome",
-        "b": "with a class B moterhome",
-        "c": "with a class C motorhome",
+        "a": "with a Class A motorhome",
+        "b": "with a Class B moterhome",
+        "c": "with a Class C motorhome",
         "sc": "with a Super C moterhome",
-        "fw": "with a fifth wheel trailer",
-        "tt": "with a travel trailer",
-        "tc": "with a truck camper",
-        "ft": "with a folding trailer",
-        "v": "with a van",
-        "cb": "with a customized bus"
+        "fw": "with a Fifth wheel trailer",
+        "tt": "with a Travel trailer",
+        "tc": "with a Truck camper",
+        "ft": "with a Folding trailer",
+        "v": "with a Van",
+        "cb": "with a Customized bus"
       }
     }
   },
@@ -384,16 +384,16 @@
         "other": "Other"
       },
       "rigtype": {
-        "a": "class A motorhome",
-        "b": "class B moterhome",
-        "c": "class C motorhome",
+        "a": "Class A motorhome",
+        "b": "Class B moterhome",
+        "c": "Class C motorhome",
         "sc": "Super C moterhome",
-        "fw": "fifth wheel trailer",
-        "tt": "travel trailer",
-        "tc": "truck camper",
-        "ft": "folding trailer",
-        "v": "van",
-        "cb": "customized bus",
+        "fw": "Fifth wheel trailer",
+        "tt": "Travel trailer",
+        "tc": "Truck camper",
+        "ft": "Folding trailer",
+        "v": "Van",
+        "cb": "Customized bus",
         "other": "Other"
       }
     }

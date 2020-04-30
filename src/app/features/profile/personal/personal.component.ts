@@ -215,9 +215,6 @@ export class PersonalComponent implements OnInit {
   }
 
 
-  // TODO: Run code auditor for security and anything else that may be helpful
-
-
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onProfileImageSelected(event: any) {
     let fileType: string = 'profile';

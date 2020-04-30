@@ -108,13 +108,6 @@ export class ProfileComponent implements OnInit {
 
    ngOnDestroy() { }
 
-  // If use touches aboutMe control and had previously selected 'other' then open the dialog to show what they had entered.
-  activatedAboutMe() {
-    if (this.aboutMeOther) {
-      this.openOtherDialog('other');
-    }
-  }
-
 
   // Offer chance for experienced RVer to help out newbies
   onHelpNewbies(event: any) {

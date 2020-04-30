@@ -18,8 +18,6 @@ import { RigService, IrigData } from '@services/data-services/rig.service';
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
-// TODO: Add rig database and hook to this component
-
 export interface RigType {
   value: string;
   viewValue: string;
@@ -42,7 +40,7 @@ export class RvRigComponent implements OnInit {
 
 
   rigBrand = new FormControl('');
-  rigType = new FormControl('', Validators.required);
+  rigType = new FormControl('');
   rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
   rigModel = new FormControl('');
   rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
@@ -123,23 +121,17 @@ export class RvRigComponent implements OnInit {
 
     this.listenForUserProfile();
 
+    console.log('RVRigComponent:ngOnInit: finishing ngOnInit')
+
     this.filteredBrands = this.rigBrand.valueChanges
     .pipe(
       startWith(''),
       map(value => this._filter(value))
     );
+    console.log('RVRigComponent:ngOnInit: finished ngOnInit')
   }
 
   ngOnDestroy() {}
-
-
-  // Automatically pop-up the 'other' dialog with the correct
-  // control and name when use clicks on select if other
-  onActivateSelectItem(control: string, controlDesc: string) {
-    if (this[control]) {
-      this.openOtherDialog(control, controlDesc, 'other');
-    }
-  }
 
 
   onBrandSelected(brand: string) {
@@ -181,11 +173,13 @@ export class RvRigComponent implements OnInit {
 
     // If user chose other, set description for dialog
     if (event === 'other') {
+      console.log('RVRigComponent:onSelectedSelectItem: control=', control, ' event=', event);
       this.openOtherDialog(control, controlDesc, event);
     } else {
 
       // If user did not choose other, call the correct update processor for the field selected
-      this[control] = '';
+      // this[control] = '';
+      console.log('RVRigComponent:onSelectedSelectItem: event=', event);
       this.updateSelectItem(control, event);
     }
   }
@@ -295,13 +289,16 @@ export class RvRigComponent implements OnInit {
   }
 
   private getRigData() {
+    console.log('RVRigComponent:getRigData: getting Rig Data')
     this.rigSvc.getRigData()
     .pipe(untilComponentDestroyed(this))
     .subscribe(rigData => {
+      console.log('RVRigComponent:getRigData: got rig data')
       this.rigData = rigData;
       this.rigBrand.patchValue(this.profile.rigBrand);
       this.brandSelected = null;
       this.showSpinner = false;
+      console.log('RVRigComponent:getRigData: spinner off')
     }, error => {
       console.log('RVRigComponent:getRigData: error=', error);
       this.showSpinner = false;
@@ -313,9 +310,10 @@ export class RvRigComponent implements OnInit {
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
   private handleOtherData(control: string): boolean {
     let result = false;
+    console.log('RVRigComponent:handleOtherData: control=', control, ' value=', this.profile[control])
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
-        this[control] = this.profile[control].substring(1, this.profile[control].length);
+        console.log('RVRigComponent:handleOtherData: rigType=', this[control])
         result = true;
       }
     }
@@ -338,13 +336,13 @@ export class RvRigComponent implements OnInit {
         } else {
           this.rigTypeFormValue = this.profile.rigType;
         }
-
-        this.rigType.patchValue (this.rigTypeFormValue);
+        console.log('RVRigComponent:listenForUserProfile: patching values')
+        this.rigType.patchValue(this.rigTypeFormValue);
         this.rigYear.patchValue(this.profile.rigYear);
         this.rigLength.patchValue(this.profile.rigLength);
         this.rigModel.patchValue(this.profile.rigModel);
         this.rigImageUrls = this.profile.rigImageUrls;
-
+        console.log('RVRigComponent:listenForUserProfile: getRigData')
         this.getRigData();
       }
     }, (error) => {
@@ -357,10 +355,16 @@ export class RvRigComponent implements OnInit {
 
   // Select form 'Other' Dialog
   private openOtherDialog(control: string, name: string, event: string): void {
+    let SaveIcon = 'show' + control + 'SaveIcon';
     let other = '';
     let selection = '';
-    other = this[control];
+    if (this.profile[control].substring(0,1) === '@') { // previous value was an entered other value
+      other = this.profile[control].substring(1, this.profile[control].length);
+    } else {
+      other = '';
+    }
 
+    console.log('RVRigComponent:openOtherDialog: control=', control, ' other=', other, ' event=', event)
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
       disableClose: true,
@@ -370,21 +374,28 @@ export class RvRigComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      if (result) {
-        if (result !== 'canceled') {
-          if (this[control] !== result ) {
-            this[control] = result;
+      if (result) { // A value was returned
+        console.log('RVRigComponent:openOtherDialog: A value was returned=', control, ' event=', event, ' result=', result);
+        if (result !== 'canceled') { // The user did not click the cancel button
+          console.log('RVRigComponent:openOtherDialog: User did not click the cancel button=', control, ' event=', event, ' result=', result);
+          if (other !== result ) { // The value was changed from original value
+            console.log('RVRigComponent:openOtherDialog: The value was changed from original value=', control, ' event=', event, ' result=', result);
+            // this[control] = result;
             this.profile[control] = '@' + result;
+            this[SaveIcon] = true;
             this.updateRig(control);
           }
         }
-      } else {
-        if (this[control]) {
-          this[control] = '';
+      } else { // No value was returned
+        console.log('RVRigComponent:openOtherDialog: no value was returned=', control, ' event=', event, ' result=', result);
+        if (this[control]) { // Control had a value before
+          // this[control] = '';
           this.profile[control] = null;
-          this.updateSelectItem(control, event);
+          console.log('RVRigComponent:openOtherDialog: but control have a value before=', control, ' event=', event, ' result=', result);
+          this.updateSelectItem(control, result);
           this[control].patchValue(null);
-        } else {
+        } else { // Control did not have a value before
+          console.log('RVRigComponent:openOtherDialog: ad control did not have a value before=', control, ' event=', event, ' result=', result);
           if (this.profile[control]) {
             selection = this.profile[control];
           }
@@ -440,13 +451,15 @@ export class RvRigComponent implements OnInit {
 
 
   // Pre-process form data and call update on server
-  private updateSelectItem(control: string, event) {
+  private updateSelectItem(control: string, event: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
-    if (event === '') {
+    if (!event) {
+      console.log('RVRigComponent:updateSelectItem: patching value to null');
       this.profile[control] = null;
       this[control].patchValue(null);
     } else {
+      console.log('RVRigComponent:updateSelectItem: setting profile and updating to =', event);
       this.profile[control] = event;
     }
     this.updateRig(control);

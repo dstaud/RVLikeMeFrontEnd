@@ -60,11 +60,11 @@
       <mat-form-field>
         <mat-select formControlName="aboutMe"
                     placeholder="{{ 'profile.component.aboutMe'| translate }}"
-                    (selectionChange)="onSelectedAboutMe($event.source.value)"
-                    (openedChange) = "activatedAboutMe()"
                     aria-label="my rv experience">
           <mat-option aria-placeholder="About Me"
-                      *ngFor="let AboutMe of AboutMes" [value]="AboutMe.value">
+                      *ngFor="let AboutMe of AboutMes"
+                      [value]="AboutMe.value"
+                      (click)="onSelectedAboutMe(AboutMe.value)">
                       {{ AboutMe.viewValue | translate }}
           </mat-option>
         </mat-select>
