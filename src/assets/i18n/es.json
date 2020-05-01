@@ -599,6 +599,11 @@
         "other": "Otro",
         "notdefined": "No entró en el perfil"
       },
+      "rigtypeagg": {
+        "motorhome": "Autocaravana",
+        "trailer": "Remolque",
+        "other": "Otro"
+      },
       "rigtype": {
         "a": "Autocaravana clase A",
         "b": "Autocaravana clase B",
