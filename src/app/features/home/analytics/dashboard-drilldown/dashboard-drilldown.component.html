@@ -1,3 +1,7 @@
 <div class="mat-app-background container mat-body-1">
   <p class="mat-title">Dashboard Drilldown</p>
+  <div *ngFor="let group of groupData">
+    <p>{{ group }}</p>
+  </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

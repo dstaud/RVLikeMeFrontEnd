@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ChartType, ChartOptions } from 'chart.js';
-import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+import { SingleDataSet } from 'ng2-charts';
 import { TranslateService } from '@ngx-translate/core';
 
 import { LikemeCountsService, IlikeMeCounts, IgroupByCounts } from '@services/data-services/likeme-counts.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
+import { ShareDataService } from './../../../core/services/share-data.service';
 
 export interface Ilegend {
   label: string,
@@ -24,16 +25,6 @@ export class AnalyticsComponent implements OnInit {
   @Input('control') control: string;
   @Input('theme') theme: string;
 
-  legend1: boolean = false;
-  legend2: boolean = false;
-  legend3: boolean = false;
-  legend4: boolean = false;
-
-  legend1Text: string = '';
-  legend2Text: string = '';
-  legend3Text: string = '';
-  legend4Text: string = '';
-
   controlData: Array<number> = [];
   controlLegends: Array<Ilegend> = [];
   allUsersCount: number;
@@ -41,20 +32,16 @@ export class AnalyticsComponent implements OnInit {
   showSpinner: boolean = false;
   showAllUsersCount: boolean = false;
 
-  // Pie
-  // pieChartData: SingleDataSet;
+  // Pie Chart Configuration
   pieChartData: SingleDataSet = this.controlData;
   pieChartOptions: ChartOptions = {
     responsive: true,
     tooltips: {enabled: false}
   };
-
   pieChartType: ChartType = 'pie';
   pieChartLegend = false;
   pieChartPlugins = [];
-
   chartColor: Array<string> = ['green','red','blue','black','yellow','orange','brown']
-
   chartColors: Array<any> = [
     { backgroundColor: this.chartColor}
   ]
@@ -65,9 +52,8 @@ export class AnalyticsComponent implements OnInit {
   constructor(private likeMeCountsSvc: LikemeCountsService,
               private translate: TranslateService,
               private router: Router,
+              private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService) {
-      // monkeyPatchChartJsTooltip();
-      // monkeyPatchChartJsLegend();
   }
 
   ngOnInit(): void {
@@ -80,6 +66,9 @@ export class AnalyticsComponent implements OnInit {
   ngOnDestroy() {}
 
   onChart() {
+    let params = '{"control":"' + this.control + '"}'
+    this.shareDataSvc.setData(params);
+
     this.activateBackArrowSvc.setBackRoute('home/dashboard');
     this.router.navigateByUrl('/home/dashboard-drilldown');
   }
