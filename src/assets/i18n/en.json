@@ -602,6 +602,11 @@
         "other": "Other",
         "notdefined": "Did not enter in profile"
       },
+      "rigtypeagg": {
+        "motorhome": "Motorhome",
+        "trailer": "Trailer",
+        "other": "Other"
+      },
       "rigtype": {
         "a": "Class A motorhome",
         "b": "Class B moterhome",

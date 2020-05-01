@@ -80,8 +80,6 @@ export class AnalyticsComponent implements OnInit {
   }
 
   private listenForGroupByCounts(control: string) {
-    let legend: string = '';
-
     this.showSpinner = true;
 
     this.groupByCounts = this.likeMeCountsSvc.groupByCounts;
@@ -91,31 +89,8 @@ export class AnalyticsComponent implements OnInit {
       console.log('AnalyticsComponent:listenForGroupByCounts: data=', counts);
       if (counts[control][0]._id !== '' && this.controlLegends.length === 0) {
 
-        console.log('AnalyticsComponent:listenForGroupByCounts: data=', counts);
-        for (let i=0; i < counts[control].length; i++) {
-          this.controlData.push(counts[control][i].count);
-          if (counts[control][i]._id === null) {
-            legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
-                                    '.notdefined') + ': ' + counts[control][i].count + ' RVers' + '",' +
-                      '"color":"' + this.chartColor[i] + '"}';
-            this.controlLegends.push(JSON.parse(legend));
-          } else if (counts[control][i]._id.substring(0,1) === '@') {
-            legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
-                                    '.other') + ': ' + counts[control][i].count + ' RVers' + '",' +
-                      '"color":"' + this.chartColor[i] + '"}';
-            this.controlLegends.push(JSON.parse(legend));
-          } else {
-            legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() + '.' +
-                                    counts[control][i]._id.toLowerCase()) + ': ' + counts[control][i].count + ' RVers' + '",' +
-                      '"color":"' + this.chartColor[i] + '"}';
-            this.controlLegends.push(JSON.parse(legend));
-          }
-        }
+        this.processCounts(control, counts);
 
-        console.log('AnalyticsComponent:listenForGroupByCounts: counts array=', this.controlData);
-        console.log('AnalyticsComponent:listenForGroupByCounts: counts label array=', this.controlLegends);
-
-        this.legend4Text = '';
 
         this.showSpinner = false;
       }
@@ -141,5 +116,83 @@ export class AnalyticsComponent implements OnInit {
     }, (error) => {
       console.error(error);
     });
+  }
+
+  private processCounts(control: string, counts: IgroupByCounts) {
+    let legend: string = '';
+
+    console.log('AnalyticsComponentprocessCountsCounts: data=', counts);
+
+    if (control === 'rigType') {
+      this.processRigTypeCounts(control, counts);
+    } else {
+      for (let i=0; i < counts[control].length; i++) {
+        this.controlData.push(counts[control][i].count);
+        if (counts[control][i]._id === null) {
+          legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
+                                  '.notdefined') + ': ' + counts[control][i].count + ' RVers' + '",' +
+                    '"color":"' + this.chartColor[i] + '"}';
+          this.controlLegends.push(JSON.parse(legend));
+        } else if (counts[control][i]._id.substring(0,1) === '@') {
+          legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
+                                  '.other') + ': ' + counts[control][i].count + ' RVers' + '",' +
+                    '"color":"' + this.chartColor[i] + '"}';
+          this.controlLegends.push(JSON.parse(legend));
+        } else {
+          legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() + '.' +
+                                  counts[control][i]._id.toLowerCase()) + ': ' + counts[control][i].count + ' RVers' + '",' +
+                    '"color":"' + this.chartColor[i] + '"}';
+          this.controlLegends.push(JSON.parse(legend));
+        }
+      }
+    }
+
+    console.log('AnalyticsComponent:processCounts: counts array=', this.controlData);
+    console.log('AnalyticsComponent:processCounts: counts label array=', this.controlLegends);
+  }
+
+  private processRigTypeCounts(control: string, counts: IgroupByCounts) {
+    let legend: string = '';
+    let motorhomeCount: number = 0;
+    let trailerCount: number = 0;
+    let otherCount: number = 0;
+
+    for (let i=0; i < counts[control].length; i++) {
+
+      if (counts[control][i]._id === null || counts[control][i]._id === 'null') {
+        otherCount = otherCount + counts[control][i].count;
+      } else if (counts[control][i]._id.toLowerCase() === 'a' ||
+          counts[control][i]._id.toLowerCase() === 'b' ||
+          counts[control][i]._id.toLowerCase() === 'c' ||
+          counts[control][i]._id.toLowerCase() === 'sc' ||
+          counts[control][i]._id.toLowerCase() === 'van' ||
+          counts[control][i]._id.toLowerCase() === 'cb' ||
+          counts[control][i]._id.toLowerCase() === 'tc') {
+            motorhomeCount = motorhomeCount + counts[control][i].count;
+      } else if (counts[control][i]._id.toLowerCase() === 'fw' ||
+                  counts[control][i]._id.toLowerCase() === 'tt' ||
+                  counts[control][i]._id.toLowerCase() === 'ft') {
+            trailerCount = trailerCount + counts[control][i].count;
+      } else {
+            otherCount = otherCount + counts[control][i].count;
+      }
+    }
+
+    this.controlData.push(motorhomeCount);
+    this.controlData.push(trailerCount);
+    this.controlData.push(otherCount);
+
+    legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.motorhome') + ': ' +
+              this.controlData[0] + ' RVers'+ '","color":"' + this.chartColor[0] + '"}';
+    this.controlLegends.push(JSON.parse(legend));
+    legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.trailer') + ': ' +
+              this.controlData[1] + ' RVers'+ '","color":"' + this.chartColor[1] + '"}';
+    this.controlLegends.push(JSON.parse(legend));
+    legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.other') + ': ' +
+              this.controlData[2] + ' RVers'+ '","color":"' + this.chartColor[2] + '"}';
+    this.controlLegends.push(JSON.parse(legend));
+
+    console.log('AnalyticsComponent:processRigTypeCounts: counts array=', this.controlData);
+    console.log('AnalyticsComponent:processRigTypeCounts: counts label array=', this.controlLegends);
   }
 }
