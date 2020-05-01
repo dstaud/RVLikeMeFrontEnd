@@ -1,0 +1,23 @@
+<div class="container mat-body-1" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+  <div class="heading">
+    <p>{{ 'analytics.component.title.' + control.toLowerCase() | translate }}</p>
+  </div>
+  <button mat-button
+    *ngIf="showAllUsersCount">
+    {{ "home.component.allUserCount1" | translate }} {{ this.allUsersCount }} {{ "home.component.allUserCount2" | translate }}
+  </button>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
+  <div>
+    <canvas baseChart
+      [colors]="chartColors"
+      [data]="pieChartData"
+      [chartType]="pieChartType"
+      [options]="pieChartOptions"
+      [plugins]="pieChartPlugins"
+      [legend]="pieChartLegend">
+    </canvas>
+    <p class="drilldown">({{ 'analytics.component.drilldown' | translate }})</p>
+    <div class="legend" *ngFor="let legend of controlLegends; let i=index">
+      <p class="legend-items" (click)="onChart(i)" [style.background-color]="legend.color">{{ legend.label }}</p>
+  </div>
+</div>

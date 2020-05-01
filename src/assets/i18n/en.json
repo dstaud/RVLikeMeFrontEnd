@@ -578,6 +578,44 @@
     "cancel": "cancel",
     "showAuthor": "Show who posted links",
     "noShowAuthor": "Hide who posted links"
-
+  },
+  "analytics.component": {
+    "drilldown": "click below to drill into data",
+    "title": {
+      "aboutme": "RVLikeMe users' RV experience",
+      "rvuse": "RVLikeMe users' RV lifestyle",
+      "rigtype": "RVLikeMe users' rigs"
+    },
+    "list": {
+      "aboutme": {
+        "dreamer": "Dreaming of RVing",
+        "newbie": "New to RVing",
+        "experienced": "Experienced RVer",
+        "notdefined": "Did not enter in profile"
+      },
+      "rvuse": {
+        "ft": "Full-time travel RVer",
+        "fs": "Full-time stationary RVer",
+        "fp": "F.T. with P.T. travel RVer",
+        "ps": "P.T. travel w home-base RVer",
+        "ny": "RVer wanna-be",
+        "other": "Other",
+        "notdefined": "Did not enter in profile"
+      },
+      "rigtype": {
+        "a": "Class A motorhome",
+        "b": "Class B moterhome",
+        "c": "Class C motorhome",
+        "sc": "Super C moterhome",
+        "fw": "Fifth wheel trailer",
+        "tt": "Travel trailer",
+        "tc": "Truck camper",
+        "ft": "Folding trailer",
+        "v": "Van",
+        "cb": "Customized bus",
+        "other": "Other",
+        "notdefined": "Did not enter in profile"
+      }
+    }
   }
 }

@@ -33,7 +33,8 @@ export class ProfilePercentComponent implements OnInit {
   constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
               private router: Router,
-              private activateBackArrowSvc: ActivateBackArrowService) { }
+              private activateBackArrowSvc: ActivateBackArrowService) {
+  }
 
   ngOnInit() {
     this.showSpinner = true;

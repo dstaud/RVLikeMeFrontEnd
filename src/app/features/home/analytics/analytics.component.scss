@@ -1,0 +1,43 @@
+@import './../../../../styles/_variables';
+
+.container {
+  border-radius: 25px;
+  padding: 10px;
+  background-color: $light-mode-group;
+}
+
+.heading {
+  margin-left: 15px;
+  font-weight: bold
+}
+
+.box-background-light {
+  background-color: $light-mode-group;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-group;
+}
+
+.drilldown {
+  text-align: center;
+  font-size: small;
+}
+
+.legend {
+  margin-top: 10px;
+  width: 230px;
+  margin: auto;
+}
+
+.legend-items {
+  color: white;
+  border-radius: 25px;
+  padding: 5px;
+  width: 230px;
+  text-align: center;
+}
+
+.spinner {
+  margin: auto;
+}

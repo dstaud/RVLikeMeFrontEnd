@@ -7,6 +7,21 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 
 import { SharedComponent } from '@shared/shared.component';
 
+export interface IgroupByCounts {
+  aboutMe: [{
+    _id: string;
+    count: number;
+  }],
+  rvUse: [{
+    _id: string;
+    count: number;
+  }],
+  rigType: [{
+    _id: string;
+    count: number;
+  }]
+}
+
 export interface IlikeMeCounts {
   allUsersCount: number;
   aboutMe: number;
@@ -77,12 +92,33 @@ export class LikemeCountsService {
     allCounts: false
   };
 
+  private groupByItemCounts: IgroupByCounts = {
+    aboutMe: [{
+      _id: '',
+      count: 0
+    }],
+    rvUse: [{
+      _id: '',
+      count: 0
+    }],
+    rigType: [{
+      _id: '',
+      count: 0
+    }]
+  }
+
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+
   private likeMeCountsSubscription: any;
   private _likeMeCounts = new BehaviorSubject<IlikeMeCounts>(this.likeMeUserCounts);
   private dataStore: { likeMeCounts: IlikeMeCounts } = { likeMeCounts: this.likeMeUserCounts }
   readonly likeMeCounts = this._likeMeCounts.asObservable();
+
+  private _groupByCounts = new BehaviorSubject<IgroupByCounts>(this.groupByItemCounts);
+  private dataStoreGroupBy: { groupByCounts: IgroupByCounts } = { groupByCounts: this.groupByItemCounts }
+  readonly groupByCounts = this._groupByCounts.asObservable();
+
 
   constructor(private http: HttpClient,
               private profileSvc: ProfileService,
@@ -158,5 +194,18 @@ export class LikemeCountsService {
     }
 
     return this.http.get(`/api/user-query`, { params: {name, value}});
+  }
+
+  getGroupByCounts() {
+    return this.http.get<IgroupByCounts>(`/api/analytics`)
+    .subscribe(counts => {
+      this.dataStoreGroupBy.groupByCounts = counts;
+
+      this._groupByCounts.next(Object.assign({}, this.dataStoreGroupBy).groupByCounts);
+
+    }, error => {
+      console.error('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
+      throw new Error(error);
+    });
   }
 }

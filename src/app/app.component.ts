@@ -285,6 +285,7 @@ export class AppComponent implements OnInit {
       // When we have actual profile data from the database, then go get the counts that will be used on the home page
       if (profile._id) {
         this.likeMeCountsSvc.getLikeMeCountsPriority();
+        this.likeMeCountsSvc.getGroupByCounts();
         this.userID = profile.userID;
         this.messagesSvc.getConversations();
       }

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
 import { Observable } from 'rxjs';
-
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -54,10 +53,10 @@ export class LikemeCountsComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private shared: SharedComponent) { }
+              private shared: SharedComponent) {
+  }
 
   ngOnInit() {
-
     this.showSpinner = true;
 
     this.listenForUserProfile();
@@ -142,6 +141,7 @@ export class LikemeCountsComponent implements OnInit {
         this.likeMeAnswer = this.profile.rigManufacturer.toLowerCase();
         this.rigManufacturer = this.rigManufacturerCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
+
     }, (error) => {
       this.showSpinner = false;
       console.error(error);

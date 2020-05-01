@@ -67,6 +67,10 @@
     "traveling1": "otros viajes",
     "rigType": "otros cuya plataforma es una",
     "rigType1": "otro cuya plataforma es un",
+    "rigManufacturer": "Otros con un",
+    "rigManufacturer1": "Otro con un",
+    "rigBrand": "Otros con un",
+    "rigBrand1": "Otro con un",
     "rigLength": "otros",
     "rigLength1": "otro",
     "interest": "Otros estan interesados ​​en",
@@ -85,6 +89,8 @@
     "less": "menos",
     "yearOfBirth": "tu edad (+/- 5anos)",
     "rigLength": "con una longitud de plataforma similar a la tuya (+/- 3ft)",
+    "rigManufacturer": "con un",
+    "rigBrand": "con un",
     "atv": "interesado en todoterreno",
     "motorcycle": "interesado en motociclismo",
     "travel": "interesado en viajar",
@@ -569,5 +575,44 @@
     "cancel": "Cancelar",
     "showAuthor": "Mostrar quién publicó el enlace",
     "noShowAuthor": "Ocultar quién publicó el enlace"
+  },
+  "analytics.component": {
+    "drilldown": "haga clic a continuación para profundizar en los datos",
+    "title": {
+      "aboutme": "Experiencia de RV de los usuarios de RVLikeMe",
+      "rvuse": "Estilo de vida de RV de los usuarios de RVLikeMe",
+      "rigtype": "Plataformas de usuarios RVLikeMe"
+    },
+    "list": {
+      "aboutme": {
+        "dreamer": "Soñando con RVing",
+        "newbie": "Nuevo en RVing",
+        "experienced": "RVer experimentado",
+        "notdefined": "No entró en el perfil"
+      },
+      "rvuse": {
+        "ft": "Viaje a tiempo completo RVer",
+        "fs": "RVer estacionario a tiempo completo",
+        "fp": "F.T. con P.T. viajes RVer",
+        "ps": "P.T. viajes con base en el hogar RVer",
+        "ny": "RVer quiere ser",
+        "other": "Otro",
+        "notdefined": "No entró en el perfil"
+      },
+      "rigtype": {
+        "a": "Autocaravana clase A",
+        "b": "Autocaravana clase B",
+        "c": "Autocaravana clase C",
+        "sc": "Super C moterhome",
+        "fw": "Remolque de quinta rueda",
+        "tt": "Remolque de viaje",
+        "tc": "Camión camper",
+        "ft": "Remolque plegable",
+        "v": "Camioneta",
+        "cb": "Bus personalizado",
+        "other": "Otro",
+        "notdefined": "No entró en el perfil"
+      }
+    }
   }
 }
