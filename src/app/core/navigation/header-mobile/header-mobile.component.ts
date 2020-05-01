@@ -77,13 +77,13 @@ export class HeaderMobileComponent implements OnInit {
 
   onChangeUsername() {
     this.router.navigateByUrl('/credentials');
-    this.activateBackArrowSvc.setBackRoute('/home');
+    this.activateBackArrowSvc.setBackRoute('/home/dashboard');
   }
 
 
   onUpdateProfile() {
     this.router.navigateByUrl('/profile');
-    this.activateBackArrowSvc.setBackRoute('home');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard');
   }
 
 

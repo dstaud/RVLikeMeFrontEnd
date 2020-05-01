@@ -580,7 +580,7 @@
     "noShowAuthor": "Hide who posted links"
   },
   "analytics.component": {
-    "drilldown": "click below to drill into data",
+    "drilldown": "click anywhere to drill into data",
     "title": {
       "aboutme": "RVLikeMe users' RV experience",
       "rvuse": "RVLikeMe users' RV lifestyle",

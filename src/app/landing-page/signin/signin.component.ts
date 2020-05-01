@@ -149,7 +149,7 @@ export class SigninComponent implements OnInit {
         // After user authorizied go to home page
         let params = '{"nbrLogins":"' + this.credentials.nbrLogins + '"}';
         this.ShareDataSvc.setData(params);
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/home/dashboard');
         this.activateBackArrowSvc.setBackRoute('');
       }
     }

@@ -10,13 +10,17 @@ import { SharedModule } from '../../shared/shared.module';
 import { ProfilePercentComponent } from './profile-percent/profile-percent.component';
 import { LikemeCountsComponent } from './likeme-counts/likeme-counts.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
+import { DashboardDrilldownComponent } from './analytics/dashboard-drilldown/dashboard-drilldown.component';
+import { DashboardComponent } from './analytics/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     ProfilePercentComponent,
     LikemeCountsComponent,
-    AnalyticsComponent
+    AnalyticsComponent,
+    DashboardDrilldownComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,

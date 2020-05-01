@@ -577,7 +577,7 @@
     "noShowAuthor": "Ocultar quién publicó el enlace"
   },
   "analytics.component": {
-    "drilldown": "haga clic a continuación para profundizar en los datos",
+    "drilldown": "haga clic en cualquier lugar para profundizar en los datos",
     "title": {
       "aboutme": "Experiencia de RV de los usuarios de RVLikeMe",
       "rvuse": "Estilo de vida de RV de los usuarios de RVLikeMe",

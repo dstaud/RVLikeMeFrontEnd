@@ -12,13 +12,12 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ShareDataService } from '@services/share-data.service';
 import { ThemeService } from '@services/theme.service';
 
-
 @Component({
-  selector: 'app-rvlm-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-rvlm-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   newbie: boolean = false;
   experiencedHelp: boolean = false;
   theme: string = 'light-theme';
@@ -37,15 +36,16 @@ export class HomeComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
+    console.log('IN DASHBOARD, NOT HOME')
     if (!this.auth.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
       this.router.navigateByUrl('/signin');
     }
-/*
+
     this.listenForColorTheme();
 
-    this.listenForUserProfile(); */
+    this.listenForUserProfile();
   }
 
   ngOnDestroy() {}

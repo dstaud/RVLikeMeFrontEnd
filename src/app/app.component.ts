@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
         // No need to login again.  However, if auth but coming to the root page, route to home.
         if (this.authSvc.isLoggedIn()) {
           if (event.url === '/') {
-            this.router.navigateByUrl('/home');
+            this.router.navigateByUrl('/home/dashboard');
           } else {
           }
         }

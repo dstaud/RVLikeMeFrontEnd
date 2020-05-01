@@ -81,7 +81,7 @@ export class LandingPageComponent implements OnInit {
         if (result === 'complete') {
           this.activateBackArrowSvc.setBackRoute('landing-page');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-          this.router.navigateByUrl('/home');
+          this.router.navigateByUrl('/home/dashboard');
         }
       });
     } else {

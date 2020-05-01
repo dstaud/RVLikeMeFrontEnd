@@ -69,7 +69,7 @@ export class LikemeCountsComponent implements OnInit {
 
   // If user clicks on one of the displayed Like Me counts on the home page, navigate to the Connections page in context.
   onSelectLikeMeCount(clickedItem: string) {
-    this.activateBackArrowSvc.setBackRoute('home');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard');
     this.router.navigate(['/connections'], { queryParams: { item: clickedItem }}); // NavigateByUrl has a bug and won't accept queryParams
   }
 

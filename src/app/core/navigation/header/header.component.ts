@@ -92,13 +92,13 @@ export class HeaderComponent implements OnInit {
 
   updateProfile() {
     this.router.navigateByUrl('/profile');
-    this.activateBackArrowSvc.setBackRoute('home');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard');
   }
 
 
   changeUsername() {
     this.router.navigateByUrl('/credentials');
-    this.activateBackArrowSvc.setBackRoute('/home');
+    this.activateBackArrowSvc.setBackRoute('/home/dashboard');
   }
 
 

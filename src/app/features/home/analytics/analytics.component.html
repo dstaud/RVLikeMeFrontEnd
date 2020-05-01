@@ -1,4 +1,6 @@
-<div class="container mat-body-1" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+<div class="container mat-body-1"
+      [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'"
+      (click)="onChart()">
   <div class="heading">
     <p>{{ 'analytics.component.title.' + control.toLowerCase() | translate }}</p>
   </div>
@@ -18,6 +20,6 @@
     </canvas>
     <p class="drilldown">({{ 'analytics.component.drilldown' | translate }})</p>
     <div class="legend" *ngFor="let legend of controlLegends; let i=index">
-      <p class="legend-items" (click)="onChart(i)" [style.background-color]="legend.color">{{ legend.label }}</p>
+      <p class="legend-items" [style.background-color]="legend.color">{{ legend.label }}</p>
   </div>
 </div>

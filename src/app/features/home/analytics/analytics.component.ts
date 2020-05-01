@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -7,6 +8,7 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 import { TranslateService } from '@ngx-translate/core';
 
 import { LikemeCountsService, IlikeMeCounts, IgroupByCounts } from '@services/data-services/likeme-counts.service';
+import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 
 export interface Ilegend {
   label: string,
@@ -61,7 +63,9 @@ export class AnalyticsComponent implements OnInit {
   private likeMeCounts: Observable<IlikeMeCounts>;
 
   constructor(private likeMeCountsSvc: LikemeCountsService,
-                      public translate: TranslateService) {
+              private translate: TranslateService,
+              private router: Router,
+              private activateBackArrowSvc: ActivateBackArrowService) {
       // monkeyPatchChartJsTooltip();
       // monkeyPatchChartJsLegend();
   }
@@ -75,8 +79,9 @@ export class AnalyticsComponent implements OnInit {
 
   ngOnDestroy() {}
 
-  onChart(event: any) {
-    console.log('Chart=', event);
+  onChart() {
+    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.router.navigateByUrl('/home/dashboard-drilldown');
   }
 
   private listenForGroupByCounts(control: string) {
