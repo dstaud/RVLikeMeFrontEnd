@@ -13,6 +13,7 @@ import { LikemeCountsService, IgroupByCounts } from '@services/data-services/lik
   styleUrls: ['./dashboard-drilldown.component.scss']
 })
 export class DashboardDrilldownComponent implements OnInit {
+  control: string;
   showSpinner: boolean = false;
   groupData: Array<string> = [];
 
@@ -24,14 +25,13 @@ export class DashboardDrilldownComponent implements OnInit {
 
   ngOnInit(): void {
     let params: any;
-    let control: string;
 
     params = this.shareDataSvc.getData();
-    control = JSON.parse(params).control;
+    this.control = JSON.parse(params).control;
 
-    console.log('DashboardDrilldownComponent:ngOnInit: control=', control);
+    console.log('DashboardDrilldownComponent:ngOnInit: control=', this.control);
 
-    this.listenForGroupByCounts(control);
+    this.listenForGroupByCounts(this.control);
   }
 
   ngOnDestroy() {}

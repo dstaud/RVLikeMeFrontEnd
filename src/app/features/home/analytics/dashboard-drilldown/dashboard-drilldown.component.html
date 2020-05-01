@@ -1,5 +1,5 @@
 <div class="mat-app-background container mat-body-1">
-  <p class="mat-title">Dashboard Drilldown</p>
+  <p class="mat-title">{{ 'analytics.component.title.' + control.toLowerCase() | translate}}</p>
   <div *ngFor="let group of groupData">
     <p>{{ group }}</p>
   </div>
