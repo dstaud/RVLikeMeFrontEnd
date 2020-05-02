@@ -19,7 +19,7 @@ import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-
 export class YourStoryComponent implements OnInit {
   userID : string;
   userMyStory: string;
-  userProfileImage: string;
+  userProfileImage: string = './../../../../assets/images/no-profile-pic.jpg';
   userAboutMe: string;
   userRigType: string;
   userRigBrand: string;
@@ -102,9 +102,8 @@ export class YourStoryComponent implements OnInit {
       }
       if (profileResult.profileImageUrl) {
         this.userProfileImage = profileResult.profileImageUrl;
-      } else {
-        this.userProfileImage = './../../../assets/images/no-profile-pic.jpg';
       }
+      console.log('YourStoryComponent:listenForUserProfile: profile image=', this.userProfileImage);
       this.userDisplayName = profileResult.displayName
       if (profileResult.aboutMe) {
         if (profileResult.aboutMe.substring(0,1) === '@') {

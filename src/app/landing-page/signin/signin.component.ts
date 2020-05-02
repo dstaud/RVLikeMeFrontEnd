@@ -15,8 +15,6 @@ import { ShareDataService } from '@services/share-data.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
-// TODO: Add forgot user id / password feature
-// TODO: Add change password feature
 
 @Component({
   selector: 'app-rvlm-signin',
@@ -26,7 +24,7 @@ import { SharedComponent } from '@shared/shared.component';
 export class SigninComponent implements OnInit {
 
   // Variable passed from the dialog when on desktop through this component's selector in the dialog compoment template
-  @Input('containerDialog') containerDialog = false;
+  @Input('containerDialog') containerDialog: boolean;
 
   // When user is in desktop mode, tell dialog container form is complete, through the reference obtained through the selector
   @Output() formComplete = new EventEmitter()
@@ -70,11 +68,15 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.headerVisibleSvc.toggleHeaderVisible(true);
-    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+    if (!this.ShareDataSvc.getData()) { // Unless came from landing-page, go back to landing-page.
+      this.router.navigateByUrl('');
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
 
-    this.setReturnRoute();
-   }
+      this.setReturnRoute();
+    }
+  }
 
   ngOnDestroy() {};
 
@@ -89,6 +91,15 @@ export class SigninComponent implements OnInit {
    onCancel() {
     this.formCompleted = 'canceled';
     this.formComplete.emit(this.formCompleted);
+  }
+
+
+  onForgotUserID() {
+    console.log('forgot User ID');
+  }
+
+  onForgotPassword() {
+    console.log('forgot Password');
   }
 
 
@@ -177,6 +188,8 @@ export class SigninComponent implements OnInit {
       this.shared.openSnackBar('It looks like you are having trouble connecting to the Internet','error', 5000);
     });
   }
+
+
   // Set dark/light color theme based on user preference or default of light-theme.
   private setColorTheme(profile) {
     if (profile.colorThemePreference) {

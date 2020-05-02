@@ -1,4 +1,31 @@
-.background {
+@import './../../../styles/_variables';
+
+.container {
   padding: 10px;
   margin-top: 50px;
+}
+
+.dave-image {
+  float:left;
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+}
+
+.dave {
+  margin-left: 90px;
+}
+
+.dave-story {
+  clear: left;
+  margin-top: 20px;
+}
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+}
+
+mat-divider {
+  margin-bottom: 10px;
 }

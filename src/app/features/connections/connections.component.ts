@@ -110,6 +110,11 @@ export class ConnectionsComponent implements OnInit {
   }
 
 
+  onProfile() {
+    this.activateBackArrowSvc.setBackRoute('connections');
+    this.router.navigateByUrl('/profile');
+  }
+
   // Display user-readable matches with counts
   private displayMatches(counts) {
     this.allUsersCount = counts.allUsersCount;

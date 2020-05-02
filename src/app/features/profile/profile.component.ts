@@ -14,7 +14,6 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ShareDataService } from '@services/share-data.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-// import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 export interface AboutMe {
   value: string;

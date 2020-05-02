@@ -6,6 +6,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
+import { ShareDataService } from './../core/services/share-data.service';
 
 import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
 
@@ -34,6 +35,7 @@ export class LandingPageComponent implements OnInit {
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private headerVisibleSvc: HeaderVisibleService,
               private dialog: MatDialog,
+              private shareDataSvc: ShareDataService,
               private router: Router) {
   }
 
@@ -76,6 +78,7 @@ export class LandingPageComponent implements OnInit {
   // When user selects signin, if mobile, go to signin component.
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
+    this.shareDataSvc.setData(true) // To indicate to signin page coming from landing page
     if (this.windowWidth > 600) {
       this.openDialog('signin', (result: string) => {
         if (result === 'complete') {

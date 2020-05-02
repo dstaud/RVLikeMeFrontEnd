@@ -92,7 +92,7 @@ export class HeaderMobileComponent implements OnInit {
     this.profileSvc.dispose();
     this.authSvc.setUserToAuthorized(false);
     this.headerVisibleSvc.toggleHeaderVisible(false);
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('');
   }
 
 

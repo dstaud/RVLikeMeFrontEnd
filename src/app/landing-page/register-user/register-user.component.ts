@@ -106,8 +106,8 @@ export class RegisterUserComponent implements OnInit {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
                 email: new FormControl('', [Validators.required, Validators.email]),
-                password: new FormControl('', Validators.required),
-                passwordConfirm: new FormControl('', Validators.required)
+                password: new FormControl('', Validators.required)
+                // passwordConfirm: new FormControl('', Validators.required)
               });
 }
 
@@ -134,15 +134,15 @@ export class RegisterUserComponent implements OnInit {
 
   // Register user on form submit
   onSubmit() {
-    if (this.form.controls.password.value !== this.form.controls.passwordConfirm.value) {
+/*     if (this.form.controls.password.value !== this.form.controls.passwordConfirm.value) {
       this.shared.openSnackBar('Passwords do not match', 'error');
       this.form.controls.password.reset();
       this.form.controls.passwordConfirm.reset();
       this.form.controls.password.markAllAsTouched();
       this.form.controls.password.setErrors({incorrect: true});
-    } else {
+    } else { */
       this.registerUser();
-    }
+    // }
   }
 
 

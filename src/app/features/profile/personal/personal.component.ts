@@ -167,7 +167,7 @@ export class PersonalComponent implements OnInit {
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
-                lastName: new FormControl(''),
+                // lastName: new FormControl(''),
                 displayName: new FormControl('', Validators.required),
                 yearOfBirth: new FormControl('',
                                               [Validators.minLength(4),
@@ -267,7 +267,7 @@ export class PersonalComponent implements OnInit {
         if (!profileResult.displayName) { this.profile.displayName = this.profile.firstName }
         this.form.patchValue ({
           firstName: this.profile.firstName,
-          lastName: this.profile.lastName,
+          // lastName: this.profile.lastName,
           displayName: this.profile.displayName,
           yearOfBirth: this.profile.yearOfBirth,
           gender: this.profile.gender,

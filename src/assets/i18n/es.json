@@ -38,7 +38,9 @@
   "connections.component": {
     "header": "Como yo",
     "heading": "Seleccione uno o más para conectarse con otros a través de foros",
-    "noResults": "Lo sentimos, no hay RVers como los que has encontrado todavía. Asegúrese de completar su perfil lo más completamente posible porque esto es lo que se utiliza para localizar a otros como usted. Además, vuelva a intentarlo e intente nuevamente porque a medida que otros usuarios se unen, encontrará a otros como usted.",
+    "noResults1": "Lo sentimos, no hay RVers como los que has encontrado todavía. Asegúrese de completar su",
+    "noResults2": "perfil",
+    "noResults3": "lo más completamente posible porque esto es lo que se usa para localizar a otros como tú. Además, vuelva a intentarlo e intente nuevamente porque a medida que otros usuarios se unen, encontrará a otros como usted.",
     "forumButton": "Conectarse en un grupo",
     "queryButton": "Buscar coincidencias combinadas",
     "cancelButton": "Cancelar",
@@ -619,5 +621,15 @@
         "notdefined": "No entró en el perfil"
       }
     }
+  },
+  "aboutme.component": {
+    "heading": "Sobre RV Like Me",
+    "daveIntro": "Mi nombre es Dave Staudenmaier y soy compañero de RVer y creador de RV Like Me.",
+    "clickPhoto": "Haga clic en mi foto para ver mi historia (pista: puede hacer esto por cualquier persona en RVLikeMe.com)",
+    "questions": "Si tiene alguna pregunta o sugerencia para mejorar esta aplicación web, no dude en ponerse en contacto conmigo en",
+    "body1": "Cuando comencé RVing estaba buscando un proyecto para mejorar mis habilidades de desarrollo de software y se me ocurrió la idea de RV Like Me; una aplicación web donde los usuarios pueden encontrar y conectarse más fácilmente con otros RVers que RV como lo hacen.",
+    "body2": "Lo que hace que esta aplicación web funcione es su información de perfil. Entiendo que puede ser incómodo proporcionar esta información, pero sin ella, esta aplicación no es muy útil.",
+    "body3": "Por eso no necesito que te identifiques. En su lugar, elige un nombre para mostrar y eso es todo lo que tengo en mi base de datos y todos los demás usuarios lo verán.",
+    "body4": "Sin embargo, si desea proporcionar su nombre completo, puede ingresarlo en el nombre para mostrar como lo hice yo."
   }
 }

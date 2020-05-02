@@ -1,6 +1,6 @@
-<div ngClass="background background-desktop mat-body-1"
-    [ngClass.xs]="{'background': true, 'background-desktop': false}"
-    [ngClass.md]="{'background': false, 'background-desktop': true}">
+<div ngClass="container container-desktop mat-body-1"
+    [ngClass.xs]="{'container': true, 'container-desktop': false}"
+    [ngClass.md]="{'container': false, 'container-desktop': true}">
   <div><span class="mat-title">{{ 'signin.component.header' | translate }}</span></div>
   <div *ngIf="httpError">
     <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
@@ -47,5 +47,9 @@
               [disabled]="!form.valid || showSpinner">Submit</button>
     </div>
   </form>
+
+  <div class="forgotGroup">
+    <span class="forgot" (click)="onForgotUserID()">Forgot User ID</span><span class="forgot" (click)="onForgotPassword()">Forgot Password</span>
+  </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

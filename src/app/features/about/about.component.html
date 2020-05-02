@@ -1,4 +1,18 @@
-<div class="mat-app-background background">
-  <h2 class="mat-h2">About content</h2>
+<div class="mat-app-background container mat-body-1">
+  <p class="mat-title">{{ 'aboutme.component.heading' | translate}}</p>
+  <div>
+    <img src="./../../../assets/images/dave.jpg" class="dave-image" (click)="onDaveStory()">
+    <div class="dave">
+      <p>{{ 'aboutme.component.daveIntro' | translate }}</p>
+    </div>
+  </div>
+  <div class="dave-story">
+    <p>{{ 'aboutme.component.clickPhoto' | translate }}</p>
+    <p>{{ 'aboutme.component.questions' | translate }} <a href="mailto:dave@rvlikeme.com" class="hyperlink">dave@rvlikeme.com</a>.</p>
+    <mat-divider></mat-divider>
+    <p>{{ 'aboutme.component.body1' | translate }}</p>
+    <p>{{ 'aboutme.component.body2' | translate }}</p>
+    <p>{{ 'aboutme.component.body3' | translate }}</p>
+    <p>{{ 'aboutme.component.body4' | translate }}</p>
+  </div>
 </div>
-<!-- TODO: populate About page -->

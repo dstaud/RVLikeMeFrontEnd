@@ -1,22 +1,11 @@
-.spinner {
-  position: fixed;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
+@import './../../../styles/_variables';
 
-mat-icon {
-  margin-right: 5px;
-}
-
-.background {
+.container {
   padding: 10px;
   margin-top: 50px;
 }
 
-.background-desktop {
+.container-desktop {
   padding: 10px;
   margin-top: 0px;
 }
@@ -33,7 +22,31 @@ mat-form-field {
   line-height: 1.4;
 }
 
+mat-icon {
+  margin-right: 5px;
+}
+
 .button {
   float: left;
   margin-right: 10px;
+}
+
+.forgotGroup {
+  clear: left;
+  margin-top: 70px;
+}
+
+.forgot {
+  margin-right: 30px;
+  color: $primary-color;
+  font-size: 90%;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

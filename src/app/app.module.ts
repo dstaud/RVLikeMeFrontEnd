@@ -44,6 +44,7 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
 import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 import { AdminComponent } from './features/admin/admin.component';
+import { EmailComponent } from './features/admin/email/email.component';
 
 
 
@@ -89,7 +90,8 @@ export function getErrorHandler(): ErrorHandler {
     UpdatePostDialogComponent,
     YourStoryComponent,
     SuggestTopicDialogComponent,
-    AdminComponent
+    AdminComponent,
+    EmailComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

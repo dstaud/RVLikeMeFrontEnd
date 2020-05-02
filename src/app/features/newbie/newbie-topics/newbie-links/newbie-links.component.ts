@@ -28,6 +28,7 @@ export class NewbieLinksComponent implements OnInit {
   newbieLinks: Array<InewbieLinks> = [];
   topicDescSentence: string;
   userType: string;
+  profileImageUrl: string = './../../../../../assets/images/no-profile-pic.jpg';
 
   showSpinner: boolean = false;
   showAddLink: boolean = false;
@@ -149,6 +150,11 @@ export class NewbieLinksComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
       this.profile = profile;
+
+      if (this.profile.profileImageUrl) {
+        this.profileImageUrl = this.profile.profileImageUrl;
+      }
+
     }, (error) => {
       console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);

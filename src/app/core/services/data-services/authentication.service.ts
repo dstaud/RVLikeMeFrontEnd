@@ -113,6 +113,7 @@ export class AuthenticationService {
   setUserToAdmin(admin): void {
     this._userAdmin.next(admin);
   }
+
   updateLoginCount(): Observable<any> {
     return this.http.put(`/api/login-count`, {});
   }
