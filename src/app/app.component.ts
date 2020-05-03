@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Router} from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -23,6 +23,8 @@ import { MessagesService, Iconversation, Imessage } from '@services/data-service
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { UserTypeService } from './core/services/user-type.service';
 
+import { routeTransitionAnimations } from './route-transition-animations';
+
 
 // TODO: Make sure unsubscribing to all subscriptions appropriately
 // TODO: Add push notifications and location information
@@ -34,7 +36,8 @@ import { UserTypeService } from './core/services/user-type.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [DeviceService]
+  providers: [DeviceService],
+  animations: [routeTransitionAnimations]
 })
 
 export class AppComponent implements OnInit {
@@ -132,6 +135,13 @@ export class AppComponent implements OnInit {
         }
     }, 16);
   }
+
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet &&
+      outlet.activatedRouteData &&
+      outlet.activatedRouteData['animationState'];
+   }
 
 
   // Listen for changes in color theme;

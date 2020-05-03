@@ -10,10 +10,16 @@ export class EmailSmtpService {
 
   constructor(private http: HttpClient) { }
 
-  sendEmail(sendTo: string, subject: string, body: string): Observable<any> {
+  sendEmail(sendTo: string, subject: string, body: string, toFirstName?: string): Observable<any> {
+    let firstName: string = '';
+
+    if (toFirstName) {
+      firstName = toFirstName
+    }
     let param = '{"sendTo":"' + sendTo + '",' +
                 '"subject":"' + subject + '",' +
-                '"body":"' + body + '"}';
+                '"body":"' + body + '",' +
+                '"toFirstName":"' + firstName + '"}';
 
     return this.http.post(`/api/send-email`, param, {});
   }

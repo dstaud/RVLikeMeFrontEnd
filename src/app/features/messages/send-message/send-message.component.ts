@@ -99,7 +99,7 @@ export class SendMessageComponent implements OnInit {
 
   // Use converation ID or from/to users to select the appropriate conversation
   private findConversation(conversations: Iconversation[], fromUserID: string, toUserID: string, conversationID?: string): number {
-    let index: number;
+    let index: number = -1;
 
     for (let i=0; i < conversations.length; i++) {
       if (conversationID) {
@@ -125,29 +125,33 @@ export class SendMessageComponent implements OnInit {
     this.userConversations
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
+      console.log('SendMessageComponent:getMessages: conversations from DB= ', conversations);
       if (conversations.length === 1 && conversations[0]._id === null) {
-        console.log('MessageListComponent:ngOnInit: default conversation ', conversations);
-      } else if (conversations.length === 0) {
-        this.newConversation = true;
-        this.conversation = null;
-        this.conversationID = null;
-        this.messages = [];
+        console.log('SendMessageComponent:getMessages: default conversation ', conversations);
       } else {
         let conversationIndex = this.findConversation(conversations, this.fromUserID, this.toUserID, this.conversationID);
-        this.conversation = conversations[conversationIndex];
-        this.conversationID = this.conversation._id;
-        this.newConversation = false;
-        this.messages = conversations[conversationIndex].messages;
-
-        if (conversations[conversationIndex].createdBy === this.fromUserID) {
-          this.originalMsgCount = conversations[conversationIndex].createdByUnreadMessages;
+        console.log('SendMessageComponent:getMessages: conversation index ', conversationIndex);
+        if (conversationIndex === -1) { // Indicates not found in collection
+          this.newConversation = true;
+          this.conversation = null;
+          this.conversationID = null;
+          this.messages = [];
         } else {
-          this.originalMsgCount = conversations[conversationIndex].withUserUnreadMessages;
-        }
-        if (this.originalMsgCount > 0) {
-          this.updateConversation('read');
-          this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
-          this.originalMsgCount = 0;
+          this.conversation = conversations[conversationIndex];
+          this.conversationID = this.conversation._id;
+          this.newConversation = false;
+          this.messages = conversations[conversationIndex].messages;
+
+          if (conversations[conversationIndex].createdBy === this.fromUserID) {
+            this.originalMsgCount = conversations[conversationIndex].createdByUnreadMessages;
+          } else {
+            this.originalMsgCount = conversations[conversationIndex].withUserUnreadMessages;
+          }
+          if (this.originalMsgCount > 0) {
+            this.updateConversation('read');
+            this.newMsgCountSvc.updateMessageCount(this.originalMsgCount);
+            this.originalMsgCount = 0;
+          }
         }
       }
       this.showSpinner = false;

@@ -53,17 +53,21 @@ const routes: Routes = [
     .then(m => m.CredentialsModule)
   },
   { path: 'settings',
-  loadChildren: () =>
-  import('./features/settings/settings.module')
-  .then(m => m.SettingsModule)
+    loadChildren: () =>
+    import('./features/settings/settings.module')
+    .then(m => m.SettingsModule)
   },
   { path: 'newbie',
-  loadChildren: () =>
-  import('./features/newbie/newbie.module')
-  .then(m => m.NewbieModule)
+    loadChildren: () =>
+    import('./features/newbie/newbie.module')
+    .then(m => m.NewbieModule)
+  },
+  { path: 'settings', loadChildren: () =>
+    import('./features/settings/settings.module')
+    .then(m => m.SettingsModule)
   },
   { path: 'signin', component: SigninComponent },
-  { path: 'register', component: RegisterUserComponent },
+  { path: 'register', component: RegisterUserComponent, data: { animationState: 'Two' } },
   { path: 'admin', component: AdminComponent },
   { path: 'learn-more', component: LearnMoreComponent },
   { path: 'profile-personal', component: PersonalComponent },
@@ -73,8 +77,7 @@ const routes: Routes = [
   { path: 'user-query', component: UserQueryComponent },
   { path: 'forums-list', component: ForumsListComponent },
   { path: 'mystory', component: YourStoryComponent },
-  { path: '', component: LandingPageComponent },
-  { path: 'settings', loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule) },
+  { path: '', component: LandingPageComponent, data: { animationState: 'One' } },
   { path: '**', component: PageNotFoundComponent }
 ];
 

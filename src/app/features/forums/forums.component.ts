@@ -88,6 +88,7 @@ export class ForumsComponent implements OnInit {
       this.groupID = group._id;
       this.updateProfileGroups();
       this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+      console.log('ForumsComponent:createGroupForum: back from get posts')
     }, error => {
       this.showSpinner = false;
       console.error('ForumsComponentcreateGroupForum: throw error ', error);
@@ -124,6 +125,7 @@ export class ForumsComponent implements OnInit {
           this.topicDesc = groupFromServer.topicDesc;
           console.log('ForumsComponent:getGroup: TopicID=', this.topicID, 'TopicDesc=', this.topicDesc);
           this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+          console.log('ForumsComponent:getGroup: back from get posts')
           this.showSpinner = false;
         }, error => {
           if (error.status === 404) {
@@ -134,6 +136,7 @@ export class ForumsComponent implements OnInit {
               this.topicDesc = groupTopic.topicDesc;
               console.log('ForumsComponent:getGroup: TopicID=', this.topicID, 'TopicDesc=', this.topicDesc);
               this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+              console.log('ForumsComponent:getGroup2: back from get posts')
               this.showSpinner = false;
             })
           }
@@ -154,6 +157,7 @@ export class ForumsComponent implements OnInit {
             }
 
             this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+            console.log('ForumsComponent:getGroup3: back from get posts')
             this.showSpinner = false;
 
           });
@@ -236,6 +240,7 @@ export class ForumsComponent implements OnInit {
       // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
         this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+        console.log('ForumsComponent:checkIfUserProfileHasGroupAndUpdate: back from get posts')
         this.showSpinner = false;
       } else {
         this.createGroupForum(names, values);

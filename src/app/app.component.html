@@ -12,12 +12,12 @@
                               (sidenavToggle)="sidenav.toggle()"
                               fxHide fxShow.lt-sm>
       </app-rvlm-header-mobile>
-      <main class="container mat-app-background"
+      <main [@triggerName]="prepareRoute(outlet)" class="container mat-app-background"
             [ngClass]="{
                       'bottom-bar-spacing': !headerDesktopVisible && userAuthorized && !iphoneModelxPlus,
                       'bottom-bar-spacing-xplus': userAuthorized && iphoneModelxPlus
                     }">
-        <router-outlet (activate)="onActivate($event)"></router-outlet>
+        <router-outlet #outlet="outlet" (activate)="onActivate($event)"></router-outlet>
       </main>
       <app-rvlm-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-footer>
     </mat-sidenav-content>

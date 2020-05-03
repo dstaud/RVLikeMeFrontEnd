@@ -16,6 +16,7 @@ export class EmailComponent implements OnInit {
               fb: FormBuilder) {
                 this.form = fb.group({
                   sendTo: new FormControl('', [Validators.required, Validators.email]),
+                  toFirstName: new FormControl(''),
                   subject: new FormControl('', Validators.required),
                   body: new FormControl('', Validators.required)
                 });
@@ -26,10 +27,11 @@ export class EmailComponent implements OnInit {
 
   onSendEmail() {
     let sendTo = this.form.controls.sendTo.value;
+    let toFirstName = this.form.controls.toFirstName.value;
     let subject = this.form.controls.subject.value;
     let body = this.form.controls.body.value;
 
-    this.emailSmtpSvc.sendEmail(sendTo, subject, body)
+    this.emailSmtpSvc.sendEmail(sendTo, subject, body, toFirstName)
     .subscribe(emailResult => {
       console.log('email sent!  result=', emailResult);
     }, error => {

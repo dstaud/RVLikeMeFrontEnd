@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -19,7 +20,24 @@ export type FadeState = 'visible' | 'hidden';
 @Component({
   selector: 'app-rvlm-posts',
   templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.scss']
+  styleUrls: ['./posts.component.scss'],
+  animations: [
+    trigger('addPostSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 
 export class PostsComponent implements OnInit {
@@ -46,8 +64,9 @@ export class PostsComponent implements OnInit {
   userNewbie: boolean = false;
   forumType: string;
 
+  addPostOpen: string = 'out';
+
   showSpinner = false;
-  showAddPost = false;
   showPosts = false;
   showFirstPost = false;
   showPostComments: Array<boolean> = [];
@@ -88,6 +107,20 @@ export class PostsComponent implements OnInit {
     this.displayName = displayName;
 
     this.getPostsFromDatabase();
+    console.log('PostsComponent:getPosts: back from getting posts from db');
+  }
+
+
+  // When user clicks to add a post, show the form
+  onAddPost() {
+    this.addPostOpen = this.addPostOpen === 'out' ? 'in' : 'out';
+    this.showFirstPost = false;
+  }
+
+
+  // When user clicks comment, open up the comments for viewing
+  onComment(row: number) {
+    this.showPostComments[row] = !this.showPostComments[row];
   }
 
 
@@ -108,35 +141,9 @@ export class PostsComponent implements OnInit {
   }
 
 
-  // When user clicks comment, open up the comments for viewing
-  onComment(row: number) {
-    this.showPostComments[row] = !this.showPostComments[row];
-  }
-
-
-  // When user clicks to see the story of another user, navigate to myStory page
-  onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
-    let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
-    let params = '{"userID":"' + toUserID + '",' +
-                      '"userIdViewer":"' + this.userID + '",' +
-                      '"params":' + userParams + '}';
-    this.activateBackArrowSvc.setBackRoute('forums-list');
-    this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/mystory');
-  }
-
-  // TODO: Add inifinity scrolling for posts
-
   // When user clicks to show all comments, set the start index to zero
   onShowAllComments() {
     this.startCommentsIndex[this.currentPostRow] = 0;
-  }
-
-
-  // When user clicks to add a post, show the form
-  onAddPost() {
-    this.showAddPost = true;
-    this.showFirstPost = false;
   }
 
 
@@ -169,6 +176,18 @@ export class PostsComponent implements OnInit {
   }
 
 
+  // When user clicks to see the story of another user, navigate to myStory page
+  onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
+    let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
+    let params = '{"userID":"' + toUserID + '",' +
+                      '"userIdViewer":"' + this.userID + '",' +
+                      '"params":' + userParams + '}';
+    this.activateBackArrowSvc.setBackRoute('forums-list');
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/mystory');
+  }
+
+
   // After submits their post, this is called from child component
   postAddComplete(newPost: any): void {
     if (newPost !== 'canceled') {
@@ -181,19 +200,7 @@ export class PostsComponent implements OnInit {
       this.showPosts = true;
       this.currentPostRow = 0;
     }
-    this.showAddPost = false;
-  }
-
-
-  // After submits their post, this is called from child component
-  postUpdateComplete(postResult: any): void {
-    let postIndex = postResult[0].postIndex;
-    let post = postResult[1];
-
-    if (post !== 'canceled') {
-      this.posts[postIndex].body = post.body;
-    }
-    this.showUpdatePost[postIndex] = false;
+    this.addPostOpen = this.addPostOpen === 'out' ? 'in' : 'out';
   }
 
 
@@ -211,6 +218,18 @@ export class PostsComponent implements OnInit {
     if (this.comments[currentRow].length > 4) {
       this.startCommentsIndex[currentRow]++
     }
+  }
+
+
+  // After submits their post, this is called from child component
+  postUpdateComplete(postResult: any): void {
+    let postIndex = postResult[0].postIndex;
+    let post = postResult[1];
+
+    if (post !== 'canceled') {
+      this.posts[postIndex].body = post.body;
+    }
+    this.showUpdatePost[postIndex] = false;
   }
 
 
@@ -274,6 +293,7 @@ export class PostsComponent implements OnInit {
     let postComments: Array<JSON> = [];
 
     this.posts = [];
+
     this.forumSvc.getPosts(this.groupID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
@@ -284,6 +304,7 @@ export class PostsComponent implements OnInit {
       } else {
         console.log('PostsComponent:getPostsFromDatabase: post=', postResult);
         this.comments= [];
+        console.log('PostsComponent:getPostsFromDatabase: create comments array');
         for (let j=0; j < postResult[0].comments.length; j++) {
           comment = this.createCommentsArrayEntry(postResult[0].comments[j]);
           postComments.push(comment);
@@ -298,6 +319,7 @@ export class PostsComponent implements OnInit {
         } else {
           this.startCommentsIndex.push(0);
         }
+        console.log('PostsComponent:getPostsFromDatabase: create posts array');
         for (let i=1; i < postResult.length; i++) {
           postComments = [];
           for (let j=0; j < postResult[i].comments.length; j++) {
@@ -317,10 +339,12 @@ export class PostsComponent implements OnInit {
           this.liked.push(this.checkIfLiked(postResult[i].reactions));
           this.comments.push(postComments);
         }
+
         this.showPosts = true;
         this.showFirstPost = false;
         this.showSpinner = false;
       }
+      console.log('PostsComponent:getPostsFromDatabase: leaving this function');
     }, error => {
       this.showSpinner = false;
       console.error('PostsComponent:getPosts: throw error ', error);
