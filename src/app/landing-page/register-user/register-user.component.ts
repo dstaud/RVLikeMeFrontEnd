@@ -12,6 +12,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
+import { HeaderVisibleService } from '@services/header-visibility.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -48,7 +49,7 @@ export class RegisterUserComponent implements OnInit {
     email: '',
     password: '',
     activateID: '',
-    active: true,
+    active: false,
     nbrLogins: 0,
     admin: false,
     tokenExpire: 0
@@ -106,6 +107,7 @@ export class RegisterUserComponent implements OnInit {
               private dialog: MatDialog,
               private router: Router,
               private emailSmtpSvc: EmailSmtpService,
+              private headerVisibleSvc: HeaderVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -156,22 +158,12 @@ export class RegisterUserComponent implements OnInit {
     this.profileSvc.addProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe((data) => {
-      this.showSpinner = false;
       // if (this.presentInstallOption) {
       //   // Show the app install prompt
       //   this.openInstallDialog();
       // } else if (!this.containerDialog) {
       this.sendRegisterEmail();
       // }
-
-      // After adding profile, log user out to clear token and go to the landing page
-      this.authSvc.logout();
-      if (this.containerDialog) {
-        this.formCompleted = 'complete';
-        this.formComplete.emit(this.formCompleted);
-      } else {
-        this.router.navigateByUrl('');
-      }
     });
   }
 
@@ -269,7 +261,17 @@ export class RegisterUserComponent implements OnInit {
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.activateID)
     .subscribe(emailResult => {
       console.log('email sent!  result=', emailResult);
-      this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 5000);
+      this.showSpinner = false;
+      this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
+      // After adding profile, log user out to clear token and go to the landing page
+      this.authSvc.logout();
+      if (this.containerDialog) {
+        this.formCompleted = 'complete';
+        this.formComplete.emit(this.formCompleted);
+      } else {
+        this.headerVisibleSvc.toggleHeaderVisible(false);
+        this.router.navigateByUrl('');
+      }
     }, error => {
       console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
     })

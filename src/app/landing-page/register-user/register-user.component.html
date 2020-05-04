@@ -1,6 +1,6 @@
 <div ngClass="container container-desktop mat-body-1"
-    [ngClass.xs]="{'background': true, 'background-desktop': false}"
-    [ngClass.md]="{'background': false, 'background-desktop': true}">
+    [ngClass.xs]="{'container': true, 'container-desktop': false}"
+    [ngClass.md]="{'container': false, 'container-desktop': true}">
   <div *ngIf="httpError">
     <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
   </div>

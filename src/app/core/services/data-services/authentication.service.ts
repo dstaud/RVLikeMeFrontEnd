@@ -23,6 +23,7 @@ export interface ItokenPayload {
 export interface ItokenResponse {
   token: string;
   activateID: UUID;
+  active: boolean;
 }
 
 @Injectable({

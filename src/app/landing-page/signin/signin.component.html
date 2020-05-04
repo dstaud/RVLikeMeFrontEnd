@@ -4,6 +4,9 @@
   <div><span class="mat-title">{{ 'signin.component.header' | translate }}</span></div>
   <div *ngIf="httpError">
     <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
+    <div *ngIf="notActive" class="activate-button">
+      <button class="mat-raised-button mat-primary" (click)="onActivateEmail()">Send new activation email</button>
+    </div>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div>
@@ -40,11 +43,11 @@
       <mat-icon matSuffix class="eyePassword" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </div>
     <div class="button">
-      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
-    </div>
-    <div class="button">
       <button type="submit" class="mat-raised-button mat-primary"
               [disabled]="!form.valid || showSpinner">Submit</button>
+    </div>
+    <div class="button">
+      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
     </div>
   </form>
 

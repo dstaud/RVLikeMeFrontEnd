@@ -99,8 +99,8 @@ export class LandingPageComponent implements OnInit {
   // For Desktop users, present register / signin as a dialog
   private openDialog(component: string, cb: CallableFunction): void {
     const dialogRef = this.dialog.open(DesktopDialogComponent, {
-      width: '340px',
-      height: '525px',
+      width: '400px',
+      height: '550px',
       disableClose: true,
       data: { component: component }
     });

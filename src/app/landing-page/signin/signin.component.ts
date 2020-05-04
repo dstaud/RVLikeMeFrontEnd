@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
+import { UUID } from 'angular2-uuid';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -12,6 +13,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService } from '@services/share-data.service';
+import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -32,11 +34,14 @@ export class SigninComponent implements OnInit {
 
   form: FormGroup;
   hidePassword: boolean = true;
+  notActive: boolean = false;
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
+  activateID: UUID;
 
   showSpinner = false;
 
+  private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private returnRoute: string = '';
   private credentials: ItokenPayload = {
@@ -44,7 +49,7 @@ export class SigninComponent implements OnInit {
     email: '',
     password: '',
     activateID: '',
-    active: true,
+    active: false,
     nbrLogins: 0,
     admin: false,
     tokenExpire: 0
@@ -57,6 +62,7 @@ export class SigninComponent implements OnInit {
               private shared: SharedComponent,
               private ShareDataSvc: ShareDataService,
               private router: Router,
+              private emailSmtpSvc: EmailSmtpService,
               private themeSvc: ThemeService,
               private language: LanguageService,
               fb: FormBuilder) {
@@ -88,6 +94,28 @@ export class SigninComponent implements OnInit {
   }
 
 
+  onActivateEmail() {
+    let sendTo = this.credentials.email;
+    let toFirstName = null;
+
+    console.log('SigninComponent:onActivateEmail: activateid=', this.activateID);
+    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.activateID)
+    .subscribe(emailResult => {
+      console.log('email sent!  result=', emailResult);
+      this.shared.openSnackBar('An email was sent to ' + this.form.controls.username.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
+
+      if (this.containerDialog) {
+        this.formCompleted = 'complete';
+        this.formComplete.emit(this.formCompleted);
+      } else {
+        this.headerVisibleSvc.toggleHeaderVisible(false);
+        this.router.navigateByUrl('');
+      }
+    }, error => {
+      console.log('SigninComponent:onActivateEmail: error sending email: ', error);
+    })
+  }
+
    // For desktop only, have cancel button because in a dialog
    onCancel() {
     this.formCompleted = 'canceled';
@@ -112,6 +140,7 @@ export class SigninComponent implements OnInit {
     this.httpError = false;
     this.httpErrorText = '';
     this.showSpinner = true;
+    this.notActive = false;
 
     // Login the user
     this.authSvc.login(this.credentials)
@@ -132,7 +161,10 @@ export class SigninComponent implements OnInit {
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else if (error.status === 403) {
-        this.httpErrorText = 'This account was deactivated';
+        this.notActive = true;
+        console.log('SigninComponenet:onSubmit not active, activateID=', JSON.parse(error.message).activateID);
+        this.activateID = JSON.parse(error.message).activateID
+        this.httpErrorText = 'This account is not yet active.  Please check for an email from rvlikeme.com to activate.  If you do not see the email, look in your spam or trash folders.';
       } else {
         this.httpErrorText = 'Please connect to Internet and retry';
         console.warn('ERROR: ', error);
@@ -173,6 +205,7 @@ export class SigninComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
+      this.profile = profileResult;
       this.setLanguage(profileResult);
       this.setColorTheme(profileResult);
       this.authSvc.setUserToAuthorized(true);

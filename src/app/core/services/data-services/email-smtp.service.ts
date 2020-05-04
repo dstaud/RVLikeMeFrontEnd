@@ -29,11 +29,27 @@ export class EmailSmtpService {
     if (toFirstName) {
       firstName = toFirstName
     }
+
     let param = '{"sendTo":"' + sendTo + '",' +
                 '"activateID":"' + activateID + '",' +
                 '"toFirstName":"' + firstName + '"}';
 
     console.log('EmailSMTPService:sendRegisterEmail: UUID=', activateID, ' param=', param);
     return this.http.post(`/api/send-register-email`, param, {});
+  }
+
+  sendWelcomeEmail(sendTo: string, toFirstName: string, activateID: UUID): Observable<any> {
+    let firstName: string = '';
+
+    if (toFirstName) {
+      firstName = toFirstName
+    }
+
+    let param = '{"sendTo":"' + sendTo + '",' +
+                '"activateID":"' + activateID + '",' +
+                '"toFirstName":"' + firstName + '"}';
+
+                console.log('EmailSMTPService:sendRegisterEmail: UUID=', activateID, ' param=', param);
+    return this.http.post(`/api/send-welcome-email`, param, {});
   }
 }
