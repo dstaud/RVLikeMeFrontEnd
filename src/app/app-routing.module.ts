@@ -15,6 +15,7 @@ import { UserQueryComponent } from './features/connections/user-query/user-query
 import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 import { YourStoryComponent } from './features/profile/your-story/your-story.component';
 import { AdminComponent } from './features/admin/admin.component';
+import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -77,6 +78,7 @@ const routes: Routes = [
   { path: 'user-query', component: UserQueryComponent },
   { path: 'forums-list', component: ForumsListComponent },
   { path: 'mystory', component: YourStoryComponent },
+  { path: 'register-confirm', component: RegisterConfirmComponent },
   { path: '', component: LandingPageComponent, data: { animationState: 'One' } },
   { path: '**', component: PageNotFoundComponent }
 ];

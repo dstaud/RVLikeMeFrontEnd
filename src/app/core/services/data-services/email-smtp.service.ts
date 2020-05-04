@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
+import { UUID } from 'angular2-uuid';
 
 import { Observable } from 'rxjs';
 
@@ -17,10 +18,22 @@ export class EmailSmtpService {
       firstName = toFirstName
     }
     let param = '{"sendTo":"' + sendTo + '",' +
-                '"subject":"' + subject + '",' +
-                '"body":"' + body + '",' +
                 '"toFirstName":"' + firstName + '"}';
 
     return this.http.post(`/api/send-email`, param, {});
+  }
+
+  sendRegisterEmail(sendTo: string, toFirstName: string, activateID: UUID): Observable<any> {
+    let firstName: string = '';
+
+    if (toFirstName) {
+      firstName = toFirstName
+    }
+    let param = '{"sendTo":"' + sendTo + '",' +
+                '"activateID":"' + activateID + '",' +
+                '"toFirstName":"' + firstName + '"}';
+
+    console.log('EmailSMTPService:sendRegisterEmail: UUID=', activateID, ' param=', param);
+    return this.http.post(`/api/send-register-email`, param, {});
   }
 }

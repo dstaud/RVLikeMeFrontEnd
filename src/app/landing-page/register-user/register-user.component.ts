@@ -2,14 +2,16 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { UUID } from 'angular2-uuid';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
+import { AuthenticationService, ItokenPayload, ItokenResponse } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
+import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -28,12 +30,13 @@ export class RegisterUserComponent implements OnInit {
 
   // When user is in desktop mode, tell dialog container form is complete, through the reference obtained through the selector
   @Output() formComplete = new EventEmitter()
-  public formCompleted: string;
+  formCompleted: string;
 
   form: FormGroup;
   hidePassword = true;
   httpError = false;
   httpErrorText = '';
+  activateID: UUID;
 
   showSpinner = false;
 
@@ -44,6 +47,7 @@ export class RegisterUserComponent implements OnInit {
     _id: '',
     email: '',
     password: '',
+    activateID: '',
     active: true,
     nbrLogins: 0,
     admin: false,
@@ -101,6 +105,7 @@ export class RegisterUserComponent implements OnInit {
               private beforeInstallEventSvc: BeforeInstallEventService,
               private dialog: MatDialog,
               private router: Router,
+              private emailSmtpSvc: EmailSmtpService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -152,21 +157,20 @@ export class RegisterUserComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe((data) => {
       this.showSpinner = false;
-      if (this.presentInstallOption) {
-        // Show the app install prompt
-        this.openInstallDialog();
-      } else if (!this.containerDialog) {
-        this.shared.openSnackBar('Credentials saved.  Please sign in', 'message', 2000);
-      }
+      // if (this.presentInstallOption) {
+      //   // Show the app install prompt
+      //   this.openInstallDialog();
+      // } else if (!this.containerDialog) {
+      this.sendRegisterEmail();
+      // }
 
-      // After adding profile, log user out to clear token and go to the signin page
+      // After adding profile, log user out to clear token and go to the landing page
       this.authSvc.logout();
       if (this.containerDialog) {
         this.formCompleted = 'complete';
         this.formComplete.emit(this.formCompleted);
       } else {
-        this.activateBackArrowSvc.setBackRoute('landing-page');
-        this.router.navigateByUrl('/signin');
+        this.router.navigateByUrl('');
       }
     });
   }
@@ -227,6 +231,8 @@ export class RegisterUserComponent implements OnInit {
       if (responseData.status === 201) {
         this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
       } else {
+        console.log('RegisterUserComponent:registerUser: response=', responseData);
+        this.activateID = responseData.activateID;
         this.profile.firstName = this.form.controls.firstName.value;
         this.profile.language = 'en';
         this.profile.colorThemePreference = 'light-theme';
@@ -252,5 +258,20 @@ export class RegisterUserComponent implements OnInit {
         }
       }
     });
+  }
+
+
+  private sendRegisterEmail() {
+    let sendTo = this.credentials.email;
+    let toFirstName = this.profile.firstName;
+
+    console.log('RegisterUser:sendRegisterEmail: activateid=', this.activateID);
+    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.activateID)
+    .subscribe(emailResult => {
+      console.log('email sent!  result=', emailResult);
+      this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 5000);
+    }, error => {
+      console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
+    })
   }
 }

@@ -45,6 +45,7 @@ import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { EmailComponent } from './features/admin/email/email.component';
+import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
 
 
 Sentry.init({
@@ -90,7 +91,8 @@ export function getErrorHandler(): ErrorHandler {
     YourStoryComponent,
     SuggestTopicDialogComponent,
     AdminComponent,
-    EmailComponent
+    EmailComponent,
+    RegisterConfirmComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

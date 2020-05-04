@@ -17,8 +17,8 @@ export class EmailComponent implements OnInit {
                 this.form = fb.group({
                   sendTo: new FormControl('', [Validators.required, Validators.email]),
                   toFirstName: new FormControl(''),
-                  subject: new FormControl('', Validators.required),
-                  body: new FormControl('', Validators.required)
+                  subject: new FormControl(''),
+                  body: new FormControl('')
                 });
      }
 

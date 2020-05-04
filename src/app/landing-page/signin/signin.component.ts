@@ -43,6 +43,7 @@ export class SigninComponent implements OnInit {
     _id: '',
     email: '',
     password: '',
+    activateID: '',
     active: true,
     nbrLogins: 0,
     admin: false,

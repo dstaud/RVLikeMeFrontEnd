@@ -75,7 +75,7 @@ export class CredentialsComponent implements OnInit {
 
   // Get username from database
   private getCredentials() {
-    this.authSvc.getUsername()
+    this.authSvc.getUser()
     .pipe(take(1))
     .subscribe(credentials => {
       this.credentials = credentials;

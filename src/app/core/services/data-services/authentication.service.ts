@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
+import { UUID } from 'angular2-uuid';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -12,6 +13,7 @@ export interface ItokenPayload {
   _id: string;
   email: string;
   password: string;
+  activateID: UUID;
   active: boolean;
   nbrLogins: number;
   admin: boolean;
@@ -20,6 +22,7 @@ export interface ItokenPayload {
 
 export interface ItokenResponse {
   token: string;
+  activateID: UUID;
 }
 
 @Injectable({
@@ -39,7 +42,14 @@ export class AuthenticationService {
               private sentryMonitorSvc: SentryMonitorService) { }
 
 
-  getUsername(): Observable<any> {
+  activateUser(activationID: string): Observable<any> {
+    let params = '{"activateID":"' + activationID + '"}';
+
+    console.log('AuthenticationService:activateUser: params=', params);
+    return this.http.put(`/api/activate`, params, {});
+  }
+
+  getUser(): Observable<any> {
     return this.http.get(`/api/username`);
   }
 
@@ -93,6 +103,10 @@ export class AuthenticationService {
 
   registerUser(user: ItokenPayload): Observable<any> {
     let base;
+
+    user.activateID = this.generateUUID();
+
+    console.log('AuthenticationService:registerUser: user=', user);
     base = this.http.post(`/api/register`, user);
     const request = base.pipe(
       map((data: ItokenResponse) => {
@@ -120,6 +134,16 @@ export class AuthenticationService {
 
   updateUsername(user: ItokenPayload): Observable<any> {
     return this.http.put(`/api/username`, user, {});
+  }
+
+  confirmRegistration(regCode: string): Observable<any> {
+    let param = JSON.parse('{"regCode":"' + regCode + '"}');
+    return this.http.get(`/api/confirm-reg`, { params: param });
+  }
+
+  private generateUUID(): UUID{
+    let uuidValue = UUID.UUID();
+    return uuidValue;
   }
 
   private getToken(): string {
