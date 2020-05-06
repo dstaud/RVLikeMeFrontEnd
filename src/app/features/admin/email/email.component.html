@@ -48,13 +48,14 @@
     </div>
 
     <div>
-      <div class="button1">
+      <div>
         <button [disabled]="!form.valid"
                 class="mat-raised-button mat-primary"
                 (click)="onSendEmail()">
-                Send Email
+                Send
         </button>
       </div>
     </div>
   </form>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

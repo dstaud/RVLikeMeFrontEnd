@@ -10,7 +10,7 @@ import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 })
 export class EmailComponent implements OnInit {
   form: FormGroup;
-
+  showSpinner: boolean = false;
 
   constructor(private emailSmtpSvc: EmailSmtpService,
               fb: FormBuilder) {
@@ -26,6 +26,8 @@ export class EmailComponent implements OnInit {
   }
 
   onSendEmail() {
+    this.showSpinner = true;
+
     let sendTo = this.form.controls.sendTo.value;
     let toFirstName = this.form.controls.toFirstName.value;
     let subject = this.form.controls.subject.value;
@@ -34,8 +36,11 @@ export class EmailComponent implements OnInit {
     this.emailSmtpSvc.sendEmail(sendTo, subject, body, toFirstName)
     .subscribe(emailResult => {
       console.log('email sent!  result=', emailResult);
+      this.showSpinner = false;
     }, error => {
-      console.log('EmailComponent:onSendEmail: error sending email: ', error);
+      alert('EmailComponent:onSendEmail: error sending email');
+      console.log('EmailComponent:onSendEmail: error sending email=',error)
+      this.showSpinner = false;
     })
   }
 }

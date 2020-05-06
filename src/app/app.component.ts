@@ -22,6 +22,8 @@ import { LikemeCountsService } from '@services/data-services/likeme-counts.servi
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { UserTypeService } from './core/services/user-type.service';
+import { AdminService } from '@services/data-services/admin.service';
+import { UsingEmailService } from './core/services/using-email.service';
 
 import { routeTransitionAnimations } from './route-transition-animations';
 
@@ -69,6 +71,8 @@ export class AppComponent implements OnInit {
               private beforeInstallEventSvc: BeforeInstallEventService,
               private newMsgCountSvc: NewMessageCountService,
               private userTypeSvc: UserTypeService,
+              private UsingEmailSvc: UsingEmailService,
+              private adminSvc: AdminService,
               private swUpdate: SwUpdate,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -116,6 +120,8 @@ export class AppComponent implements OnInit {
 
     this.listenForInstallPrompts();
 
+    this.getSystemConfiguration();
+
   };
 
   ngOnDestroy() {
@@ -142,6 +148,20 @@ export class AppComponent implements OnInit {
       outlet.activatedRouteData &&
       outlet.activatedRouteData['animationState'];
    }
+
+
+  // Get system configuration variables
+  private getSystemConfiguration() {
+    this.adminSvc.getSystemData()
+    .subscribe(systemResult => {
+      if (systemResult.length > 0) {
+        this.UsingEmailSvc.setUseEmail(systemResult[0].useEmail);
+        console.log('AppComponent:getSystemConfiguration: useEmail set to', systemResult[0].useEmail);
+      }
+    }, error => {
+      console.log('AppComponent:getSystemConfiguration: error=', error);
+    })
+  }
 
 
   // Listen for changes in color theme;

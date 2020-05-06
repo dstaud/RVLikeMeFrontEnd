@@ -18,6 +18,8 @@ export class EmailSmtpService {
       firstName = toFirstName
     }
     let param = '{"sendTo":"' + sendTo + '",' +
+                '"subject":"' + subject + '",' +
+                '"body":"' + body + '",' +
                 '"toFirstName":"' + firstName + '"}';
 
     return this.http.post(`/api/send-email`, param, {});
@@ -49,7 +51,7 @@ export class EmailSmtpService {
                 '"activateID":"' + activateID + '",' +
                 '"toFirstName":"' + firstName + '"}';
 
-                console.log('EmailSMTPService:sendRegisterEmail: UUID=', activateID, ' param=', param);
+    console.log('EmailSMTPService:sendWelcomeEmail: UUID=', activateID, ' param=', param);
     return this.http.post(`/api/send-welcome-email`, param, {});
   }
 }

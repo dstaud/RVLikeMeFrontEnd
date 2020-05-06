@@ -13,6 +13,7 @@ import { BeforeInstallEventService } from '@services/before-install-event.servic
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
+import { UsingEmailService } from '@services/using-email.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -43,6 +44,7 @@ export class RegisterUserComponent implements OnInit {
 
   private presentInstallOption = false;
   private event: any;
+  private useEmail: boolean;
 
   private credentials: ItokenPayload = {
     _id: '',
@@ -106,6 +108,7 @@ export class RegisterUserComponent implements OnInit {
               private beforeInstallEventSvc: BeforeInstallEventService,
               private dialog: MatDialog,
               private router: Router,
+              private UsingEmailSvc: UsingEmailService,
               private emailSmtpSvc: EmailSmtpService,
               private headerVisibleSvc: HeaderVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -120,6 +123,8 @@ export class RegisterUserComponent implements OnInit {
 
   ngOnInit() {
     this.onBeforeInstallEventOfferInstallApp();
+
+    this.listenForSystemConfiguration();
   }
 
   ngOnDestroy() {};
@@ -162,9 +167,35 @@ export class RegisterUserComponent implements OnInit {
       //   // Show the app install prompt
       //   this.openInstallDialog();
       // } else if (!this.containerDialog) {
-      this.sendRegisterEmail();
+      if (this.useEmail) {
+        this.sendRegisterEmail();
+      } else {
+        this.showSpinner = false;
+        this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
+        // After adding profile, log user out to clear token and go to the landing page
+        this.authSvc.logout();
+        if (this.containerDialog) {
+          this.formCompleted = 'complete';
+          this.formComplete.emit(this.formCompleted);
+        } else {
+          this.headerVisibleSvc.toggleHeaderVisible(false);
+          this.router.navigateByUrl('/');
+        }
+      }
       // }
     });
+  }
+
+  // Determine if using email for registration or overriding
+  private listenForSystemConfiguration() {
+    this.UsingEmailSvc.useEmail
+    .subscribe(useEmail => {
+      console.log('RegisterUserComponent:listenForSystemConfiguration: useEmailResults', useEmail);
+      this.useEmail = useEmail;
+      console.log('RegisterUserComponent:listenForSystemConfiguration: useEmail=', this.useEmail);
+    }, error => {
+      console.log('RegisterUserComponent:listenForSystemConfiguration: error=', error);
+    })
   }
 
 
@@ -215,8 +246,15 @@ export class RegisterUserComponent implements OnInit {
     this.credentials.email = this.form.controls.email.value;
     this.credentials.email = this.credentials.email.toLowerCase();
     this.credentials.password = this.form.controls.password.value;
+    if (this.useEmail) {
+      this.credentials.active = false;
+    } else {
+      this.credentials.active = true;
+    }
+
     this.showSpinner = true;
 
+    console.log('RegisterUserComponent:RegisterUser: credential=', this.credentials)
     this.authSvc.registerUser(this.credentials)
     .pipe(untilComponentDestroyed(this))
     .subscribe((responseData) => {
@@ -270,7 +308,7 @@ export class RegisterUserComponent implements OnInit {
         this.formComplete.emit(this.formCompleted);
       } else {
         this.headerVisibleSvc.toggleHeaderVisible(false);
-        this.router.navigateByUrl('');
+        this.router.navigateByUrl('/');
       }
     }, error => {
       console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);

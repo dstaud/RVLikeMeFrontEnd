@@ -1,0 +1,20 @@
+<div>
+  <form [formGroup]="form">
+    <mat-checkbox formControlName="useEmail"
+                  class="checkbox">
+                  Use Email
+    </mat-checkbox>
+    <br>
+    <br>
+    <div>
+      <div>
+        <button [disabled]="!form.valid"
+                class="mat-raised-button mat-primary"
+                (click)="onSubmit()">
+                Submit
+        </button>
+      </div>
+    </div>
+  </form>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>

@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { ProfileService } from '@services/data-services/profile.service';
 
 import { SentryMonitorService } from './../sentry-monitor.service';
+import { AdminService } from '@services/data-services/admin.service';
 
 export interface ItokenPayload {
   _id: string;
@@ -40,6 +41,7 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient,
               private profileSvc: ProfileService,
+              private adminSvc: AdminService,
               private sentryMonitorSvc: SentryMonitorService) { }
 
 
