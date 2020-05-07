@@ -178,10 +178,6 @@ export class ProfileService {
     return this.http.get(`/api/profile-new-brands`);
   }
 
-  addProfile(userProfile: IuserProfile): Observable<any> {
-    return this.http.post(`/api/profile`, userProfile, {});
-  }
-
   distributeProfileUpdate(userProfile: IuserProfile) {
     this.dataStore.profile = userProfile;
     this._profile.next(Object.assign({}, this.dataStore).profile);

@@ -12,6 +12,7 @@ import { MessagesService, Iconversation, Imessage } from '@services/data-service
 import { ShareDataService } from '@services/share-data.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { ThemeService } from '@services/theme.service';
+import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -48,6 +49,7 @@ export class SendMessageComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private newMsgCountSvc: NewMessageCountService,
               private themeSvc: ThemeService,
+              private emailSmtpSvc: EmailSmtpService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -85,6 +87,7 @@ export class SendMessageComponent implements OnInit {
 
       if (this.newConversation) {
         this.messagesSvc.getConversations();
+        this.sendNotificationToRecipient();
       } else {
         this.updateConversation('sent');
       }
@@ -202,6 +205,23 @@ export class SendMessageComponent implements OnInit {
   }
 
 
+  // Send notification to recipient about new message
+  private sendNotificationToRecipient() {
+    this.authSvc.getOtherUserEmail(this.toUserID)
+    .subscribe(userResult => {
+      console.log('SendMessageComponent:sendNotificationToRecipient: userResult=', userResult);
+      this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
+      .subscribe(emailResult => {
+        console.log('SendMessageComponent:sendNotificationToRecipient: emailResult=', emailResult);
+      }, error => {
+        console.log('SendMessageComponent:sendNotificationToRecipient: error sending email=', error);
+      });
+    }, error => {
+      console.log('SendMessageComponent:sendNotificationToRecipient: error getting other user=', error);
+    });
+  }
+
+
   // Update count of unread messages in conversation in database
   // If user viewed unread messages, set to zero
   // If user sent a new message, add to the count for the person sent to.
@@ -219,6 +239,7 @@ export class SendMessageComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversationResult => {
       this.messagesSvc.getConversations(); // Get updated conversation into behaviorSubject
+      this.sendNotificationToRecipient();
     }, error => {
       console.error('SendMessageComponent:updateConversation: throw error ', error);
       throw new Error(error);

@@ -18,13 +18,14 @@
       </h2>
     </div>
   </div>
-  <div *ngIf="!httpError" class="body">
+  <div *ngIf="!httpError && !showSpinner" class="body">
     <p class="mat-subheading-2 welcome">Your account is now activated.<br>Welcome to RVLikeMe.com</p>
   </div>
-  <div *ngIf="httpError" class="body welcome">
-    <mat-error class="mat-subheading-2">Unable to activate.  Please contact <a href="mailto:dave@rvlikeme.com">dave@rvlikeme.com</a></mat-error>
+  <div *ngIf="httpError && !showSpinner" class="body welcome">
+    <mat-error class="mat-subheading-2">{{httpErrorText}}</mat-error>
   </div>
   <div>
-    <button [disabled]="httpError" mat-flat-button class="button" color="primary" (click)="onSignIn()">Log in</button>
+    <button [disabled]="httpError || showSpinner" mat-flat-button class="button" color="primary" (click)="onSignIn()">Log in</button>
   </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

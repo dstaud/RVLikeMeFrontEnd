@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { UUID } from 'angular2-uuid';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
@@ -38,7 +37,7 @@ export class RegisterUserComponent implements OnInit {
   hidePassword = true;
   httpError = false;
   httpErrorText = '';
-  activateID: UUID;
+  token: string;
 
   showSpinner = false;
 
@@ -50,57 +49,13 @@ export class RegisterUserComponent implements OnInit {
     _id: '',
     email: '',
     password: '',
-    activateID: '',
     active: false,
     nbrLogins: 0,
     admin: false,
     tokenExpire: 0
   };
-  private profile: IuserProfile = {
-    _id: null,
-    userID: null,
-    firstName: null,
-    lastName: null,
-    displayName: null,
-    yearOfBirth: null,
-    gender: null,
-    homeCountry: null,
-    homeState: null,
-    myStory: null,
-    language: 'en',
-    colorThemePreference: 'light-theme',
-    aboutMe: null,
-    helpNewbies: false,
-    rvUse: null,
-    worklife: null,
-    campsWithMe: null,
-    boondocking: null,
-    traveling: null,
-    rigType: null,
-    rigLength: null,
-    rigManufacturer: null,
-    rigBrandID: null,
-    rigBrand: null,
-    rigModel: null,
-    rigYear: null,
-    profileImageUrl: null,
-    atv: null,
-    motorcycle: null,
-    travel: null,
-    quilting: null,
-    cooking: null,
-    painting: null,
-    blogging: null,
-    livingFrugally: null,
-    gaming: null,
-    musicalInstrument: null,
-    programming: null,
-    mobileInternet: null,
-    forums: [],
-    notifySubscription: null,
-    rigImageUrls: [],
-    lifestyleImageUrls: []
-  };
+
+  private regPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
 
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
@@ -116,7 +71,7 @@ export class RegisterUserComponent implements OnInit {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
                 email: new FormControl('', [Validators.required, Validators.email]),
-                password: new FormControl('', Validators.required)
+                password: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)])
                 // passwordConfirm: new FormControl('', Validators.required)
               });
 }
@@ -157,34 +112,6 @@ export class RegisterUserComponent implements OnInit {
     // }
   }
 
-
-  // Create profile document in database for new user
-  private addProfileForUser() {
-    this.profileSvc.addProfile(this.profile)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe((data) => {
-      // if (this.presentInstallOption) {
-      //   // Show the app install prompt
-      //   this.openInstallDialog();
-      // } else if (!this.containerDialog) {
-      if (this.useEmail) {
-        this.sendRegisterEmail();
-      } else {
-        this.showSpinner = false;
-        this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
-        // After adding profile, log user out to clear token and go to the landing page
-        this.authSvc.logout();
-        if (this.containerDialog) {
-          this.formCompleted = 'complete';
-          this.formComplete.emit(this.formCompleted);
-        } else {
-          this.headerVisibleSvc.toggleHeaderVisible(false);
-          this.router.navigateByUrl('/');
-        }
-      }
-      // }
-    });
-  }
 
   // Determine if using email for registration or overriding
   private listenForSystemConfiguration() {
@@ -255,23 +182,26 @@ export class RegisterUserComponent implements OnInit {
     this.showSpinner = true;
 
     console.log('RegisterUserComponent:RegisterUser: credential=', this.credentials)
-    this.authSvc.registerUser(this.credentials)
+    this.authSvc.registerUser(this.credentials, this.form.controls.firstName.value)
     .pipe(untilComponentDestroyed(this))
     .subscribe((responseData) => {
       if (responseData.status === 201) {
         this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
       } else {
         console.log('RegisterUserComponent:registerUser: response=', responseData);
-        this.activateID = responseData.activateID;
-        this.profile.firstName = this.form.controls.firstName.value;
-        this.profile.language = 'en';
-        this.profile.colorThemePreference = 'light-theme';
 
-        this.addProfileForUser();
+        if (this.useEmail) {
+          this.getActivationToken();
+        } else {
+          this.showSpinner = false;
+          this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
+          this.registrationComplete();
+        }
       }
     }, error => {
       this.showSpinner = false;
       this.httpError = true;
+      console.log('RegisterUser:RegisterUser: error=', error);
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else {
@@ -290,26 +220,43 @@ export class RegisterUserComponent implements OnInit {
     });
   }
 
+  // Log user out to clear token and go to the landing page
+  private registrationComplete() {
+    this.authSvc.logout();
+    if (this.containerDialog) {
+      this.formCompleted = 'complete';
+      this.formComplete.emit(this.formCompleted);
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(false);
+      this.router.navigateByUrl('/');
+    }
+  }
 
-  private sendRegisterEmail() {
+  private getActivationToken() {
+    let noExpire: boolean = true;
+
+    this.authSvc.getPasswordResetToken(this.credentials.email, noExpire)
+    .subscribe(tokenResult => {
+      console.log('ForgotPasswordComponent:onSubmit: tokenResult=', tokenResult);
+        this.sendRegisterEmail(tokenResult.token);
+    }, error => {
+      console.log('ForgotPasswordComponent:onSubmit: error getting token=', error);
+      throw new Error(error);
+    });
+  }
+
+
+  private sendRegisterEmail(token: string) {
     let sendTo = this.credentials.email;
-    let toFirstName = this.profile.firstName;
+    let toFirstName = this.form.controls.firstName.value;
 
-    console.log('RegisterUser:sendRegisterEmail: activateid=', this.activateID);
-    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.activateID)
+    console.log('RegisterUser:sendRegisterEmail: token=', token);
+    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, token)
     .subscribe(emailResult => {
       console.log('email sent!  result=', emailResult);
       this.showSpinner = false;
       this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
-      // After adding profile, log user out to clear token and go to the landing page
-      this.authSvc.logout();
-      if (this.containerDialog) {
-        this.formCompleted = 'complete';
-        this.formComplete.emit(this.formCompleted);
-      } else {
-        this.headerVisibleSvc.toggleHeaderVisible(false);
-        this.router.navigateByUrl('/');
-      }
+      this.registrationComplete();
     }, error => {
       console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
     })

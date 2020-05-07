@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
-import { UUID } from 'angular2-uuid';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,7 +13,6 @@ export interface ItokenPayload {
   _id: string;
   email: string;
   password: string;
-  activateID: UUID;
   active: boolean;
   nbrLogins: number;
   admin: boolean;
@@ -23,7 +21,6 @@ export interface ItokenPayload {
 
 export interface ItokenResponse {
   token: string;
-  activateID: UUID;
   active: boolean;
 }
 
@@ -45,15 +42,45 @@ export class AuthenticationService {
               private sentryMonitorSvc: SentryMonitorService) { }
 
 
-  activateUser(activationID: string): Observable<any> {
-    let params = '{"activateID":"' + activationID + '"}';
+  activateUser(token: string): Observable<any> {
+    let params = '{"token":"' + token + '"}';
 
     console.log('AuthenticationService:activateUser: params=', params);
     return this.http.put(`/api/activate`, params, {});
   }
 
+  getPasswordResetToken(email: string, noExpire: boolean): Observable<any> {
+    let params = JSON.parse('{"email":"' + email + '","noExpire":"' + noExpire + '}');
+
+    return this.http.post(`/api/get-password-reset-token`, params, {});
+  }
+
+  validatePasswordResetToken(token: string): Observable<any> {
+    let params = JSON.parse('{"token":"' + token + '"}');
+
+    return this.http.post(`/api/validate-password-reset-token`, params, {});
+  }
+
+  resetPassword(token: string, password: string): Observable<any> {
+    let params = JSON.parse('{"token":"' + token + '","password":"' + password + '"}');
+
+    return this.http.post(`/api/password-reset`, params, {});
+  }
+
   getUser(): Observable<any> {
     return this.http.get(`/api/username`);
+  }
+
+  getUserEmail(email: string): Observable<any> {
+    let param = JSON.parse('{"email":"' + email + '"}');
+
+    return this.http.get(`/api/user-by-email`, { params: param });
+  }
+
+  getOtherUserEmail(userID: string): Observable<any> {
+    let param = JSON.parse('{"userID":"' + userID + '"}');
+
+    return this.http.get(`/api/other-email`, { params: param });
   }
 
   handleBackendError(error) {
@@ -104,13 +131,11 @@ export class AuthenticationService {
     this.profileSvc.getProfile(true);
   }
 
-  registerUser(user: ItokenPayload): Observable<any> {
+  registerUser(user: ItokenPayload, firstName: string): Observable<any> {
     let base;
-
-    user.activateID = this.generateUUID();
-
-    console.log('AuthenticationService:registerUser: user=', user);
-    base = this.http.post(`/api/register`, user);
+    let params = '{"credentials":' + JSON.stringify(user) + ',"firstName":"' + firstName + '"}';
+    console.log('AuthenticationService:registerUser: params=', params);
+    base = this.http.post(`/api/register`, params);
     const request = base.pipe(
       map((data: ItokenResponse) => {
         if (data.token) {
@@ -142,11 +167,6 @@ export class AuthenticationService {
   confirmRegistration(regCode: string): Observable<any> {
     let param = JSON.parse('{"regCode":"' + regCode + '"}');
     return this.http.get(`/api/confirm-reg`, { params: param });
-  }
-
-  private generateUUID(): UUID{
-    let uuidValue = UUID.UUID();
-    return uuidValue;
   }
 
   private getToken(): string {

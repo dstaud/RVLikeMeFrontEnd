@@ -18,9 +18,6 @@
     "subscribe": "subscribe notifications",
     "unsubscribe": "unsubscribe notifications"
   },
-  "signin.component": {
-    "header": "Sign in"
-  },
   "register.component": {
     "header": "Register"
   },

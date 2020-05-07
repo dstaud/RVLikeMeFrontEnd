@@ -37,7 +37,7 @@ export class SigninComponent implements OnInit {
   notActive: boolean = false;
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
-  activateID: UUID;
+  token: string;
 
   showSpinner = false;
 
@@ -48,7 +48,6 @@ export class SigninComponent implements OnInit {
     _id: '',
     email: '',
     password: '',
-    activateID: '',
     active: false,
     nbrLogins: 0,
     admin: false,
@@ -98,8 +97,8 @@ export class SigninComponent implements OnInit {
     let sendTo = this.credentials.email;
     let toFirstName = null;
 
-    console.log('SigninComponent:onActivateEmail: activateid=', this.activateID);
-    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.activateID)
+    console.log('SigninComponent:onActivateEmail: token=', this.token);
+    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.token)
     .subscribe(emailResult => {
       console.log('email sent!  result=', emailResult);
       this.shared.openSnackBar('An email was sent to ' + this.form.controls.username.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
@@ -123,12 +122,9 @@ export class SigninComponent implements OnInit {
   }
 
 
-  onForgotUserID() {
-    console.log('forgot User ID');
-  }
-
   onForgotPassword() {
-    console.log('forgot Password');
+    this.activateBackArrowSvc.setBackRoute('landing-page');
+    this.router.navigateByUrl('/forgot-password');
   }
 
 
@@ -162,8 +158,8 @@ export class SigninComponent implements OnInit {
         this.httpErrorText = 'Invalid email address or password';
       } else if (error.status === 403) {
         this.notActive = true;
-        console.log('SigninComponenet:onSubmit not active, activateID=', JSON.parse(error.message).activateID);
-        this.activateID = JSON.parse(error.message).activateID
+        console.log('SigninComponenet:onSubmit not active, token=', JSON.parse(error.message).token);
+        this.token = JSON.parse(error.message).token
         this.httpErrorText = 'This account is not yet active.  Please check for an email from rvlikeme.com to activate.  If you do not see the email, look in your spam or trash folders.';
       } else {
         this.httpErrorText = 'Please connect to Internet and retry';

@@ -1,7 +1,7 @@
 <div ngClass="container container-desktop mat-body-1"
     [ngClass.xs]="{'container': true, 'container-desktop': false}"
     [ngClass.md]="{'container': false, 'container-desktop': true}">
-  <div><span class="mat-title">{{ 'signin.component.header' | translate }}</span></div>
+  <div><span class="mat-title">Sign In</span></div>
   <div *ngIf="httpError">
     <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
     <div *ngIf="notActive" class="activate-button">
@@ -12,10 +12,10 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
-        <mat-label>Email</mat-label>
+        <mat-label>Email address</mat-label>
         <input matInput
                 type="text"
-                placeholder="Email"
+                placeholder="Email address"
                 autocapitalize="none"
                 formControlName="username"
                 autocomplete="username email"
@@ -52,7 +52,13 @@
   </form>
 
   <div class="forgotGroup">
-    <span class="forgot" (click)="onForgotUserID()">Forgot User ID</span><span class="forgot" (click)="onForgotPassword()">Forgot Password</span>
+    <span class="forgot" (click)="onForgotPassword()">Forgotten your Password?</span>
+  </div>
+  <br>
+  <div>
+    <span class="legal">Logging in means that you agree to
+      our <a class="hyperlink" href="https://rvlikeme.com/privacy-policy">Privacy Policy</a>
+      and <a class="hyperlink" href="https://rvlikeme.com/terms">Terms of Service</a></span>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

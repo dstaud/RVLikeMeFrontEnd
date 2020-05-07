@@ -16,6 +16,8 @@ import { ForumsListComponent } from './features/forums/forums-list/forums-list.c
 import { YourStoryComponent } from './features/profile/your-story/your-story.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
+import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
+import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -70,6 +72,8 @@ const routes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'register', component: RegisterUserComponent, data: { animationState: 'Two' } },
   { path: 'admin', component: AdminComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'password-reset', component: PasswordResetComponent },
   { path: 'learn-more', component: LearnMoreComponent },
   { path: 'profile-personal', component: PersonalComponent },
   { path: 'profile-lifestyle', component: LifestyleComponent },

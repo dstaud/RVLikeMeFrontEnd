@@ -21,14 +21,16 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./register-confirm.component.scss']
 })
 export class RegisterConfirmComponent implements OnInit {
-  registerConfirmUserCode: string;
   landingImage: string;
   maxRvImageHeight = 'auto';
   maxRvImageWidth = '100%';
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
+  showSpinner: boolean = true;
 
   private windowWidth: number;
+  private routeSubscription: any;
+  private token: string;
 
   // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
@@ -48,14 +50,14 @@ export class RegisterConfirmComponent implements OnInit {
 
       this.route.queryParams
       .subscribe(params => {
-        this.registerConfirmUserCode = params['e'];
+        this.token = params['e'];
       });
   }
 
   ngOnInit(): void {
     this.setImageBasedOnScreenWidth();
 
-    this.activateUser();
+    this.listenForParameters();
   }
 
   ngOnDestroy() {}
@@ -83,14 +85,36 @@ export class RegisterConfirmComponent implements OnInit {
 
 
   private activateUser() {
-    console.log('RegisterConfirmComponent:activateUser: confirm code =', this.registerConfirmUserCode);
-    this.authSvc.activateUser(this.registerConfirmUserCode)
+    console.log('RegisterConfirmComponent:activateUser: confirm code =', this.token);
+    this.authSvc.activateUser(this.token)
     .subscribe(activateResult => {
       console.log('RegisterConfirmComponent:activateUser: result=', activateResult);
-      this.sendWelcomeEmail(activateResult.email, activateResult.activateID)
+      this.showSpinner = false;
+      this.sendWelcomeEmail(activateResult.email, activateResult.token)
     }, error => {
       console.log('RegisterConfirmComponent:activateUser: error=', error);
+      this.showSpinner = false;
       this.httpError = true;
+      this.httpErrorText = 'The activation token is invalid';
+    });
+  }
+
+
+  private listenForParameters() {
+    console.log('PasswordReset:listenForParameters:');
+    this.routeSubscription = this.route
+    .queryParams
+    .subscribe(params => {
+      if (params.e) {
+        this.token = params.e;
+        console.log('PasswordReset:listenForParameters: token=', this.token);
+        this.validateToken();
+      }
+    }, error => {
+      console.error('PasswordReset:listenForParameters: could not read parameters.  error=', error);
+      this.showSpinner = false;
+      this.httpError = true;
+      this.httpErrorText = 'The activation token is invalid';
     });
   }
 
@@ -111,16 +135,16 @@ export class RegisterConfirmComponent implements OnInit {
     });
   }
 
-  sendWelcomeEmail(email: string, activateID: UUID) {
-  let sendTo = email;
-  let toFirstName = null;
-  console.log('RegisterConfirmComponent:sendWelcomeEmail: sending email to ', sendTo);
-  this.emailSmtpSvc.sendWelcomeEmail(sendTo, toFirstName, activateID)
-  .subscribe(emailResult => {
-    console.log('welcome email sent!  result=', emailResult);
-  }, error => {
-    console.log('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ', error);
-  })
+  sendWelcomeEmail(email: string, token: string) {
+    let sendTo = email;
+    let toFirstName = null;
+    console.log('RegisterConfirmComponent:sendWelcomeEmail: sending email to ', sendTo);
+    this.emailSmtpSvc.sendWelcomeEmail(sendTo, toFirstName, token)
+    .subscribe(emailResult => {
+      console.log('welcome email sent!  result=', emailResult);
+    }, error => {
+      console.log('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ', error);
+    });
 }
 
   private setImageBasedOnScreenWidth() {
@@ -131,5 +155,19 @@ export class RegisterConfirmComponent implements OnInit {
     } else {
       this.landingImage = 'landing-imageM1.jpeg';
     }
+  }
+
+
+  private validateToken() {
+    this.authSvc.validatePasswordResetToken(this.token)
+    .subscribe(tokenResult => {
+      console.log('PasswordReset:validateToken: tokenResult=', tokenResult);
+      this.activateUser();
+    }, error => {
+      console.error('PasswordReset:validateToken: error validating token.  error=', error);
+      this.httpError = true;
+      this.httpErrorText = 'The activation token is invalid';
+      this.showSpinner = false;
+    })
   }
 }
