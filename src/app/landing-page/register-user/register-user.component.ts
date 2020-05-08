@@ -225,14 +225,18 @@ export class RegisterUserComponent implements OnInit {
 
   // Log user out to clear token and go to the landing page
   private registrationComplete() {
-    this.authSvc.logout();
-    if (this.containerDialog) {
-      this.formCompleted = 'complete';
-      this.formComplete.emit(this.formCompleted);
-    } else {
-      this.headerVisibleSvc.toggleHeaderVisible(false);
-      this.router.navigateByUrl('/');
-    }
+    let self = this;
+
+    setTimeout(function () {
+      self.authSvc.logout();
+      if (self.containerDialog) {
+        self.formCompleted = 'complete';
+        self.formComplete.emit(self.formCompleted);
+      } else {
+        self.headerVisibleSvc.toggleHeaderVisible(false);
+        self.router.navigateByUrl('/signin');
+      }
+    }, 2000);
   }
 
   private getActivationToken() {

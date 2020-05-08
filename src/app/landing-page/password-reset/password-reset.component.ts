@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { SharedComponent } from '@shared/shared.component';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-password-reset',
@@ -36,6 +38,9 @@ export class PasswordResetComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private authSvc: AuthenticationService,
+              private shared: SharedComponent,
+              private ActivateBackArrowSvc: ActivateBackArrowService,
+              private router: Router,
               fb: FormBuilder) {
               this.form = fb.group({
                 password: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)])
@@ -53,6 +58,7 @@ export class PasswordResetComponent implements OnInit {
     this.routeSubscription.unsubscribe();
   }
 
+
   // Form validation error handling
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
@@ -60,10 +66,19 @@ export class PasswordResetComponent implements OnInit {
 
 
   onSubmit() {
+    let self = this;
+
     this.form.disable();
     this.authSvc.resetPassword(this.token, this.tokenID, this.form.controls.password.value)
     .subscribe(passwordResult => {
       console.log('PasswordReset:onSubmit: passwordResult=', passwordResult);
+      this.shared.openSnackBar('Your password has been reset, please sign in.', 'message', 5000);
+
+      setTimeout(function () {
+        self.ActivateBackArrowSvc.setBackRoute('landing-page');
+        self.router.navigateByUrl('/signin');
+      }, 2000);
+
     }, error => {
       if (error.status === 406) {
         this.httpError = true;
@@ -114,7 +129,7 @@ export class PasswordResetComponent implements OnInit {
         this.httpErrorText = 'The reset token has expired. Please request to reset password again.';
       } else {
         this.httpError = true;
-        this.httpErrorText = 'The reset token is invalid.';
+        this.httpErrorText = 'The reset token is invalid.  Please request your password to be reset again.';
       }
     });
   }

@@ -17,7 +17,8 @@ export class SystemDataComponent implements OnInit {
   constructor(private adminSvc: AdminService,
               fb: FormBuilder) {
                 this.form = fb.group({
-                  useEmail: new FormControl('', Validators.required)
+                  useEmail: new FormControl('', Validators.required),
+                  textOnlyEmails: new FormControl('', Validators.required),
                 });
      }
 
@@ -32,11 +33,13 @@ export class SystemDataComponent implements OnInit {
         this.systemDataFound = true;
         this.systemID = systemResult[0]._id;
         this.form.patchValue({
-          useEmail: systemResult[0].useEmail
+          useEmail: systemResult[0].useEmail,
+          textOnlyEmails: systemResult[0].textOnlyEmails
         });
       } else {
         this.form.patchValue({
-          useEmail: false
+          useEmail: false,
+          textOnlyEmails: false
         });
       }
       this.showSpinner = false;
@@ -49,11 +52,12 @@ export class SystemDataComponent implements OnInit {
     this.showSpinner = true;
 
     let useEmail = this.form.controls.useEmail.value;
+    let textOnlyEmails = this.form.controls.textOnlyEmails.value;
 
     console.log('SystemDataComponent:onSubmit: useEmail=', useEmail);
 
     if (!this.systemDataFound) {
-      this.adminSvc.setSystemData(useEmail)
+      this.adminSvc.setSystemData(useEmail, textOnlyEmails)
       .subscribe(systemResult => {
         console.log('SystemDataComponent:onSubmit  result=', systemResult);
         this.showSpinner = false;
@@ -63,7 +67,7 @@ export class SystemDataComponent implements OnInit {
         this.showSpinner = false;
       });
     } else {
-      this.adminSvc.updateSystemData(useEmail, this.systemID)
+      this.adminSvc.updateSystemData(useEmail, this.systemID, textOnlyEmails)
       .subscribe(systemResult => {
         console.log('SystemDataComponent:onSubmit  result=', systemResult);
         this.showSpinner = false;

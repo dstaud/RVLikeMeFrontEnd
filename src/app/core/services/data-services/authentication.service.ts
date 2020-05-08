@@ -50,7 +50,7 @@ export class AuthenticationService {
 
   getPasswordResetToken(email: string, noExpire: boolean, type: string): Observable<any> {
     let params = JSON.parse('{"email":"' + email + '",' +
-                            '"noExpire":"' + noExpire + + '",' +
+                            '"noExpire":"' + noExpire + '",' +
                             '"type":"' + type + '"}');
 
     return this.http.post(`/api/get-password-reset-token`, params, {});

@@ -90,7 +90,7 @@ export class RegisterConfirmComponent implements OnInit {
     .subscribe(activateResult => {
       console.log('RegisterConfirmComponent:activateUser: result=', activateResult);
       this.showSpinner = false;
-      this.sendWelcomeEmail(activateResult.email, this.token)
+      this.sendWelcomeEmail(activateResult.email, '8805-1335-8153-3116')
     }, error => {
       console.log('RegisterConfirmComponent:activateUser: error=', error);
       this.showSpinner = false;

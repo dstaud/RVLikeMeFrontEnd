@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 export interface Isystem {
   _id: string;
   useEmail: boolean;
+  textOnlyEmails: boolean;
 }
 
 @Injectable({
@@ -25,14 +26,14 @@ export class AdminService {
     return this.http.get<Isystem[]>(`/api/admin-system-data`);
   }
 
-  setSystemData(useEmail: boolean): Observable<any> {
-    let params = '{"useEmail":"' + useEmail + '"}';
+  setSystemData(useEmail: boolean, textOnlyEmails: boolean): Observable<any> {
+    let params = '{"useEmail":"' + useEmail + '","textOnlyEmails":"' + textOnlyEmails + '"}';
 
     return this.http.post(`/api/admin-system-data`, params, {});
   }
 
-  updateSystemData(useEmail: boolean, systemID: string): Observable<any> {
-    let params = '{"systemID":"' + systemID + '","useEmail":"' + useEmail + '"}';
+  updateSystemData(useEmail: boolean, systemID: string, textOnlyEmails: boolean): Observable<any> {
+    let params = '{"systemID":"' + systemID + '","useEmail":"' + useEmail + '","textOnlyEmails":"' + textOnlyEmails + '"}';
 
     return this.http.put(`/api/admin-system-data`, params, {});
   }
