@@ -1,64 +1,75 @@
 <div ngClass="container container-desktop mat-body-1"
     [ngClass.xs]="{'container': true, 'container-desktop': false}"
     [ngClass.md]="{'container': false, 'container-desktop': true}">
-  <div><span class="mat-title">Sign In</span></div>
-  <div *ngIf="httpError">
-    <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
-    <div *ngIf="notActive" class="activate-button">
-      <button class="mat-raised-button mat-primary" (click)="onActivateEmail()">Send new activation email</button>
+  <div *ngIf="showSignin">
+    <div><span class="mat-title">Sign In</span></div>
+    <br>
+    <div *ngIf="httpError">
+      <mat-error class="mat-subheading-2">{{ httpErrorText }}</mat-error>
+      <div *ngIf="notActive" class="activate-button">
+        <button class="mat-raised-button mat-primary" (click)="onActivateEmail()">Send new activation email</button>
+      </div>
     </div>
-  </div>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
-        <mat-label>Email address</mat-label>
-        <input matInput
-                type="text"
-                placeholder="Email address"
-                autocapitalize="none"
-                formControlName="username"
-                autocomplete="username email"
-                required>
-        <mat-error *ngIf="errorHandling('username', 'required')">
-          Please enter your <strong>Email</strong>
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
-        <mat-label >Password</mat-label>
-        <input matInput
-                [type]="hidePassword ? 'password' : 'text'"
-                placeholder="Password"
-                autocapitalize="none"
-                formControlName="password"
-                autocomplete="new-password"
-                required>
-        <mat-error *ngIf="errorHandling('password', 'required')">
-          Please enter your <strong>Password</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-icon matSuffix class="eyePassword" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </div>
-    <div class="button">
-      <button type="submit" class="mat-raised-button mat-primary"
-              [disabled]="!form.valid || showSpinner">Submit</button>
-    </div>
-    <div class="button">
-      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
-    </div>
-  </form>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix fontSet="material-icons-outlined">email</mat-icon>
+          <mat-label>Email address</mat-label>
+          <input matInput
+                  type="text"
+                  placeholder="Email address"
+                  autocapitalize="none"
+                  formControlName="username"
+                  autocomplete="username email"
+                  required>
+          <mat-error *ngIf="errorHandling('username', 'required')">
+            Please enter your <strong>Email</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+          <mat-label >Password</mat-label>
+          <input matInput
+                  [type]="hidePassword ? 'password' : 'text'"
+                  placeholder="Password"
+                  autocapitalize="none"
+                  formControlName="password"
+                  autocomplete="new-password"
+                  required>
+          <mat-error *ngIf="errorHandling('password', 'required')">
+            Please enter your <strong>Password</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-icon matSuffix class="eyePassword" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </div>
+      <div class="button">
+        <button type="submit" class="mat-raised-button mat-primary"
+                [disabled]="!form.valid || showSpinner">Submit</button>
+      </div>
+      <div class="button">
+        <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
 
-  <div class="forgotGroup">
-    <span class="forgot" (click)="onForgotPassword()">Forgotten your Password?</span>
+    <div class="forgotGroup">
+      <span class="forgot" (click)="onForgotPassword()">Forgotten your Password?</span>
+    </div>
+    <br>
+    <div>
+      <span class="legal">Logging in means that you agree to
+        our <a class="hyperlink" href="https://rvlikeme.com/privacy-policy">Privacy Policy</a>
+        and <a class="hyperlink" href="https://rvlikeme.com/terms">Terms of Service</a></span>
+    </div>
+    <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+
   </div>
-  <br>
-  <div>
-    <span class="legal">Logging in means that you agree to
-      our <a class="hyperlink" href="https://rvlikeme.com/privacy-policy">Privacy Policy</a>
-      and <a class="hyperlink" href="https://rvlikeme.com/terms">Terms of Service</a></span>
+  <div *ngIf="showPasswordReset">
+    <app-rvlm-forgot-password
+      [containerDialog]=containerDialog
+      (formComplete)="onCancelReset($event)">
+    </app-rvlm-forgot-password>
   </div>
-  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
+

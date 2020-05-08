@@ -40,6 +40,8 @@ export class SigninComponent implements OnInit {
   token: string;
 
   showSpinner = false;
+  showSignin = true;
+  showPasswordReset = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -122,9 +124,15 @@ export class SigninComponent implements OnInit {
   }
 
 
+  onCancelReset(event: any) {
+    this.showPasswordReset = false;
+    this.showSignin = true;
+  }
+
+
   onForgotPassword() {
-    this.activateBackArrowSvc.setBackRoute('landing-page');
-    this.router.navigateByUrl('/forgot-password');
+    this.showSignin = false;
+    this.showPasswordReset = true;
   }
 
 

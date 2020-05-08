@@ -3,13 +3,13 @@
     <div class="group-heading" [ngClass]="theme === 'dark-theme' ? 'group-heading-dark' : 'group-heading-light'">
       <span *ngIf="forumType === 'group'">{{ 'forums.component.heading' | translate}}:</span>
       <span *ngIf="forumType === 'topic'">{{ 'forums.component.headingTopic' | translate}}:</span>
-      <div class="options">
+<!--       <div class="options">
         <mat-icon class="options-icons hyperlink"
                   fontSet="material-icons-outlined"
                   (click)="onSearch()">
                   {{ 'forums.component.search' | translate }}
         </mat-icon>
-      </div>
+      </div> -->
       <span *ngIf="forumType === 'group' && showLessMatches">
         <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup | slice:0:3" class="group-attributes"><br>- {{ profileAttribute }}</span>
         <div *ngIf="showMoreOption"

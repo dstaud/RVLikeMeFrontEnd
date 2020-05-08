@@ -1,17 +1,16 @@
+import { finalize } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UUID } from 'angular2-uuid';
-
-import { Observable } from 'rxjs';
-import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
-  selector: 'app-forgot-password',
+  selector: 'app-rvlm-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']
 })
@@ -28,11 +27,10 @@ export class ForgotPasswordComponent implements OnInit {
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
 
-  private resetID: UUID;
-
   constructor(private emailSmtpSvc: EmailSmtpService,
               private authSvc: AuthenticationService,
               private router: Router,
+              private shared: SharedComponent,
               private headerVisibleSvc: HeaderVisibleService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -61,34 +59,53 @@ export class ForgotPasswordComponent implements OnInit {
 
 
   onSubmit() {
-    let resetID: string;
+    this.form.disable();
     let userEmail: string;
     let noExpire = false;
+    let self = this;
 
     userEmail = this.form.controls.userEmail.value;
     this.authSvc.getPasswordResetToken(userEmail, noExpire)
     .subscribe(tokenResult => {
       console.log('ForgotPasswordComponent:onSubmit: tokenResult=', tokenResult);
-        this.emailSmtpSvc.sendPasswordResetEmail(userEmail, tokenResult.token)
-        .subscribe(sendEmailResult => {
-          console.log('ForgotPasswordComponent:onSubmit: sendEmailResult=',sendEmailResult);
-        }, error => {
-          console.log('ForgotPasswordComponent:onSubmit: sending email=', error);
-          throw new Error(error);
-        });
-    }, error => {
-      console.log('ForgotPasswordComponent:onSubmit: error getting token=', error);
-      throw new Error(error);
-    });
+      this.sendPasswordResetEmail(userEmail, tokenResult.token);
+      this.shared.openSnackBar('An email has been sent to this email address to reset your password', 'message', 8000);
 
+      setTimeout(function () {
+        self.finalize();
+      }, 2000);
+
+    }, error => {
+      console.log('ForgotPasswordComponent:onSubmit: error getting token=', error, ' status=', error.status);
+      if (error.status === 406) {
+        this.httpError = true;
+        this.httpErrorText = 'Email does not exist in database';
+        this.form.enable();
+      } else {
+        throw new Error(error);
+      }
+    });
+  }
+
+
+  private finalize() {
     if (this.containerDialog) {
       this.formCompleted = 'complete';
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.formComplete.emit(this.formCompleted);
     } else {
-      // After email sent, go to home page
       this.headerVisibleSvc.toggleHeaderVisible(false);
       this.router.navigateByUrl('/');
     }
+  }
+
+  private sendPasswordResetEmail(userEmail: string, token:string) {
+    this.emailSmtpSvc.sendPasswordResetEmail(userEmail, token)
+    .subscribe(sendEmailResult => {
+      console.log('ForgotPasswordComponent:onSubmit: sendEmailResult=',sendEmailResult);
+    }, error => {
+      console.log('ForgotPasswordComponent:onSubmit: sending email=', error);
+      throw new Error(error);
+    });
   }
 }

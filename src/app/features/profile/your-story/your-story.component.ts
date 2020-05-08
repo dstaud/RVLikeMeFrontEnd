@@ -28,6 +28,7 @@ export class YourStoryComponent implements OnInit {
   userRvUse: string;
   userDisplayName: string;
   userIdViewer: string;
+  showRigBrand: boolean = false;
   rigImageUrls: Array<string> = [];
   lifestyleImageUrls: Array<string> = [];
 
@@ -139,6 +140,10 @@ export class YourStoryComponent implements OnInit {
       this.userRigModel = profileResult.rigModel;
       this.rigImageUrls = profileResult.rigImageUrls;
       this.lifestyleImageUrls = profileResult.lifestyleImageUrls;
+
+      if (this.userRigBrand) {
+        this.showRigBrand = true;
+      }
     }, error => {
       console.error('YourStoryComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);

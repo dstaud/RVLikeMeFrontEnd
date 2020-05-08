@@ -118,7 +118,7 @@ export class ForumsComponent implements OnInit {
       this.showSpinner = true;
       console.log('ForumsComponent:getGroup: type=', paramData.forumType);
       if (paramData.forumType === 'topic') {
-        this.forumSvc.getGroupByTopic(paramData.topic)
+        this.forumSvc.getGroupByTopic(paramData.topicID)
         .subscribe(groupFromServer => {
           this.groupID = groupFromServer._id;
           this.topicID = groupFromServer.topic;

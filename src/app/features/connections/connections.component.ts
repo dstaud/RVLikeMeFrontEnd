@@ -134,7 +134,6 @@ export class ConnectionsComponent implements OnInit {
     // If have a match, create a new array of nicely worded results that can be displayed
     // with checkboxes on the template.
     for (let i = 1; i < this.profileKeys.length; i++ ) {
-      console.log('ConnectionsComponent:displayMatches: key=', this.profileKeys[i])
       if (this.profileValues[i] && this.profileValues[i] !== null && this.profileValues[i] !== 'null') {
         if (this.profile[this.profileKeys[i]] === true) {
           this.foundMatch = true;
@@ -168,10 +167,14 @@ export class ConnectionsComponent implements OnInit {
                   this.likeMeAnswer = this.profile[this.profileKeys[i]];
                   this.processMatch(this.profileKeys[i], this.profileValues[i]);
                 } else {
-                  this.likeMeAnswer = this.translate.instant(
-                    'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
-                    );
-                    this.processMatch(this.profileKeys[i], this.profileValues[i]);
+                    if (this.profileKeys[i] === 'yearOfBirth' || this.profileKeys[i] === 'rigLength') {
+                      this.likeMeAnswer = 'profile.component.' + name;
+                    } else {
+                      this.likeMeAnswer = this.translate.instant(
+                        'profile.component.list.' + this.profileKeys[i].toLowerCase() + '.' + this.profile[this.profileKeys[i]].toLowerCase()
+                        );
+                      this.processMatch(this.profileKeys[i], this.profileValues[i]);
+                    }
                 }
               }
             }

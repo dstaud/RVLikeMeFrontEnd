@@ -122,13 +122,6 @@ export class RvRigComponent implements OnInit {
     this.listenForUserProfile();
 
     console.log('RVRigComponent:ngOnInit: finishing ngOnInit')
-
-    this.filteredBrands = this.rigBrand.valueChanges
-    .pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
-    console.log('RVRigComponent:ngOnInit: finished ngOnInit')
   }
 
   ngOnDestroy() {}
@@ -297,6 +290,13 @@ export class RvRigComponent implements OnInit {
       this.rigData = rigData;
       this.rigBrand.patchValue(this.profile.rigBrand);
       this.brandSelected = null;
+
+      this.filteredBrands = this.rigBrand.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+
       this.showSpinner = false;
       console.log('RVRigComponent:getRigData: spinner off')
     }, error => {

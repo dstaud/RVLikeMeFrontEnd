@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -11,18 +11,20 @@ import { AuthenticationService } from '@services/data-services/authentication.se
   styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent implements OnInit {
+
   form: FormGroup;
   landingImage: string;
   maxRvImageHeight = 'auto';
   maxRvImageWidth = '100%';
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
-  hidePassword: boolean = false;
+  hidePassword: boolean = true;
   showSpinner: boolean = false;
 
   private windowWidth: number;
   private routeSubscription: any;
   private token: string;
+  private tokenID: string;
 
   private regPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
 
@@ -56,16 +58,20 @@ export class PasswordResetComponent implements OnInit {
     return this.form.controls[control].hasError(error);
   }
 
+
   onSubmit() {
-    this.authSvc.resetPassword(this.token, this.form.controls.password.value)
+    this.form.disable();
+    this.authSvc.resetPassword(this.token, this.tokenID, this.form.controls.password.value)
     .subscribe(passwordResult => {
       console.log('PasswordReset:onSubmit: passwordResult=', passwordResult);
     }, error => {
-      console.error('PasswordReset:onSubmit: error resetting password=', error);
-      if (error.status === 409) {
-
+      if (error.status === 406) {
+        this.httpError = true;
+        this.httpErrorText = 'Token is not valid';
+      } else {
+        console.error('PasswordReset:onSubmit: error resetting password=', error);
+        throw new Error(error);
       }
-      throw new Error(error);
     })
   }
 
@@ -99,6 +105,8 @@ export class PasswordResetComponent implements OnInit {
     this.authSvc.validatePasswordResetToken(this.token)
     .subscribe(tokenResult => {
       console.log('PasswordReset:validateToken: tokenResult=', tokenResult);
+      this.tokenID = tokenResult.tokenID;
+      console.log('PasswordReset:validateToken: tokenID=', tokenResult.tokenID);
     }, error => {
       console.error('PasswordReset:validateToken: error validating token.  error=', error);
       if (error === 403) { // token expired
@@ -108,6 +116,6 @@ export class PasswordResetComponent implements OnInit {
         this.httpError = true;
         this.httpErrorText = 'The reset token is invalid.';
       }
-    })
+    });
   }
 }

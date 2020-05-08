@@ -42,10 +42,9 @@ export class AuthenticationService {
               private sentryMonitorSvc: SentryMonitorService) { }
 
 
-  activateUser(token: string): Observable<any> {
-    let params = '{"token":"' + token + '"}';
+  activateUser(token: string, tokenID: string): Observable<any> {
+    let params = '{"token":"' + token + '","tokenID":"' + tokenID + '"}';
 
-    console.log('AuthenticationService:activateUser: params=', params);
     return this.http.put(`/api/activate`, params, {});
   }
 
@@ -55,26 +54,22 @@ export class AuthenticationService {
     return this.http.post(`/api/get-password-reset-token`, params, {});
   }
 
-  validatePasswordResetToken(token: string): Observable<any> {
-    let params = JSON.parse('{"token":"' + token + '"}');
-
-    return this.http.post(`/api/validate-password-reset-token`, params, {});
-  }
-
-  resetPassword(token: string, password: string): Observable<any> {
-    let params = JSON.parse('{"token":"' + token + '","password":"' + password + '"}');
-
-    return this.http.post(`/api/password-reset`, params, {});
-  }
-
   getUser(): Observable<any> {
     return this.http.get(`/api/username`);
   }
 
-  getUserEmail(email: string): Observable<any> {
-    let param = JSON.parse('{"email":"' + email + '"}');
+  resetPassword(token: string, tokenID: string, password: string): Observable<any> {
+    let params = JSON.parse('{"token":"' + token + '",' +
+                            '"tokenID":"' + tokenID + '",' +
+                            '"password":"' + password + '"}');
 
-    return this.http.get(`/api/user-by-email`, { params: param });
+    return this.http.post(`/api/password-reset`, params, {});
+  }
+
+  validatePasswordResetToken(token: string): Observable<any> {
+    let params = JSON.parse('{"token":"' + token + '"}');
+
+    return this.http.post(`/api/validate-password-reset-token`, params, {});
   }
 
   getOtherUserEmail(userID: string): Observable<any> {
@@ -164,11 +159,6 @@ export class AuthenticationService {
     return this.http.put(`/api/username`, user, {});
   }
 
-  confirmRegistration(regCode: string): Observable<any> {
-    let param = JSON.parse('{"regCode":"' + regCode + '"}');
-    return this.http.get(`/api/confirm-reg`, { params: param });
-  }
-
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('rvlikeme-token');
@@ -176,6 +166,7 @@ export class AuthenticationService {
     return this.token;
   }
 
+  // Get user token from local storage
   private getLocalToken(): ItokenPayload {
     const token = this.getToken();
     let payload;
@@ -189,6 +180,7 @@ export class AuthenticationService {
     }
   }
 
+  // Save token in local storage
   private saveToken(token: string): void {
     localStorage.setItem('rvlikeme-token', token);
     this.token = token;

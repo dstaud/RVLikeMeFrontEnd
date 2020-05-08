@@ -84,9 +84,9 @@ export class RegisterConfirmComponent implements OnInit {
   }
 
 
-  private activateUser() {
+  private activateUser(tokenID: string) {
     console.log('RegisterConfirmComponent:activateUser: confirm code =', this.token);
-    this.authSvc.activateUser(this.token)
+    this.authSvc.activateUser(this.token, tokenID)
     .subscribe(activateResult => {
       console.log('RegisterConfirmComponent:activateUser: result=', activateResult);
       this.showSpinner = false;
@@ -162,7 +162,7 @@ export class RegisterConfirmComponent implements OnInit {
     this.authSvc.validatePasswordResetToken(this.token)
     .subscribe(tokenResult => {
       console.log('PasswordReset:validateToken: tokenResult=', tokenResult);
-      this.activateUser();
+      this.activateUser(tokenResult.tokenID);
     }, error => {
       console.error('PasswordReset:validateToken: error validating token.  error=', error);
       this.httpError = true;
