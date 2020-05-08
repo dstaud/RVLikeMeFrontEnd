@@ -74,6 +74,9 @@ export class RegisterUserComponent implements OnInit {
                 password: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)])
                 // passwordConfirm: new FormControl('', Validators.required)
               });
+              this.headerVisibleSvc.toggleHeaderVisible(true);
+              this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+              this.activateBackArrowSvc.setBackRoute('landing-page');
 }
 
   ngOnInit() {
@@ -235,7 +238,7 @@ export class RegisterUserComponent implements OnInit {
   private getActivationToken() {
     let noExpire: boolean = true;
 
-    this.authSvc.getPasswordResetToken(this.credentials.email, noExpire)
+    this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
     .subscribe(tokenResult => {
       console.log('ForgotPasswordComponent:onSubmit: tokenResult=', tokenResult);
         this.sendRegisterEmail(tokenResult.token);

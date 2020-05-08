@@ -65,7 +65,7 @@ export class ForgotPasswordComponent implements OnInit {
     let self = this;
 
     userEmail = this.form.controls.userEmail.value;
-    this.authSvc.getPasswordResetToken(userEmail, noExpire)
+    this.authSvc.getPasswordResetToken(userEmail, noExpire, 'password-reset')
     .subscribe(tokenResult => {
       console.log('ForgotPasswordComponent:onSubmit: tokenResult=', tokenResult);
       this.sendPasswordResetEmail(userEmail, tokenResult.token);
@@ -76,12 +76,13 @@ export class ForgotPasswordComponent implements OnInit {
       }, 2000);
 
     }, error => {
-      console.log('ForgotPasswordComponent:onSubmit: error getting token=', error, ' status=', error.status);
+      console.error('ForgotPasswordComponent:onSubmit: error getting token=', error, ' status=', error.status);
       if (error.status === 406) {
         this.httpError = true;
         this.httpErrorText = 'Email does not exist in database';
         this.form.enable();
       } else {
+        console.error('ForgotPasswordComponent:onSubmit: error =', error.message);
         throw new Error(error);
       }
     });
@@ -89,14 +90,8 @@ export class ForgotPasswordComponent implements OnInit {
 
 
   private finalize() {
-    if (this.containerDialog) {
-      this.formCompleted = 'complete';
-      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-      this.formComplete.emit(this.formCompleted);
-    } else {
-      this.headerVisibleSvc.toggleHeaderVisible(false);
-      this.router.navigateByUrl('/');
-    }
+    this.formCompleted = 'complete';
+    this.formComplete.emit(this.formCompleted);
   }
 
   private sendPasswordResetEmail(userEmail: string, token:string) {

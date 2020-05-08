@@ -50,10 +50,22 @@ export class LandingPageComponent implements OnInit {
 
 
   onLearnMore() {
+    let params: string;
+
+    let desktop: boolean = false;
+
+    if (this.windowWidth > 600) {
+      desktop = true;
+    }
+
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.router.navigateByUrl('/learn-more');
     this.activateBackArrowSvc.setBackRoute('landing-page');
+
+    params = '{"desktop":' + desktop + '}'
+    console.log('LandingPageComponent:onLearnMore: params=', params);
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/learn-more');
   }
 
 

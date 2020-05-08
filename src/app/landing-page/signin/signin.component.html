@@ -68,7 +68,7 @@
   <div *ngIf="showPasswordReset">
     <app-rvlm-forgot-password
       [containerDialog]=containerDialog
-      (formComplete)="onCancelReset($event)">
+      (formComplete)="onBackFromReset($event)">
     </app-rvlm-forgot-password>
   </div>
 </div>

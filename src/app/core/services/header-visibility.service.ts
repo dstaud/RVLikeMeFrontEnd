@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 // Publish current state of whether to show top toolbar.  Will vary depending on screen size too.
 @Injectable({
   providedIn: 'root'
 })
 export class HeaderVisibleService {
-  private headerVisible = new Subject<boolean>();
+  private headerVisible = new BehaviorSubject<boolean>(false);
   headerVisible$ = this.headerVisible.asObservable();
 
-  private headerDesktopVisible = new Subject<boolean>();
+  private headerDesktopVisible = new BehaviorSubject<boolean>(false);
   headerDesktopVisible$ = this.headerDesktopVisible.asObservable();
 
   constructor() { }

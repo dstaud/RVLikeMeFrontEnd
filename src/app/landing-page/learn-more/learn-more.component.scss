@@ -1,15 +1,33 @@
-.background {
+.container {
   padding: 10px;
   margin-top: 50px;
 }
 
-.background-desktop {
+.container-desktop {
   padding: 10px;
   margin-top: 0px;
 }
 
+.rvlikeme {
+  position: relative;
+  float: right;
+  top: 5px;
+  left: 5px;
+  color: white;
+}
+
 .hook {
   line-height: 1.4;
+}
+
+.logoCombined {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.logo {
+  float: left;
 }
 
 .sub-text {

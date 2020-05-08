@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
   iphoneModelxPlus: boolean;
   newMessageCount: number;
 
+  private windowWidth: number;
   private userID: string;
   private userProfile: Observable<IuserProfile>;
   private userConversations: Observable<Iconversation[]>;
@@ -101,7 +102,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.listenForUpdatedVersionOfApp();
 
     this.listenForChangeInFontTheme();
@@ -185,19 +185,20 @@ export class AppComponent implements OnInit {
     });
   }
 
-
   // Listen for changes in whether should show header toolbar
   private listenForChangeInHeaderVisibility() {
     this.headerVisibleSvc.headerVisible$
     .pipe(untilComponentDestroyed(this))
     .subscribe(header => {
       this.headerVisible = header.valueOf();
+      console.log('AppComponent.listenForChangeInHeaderVisibility: this.headerVisible=', this.headerVisible);
     });
 
     this.headerVisibleSvc.headerDesktopVisible$
     .pipe(untilComponentDestroyed(this))
     .subscribe(header => {
       this.headerDesktopVisible = header.valueOf();
+      console.log('AppComponent.listenForChangeInHeaderVisibility: this.headerDesktopVisible=', this.headerDesktopVisible);
     });
   }
 

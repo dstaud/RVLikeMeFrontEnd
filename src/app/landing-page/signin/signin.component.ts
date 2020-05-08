@@ -73,17 +73,14 @@ export class SigninComponent implements OnInit {
                 password: new FormControl({value: '', disabled: this.showSpinner},
                                            Validators.required)
               });
+
+              this.headerVisibleSvc.toggleHeaderVisible(true);
+              this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+              this.activateBackArrowSvc.setBackRoute('landing-page');
+              this.setReturnRoute();
   }
 
   ngOnInit() {
-    if (!this.ShareDataSvc.getData()) { // Unless came from landing-page, go back to landing-page.
-      this.router.navigateByUrl('');
-    } else {
-      this.headerVisibleSvc.toggleHeaderVisible(true);
-      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-
-      this.setReturnRoute();
-    }
   }
 
   ngOnDestroy() {};
@@ -124,7 +121,7 @@ export class SigninComponent implements OnInit {
   }
 
 
-  onCancelReset(event: any) {
+  onBackFromReset(event: any) {
     this.showPasswordReset = false;
     this.showSignin = true;
   }
