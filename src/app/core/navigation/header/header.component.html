@@ -84,10 +84,6 @@
       <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
       {{ "account.changePassword" | translate }}
     </button>
-    <button *ngIf="lightTheme" mat-menu-item (click)="selectTheme('dark-theme')">
-      <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
-      {{ "account.darkTheme" | translate }}
-    </button>
     <button *ngIf="!lightTheme" mat-menu-item (click)="selectTheme('light-theme')">
       <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
       {{ "account.lightTheme" | translate }}
