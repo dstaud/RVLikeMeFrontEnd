@@ -49,6 +49,7 @@ import { RegisterConfirmComponent } from './landing-page/register-user/register-
 import { SystemDataComponent } from './features/admin/system-data/system-data.component';
 import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
 import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
+import { ChangePasswordComponent } from './landing-page/change-password/change-password.component';
 
 
 Sentry.init({
@@ -98,7 +99,8 @@ export function getErrorHandler(): ErrorHandler {
     RegisterConfirmComponent,
     SystemDataComponent,
     ForgotPasswordComponent,
-    PasswordResetComponent
+    PasswordResetComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

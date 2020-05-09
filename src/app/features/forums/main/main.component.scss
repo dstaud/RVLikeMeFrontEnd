@@ -1,0 +1,55 @@
+@import './../../../../styles/_variables';
+
+.container {
+  margin-top: 50px;
+}
+
+.hyperlink {
+  color: $primary-color;
+}
+
+.group-list {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.group-heading {
+  float: left;
+  padding: 10px;
+  width: 100%;
+}
+
+.group-heading-light {
+  background-color: $light-mode-group;
+}
+
+.group-heading-dark {
+  background-color: $dark-mode-group;
+}
+
+.options {
+  float: right;
+  padding-right: 20px;
+}
+
+.options-icons {
+  padding-left: 10px;
+}
+
+.posts {
+  clear: left;
+}
+
+.group-attributes {
+  margin-left: 5px;
+  font-size: 90%;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

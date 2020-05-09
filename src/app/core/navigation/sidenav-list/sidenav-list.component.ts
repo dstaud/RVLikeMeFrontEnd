@@ -64,7 +64,7 @@ export class SidenavListComponent implements OnInit {
 
 
   onProfile() {
-    this.router.navigateByUrl('/profile');
+    this.router.navigateByUrl('/profile/main');
     this.closeSideNav();
   }
 

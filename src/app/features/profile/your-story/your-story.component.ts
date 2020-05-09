@@ -80,7 +80,7 @@ export class YourStoryComponent implements OnInit {
     let paramData: any;
 
     if (!this.shareDataSvc.getData()) {
-      this.router.navigateByUrl('/forums');
+      this.router.navigateByUrl('/forums/main');
     } else {
       paramData = JSON.parse(this.shareDataSvc.getData());
       this.userID = paramData.userID;

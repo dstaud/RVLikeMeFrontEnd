@@ -85,13 +85,13 @@ export class HeaderComponent implements OnInit {
   ngOnDestroy() {}
 
   changeProfileImage() {
-    this.router.navigateByUrl('/profile-personal');
-    this.activateBackArrowSvc.setBackRoute('/profile');
+    this.router.navigateByUrl('/profile/personal');
+    this.activateBackArrowSvc.setBackRoute('/profile/main');
   }
 
 
   updateProfile() {
-    this.router.navigateByUrl('/profile');
+    this.router.navigateByUrl('/profile/main');
     this.activateBackArrowSvc.setBackRoute('home/dashboard');
   }
 

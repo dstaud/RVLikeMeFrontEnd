@@ -10,6 +10,7 @@ import { PostsComponent } from './posts/posts.component';
 import { AddPostComponent } from './posts/add-post/add-post.component';
 import { CommentsComponent } from './posts/comments/comments.component';
 import { AddCommentComponent } from './posts/comments/add-comment/add-comment.component';
+import { MainComponent } from './main/main.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { AddCommentComponent } from './posts/comments/add-comment/add-comment.co
     PostsComponent,
     AddPostComponent,
     CommentsComponent,
-    AddCommentComponent],
+    AddCommentComponent,
+    MainComponent],
   imports: [
     CommonModule,
     ForumsRoutingModule,

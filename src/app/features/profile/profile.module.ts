@@ -12,6 +12,7 @@ import { PersonalComponent } from './personal/personal.component';
 import { RvRigComponent } from './rv-rig/rv-rig.component';
 import { LifestyleComponent } from './lifestyle/lifestyle.component';
 import { InterestsComponent } from './interests/interests.component';
+import { MainComponent } from './main/main.component';
 
 
 
@@ -23,7 +24,8 @@ import { InterestsComponent } from './interests/interests.component';
     LifestyleComponent,
     ImageCropperComponent,
     InterestsComponent,
-    ImageDialogComponent
+    ImageDialogComponent,
+    MainComponent
   ],
   imports: [
     CommonModule,

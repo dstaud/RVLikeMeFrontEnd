@@ -1,6 +1,12 @@
+@import './../../../../styles/_variables';
+
 .container {
   padding: 10px;
   margin-top: 50px;
+}
+
+.hyperlink {
+  color: $primary-color;
 }
 
 .checkbox {
@@ -9,7 +15,6 @@
 
 .button {
   margin-bottom: 10px;
-  margin-right: 10px;
 }
 
 .spinner {
@@ -19,15 +24,4 @@
   left: 0;
   bottom: 0;
   right: 0;
-}
-
-mat-icon {
-  font-size: 80%;
-}
-
-.list-item {
-  display: inline-flex;
-  vertical-align: middle;
-  align-items: center;
-  padding-left: 5px;
 }

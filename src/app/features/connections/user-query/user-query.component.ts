@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -21,11 +21,6 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./user-query.component.scss']
 })
 export class UserQueryComponent implements OnInit {
-
-  @Input('matches') matches: Array<{name: string, value: string}>;
-
-  @Output() onCancelQuery = new EventEmitter()
-
   showSpinner: boolean = false;
   showAllMatches: boolean = false;
   showQueryResults: boolean = false;
@@ -35,6 +30,7 @@ export class UserQueryComponent implements OnInit {
   showNoConnections: boolean = false;
   disableSingleMatchForumOffer: boolean = true;
   queryMatches: boolean = false;
+  matches: Array<{name: string, value: string}> = [];
   queryResultMessagePrefix: string;
   matchResults = [];
   theme: string;
@@ -54,6 +50,7 @@ export class UserQueryComponent implements OnInit {
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
+    let sharedData: any;
     if (!this.auth.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
@@ -62,11 +59,29 @@ export class UserQueryComponent implements OnInit {
 
     this.showSpinner = true;
 
-    this.listenForColorTheme();
+    console.log('UserQueryComponent:ngOnInit: in ngOnInit');
 
-    this.getQueryResults();
+    if (this.shareDataSvc.getData()) {
+      let sharedData = this.shareDataSvc.getData();
+      if (sharedData.matches !== undefined) {
+        console.log('UserQueryComponent:ngOnInit: matches exists?', sharedData.matches);
+        this.matches = sharedData.matches;
+        console.log('UserQueryComponent:ngOnInit: matches=', this.matches);
 
-    this.listenForUserProfile();
+        this.listenForColorTheme();
+
+        this.getQueryResults();
+
+        this.listenForUserProfile();
+
+      } else {
+        console.log('UserQueryComponent:ngOnInit: going to connections/main');
+        this.router.navigateByUrl('/connections/main');
+      }
+    } else {
+      console.log('UserQueryComponent:ngOnInit: going to connections/main');
+      this.router.navigateByUrl('/connections/main');
+    }
   }
 
   ngOnDestroy() {}
@@ -74,7 +89,7 @@ export class UserQueryComponent implements OnInit {
 
   // If user selects cancel
   onCancel() {
-    this.onCancelQuery.emit();
+    this.router.navigateByUrl('connections/main');
   }
 
 
@@ -96,18 +111,19 @@ export class UserQueryComponent implements OnInit {
     queryParams = queryParams + '}'
 
     this.shareDataSvc.setData(queryParams);
-    this.activateBackArrowSvc.setBackRoute('connections');
-    this.router.navigateByUrl('/forums');
+    this.activateBackArrowSvc.setBackRoute('connections/main');
+    this.router.navigateByUrl('/forums/main');
   }
 
 
   // Look for matches with user-selected query parameters
   private getQueryResults() {
+    console.log('UserQueryComponent:getQueryResults: matches=', this.matches);
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
     .subscribe(matchResults => {
       this.matchQueryParams(matchResults);
     }, error => {
-      console.error('UserQueryComponent:ngOnInit: throw error ', error);
+      console.error('UserQueryComponent:getQueryResults: throw error ', error);
       throw new Error(error);
     });
   }
@@ -119,7 +135,7 @@ export class UserQueryComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
+      console.log('ForumsListComponent:listenForColorTheme: Theme=', this.theme);
     });
   }
 
@@ -132,7 +148,7 @@ export class UserQueryComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
     }, error => {
-      console.error('UserQueryComponent:ngOnInit: throw error ', error);
+      console.error('UserQueryComponent:listenForUserProfile: throw error ', error);
       throw new Error(error);
     });
   }

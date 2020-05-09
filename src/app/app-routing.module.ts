@@ -7,13 +7,6 @@ import { PageNotFoundComponent } from './core/navigation/page-not-found/page-not
 import { SigninComponent } from './landing-page/signin/signin.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
 import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
-import { PersonalComponent } from './features/profile/personal/personal.component';
-import { RvRigComponent } from './features/profile/rv-rig/rv-rig.component';
-import { LifestyleComponent } from './features/profile/lifestyle/lifestyle.component';
-import { InterestsComponent } from './features/profile/interests/interests.component';
-import { UserQueryComponent } from './features/connections/user-query/user-query.component';
-import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
-import { YourStoryComponent } from './features/profile/your-story/your-story.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
 import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
@@ -75,13 +68,6 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'password-reset', component: PasswordResetComponent },
   { path: 'learn-more', component: LearnMoreComponent },
-  { path: 'profile-personal', component: PersonalComponent },
-  { path: 'profile-lifestyle', component: LifestyleComponent },
-  { path: 'profile-rig', component: RvRigComponent },
-  { path: 'profile-interests', component: InterestsComponent },
-  { path: 'user-query', component: UserQueryComponent },
-  { path: 'forums-list', component: ForumsListComponent },
-  { path: 'mystory', component: YourStoryComponent },
   { path: 'register-confirm', component: RegisterConfirmComponent },
   { path: '', component: LandingPageComponent, data: { animationState: 'One' } },
   { path: '**', component: PageNotFoundComponent }

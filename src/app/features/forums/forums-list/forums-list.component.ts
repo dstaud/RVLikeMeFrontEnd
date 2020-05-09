@@ -69,8 +69,8 @@ export class ForumsListComponent implements OnInit {
               '"theme":"' + this.theme + '"}';
 
     this.shareDataSvc.setData(params);
-    this.activateBackArrowSvc.setBackRoute('forums-list');
-    this.router.navigateByUrl('/forums');
+    this.activateBackArrowSvc.setBackRoute('forums/forums-list');
+    this.router.navigateByUrl('/forums/main');
   }
 
 

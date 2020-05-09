@@ -1,0 +1,39 @@
+<div class="mat-app-background container mat-body-1">
+  <div>
+    <p class="mat-title">{{ "connections.component.heading" | translate }}
+    </p>
+    <button *ngIf="showSingleMatchForumOffer"
+            [disabled]="disableSingleMatchForumOffer"
+            class="mat-raised-button button mat-primary"
+            (click)="onForum()">
+      {{ "connections.component.forumButton" | translate }}
+    </button>
+    <button *ngIf="showMultiMatchQuery"
+            class="mat-raised-button button mat-primary"
+            (click)="onQuery()">
+        {{ "connections.component.queryButton" | translate }}
+    </button>
+    <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation-->
+      <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
+        <mat-label>
+          <mat-checkbox [checked]="likeMeMatch.id === param"
+                        color="primary"
+                        class="checkbox"
+                        [value]="likeMeMatch.id"
+                        (change)="onCheckboxChange($event)">
+          </mat-checkbox>
+          {{likeMeMatch.match}}
+        </mat-label>
+      </div>
+    </form>
+    <div *ngIf="showNoConnections">
+      <p>{{ "connections.component.noResults1" | translate }} <span class="hyperlink" (click)="onProfile()">{{ "connections.component.noResults2" | translate }}</span> {{ "connections.component.noResults3" | translate }}</p>
+    </div>
+    <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+  </div>
+<!--   <div *ngIf="showQueryResults">
+    <app-rvlm-user-query [matches]="matches"
+                          (onCancelQuery)="onCancelQuery($event)"
+    ></app-rvlm-user-query>
+  </div> -->
+</div>

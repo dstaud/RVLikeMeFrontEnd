@@ -1,6 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -13,7 +12,6 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
   styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent implements OnInit {
-
   form: FormGroup;
   landingImage: string;
   maxRvImageHeight = 'auto';
@@ -66,6 +64,7 @@ export class PasswordResetComponent implements OnInit {
 
 
   onSubmit() {
+    this.showSpinner = true;
     let self = this;
 
     this.form.disable();
@@ -73,6 +72,7 @@ export class PasswordResetComponent implements OnInit {
     .subscribe(passwordResult => {
       console.log('PasswordReset:onSubmit: passwordResult=', passwordResult);
       this.shared.openSnackBar('Your password has been reset, please sign in.', 'message', 5000);
+      this.showSpinner = false;
 
       setTimeout(function () {
         self.ActivateBackArrowSvc.setBackRoute('landing-page');
@@ -80,6 +80,7 @@ export class PasswordResetComponent implements OnInit {
       }, 2000);
 
     }, error => {
+      this.showSpinner = false;
       if (error.status === 406) {
         this.httpError = true;
         this.httpErrorText = 'Token is not valid';

@@ -24,13 +24,13 @@ export class NewbieComponent implements OnInit {
 
   onLikeMe() {
     this.activateBackArrowSvc.setBackRoute('newbie');
-    this.router.navigateByUrl('/connections');
+    this.router.navigateByUrl('/connections/main');
   }
 
 
   onProfile() {
     this.activateBackArrowSvc.setBackRoute('newbie');
-    this.router.navigateByUrl('/profile');
+    this.router.navigateByUrl('/profile/main');
   }
 
 
