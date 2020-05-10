@@ -181,6 +181,7 @@ export class AuthenticationService {
     const token = this.getToken();
     let payload;
     if (token) {
+      console.log('token=', token);
       payload = token.split('.')[1];
       payload = window.atob(payload);
       this.sentryMonitorSvc.monitorUser(JSON.parse(payload));

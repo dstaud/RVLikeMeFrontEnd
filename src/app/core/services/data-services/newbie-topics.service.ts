@@ -62,7 +62,7 @@ export class NewbieTopicsService {
                     '"photoUrl":"' + photoUrl + '",' +
                     '"body":"' + postEscaped + '"}'
 
-    return this.http.put(`/api/newbie-topic-post`, JSON.parse(keyValues), {});
+    return this.http.post(`/api/newbie-topic-post`, JSON.parse(keyValues), {});
   }
 
   getNewbieLinks(topicID: string): Observable<any> {
