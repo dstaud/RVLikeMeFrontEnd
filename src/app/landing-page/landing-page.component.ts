@@ -8,7 +8,8 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ShareDataService } from './../core/services/share-data.service';
 
-import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
+import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
+import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
 
 @Component({
   selector: 'app-rvlm-landing-page',
@@ -73,7 +74,7 @@ export class LandingPageComponent implements OnInit {
   // If desktop, present register component in dialog and take action when registration complete.
   onRegisterUser() {
     if (this.windowWidth > 600) {
-      this.openDialog('register', (result: string) => {
+      this.openRegisterDialog((result: string) => {
         if (result === 'complete') {
           this.onSignIn();
         }
@@ -92,7 +93,8 @@ export class LandingPageComponent implements OnInit {
   onSignIn() {
     this.shareDataSvc.setData(true) // To indicate to signin page coming from landing page
     if (this.windowWidth > 600) {
-      this.openDialog('signin', (result: string) => {
+      this.openSigninDialog((result: string) => {
+        console.log('LandingPageComponent:onSignIn: back from dialog. result=', result);
         if (result === 'complete') {
           this.activateBackArrowSvc.setBackRoute('landing-page');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
@@ -109,12 +111,25 @@ export class LandingPageComponent implements OnInit {
 
 
   // For Desktop users, present register / signin as a dialog
-  private openDialog(component: string, cb: CallableFunction): void {
-    const dialogRef = this.dialog.open(DesktopDialogComponent, {
+  private openRegisterDialog(cb: CallableFunction): void {
+    const dialogRef = this.dialog.open(RegisterDesktopDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true,
-      data: { component: component }
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+        cb(result);
+    });
+  }
+
+  private openSigninDialog(cb: CallableFunction): void {
+    const dialogRef = this.dialog.open(SigninDesktopDialogComponent, {
+      width: '400px',
+      height: '550px',
+      disableClose: true
     });
 
     dialogRef.afterClosed()

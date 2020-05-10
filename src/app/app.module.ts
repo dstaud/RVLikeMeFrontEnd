@@ -37,7 +37,6 @@ import { WindowService } from '@services/window.service';
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
-import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
@@ -49,6 +48,8 @@ import { RegisterConfirmComponent } from './landing-page/register-user/register-
 import { SystemDataComponent } from './features/admin/system-data/system-data.component';
 import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
 import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
+import { RegisterDesktopDialogComponent } from './dialogs/register-desktop-dialog/register-desktop-dialog.component';
+import { SigninDesktopDialogComponent } from './dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 
 
 Sentry.init({
@@ -87,7 +88,6 @@ export function getErrorHandler(): ErrorHandler {
     OtherDialogComponent,
     InstallDialogComponent,
     MyStoryDialogComponent,
-    DesktopDialogComponent,
     ImageViewDialogComponent,
     ForumsListComponent,
     UpdatePostDialogComponent,
@@ -98,7 +98,9 @@ export function getErrorHandler(): ErrorHandler {
     RegisterConfirmComponent,
     SystemDataComponent,
     ForgotPasswordComponent,
-    PasswordResetComponent
+    PasswordResetComponent,
+    RegisterDesktopDialogComponent,
+    SigninDesktopDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
