@@ -96,8 +96,14 @@ export class HeaderComponent implements OnInit {
   }
 
 
+  changePassword() {
+    this.router.navigateByUrl('/credentials/change-password');
+    this.activateBackArrowSvc.setBackRoute('/home/dashboard');
+  }
+
+
   changeUsername() {
-    this.router.navigateByUrl('/credentials');
+    this.router.navigateByUrl('/credentials/change-username');
     this.activateBackArrowSvc.setBackRoute('/home/dashboard');
   }
 

@@ -184,7 +184,7 @@ export class PostsComponent implements OnInit {
                       '"params":' + userParams + '}';
     this.activateBackArrowSvc.setBackRoute('forums-list');
     this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/mystory');
+    this.router.navigateByUrl('/profile/mystory');
   }
 
 

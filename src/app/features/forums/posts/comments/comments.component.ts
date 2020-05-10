@@ -54,7 +54,7 @@ export class CommentsComponent implements OnInit {
     console.log('CommentsComponent:onYourStory: params=', params);
     this.activateBackArrowSvc.setBackRoute('forums-list');
     this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/mystory');
+    this.router.navigateByUrl('/profile/mystory');
   }
 
 

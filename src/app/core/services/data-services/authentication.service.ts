@@ -48,12 +48,24 @@ export class AuthenticationService {
     return this.http.put(`/api/activate`, params, {});
   }
 
+  changePassword(user: any): Observable<any> {
+    return this.http.post(`/api/change-password`, user, {});
+  }
+
+  changeUsername(user: any): Observable<any> {
+    return this.http.put(`/api/username`, user, {});
+  }
+
   getPasswordResetToken(email: string, noExpire: boolean, type: string): Observable<any> {
     let params = JSON.parse('{"email":"' + email + '",' +
                             '"noExpire":"' + noExpire + '",' +
                             '"type":"' + type + '"}');
 
     return this.http.post(`/api/get-password-reset-token`, params, {});
+  }
+
+  getDaveInfo(): Observable<any> {
+    return this.http.get(`/api/dave`);
   }
 
   getUser(): Observable<any> {
@@ -155,10 +167,6 @@ export class AuthenticationService {
 
   updateLoginCount(): Observable<any> {
     return this.http.put(`/api/login-count`, {});
-  }
-
-  updateUsername(user: ItokenPayload): Observable<any> {
-    return this.http.put(`/api/username`, user, {});
   }
 
   private getToken(): string {

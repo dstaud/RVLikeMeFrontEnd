@@ -52,7 +52,7 @@ export class YourStoryComponent implements OnInit {
 
   // Navigate to send messages for the user whose story viewing
   onMessageUser() {
-    this.activateBackArrowSvc.setBackRoute('mystory');
+    this.activateBackArrowSvc.setBackRoute('profile/mystory');
     this.shareDataSvc.setData(this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');
   }
@@ -82,6 +82,7 @@ export class YourStoryComponent implements OnInit {
     if (!this.shareDataSvc.getData()) {
       this.router.navigateByUrl('/forums/main');
     } else {
+      console.log('YourStoryComponent:getParameters: story params=', paramData);
       paramData = JSON.parse(this.shareDataSvc.getData());
       this.userID = paramData.userID;
       this.userIdViewer = paramData.userIdViewer;

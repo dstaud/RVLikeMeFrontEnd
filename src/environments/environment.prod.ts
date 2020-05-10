@@ -2,6 +2,5 @@ export const environment = {
   production: true,
   dataServiceURL: 'https://api.rvlikeme.com/',
   name: 'Production',
-  vapidPublicKey: 'BF5-UcPePk-AQPmdbupW3VG6OCjSGX0AXnykcsaO4KnDiDkkxqiln3NGZFjUGOk_rXBM846a7Hg00_ZbFHQeYTc',
-  daveProfileID: '5ea719c14c037f09d9e5feb8'
+  vapidPublicKey: 'BF5-UcPePk-AQPmdbupW3VG6OCjSGX0AXnykcsaO4KnDiDkkxqiln3NGZFjUGOk_rXBM846a7Hg00_ZbFHQeYTc'
 };

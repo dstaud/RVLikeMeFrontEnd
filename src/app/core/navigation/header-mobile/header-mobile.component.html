@@ -58,7 +58,7 @@
       <mat-icon matPrefix fontSet="material-icons-outlined">account_box</mat-icon>
       {{ "account.changeUsername" | translate }}
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="onChangePassword()">
       <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
       {{ "account.changePassword" | translate }}
     </button>

@@ -1,14 +1,14 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { environment } from '@environments/environment';
-import { Observable } from 'rxjs';
+import { Observable} from 'rxjs';
+import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { AuthenticationService } from '@services/data-services/authentication.service';
+import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService } from '@services/share-data.service';
 
@@ -18,7 +18,7 @@ import { ShareDataService } from '@services/share-data.service';
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent implements OnInit {
-  daveID: string = environment.daveProfileID;
+  daveID: string;
   daveDisplayName: string;
   daveProfileImageUrl: string;
 
@@ -47,26 +47,31 @@ export class AboutComponent implements OnInit {
   ngOnDestroy() {}
 
   onDaveStory() {
-    let userParams = this.packageParamsForMessaging();
-    let params = '{"userID":"' + this.daveID + '",' +
-                      '"userIdViewer":"' + this.profile.userID + '",' +
-                      '"params":' + userParams + '}';
-    this.activateBackArrowSvc.setBackRoute('about');
-    this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/mystory');
+    if (this.daveID) {
+      let userParams = this.packageParamsForMessaging();
+      console.log('AboutComponent:onDaveStory: userParams=', userParams);
+      let params = '{"userID":"' + this.daveID + '",' +
+                        '"userIdViewer":"' + this.profile.userID + '",' +
+                        '"params":' + userParams + '}';
+      this.activateBackArrowSvc.setBackRoute('about');
+      this.shareDataSvc.setData(params);
+      this.router.navigateByUrl('/profile/mystory');
+    }
   }
 
-
-  // Listen for Profile changes
-  private getDaveProfile() {
-    console.log('AboutComponent:getDaveProfile: Userid =', this.daveID);
-    this.profileSvc.getUserProfile(this.daveID)
-    .subscribe(profileResult => {
-      this.daveDisplayName = profileResult.displayName;
-      this.daveProfileImageUrl = profileResult.profileImageUrl;
+  // Get Dave credentials ID from database
+  private getDaveInfo() {
+    this.authSvc.getDaveInfo()
+    .pipe(take(1))
+    .subscribe(dave => {
+      this.daveID = dave.id;
+      this.daveDisplayName = dave.displayName;
+      this.daveProfileImageUrl = dave.profileImageUrl;
+      console.log('AboutComponent:getDaveInfo: dave=', dave);
     }, error => {
-      console.error('AboutComponent:getDaveProfile: error getting dave profile ', error);
-      throw new Error(error);
+      if (error.status !== 404) {
+        console.error('AboutComponent:getDaveCredentials: error getting user credentials ', error);
+      }
     });
   }
 
@@ -78,7 +83,7 @@ export class AboutComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.profile = profileResult;
-      this.getDaveProfile();
+      this.getDaveInfo();
     }, error => {
       console.error('AboutComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
