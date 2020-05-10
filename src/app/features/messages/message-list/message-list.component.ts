@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -7,6 +8,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
 import { ShareDataService } from '@services/share-data.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
 
 @Component({
   selector: 'app-message-list',
@@ -29,9 +32,24 @@ export class MessageListComponent implements OnInit {
   constructor(private messagesSvc: MessagesService,
               private profileSvc: ProfileService,
               private shareDataSvc: ShareDataService,
+              private location: Location,
+              private authSvc: AuthenticationService,
+              private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
   ngOnInit(): void {
+    let backPath;
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
     this.showSpinner = true;
 
     this.listenForUserProfile();
@@ -43,14 +61,15 @@ export class MessageListComponent implements OnInit {
   ngOnDestroy() {}
 
   onClickGoToGroup() {
-    this.router.navigateByUrl('forums');
+    this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
+    this.router.navigateByUrl('/forums/forums-list');
   }
 
   // When user clicks on a conversation, extract the information needed on the SendMessageComponent,
   // save it for that component and navigate
   onSelectSendTo(row: number) {
     this.setParameters(row);
-
+    this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
     this.router.navigateByUrl('/messages/send-message');
   }
 

@@ -37,9 +37,13 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
     if (!this.authSvc.isLoggedIn()) {
       let backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
     this.listenForUserProfile();
   }
@@ -53,7 +57,7 @@ export class AboutComponent implements OnInit {
       let params = '{"userID":"' + this.daveID + '",' +
                         '"userIdViewer":"' + this.profile.userID + '",' +
                         '"params":' + userParams + '}';
-      this.activateBackArrowSvc.setBackRoute('about');
+      this.activateBackArrowSvc.setBackRoute('about', 'forward');
       this.shareDataSvc.setData(params);
       this.router.navigateByUrl('/profile/mystory');
     }

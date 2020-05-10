@@ -52,7 +52,7 @@ export class CommentsComponent implements OnInit {
                       '"userIdViewer":"' + this.userID + '",' +
                       '"params":' + userParams + '}';
     console.log('CommentsComponent:onYourStory: params=', params);
-    this.activateBackArrowSvc.setBackRoute('forums-list');
+    this.activateBackArrowSvc.setBackRoute('forums-list', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/profile/mystory');
   }

@@ -109,7 +109,7 @@ export class NewbieTopicsComponent implements OnInit {
 
     params = '{"topicID":"' + topicID + '","topicDesc":"' + topicDesc + '"}';
     this.shareDataSvc.setData(params);
-    this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie');
+    this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie', 'forward');
     this.router.navigateByUrl('/newbie/topic');
   }
 

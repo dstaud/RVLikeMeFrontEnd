@@ -138,7 +138,6 @@ export class PersonalComponent implements OnInit {
   private windowWidth: any;
   private dialogWidth: number;
   private dialogWidthDisplay: string;
-  private backPath: string;
 
   // Interface for Profile data
   private profile: IuserProfile;
@@ -184,13 +183,17 @@ export class PersonalComponent implements OnInit {
     }
 
   ngOnInit() {
-    // If user got to this page without logging in (i.e. a bookmark or attack), send
-    // them to the signin page and set the back path to the page they wanted to go
+    let backPath;
+
     if (!this.authSvc.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
     this.setDialogWindowDimensions();
 

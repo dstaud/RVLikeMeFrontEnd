@@ -40,7 +40,6 @@ export class MainComponent implements OnInit {
   matches = [];
   theme: string;
 
-  private backPath = '';
   private likeMeItem: string;
   private likeMeDesc: string;
   private likeMeAnswer: string;
@@ -56,7 +55,7 @@ export class MainComponent implements OnInit {
   private allCountsReceived: boolean = false;
 
   constructor(private translate: TranslateService,
-              private auth: AuthenticationService,
+              private authSvc: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
               private likeMeCountsSvc: LikemeCountsService,
@@ -72,12 +71,17 @@ export class MainComponent implements OnInit {
               }
 
   ngOnInit() {
-    console.log('ConnectionsComponent:ngOnInit');
-    if (!this.auth.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+    let backPath;
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
     this.showSpinner = true;
 
@@ -110,7 +114,7 @@ export class MainComponent implements OnInit {
 
 
   onProfile() {
-    this.activateBackArrowSvc.setBackRoute('connections');
+    this.activateBackArrowSvc.setBackRoute('connections/main', 'forward');
     this.router.navigateByUrl('/profile/main');
   }
 
@@ -250,7 +254,7 @@ export class MainComponent implements OnInit {
     let i: number = 0;
 
     this.queryParams = '{';
-    this.activateBackArrowSvc.setBackRoute('connections/main');
+    this.activateBackArrowSvc.setBackRoute('connections/main', 'forward');
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
       value = this.profile[item.value];
@@ -283,7 +287,7 @@ export class MainComponent implements OnInit {
       i++;
     });
     this.shareDataSvc.setData({"matches":this.matches});
-    this.activateBackArrowSvc.setBackRoute('connections/main');
+    this.activateBackArrowSvc.setBackRoute('connections/main', 'forward');
     this.router.navigateByUrl('/connections/user-query');
   }
 

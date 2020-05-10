@@ -25,12 +25,11 @@ export class ForumsListComponent implements OnInit {
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
-  private backPath: string;
   private groupsListFromUserProfile = [];
   private groupProfileDisplayAttributesFromGroup = [];
 
   constructor(private router: Router,
-              private auth: AuthenticationService,
+              private authSvc: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
               public translate: TranslateService,
@@ -39,15 +38,21 @@ export class ForumsListComponent implements OnInit {
               private shareDataSvc: ShareDataService) { }
 
   ngOnInit(): void {
-    if (!this.auth.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+    let backPath;
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForColorTheme();
+
+      this.listenForUserProfile();
     }
-
-    this.listenForColorTheme();
-
-    this.listenForUserProfile();
   }
 
   ngOnDestroy() {
@@ -55,7 +60,8 @@ export class ForumsListComponent implements OnInit {
 
   // If user likes the comment, add to the total for likes for the comment
   onLikeMe() {
-    this.router.navigateByUrl('connections');
+    this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
+    this.router.navigateByUrl('/connections/main');
   }
 
 
@@ -69,7 +75,7 @@ export class ForumsListComponent implements OnInit {
               '"theme":"' + this.theme + '"}';
 
     this.shareDataSvc.setData(params);
-    this.activateBackArrowSvc.setBackRoute('forums/forums-list');
+    this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
     this.router.navigateByUrl('/forums/main');
   }
 

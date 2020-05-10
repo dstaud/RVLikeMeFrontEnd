@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
-import { ItokenPayload } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
 
 @Component({
@@ -32,6 +34,9 @@ export class ChangeUsernameComponent implements OnInit {
 
   constructor(private authSvc: AuthenticationService,
               private shared: SharedComponent,
+              private location: Location,
+              private router: Router,
+              private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
                 username: new FormControl('', [Validators.required, Validators.email]),
@@ -40,10 +45,23 @@ export class ChangeUsernameComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.form.disable();
-    this.showSpinner = true;
+    let backPath;
+    let self = this;
 
-    this.getCredentials();
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.form.disable();
+      this.showSpinner = true;
+
+      this.getCredentials();
+    }
   }
 
   ngOnDestroy() {};

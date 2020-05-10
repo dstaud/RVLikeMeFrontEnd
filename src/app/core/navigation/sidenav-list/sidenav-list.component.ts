@@ -46,30 +46,35 @@ export class SidenavListComponent implements OnInit {
 
 
   onAdmin() {
+    this.activateBackArrowSvc.setBackRoute('');
     this.router.navigateByUrl('/admin');
     this.closeSideNav();
   }
 
 
   onAbout() {
+    this.activateBackArrowSvc.setBackRoute('');
     this.router.navigateByUrl('/about');
     this.closeSideNav();
   }
 
 
   onNewbieCorner() {
+    this.activateBackArrowSvc.setBackRoute('');
     this.router.navigateByUrl('/newbie/need-help-newbie');
     this.closeSideNav();
   }
 
 
   onProfile() {
+    this.activateBackArrowSvc.setBackRoute('');
     this.router.navigateByUrl('/profile/main');
     this.closeSideNav();
   }
 
 
   onSettings() {
+    this.activateBackArrowSvc.setBackRoute('');
     this.router.navigateByUrl('/settings');
     this.closeSideNav();
   }

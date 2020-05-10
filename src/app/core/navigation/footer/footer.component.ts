@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { DeviceService } from '@services/device.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-footer',
@@ -12,13 +14,22 @@ export class FooterComponent implements OnInit {
 
   @Output() public sidenavToggle = new EventEmitter();
 
-  constructor(private deviceSvc: DeviceService) { }
+  constructor(private deviceSvc: DeviceService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private router: Router) { }
 
   ngOnInit() {
+    // Make adjustment for extra space needed for iPhonePlus models
     this.iPhoneXPlus = this.deviceSvc.iPhoneModelXPlus;
   }
 
-  public onToggleSidenav = () => {
+
+  onRoute() {
+    this.activateBackArrowSvc.setBackRoute('');
+  }
+
+
+  onToggleSidenav = () => {
     this.sidenavToggle.emit();
   }
 }

@@ -44,7 +44,7 @@ export class LearnMoreComponent implements OnInit {
                   this.containerDesktop = true;
                 } else {
                   this.headerVisibleSvc.toggleHeaderVisible(true);
-                  this.activateBackArrowSvc.setBackRoute('landing-page');
+                  this.activateBackArrowSvc.setBackRoute('', 'forward');
                 }
               }
 
@@ -62,7 +62,7 @@ export class LearnMoreComponent implements OnInit {
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.router.navigateByUrl('/register');
-    this.activateBackArrowSvc.setBackRoute('landing-page');
+    this.activateBackArrowSvc.setBackRoute('', 'forward');
   }
 
   private setImageBasedOnScreenWidth() {

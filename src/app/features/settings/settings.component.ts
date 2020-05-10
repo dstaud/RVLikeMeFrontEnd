@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SwUpdate, SwPush } from '@angular/service-worker';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
@@ -9,6 +11,8 @@ import { SubscribeNotificationsService } from '@services/data-services/subscribe
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { ThemeService } from '@services/theme.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
 
 @Component({
   selector: 'app-rvlm-settings',
@@ -29,11 +33,27 @@ export class SettingsComponent implements OnInit {
   constructor(private swUpdate: SwUpdate,
               private swPush: SwPush,
               private profileSvc: ProfileService,
+              private authSvc: AuthenticationService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private router: Router,
+              private location: Location,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private themeSvc: ThemeService,
               private subscribeNotificationsSvc: SubscribeNotificationsService) { }
 
   ngOnInit(): void {
+    let backPath;
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
     this.listenBeforeInstall();
 
     this.listenForUserProfile();

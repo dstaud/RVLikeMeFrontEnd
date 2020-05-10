@@ -23,7 +23,7 @@ export class MessagesComponent implements OnInit {
   ngOnInit() {
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
   }

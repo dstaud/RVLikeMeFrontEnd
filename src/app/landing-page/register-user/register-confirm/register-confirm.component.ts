@@ -11,8 +11,7 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
-import { DesktopDialogComponent } from '@dialogs/desktop-dialog/desktop-dialog.component';
-
+import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
 
 @Component({
@@ -70,7 +69,7 @@ export class RegisterConfirmComponent implements OnInit {
     if (this.windowWidth > 600) {
       this.openDialog('signin', (result: string) => {
         if (result === 'complete') {
-          this.activateBackArrowSvc.setBackRoute('landing-page');
+          this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
           this.router.navigateByUrl('/home/dashboard');
         }
@@ -79,7 +78,7 @@ export class RegisterConfirmComponent implements OnInit {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.router.navigateByUrl('/signin');
-      this.activateBackArrowSvc.setBackRoute('landing-page');
+      this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
   }
 
@@ -121,7 +120,7 @@ export class RegisterConfirmComponent implements OnInit {
 
   // For Desktop users, present register / signin as a dialog
   private openDialog(component: string, cb: CallableFunction): void {
-    const dialogRef = this.dialog.open(DesktopDialogComponent, {
+    const dialogRef = this.dialog.open(RegisterDesktopDialogComponent, {
       width: '340px',
       height: '525px',
       disableClose: true,

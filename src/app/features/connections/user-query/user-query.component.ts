@@ -37,10 +37,9 @@ export class UserQueryComponent implements OnInit {
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
-  private backPath: string;
 
   constructor(private translate: TranslateService,
-              private auth: AuthenticationService,
+              private authSvc: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -51,11 +50,17 @@ export class UserQueryComponent implements OnInit {
 
   ngOnInit() {
     let sharedData: any;
-    if (!this.auth.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+    let backPath;
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
     this.showSpinner = true;
 
@@ -111,7 +116,7 @@ export class UserQueryComponent implements OnInit {
     queryParams = queryParams + '}'
 
     this.shareDataSvc.setData(queryParams);
-    this.activateBackArrowSvc.setBackRoute('connections/main');
+    this.activateBackArrowSvc.setBackRoute('', 'nostack');
     this.router.navigateByUrl('/forums/main');
   }
 

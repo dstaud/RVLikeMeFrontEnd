@@ -60,9 +60,13 @@ export class SendMessageComponent implements OnInit {
   ngOnInit(): void {
     if (!this.authSvc.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
     this.listenForChangeInColorTheme();
 

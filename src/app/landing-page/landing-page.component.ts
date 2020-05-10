@@ -61,7 +61,7 @@ export class LandingPageComponent implements OnInit {
 
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.activateBackArrowSvc.setBackRoute('landing-page');
+    this.activateBackArrowSvc.setBackRoute('', 'forward');
 
     params = '{"desktop":' + desktop + '}'
     console.log('LandingPageComponent:onLearnMore: params=', params);
@@ -83,7 +83,7 @@ export class LandingPageComponent implements OnInit {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.router.navigateByUrl('/register');
-      this.activateBackArrowSvc.setBackRoute('landing-page');
+      this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
   }
 
@@ -96,7 +96,7 @@ export class LandingPageComponent implements OnInit {
       this.openSigninDialog((result: string) => {
         console.log('LandingPageComponent:onSignIn: back from dialog. result=', result);
         if (result === 'complete') {
-          this.activateBackArrowSvc.setBackRoute('landing-page');
+          this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
           this.router.navigateByUrl('/home/dashboard');
         }
@@ -105,7 +105,7 @@ export class LandingPageComponent implements OnInit {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.router.navigateByUrl('/signin');
-      this.activateBackArrowSvc.setBackRoute('landing-page');
+      this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
   }
 

@@ -43,7 +43,7 @@ export class TopicComponent implements OnInit {
   onGroup() {
     let params: string;
 
-    this.activateBackArrowSvc.setBackRoute('newbie/topic');
+    this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
     params = '{"forumType":"topic","topicID":"' + this.topicID + '","topicDesc":"' + this.topicDesc + '" }'
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/forums/main');

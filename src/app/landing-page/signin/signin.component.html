@@ -1,7 +1,7 @@
 <div ngClass="container container-desktop mat-body-1"
     [ngClass.xs]="{'container': true, 'container-desktop': false}"
     [ngClass.md]="{'container': false, 'container-desktop': true}">
-  <div *ngIf="showSignin">
+  <div *ngIf="!showPasswordReset">
     <div><span class="mat-title">Sign In</span></div>
     <br>
     <div *ngIf="httpError">

@@ -104,14 +104,10 @@ export class HeaderMobileComponent implements OnInit {
 
 
   returnToBackRoute() {
-    if (this.returnRoute === 'landing-page') {
-      this.headerVisibleSvc.toggleHeaderVisible(false);
-      this.router.navigateByUrl('/');
-    } else {
-      console.log('HeaderMobileComponent:returnToBackRoute: return route=', this.returnRoute);
-      this.router.navigateByUrl('/' + this.returnRoute);
-    }
-    this.activateBackArrowSvc.setBackRoute('');
+    let route = '/' + this.returnRoute
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    console.log('HeaderMobileComponent:returnToBackRoute: routing to ', route);
+    this.router.navigateByUrl(route);
   }
 
 
@@ -176,22 +172,30 @@ export class HeaderMobileComponent implements OnInit {
 
 
   private setReturnRoute() {
+    let returnStack: Array<string> = [];
+    let i: number;
+
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
-      this.returnRoute = data.valueOf();
-      if (this.returnRoute) {
-        if (this.returnRoute.substring(0, 1) === '*') {
-            this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
+      returnStack = data;
+      console.log('HeaderMobileComonent:setReturnRoute: return stack=', returnStack);
+      i = returnStack.length - 1;
+      if (returnStack.length > 0) {
+        if (returnStack[i].substring(0, 1) === '*') {
+            this.returnRoute = returnStack[i].substring(1, returnStack[i].length);
             this.autoRoute = true;
             this.showBackArrow = false;
           } else {
+            this.returnRoute = returnStack[i];
             this.showBackArrow = true;
           }
-        } else {
-            this.showBackArrow = false;
-            this.autoRoute = false;
-        }
+      } else {
+          this.returnRoute = '';
+          this.showBackArrow = false;
+          this.autoRoute = false;
+      }
+        console.log('HeaderMobileComonent:setReturnRoute: return route=', this.returnRoute);
     }, error => {
       console.error('HeaderMobileComponent:setReturnRoute: error setting return route ', error);
     });

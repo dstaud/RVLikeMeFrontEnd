@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit {
   experiencedHelp: boolean = false;
   theme: string = 'light-theme';
 
-  private backPath = '';
   private userProfile: Observable<IuserProfile>;
   private profile: IuserProfile;
 
@@ -37,22 +36,28 @@ export class HomeComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
+    let backPath;
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
     if (!this.auth.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
-    }
+    } else {
 /*
     this.listenForColorTheme();
 
     this.listenForUserProfile(); */
+    }
   }
 
   ngOnDestroy() {}
 
 
   onHelpNewbieTopic() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/newbie/help-newbie');
   }
 
@@ -60,7 +65,7 @@ export class HomeComponent implements OnInit {
   onNewbieTopics() {
     let params = '{"displayName":"' + this.profile.displayName + '","profileImageUrl":"' + this.profile.profileImageUrl + '"}'
     this.shareDataSvc.setData(params);
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/newbie/need-help-newbie');
   }
 

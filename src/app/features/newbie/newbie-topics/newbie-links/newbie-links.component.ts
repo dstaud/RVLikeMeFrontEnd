@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -9,6 +10,7 @@ import { NewbieTopicsService, InewbieLinks } from '@services/data-services/newbi
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UserTypeService } from '@services/user-type.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ShareDataService } from '@services/share-data.service';
 
 @Component({
@@ -43,6 +45,8 @@ export class NewbieLinksComponent implements OnInit {
               private profileSvc: ProfileService,
               private userTypeSvc: UserTypeService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private authSvc: AuthenticationService,
+              private location: Location,
               private shareDataSvc: ShareDataService,
               private router: Router,
               fb: FormBuilder) {
@@ -55,6 +59,18 @@ export class NewbieLinksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let backPath;
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
     this.listenForUserProfile();
 
     this.listenForUserType();
@@ -116,7 +132,7 @@ export class NewbieLinksComponent implements OnInit {
                       '"topicID":"' + this.topicID + '",' +
                       '"topicDesc":"' + this.topicDesc + '"}';
     console.log('NewbieLinksComponent:onYourStory: parmas=', params);
-    this.activateBackArrowSvc.setBackRoute('newbie/topic');
+    this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/mystory');
   }

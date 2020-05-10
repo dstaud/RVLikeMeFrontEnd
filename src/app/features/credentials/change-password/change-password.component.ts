@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -33,6 +35,8 @@ export class ChangePasswordComponent implements OnInit {
   constructor(private authSvc: AuthenticationService,
               private router: Router,
               private shared: SharedComponent,
+              private location: Location,
+              private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
                 currentPassword: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)]),
@@ -41,7 +45,18 @@ export class ChangePasswordComponent implements OnInit {
 }
 
   ngOnInit(): void {
-    this.getCredentials();
+    let backPath;
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.getCredentials();
+    }
   }
 
   ngOnDestroy() {}

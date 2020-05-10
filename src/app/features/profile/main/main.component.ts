@@ -64,7 +64,6 @@ export class MainComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
 
-  private backPath = '';
   private totalLifestyleFieldsWithData = 0;
   private totalLifestyleNbrOfFields = 6;
 
@@ -93,11 +92,17 @@ export class MainComponent implements OnInit {
             }
 
   ngOnInit() {
+    let backPath;
+
     if (!this.authSvc.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
     this.form.disable();
     this.showSpinner = true;
@@ -127,22 +132,22 @@ export class MainComponent implements OnInit {
 
   /**** Route to sub-profile pages as user selects ****/
   onInterests() {
-    this.activateBackArrowSvc.setBackRoute('profile/main');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.router.navigateByUrl('/profile/interests');
   }
 
   onLifestyle() {
-    this.activateBackArrowSvc.setBackRoute('profile/main');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.router.navigateByUrl('/profile/lifestyle');
   }
 
   onPersonal() {
-    this.activateBackArrowSvc.setBackRoute('profile/main');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.router.navigateByUrl('/profile/personal');
   }
 
   onRig() {
-    this.activateBackArrowSvc.setBackRoute('profile/main');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.router.navigateByUrl('/profile/rig');
   }
 
@@ -152,7 +157,7 @@ export class MainComponent implements OnInit {
     let params = '{"userID":"' + this.profile.userID + '",' +
                       '"userIdViewer":"' + this.profile.userID + '",' +
                       '"params":' + userParams + '}';
-    this.activateBackArrowSvc.setBackRoute('profile/main');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/profile/mystory');
   }

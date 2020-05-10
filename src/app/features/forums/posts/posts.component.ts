@@ -182,7 +182,7 @@ export class PostsComponent implements OnInit {
     let params = '{"userID":"' + toUserID + '",' +
                       '"userIdViewer":"' + this.userID + '",' +
                       '"params":' + userParams + '}';
-    this.activateBackArrowSvc.setBackRoute('forums-list');
+    this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/profile/mystory');
   }

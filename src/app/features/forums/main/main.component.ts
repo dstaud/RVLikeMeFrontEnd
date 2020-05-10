@@ -38,7 +38,6 @@ export class MainComponent implements OnInit {
   showMoreOption = false;
 
   private groupID: string;
-  private backPath = '';
   private groupProfileCodeAttributesFromGroup = [];
   private groupsListFromUserProfile = [];
 
@@ -58,17 +57,23 @@ export class MainComponent implements OnInit {
               }
 
   ngOnInit() {
+    let backPath;
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
     if (!this.auth.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForChangeInColorTheme();
+
+      this.listenForUserProfile();
+
+      this.getGroup();
     }
-
-    this.listenForChangeInColorTheme();
-
-    this.listenForUserProfile();
-
-    this.getGroup();
   }
 
   ngOnDestroy() {}

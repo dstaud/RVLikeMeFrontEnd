@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
     console.log('IN DASHBOARD, NOT HOME')
     if (!this.auth.isLoggedIn()) {
       this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath);
+      this.activateBackArrowSvc.setBackRoute('*' + this.backPath, 'forward');
       this.router.navigateByUrl('/signin');
     }
 
@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit {
 
 
   onHelpNewbieTopic() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/newbie/help-newbie');
   }
 
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit {
   onNewbieTopics() {
     let params = '{"displayName":"' + this.profile.displayName + '","profileImageUrl":"' + this.profile.profileImageUrl + '"}'
     this.shareDataSvc.setData(params);
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/newbie/need-help-newbie');
   }
 

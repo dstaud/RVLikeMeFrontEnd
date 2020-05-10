@@ -1,7 +1,7 @@
 <footer class="footer" fxFlexOffset="auto">
   <mat-toolbar color="primary" class="toolbar" [ngClass]="iPhoneXPlus ? 'footer-height-plus' : 'footer-height'" role="toolbar">
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-      <button mat-button routerLink="/home/dashboard" routerLinkActive="active-menu-item">
+      <button mat-button (click)="onRoute()" routerLink="/home/dashboard" routerLinkActive="active-menu-item">
         <div class="menu-icon">
           <mat-icon fontSet="material-icons-outlined">home</mat-icon>
         </div>
@@ -9,7 +9,7 @@
           <span>{{ "menu.home" | translate }}</span>
         </div>
       </button>
-      <button mat-button routerLink="/connections/main" routerLinkActive="active-menu-item">
+      <button mat-button (click)="onRoute()" routerLink="/connections/main" routerLinkActive="active-menu-item">
         <div class="menu-icon">
           <mat-icon fontSet="material-icons-outlined">people</mat-icon>
         </div>
@@ -17,7 +17,7 @@
           <span>{{ "menu.connections" | translate }}</span>
         </div>
       </button>
-      <button mat-button routerLink="/forums/forums-list" routerLinkActive="active-menu-item">
+      <button mat-button (click)="onRoute()" routerLink="/forums/forums-list" routerLinkActive="active-menu-item">
         <div class="menu-icon">
           <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
         </div>

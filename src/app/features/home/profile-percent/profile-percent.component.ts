@@ -47,7 +47,7 @@ export class ProfilePercentComponent implements OnInit {
 
 
   onPercentProfile() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/profile/main');
   }
 

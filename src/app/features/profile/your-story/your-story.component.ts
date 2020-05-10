@@ -52,7 +52,7 @@ export class YourStoryComponent implements OnInit {
 
   // Navigate to send messages for the user whose story viewing
   onMessageUser() {
-    this.activateBackArrowSvc.setBackRoute('profile/mystory');
+    this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
     this.shareDataSvc.setData(this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');
   }

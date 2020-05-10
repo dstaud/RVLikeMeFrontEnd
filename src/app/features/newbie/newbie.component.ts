@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-
 
 @Component({
   selector: 'app-rvlm-newbie',
@@ -11,31 +7,8 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 })
 export class NewbieComponent implements OnInit {
 
-  constructor(private activateBackArrowSvc: ActivateBackArrowService,
-              private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  onFAQ() {
-
-  }
-
-
-  onLikeMe() {
-    this.activateBackArrowSvc.setBackRoute('newbie');
-    this.router.navigateByUrl('/connections/main');
-  }
-
-
-  onProfile() {
-    this.activateBackArrowSvc.setBackRoute('newbie');
-    this.router.navigateByUrl('/profile/main');
-  }
-
-
-  onTopics() {
-    this.activateBackArrowSvc.setBackRoute('newbie');
-    this.router.navigateByUrl('/newbie-topics');
   }
 }

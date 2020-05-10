@@ -75,7 +75,7 @@ export class PasswordResetComponent implements OnInit {
       this.showSpinner = false;
 
       setTimeout(function () {
-        self.ActivateBackArrowSvc.setBackRoute('landing-page');
+        self.ActivateBackArrowSvc.setBackRoute('', 'forward');
         self.router.navigateByUrl('/signin');
       }, 2000);
 

@@ -69,7 +69,7 @@ export class AnalyticsComponent implements OnInit {
     let params = '{"control":"' + this.control + '"}'
     this.shareDataSvc.setData(params);
 
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/home/dashboard-drilldown');
   }
 

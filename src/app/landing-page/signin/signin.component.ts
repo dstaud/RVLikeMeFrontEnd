@@ -76,7 +76,6 @@ export class SigninComponent implements OnInit {
 
               this.headerVisibleSvc.toggleHeaderVisible(true);
               this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-              this.activateBackArrowSvc.setBackRoute('landing-page');
               this.setReturnRoute();
   }
 
@@ -128,8 +127,13 @@ export class SigninComponent implements OnInit {
 
 
   onForgotPassword() {
-    this.showSignin = false;
-    this.showPasswordReset = true;
+    if (this.containerDialog) {
+      this.showSignin = false;
+      this.showPasswordReset = true;
+    } else {
+      this.activateBackArrowSvc.setBackRoute('signin', 'forward');
+      this.router.navigateByUrl('/forgot-password');
+    }
   }
 
 
@@ -182,8 +186,10 @@ export class SigninComponent implements OnInit {
 
   // If user used a bookmark to go to a certain page, go there after valid signin
   private handleReturnRoute() {
-    if (this.returnRoute && this.returnRoute !== 'landing-page') {
+    console.log('SigninComponent:handleReturnRoute: in handle return route=', this.returnRoute);
+    if (this.returnRoute && this.returnRoute !== '') {
       // User booked-marked a specific page which can route too after authorization
+      console.log('SigninComponent:handleReturnRoute: return route=', this.returnRoute);
       this.router.navigateByUrl(this.returnRoute);
       this.activateBackArrowSvc.setBackRoute('');
     } else {
@@ -248,13 +254,17 @@ export class SigninComponent implements OnInit {
 
 
   private setReturnRoute() {
+    let routeStack: Array<string>;
+    let i: number;
+
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(routeResult => {
-      this.returnRoute = routeResult.valueOf();
-      if (this.returnRoute) {
-        if (this.returnRoute.substring(0, 1) === '*') {
-            this.returnRoute = this.returnRoute.substring(1, this.returnRoute.length);
+      routeStack = routeResult;
+      i = routeStack.length - 1;
+      if (routeStack.length > 0) {
+        if (routeStack[i].substring(0, 1) === '*') {
+            this.returnRoute = routeStack[i].substring(1, routeStack[i].length);
         }
       }
     });
