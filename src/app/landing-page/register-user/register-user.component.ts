@@ -265,6 +265,10 @@ export class RegisterUserComponent implements OnInit {
       this.registrationComplete();
     }, error => {
       console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
+      this.showSpinner = false;
+      this.httpError = true;
+      this.httpErrorText = "Unable to send registration email.  Please contact dave@rvlikeme.com";
+      this.authSvc.logout();
     })
   }
 }
