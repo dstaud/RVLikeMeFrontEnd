@@ -4,6 +4,7 @@
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
       <app-rvlm-header *ngIf="headerDesktopVisible || userAuthorized"
+                        [newMessageCount]=newMessageCount
                         (sidenavToggle)="sidenav.toggle()"
                         fxHide fxShow.gt-sm>
       </app-rvlm-header>

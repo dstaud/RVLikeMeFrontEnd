@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-rvlm-profile',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() {}
+  constructor(private router: Router,
+              private location: Location) {}
 
   ngOnInit() {
+    console.log('ProfileComponenet:ngOnInit: path=', this.location.path());
+    if (this.location.path() === '/profile') {
+      this.router.navigateByUrl('/profile/main');
+    }
   }
 
 }

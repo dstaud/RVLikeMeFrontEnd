@@ -13,6 +13,7 @@ import { ShareDataService } from '@services/share-data.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { ThemeService } from '@services/theme.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
+import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -40,7 +41,6 @@ export class SendMessageComponent implements OnInit {
   private originalMsgCount: number = 0;
   private newConversation: boolean = false;
   private userConversations: Observable<Iconversation[]>;
-  private backPath: string = '';
 
   constructor(private shareDataSvc: ShareDataService,
               private authSvc: AuthenticationService,
@@ -58,19 +58,21 @@ export class SendMessageComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    if (!this.authSvc.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
+    let backPath: string;
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.listenForChangeInColorTheme();
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForChangeInColorTheme();
 
-    this.getParameters();
+      this.getParameters();
+    }
   }
 
 

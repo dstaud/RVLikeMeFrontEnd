@@ -93,21 +93,21 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.form.disable();
-    this.showSpinner = true;
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.form.disable();
+      this.showSpinner = true;
 
-    this.listenForUserProfile();
+      this.listenForUserProfile();
+    }
    }
 
    ngOnDestroy() { }

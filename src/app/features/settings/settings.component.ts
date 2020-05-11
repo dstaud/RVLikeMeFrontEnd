@@ -20,7 +20,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  lightTheme = true;
+  theme: string = 'light-theme';
 
   showSpinner: boolean = false;
   showInstallLink:boolean = false;
@@ -43,20 +43,22 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.listenBeforeInstall();
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.listenBeforeInstall();
 
-    this.listenForUserProfile();
+      this.listenForTheme();
+
+      this.listenForUserProfile();
+    }
   }
 
   ngOnDestroy() {}
@@ -135,8 +137,6 @@ export class SettingsComponent implements OnInit {
 
   // Toggle between light and dark theme as user selectes
   onSelectTheme(theme: string) {
-    this.lightTheme = !this.lightTheme;
-
     this.themeSvc.setGlobalColorTheme(theme);
     this.profile.colorThemePreference = theme;
     this.profileSvc.updateProfile(this.profile)
@@ -145,7 +145,6 @@ export class SettingsComponent implements OnInit {
       console.log('SettingsComponent:onSelectTheme: update color theme ', responseData);
     }, error => {
       console.log('HeaderMobileComponent:selectTheme: throw error ', error);
-      throw new Error(error);
     });
   }
 
@@ -160,6 +159,20 @@ export class SettingsComponent implements OnInit {
         this.event = data.valueOf();
         this.showInstallLink = true;
       }
+    });
+  }
+
+
+  // Listen for user profile and save
+  private listenForTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(theme => {
+      console.log('SettingsComponent:listenForTheme: got theme=', theme);
+      this.theme = theme;
+    }, error => {
+      console.error('SettingsComponent:listenForTheme: error getting theme ', error);
+      this.theme = 'light-theme';
     });
   }
 

@@ -475,6 +475,7 @@
     "changePassword": "Cambia la contraseña",
     "darkTheme": "Modo oscuro",
     "lightTheme": "Modo de luz",
+    "settings": "Configuraciones",
     "logout": "Cerrar sesión"
   },
   "posts.component": {

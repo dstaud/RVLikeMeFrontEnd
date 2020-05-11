@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rvlm-newbie',
@@ -7,8 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewbieComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router,
+              private location: Location) { }
 
   ngOnInit(): void {
+    if (this.location.path() === '/newbie') {
+      this.router.navigateByUrl('/newbie/need-help-newbie');
+    }
   }
 }

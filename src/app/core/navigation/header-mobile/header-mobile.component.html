@@ -18,14 +18,31 @@
           matTooltip="Messages"
           routerLink="/messages/message-list"
           routerLinkActive="active-menu-item">
-    <mat-icon matBadge="{{newMessageCount}}"
-          matBadgeColor="warn"
-          matBadgeSize="small"
-          matBadgePosition="above after"
-          fontSet="material-icons-outlined">
-          messages
-    </mat-icon>
+    <div class="menu-icon-text">
+      <mat-icon matBadge="{{newMessageCount}}"
+            matBadgeColor="warn"
+            matBadgeSize="small"
+            matBadgePosition="above after"
+            fontSet="material-icons-outlined">
+            messages
+      </mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.messages" | translate }}</span>
+    </div>
   </button>
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Profile"
+          routerLink="/profile/main"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon-text">
+      <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.profile" | translate }}</span>
+    </div>
+</button>
   <div class="toolbar-image">
     <button *ngIf="userAuthorized && profileImage"
             mat-button
@@ -50,10 +67,6 @@
       <mat-icon matPrefix fontSet="material-icons-outlined">add_a_photo</mat-icon>
       {{ "account.changeProfileImage" | translate }}
     </button>
-    <button mat-menu-item (click)="onUpdateProfile()">
-      <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
-      {{ "account.updateProfile" | translate }}
-    </button>
     <button mat-menu-item (click)="onChangeUsername()">
       <mat-icon matPrefix fontSet="material-icons-outlined">account_box</mat-icon>
       {{ "account.changeUsername" | translate }}
@@ -61,6 +74,10 @@
     <button mat-menu-item (click)="onChangePassword()">
       <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
       {{ "account.changePassword" | translate }}
+    </button>
+    <button mat-menu-item (click)="onSettings()">
+      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+      {{ "account.settings" | translate }}
     </button>
     <button mat-menu-item (click)="onLogout()">
       <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>

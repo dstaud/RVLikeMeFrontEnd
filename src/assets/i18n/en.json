@@ -477,6 +477,7 @@
     "changePassword": "Change password",
     "darkTheme": "Dark mode",
     "lightTheme": "Light mode",
+    "settings": "Settings",
     "logout": "Logout"
   },
   "posts.component": {

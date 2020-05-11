@@ -2,12 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { Location } from '@angular/common';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
@@ -37,12 +39,26 @@ export class YourStoryComponent implements OnInit {
   constructor(private profileSvc: ProfileService,
               private dialog: MatDialog,
               private translate: TranslateService,
+              private authSvc: AuthenticationService,
+              private location: Location,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
   ngOnInit(): void {
-    this.getParameters();
+    let backPath;
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.getParameters();
+    }
   }
 
   ngOnDestroy() {}

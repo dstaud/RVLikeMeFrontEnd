@@ -15,45 +15,104 @@
     </div>
   </div>
   <span class="fill-space"></span>
-  <button
-    mat-button
-    class="toolbar-icon"
-    matTooltip="Home page"
-    routerLink="/home/dashboard"
-    routerLinkActive="active-menu-item">
-    <mat-icon fontSet="material-icons-outlined">home</mat-icon>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Home page"
+          routerLink="/home/dashboard"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon">
+      <mat-icon fontSet="material-icons-outlined">home</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.home" | translate }}</span>
+    </div>
   </button>
-  <button
-    mat-button
-    class="toolbar-icon"
-    matTooltip="Like me"
-    routerLink="/connections/main"
-    routerLinkActive="active-menu-item">
-    <mat-icon fontSet="material-icons-outlined">people</mat-icon>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Find others like me"
+          routerLink="/connections/main"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon">
+      <mat-icon fontSet="material-icons-outlined">people</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.connections" | translate }}</span>
+    </div>
   </button>
-  <button
-    mat-button
-    class="toolbar-icon"
-    matTooltip="Forums"
-    routerLink="/forums/forums-list"
-    routerLinkActive="active-menu-item">
-    <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Connect in Group Forums"
+          routerLink="/forums/forums-list"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon-text">
+      <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.forums" | translate }}</span>
+    </div>
   </button>
-  <button
-    mat-button
-    class="toolbar-icon"
-    matTooltip="Messages"
-    routerLink="/messages/message-list"
-    routerLinkActive="active-menu-item">
-    <mat-icon
-      matBadge="{{newMessageCount}}"
-      matBadgeColor="warn"
-      matBadgeSize="small"
-      matBadgePosition="above after"
-      fontSet="material-icons-outlined">
-      messages
-    </mat-icon>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Messages"
+          routerLink="/messages/message-list"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon-text">
+      <mat-icon
+        matBadge="{{newMessageCount}}"
+        matBadgeColor="warn"
+        matBadgeSize="small"
+        matBadgePosition="above after"
+        fontSet="material-icons-outlined">
+        messages
+      </mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.messages" | translate }}</span>
+    </div>
   </button>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Learn about RV lifestyle"
+          routerLink="/newbie/need-help-newbie">
+    <div class="menu-icon-text">
+      <mat-icon fontSet="material-icons-outlined">accessibility_new</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.newbie" | translate }}</span>
+    </div>
+  </button>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="Profile"
+          routerLink="/profile/main"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon-text">
+      <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.profile" | translate }}</span>
+    </div>
+  </button>
+
+  <button mat-button
+          class="toolbar-icon"
+          matTooltip="About RVLikeMe"
+          routerLink="/about"
+          routerLinkActive="active-menu-item">
+    <div class="menu-icon-text">
+      <mat-icon fontSet="material-icons-outlined">rv_hookup</mat-icon>
+    </div>
+    <div class="menu-icon-text">
+      <span>{{ "menu.about" | translate }}</span>
+    </div>
+</button>
+
   <div class="toolbar-image">
     <button *ngIf="userAuthorized"
             mat-button
@@ -72,10 +131,6 @@
       <mat-icon matPrefix fontSet="material-icons-outlined">add_a_photo</mat-icon>
       {{ "account.changeProfileImage" | translate }}
     </button>
-    <button mat-menu-item (click)="updateProfile()">
-      <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
-      {{ "account.updateProfile" | translate }}
-    </button>
     <button mat-menu-item (click)="changeUsername()">
       <mat-icon matPrefix fontSet="material-icons-outlined">account_box</mat-icon>
       {{ "account.changeUsername" | translate }}
@@ -84,9 +139,9 @@
       <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
       {{ "account.changePassword" | translate }}
     </button>
-    <button *ngIf="!lightTheme" mat-menu-item (click)="selectTheme('light-theme')">
-      <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
-      {{ "account.lightTheme" | translate }}
+    <button mat-menu-item (click)="onSettings()">
+      <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
+      {{ "account.settings" | translate }}
     </button>
     <button mat-menu-item (click)="logout()">
       <mat-icon fontSet="material-icons-outlined" >eject</mat-icon>

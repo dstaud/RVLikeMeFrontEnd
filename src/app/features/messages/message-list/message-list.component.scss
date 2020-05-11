@@ -42,10 +42,13 @@
 
 .hyperlink {
   color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .conversation {
   margin-top: 15px;
+  cursor: pointer;
 }
 
 .spinner {

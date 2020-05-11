@@ -80,6 +80,8 @@ export class HeaderComponent implements OnInit {
     if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
     }
+    console.log('HeaderComponent:ngOnInit: newMessageCount=', this.newMessageCount);
+
   }
 
   ngOnDestroy() {}
@@ -114,6 +116,12 @@ export class HeaderComponent implements OnInit {
     this.authSvc.setUserToAuthorized(false);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.router.navigateByUrl('/');
+  }
+
+
+  onSettings() {
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.router.navigateByUrl('/settings');
   }
 
 

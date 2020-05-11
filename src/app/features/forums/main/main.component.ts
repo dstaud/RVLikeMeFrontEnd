@@ -46,7 +46,7 @@ export class MainComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
 
   constructor(public translate: TranslateService,
-              private auth: AuthenticationService,
+              private authSvc: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -63,7 +63,7 @@ export class MainComponent implements OnInit {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    if (!this.auth.isLoggedIn()) {
+    if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');

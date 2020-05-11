@@ -60,25 +60,24 @@ export class NewbieLinksComponent implements OnInit {
 
   ngOnInit(): void {
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.listenForUserProfile();
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForUserProfile();
 
-    this.listenForUserType();
+      this.listenForUserType();
 
-    this.getNewbieLinks();
+      this.getNewbieLinks();
 
-    this.topicDescSentence = 'newbie-topics.component.' + this.topicID + '2';
-    console.log('NewbieLinksComponent:ngOnInit: topicDescSentence=', this.topicDescSentence);
+      this.topicDescSentence = 'newbie-topics.component.' + this.topicID + '2';
+    }
   }
 
   ngOnDestroy() { }
@@ -134,7 +133,7 @@ export class NewbieLinksComponent implements OnInit {
     console.log('NewbieLinksComponent:onYourStory: parmas=', params);
     this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
     this.shareDataSvc.setData(params);
-    this.router.navigateByUrl('/mystory');
+    this.router.navigateByUrl('/profile/mystory');
   }
 
   private getNewbieLinks() {

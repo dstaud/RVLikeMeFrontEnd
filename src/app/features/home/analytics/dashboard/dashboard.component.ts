@@ -22,7 +22,6 @@ export class DashboardComponent implements OnInit {
   experiencedHelp: boolean = false;
   theme: string = 'light-theme';
 
-  private backPath = '';
   private userProfile: Observable<IuserProfile>;
   private profile: IuserProfile;
 
@@ -36,16 +35,21 @@ export class DashboardComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    console.log('IN DASHBOARD, NOT HOME')
+    let backPath;
+    let self = this;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
+
     if (!this.auth.isLoggedIn()) {
-      this.backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + this.backPath, 'forward');
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForColorTheme();
+
+      this.listenForUserProfile();
     }
-
-    this.listenForColorTheme();
-
-    this.listenForUserProfile();
   }
 
   ngOnDestroy() {}

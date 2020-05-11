@@ -14,6 +14,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { RigService, IrigData } from '@services/data-services/rig.service';
+import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -82,6 +83,7 @@ export class RvRigComponent implements OnInit {
   private rigTypeFormValue: string = '';
   private windowWidth: any;
   private dialogWidth: number;
+  private desktopMaxWidth: number;
   private dialogWidthDisplay: string;
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
@@ -101,37 +103,38 @@ export class RvRigComponent implements OnInit {
               private dialog: MatDialog,
               private router: Router,
               private location: Location,
+              private desktopMaxWidthSvc: DesktopMaxWidthService,
               private uploadImageSvc: UploadImageService,
               private rigSvc: RigService,
               private activateBackArrowSvc: ActivateBackArrowService) {}
 
   ngOnInit() {
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.setDialogWindowDimensions();
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForDesktopMaxWidth();
 
-    this.showSpinner = true;
+      this.showSpinner = true;
 
-    this.listenForUserProfile();
+      this.listenForUserProfile();
+    }
 
-    console.log('RVRigComponent:ngOnInit: finishing ngOnInit')
+
+
   }
 
   ngOnDestroy() {}
 
 
   onBrandSelected(brand: string) {
-    console.log('RVRigComponent:onBrandSelected: optionSelected=', brand);
     this.brandSelected = brand;
   }
 
@@ -169,13 +172,11 @@ export class RvRigComponent implements OnInit {
 
     // If user chose other, set description for dialog
     if (event === 'other') {
-      console.log('RVRigComponent:onSelectedSelectItem: control=', control, ' event=', event);
       this.openOtherDialog(control, controlDesc, event);
     } else {
 
       // If user did not choose other, call the correct update processor for the field selected
       // this[control] = '';
-      console.log('RVRigComponent:onSelectedSelectItem: event=', event);
       this.updateSelectItem(control, event);
     }
   }
@@ -220,7 +221,6 @@ export class RvRigComponent implements OnInit {
   updateBrand() {
     let brandInfo: RigBrandManufacturer;
 
-    console.log('RVRigComponent:updateBrand: brandSelected=', this.brandSelected);
     this.showrigBrandSaveIcon = true;
     this.profile.rigBrand = this.rigBrand.value;
 
@@ -229,9 +229,7 @@ export class RvRigComponent implements OnInit {
         brandInfo = this.getBrandInfo(this.brandSelected);
         this.profile.rigBrandID = brandInfo.brandID;
         this.profile.rigManufacturer = brandInfo.manufacturer;
-        console.log('RVRigComponent:updateBrand: input=selected. ID=', this.profile.rigBrandID);
       } else {
-        console.log('RVRigComponent:updateBrand: input<>selected', this.brandSelected);
         this.profile.rigBrandID = null;
         this.profile.rigManufacturer = null;
       }
@@ -239,7 +237,6 @@ export class RvRigComponent implements OnInit {
       this.profile.rigBrandID = null;
       this.profile.rigManufacturer = null;
     }
-    console.log('RVRigComponent:updateBrand: update profile=', this.profile.rigBrand, ',', this.profile.rigBrandID, ',', this.profile.rigManufacturer);
     this.updateRig('rigBrand');
   }
 
@@ -285,11 +282,9 @@ export class RvRigComponent implements OnInit {
   }
 
   private getRigData() {
-    console.log('RVRigComponent:getRigData: getting Rig Data')
     this.rigSvc.getRigData()
     .pipe(untilComponentDestroyed(this))
     .subscribe(rigData => {
-      console.log('RVRigComponent:getRigData: got rig data')
       this.rigData = rigData;
       this.rigBrand.patchValue(this.profile.rigBrand);
       this.brandSelected = null;
@@ -301,9 +296,7 @@ export class RvRigComponent implements OnInit {
       );
 
       this.showSpinner = false;
-      console.log('RVRigComponent:getRigData: spinner off')
     }, error => {
-      console.log('RVRigComponent:getRigData: error=', error);
       this.showSpinner = false;
       throw new Error(error);
     })
@@ -313,14 +306,26 @@ export class RvRigComponent implements OnInit {
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
   private handleOtherData(control: string): boolean {
     let result = false;
-    console.log('RVRigComponent:handleOtherData: control=', control, ' value=', this.profile[control])
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
-        console.log('RVRigComponent:handleOtherData: rigType=', this[control])
         result = true;
       }
     }
     return result;
+  }
+
+
+  private listenForDesktopMaxWidth() {
+    this.desktopMaxWidthSvc.desktopMaxWidth
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(maxWidth => {
+      this.desktopMaxWidth = maxWidth;
+      this.setDialogWindowDimensions();
+    }, (error) => {
+      console.error('PostsComponent:listenForDesktopMaxWidth: error getting maxWidth ', error);
+      this.desktopMaxWidth = 1140;
+      this.setDialogWindowDimensions();
+    });
   }
 
 
@@ -339,13 +344,11 @@ export class RvRigComponent implements OnInit {
         } else {
           this.rigTypeFormValue = this.profile.rigType;
         }
-        console.log('RVRigComponent:listenForUserProfile: patching values')
         this.rigType.patchValue(this.rigTypeFormValue);
         this.rigYear.patchValue(this.profile.rigYear);
         this.rigLength.patchValue(this.profile.rigLength);
         this.rigModel.patchValue(this.profile.rigModel);
         this.rigImageUrls = this.profile.rigImageUrls;
-        console.log('RVRigComponent:listenForUserProfile: getRigData')
         this.getRigData();
       }
     }, (error) => {
@@ -367,7 +370,6 @@ export class RvRigComponent implements OnInit {
       other = '';
     }
 
-    console.log('RVRigComponent:openOtherDialog: control=', control, ' other=', other, ' event=', event)
     const dialogRef = this.dialog.open(OtherDialogComponent, {
       width: '250px',
       disableClose: true,
@@ -378,11 +380,8 @@ export class RvRigComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
       if (result) { // A value was returned
-        console.log('RVRigComponent:openOtherDialog: A value was returned=', control, ' event=', event, ' result=', result);
         if (result !== 'canceled') { // The user did not click the cancel button
-          console.log('RVRigComponent:openOtherDialog: User did not click the cancel button=', control, ' event=', event, ' result=', result);
           if (other !== result ) { // The value was changed from original value
-            console.log('RVRigComponent:openOtherDialog: The value was changed from original value=', control, ' event=', event, ' result=', result);
             // this[control] = result;
             this.profile[control] = '@' + result;
             this[SaveIcon] = true;
@@ -390,15 +389,12 @@ export class RvRigComponent implements OnInit {
           }
         }
       } else { // No value was returned
-        console.log('RVRigComponent:openOtherDialog: no value was returned=', control, ' event=', event, ' result=', result);
         if (this[control]) { // Control had a value before
           // this[control] = '';
           this.profile[control] = null;
-          console.log('RVRigComponent:openOtherDialog: but control have a value before=', control, ' event=', event, ' result=', result);
           this.updateSelectItem(control, result);
           this[control].patchValue(null);
         } else { // Control did not have a value before
-          console.log('RVRigComponent:openOtherDialog: ad control did not have a value before=', control, ' event=', event, ' result=', result);
           if (this.profile[control]) {
             selection = this.profile[control];
           }
@@ -413,8 +409,8 @@ export class RvRigComponent implements OnInit {
   private setDialogWindowDimensions() {
     this.windowWidth = window.innerWidth;
     if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
+      if (this.windowWidth > this.desktopMaxWidth) {
+        this.dialogWidth = this.desktopMaxWidth * .95;
       } else {
         this.dialogWidth = this.windowWidth * .95;
       }

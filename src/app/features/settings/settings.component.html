@@ -1,12 +1,12 @@
 <div class="mat-app-background background">
   <h2 class="mat-title">Settings</h2>
-  <p *ngIf="lightTheme">
+  <p *ngIf="theme === 'light-theme'">
     <a mat-menu-item (click)="onSelectTheme('dark-theme')">
       <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
       {{ "account.darkTheme" | translate }}
     </a>
   </p>
-  <p *ngIf="!lightTheme">
+  <p *ngIf="theme === 'dark-theme'">
     <a mat-menu-item (click)="onSelectTheme('light-theme')">
       <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
       {{ "account.lightTheme" | translate }}

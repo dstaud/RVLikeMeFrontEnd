@@ -13,6 +13,7 @@ import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
@@ -78,19 +79,21 @@ export class PostsComponent implements OnInit {
   private dialogWidthDisplay: string;
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private desktopMaxWidth: number;
 
   constructor(private forumSvc: ForumService,
               private profileSvc: ProfileService,
               private translate: TranslateService,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private desktopMaxWidthSvc: DesktopMaxWidthService,
               private router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit() {
     this.listenForUserProfile();
 
-    this.setDialogDimensions();
+    this.listenForDesktopMaxWidth();
   }
 
   ngOnDestroy() {}
@@ -182,7 +185,7 @@ export class PostsComponent implements OnInit {
     let params = '{"userID":"' + toUserID + '",' +
                       '"userIdViewer":"' + this.userID + '",' +
                       '"params":' + userParams + '}';
-    this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
+    this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/profile/mystory');
   }
@@ -353,6 +356,20 @@ export class PostsComponent implements OnInit {
   }
 
 
+  private listenForDesktopMaxWidth() {
+    this.desktopMaxWidthSvc.desktopMaxWidth
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(maxWidth => {
+      this.desktopMaxWidth = maxWidth;
+      this.setDialogDimensions();
+    }, (error) => {
+      console.error('PostsComponent:listenForDesktopMaxWidth: error getting maxWidth ', error);
+      this.desktopMaxWidth = 1140;
+      this.setDialogDimensions();
+    });
+  }
+
+
   // Get user profile
   // Get user's ID and store for use in determining what posts or comments can edit
   private listenForUserProfile() {
@@ -390,8 +407,8 @@ export class PostsComponent implements OnInit {
   private setDialogDimensions() {
     this.windowWidth = window.innerWidth;
     if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
+      if (this.windowWidth > this.desktopMaxWidth) {
+        this.dialogWidth = this.desktopMaxWidth * .95;
       } else {
         this.dialogWidth = this.windowWidth * .95;
       }

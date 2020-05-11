@@ -6,6 +6,8 @@
 
 .hyperlink {
   color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .profile-image {
@@ -30,11 +32,18 @@
 
 .menu {
   float: right;
+  cursor: pointer;
 }
 
 .posts {
   clear: left;
   margin-top: 10px;
+}
+
+.author {
+  clear: left;
+  margin-top: 10px;
+  cursor: pointer;
 }
 
 .body {

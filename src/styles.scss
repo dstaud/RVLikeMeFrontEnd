@@ -1,6 +1,7 @@
+@import './styles/_variables';
 /* for sidenav to take whole page */
 html {
-  max-width: 1140px;
+  max-width: $max-width;
   margin: 0 auto;
   position: relative;
 }
@@ -20,21 +21,11 @@ body {
 
 @import './styles/theme-color-schemes.scss';
 
-// Default to orange dark theme
-// @include angular-material-theme($orange-dark-theme);
+// Default to custom theme cyan.  If changing the custom theme, must also change the defaults in styles/_variables
 @include angular-material-theme($cyan-theme);
-// @include angular-material-theme($deep-purple-theme);
-// @include angular-material-theme($orange-theme);
-// @include angular-material-theme($indigo-theme);
-// @include angular-material-theme($white-theme);
-// @include angular-material-theme($dark-theme);
 
 .light-theme {
   @include angular-material-theme($cyan-theme);
-}
-
-.orange-theme {
-  @include angular-material-theme($orange-theme);
 }
 
 .dark-theme {

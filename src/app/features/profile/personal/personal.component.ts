@@ -6,12 +6,12 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
+import { DesktopMaxWidthService } from './../../../core/services/desktop-max-width.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
@@ -138,6 +138,7 @@ export class PersonalComponent implements OnInit {
   private windowWidth: any;
   private dialogWidth: number;
   private dialogWidthDisplay: string;
+  private desktopMaxWidth: number;
 
   // Interface for Profile data
   private profile: IuserProfile;
@@ -162,6 +163,7 @@ export class PersonalComponent implements OnInit {
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private desktopMaxWidthSvc: DesktopMaxWidthService,
               private uploadImageSvc: UploadImageService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -184,24 +186,24 @@ export class PersonalComponent implements OnInit {
 
   ngOnInit() {
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.setDialogWindowDimensions();
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      this.listenForDesktopMaxWidth();
 
-    this.form.disable();
+      this.form.disable();
 
-    this.showSpinner = true;
+      this.showSpinner = true;
 
-    this.listenForUserProfile();
+      this.listenForUserProfile();
+    }
   }
 
   ngOnDestroy() {};
@@ -256,6 +258,20 @@ export class PersonalComponent implements OnInit {
       this.profile[control] = event;
     }
     this.updatePersonal(control);
+  }
+
+
+  private listenForDesktopMaxWidth() {
+    this.desktopMaxWidthSvc.desktopMaxWidth
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(maxWidth => {
+      this.desktopMaxWidth = maxWidth;
+      this.setDialogWindowDimensions();
+    }, (error) => {
+      console.error('PostsComponent:listenForDesktopMaxWidth: error getting maxWidth ', error);
+      this.desktopMaxWidth = 1140;
+      this.setDialogWindowDimensions();
+    });
   }
 
 
@@ -366,8 +382,8 @@ export class PersonalComponent implements OnInit {
   private setDialogWindowDimensions() {
     this.windowWidth = window.innerWidth;
     if (this.windowWidth > 600) {
-      if (this.windowWidth > 1140) {
-        this.dialogWidth = 1140 * .95;
+      if (this.windowWidth > this.desktopMaxWidth) {
+        this.dialogWidth = this.desktopMaxWidth * .95;
       } else {
         this.dialogWidth = this.windowWidth * .95;
       }

@@ -73,13 +73,6 @@ export class SidenavListComponent implements OnInit {
   }
 
 
-  onSettings() {
-    this.activateBackArrowSvc.setBackRoute('');
-    this.router.navigateByUrl('/settings');
-    this.closeSideNav();
-  }
-
-
   // Check if user is marked as user Admin in the database as this offers additional access
   private listenForUserAdmin() {
     this.authSvc.userAdmin

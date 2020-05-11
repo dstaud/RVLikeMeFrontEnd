@@ -6,6 +6,8 @@
 
 .hyperlink {
   color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* mat-form-field {

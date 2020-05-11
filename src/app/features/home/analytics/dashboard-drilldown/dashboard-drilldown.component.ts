@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -6,6 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ShareDataService } from '@services/share-data.service';
 import { LikemeCountsService, IgroupByCounts } from '@services/data-services/likeme-counts.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 @Component({
   selector: 'app-rvlm-dashboard-drilldown',
@@ -21,17 +25,31 @@ export class DashboardDrilldownComponent implements OnInit {
 
   constructor(private shareDataSvc: ShareDataService,
               private likeMeCountsSvc: LikemeCountsService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private authSvc: AuthenticationService,
+              private location: Location,
+              private router: Router,
               private translate: TranslateService) { }
 
   ngOnInit(): void {
+    let backPath;
+    let self = this;
     let params: any;
 
-    params = this.shareDataSvc.getData();
-    this.control = JSON.parse(params).control;
+    window.onpopstate = function(event) {
+      self.activateBackArrowSvc.setBackRoute('', 'backward');
+    };
 
-    console.log('DashboardDrilldownComponent:ngOnInit: control=', this.control);
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/signin');
+    } else {
+      params = this.shareDataSvc.getData();
+      this.control = JSON.parse(params).control;
 
-    this.listenForGroupByCounts(this.control);
+      this.listenForGroupByCounts(this.control);
+    }
   }
 
   ngOnDestroy() {}
