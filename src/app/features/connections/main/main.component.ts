@@ -72,33 +72,35 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.showSpinner = true;
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/?e=signin');
+    } else {
+      this.showSpinner = true;
 
-    this.listenForColorTheme();
+      this.listenForColorTheme();
 
-    this.listenForUserProfile();
+      this.listenForUserProfile();
 
-    this.listenForParameters();
+      this.listenForParameters();
 
-    // Get all of the rest of the counts not obtained by app-component.
-    this.likeMeCountsSvc.getLikeMeCountsSecondary();
+      // Get all of the rest of the counts not obtained by app-component.
+      this.likeMeCountsSvc.getLikeMeCountsSecondary();
 
-    this.listenForLikeMeCounts();
+      this.listenForLikeMeCounts();
+    }
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 
 

@@ -112,6 +112,9 @@ export class HeaderMobileComponent implements OnInit {
     let route = '/' + this.returnRoute
     this.activateBackArrowSvc.setBackRoute('', 'backward');
     console.log('HeaderMobileComponent:returnToBackRoute: routing to ', route);
+    if (route === '/') {
+      this.headerVisibleSvc.toggleHeaderVisible(false);
+    }
     this.router.navigateByUrl(route);
   }
 

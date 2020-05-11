@@ -31,7 +31,8 @@
       <span>{{ "menu.messages" | translate }}</span>
     </div>
   </button>
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Profile"
           routerLink="/profile/main"

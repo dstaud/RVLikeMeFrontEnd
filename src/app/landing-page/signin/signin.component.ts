@@ -102,6 +102,7 @@ export class SigninComponent implements OnInit {
       this.shared.openSnackBar('An email was sent to ' + this.form.controls.username.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
 
       if (this.containerDialog) {
+        console.log('SigninComponent:onActivateEmail:')
         this.formCompleted = 'complete';
         this.formComplete.emit(this.formCompleted);
       } else {
@@ -190,8 +191,10 @@ export class SigninComponent implements OnInit {
     if (this.returnRoute && this.returnRoute !== '') {
       // User booked-marked a specific page which can route too after authorization
       console.log('SigninComponent:handleReturnRoute: return route=', this.returnRoute);
-      this.router.navigateByUrl(this.returnRoute);
+      this.formCompleted = 'complete';
+      this.formComplete.emit(this.formCompleted);
       this.activateBackArrowSvc.setBackRoute('');
+      this.router.navigateByUrl(this.returnRoute);
     } else {
       if (this.containerDialog) {
         this.formCompleted = 'complete';

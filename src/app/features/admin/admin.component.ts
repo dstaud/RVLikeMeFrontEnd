@@ -39,23 +39,23 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     let backPath: string;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.authSvc.userAdmin
-    .subscribe(admin => {
-      if (!admin) {
-        this.router.navigateByUrl('/signin');
-      }
-    });
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/?e=signin');
+    } else {
+      this.authSvc.userAdmin
+      .subscribe(admin => {
+        if (!admin) {
+          this.router.navigateByUrl('/signin');
+        }
+      });
+    }
   }
 
   onBrandsByManufacturer() {

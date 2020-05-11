@@ -67,7 +67,7 @@ export class SendMessageComponent implements OnInit {
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
+      this.router.navigateByUrl('/?e=signin');
     } else {
       this.listenForChangeInColorTheme();
 

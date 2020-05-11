@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -26,6 +26,7 @@ export class LandingPageComponent implements OnInit {
 
   private windowWidth: number;
   private landingImageNbr: number;
+  private routeSubscription: any;
 
   // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
@@ -36,6 +37,7 @@ export class LandingPageComponent implements OnInit {
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private headerVisibleSvc: HeaderVisibleService,
               private dialog: MatDialog,
+              private route: ActivatedRoute,
               private shareDataSvc: ShareDataService,
               private router: Router) {
   }
@@ -45,9 +47,15 @@ export class LandingPageComponent implements OnInit {
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
 
     this.setImageBasedOnScreenWidth();
+
+    this.listenForParameters();
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
 
 
   onLearnMore() {
@@ -107,6 +115,33 @@ export class LandingPageComponent implements OnInit {
       this.router.navigateByUrl('/signin');
       this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
+  }
+
+
+  private listenForParameters() {
+    console.log('PasswordReset:listenForParameters:');
+    this.routeSubscription = this.route
+    .queryParams
+    .subscribe(params => {
+      if (params.e === 'signin') {
+        if (this.windowWidth > 600) {
+          this.openSigninDialog((result: string) => {
+            console.log('LandingPageComponent:listenForParameters: back from dialog. result=', result);
+            if (result === 'complete') {
+              this.activateBackArrowSvc.setBackRoute('', 'forward');
+              this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
+              this.router.navigateByUrl('/home/dashboard');
+            }
+          });
+        } else {
+          this.activateBackArrowSvc.setBackRoute('', 'forward');
+          this.router.navigateByUrl('/signin');
+        }
+      }
+    }, error => {
+      console.error('PasswordReset:listenForParameters: could not read parameters.  error=', error);
+      throw new Error(error);
+    });
   }
 
 

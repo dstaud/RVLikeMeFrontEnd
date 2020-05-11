@@ -48,7 +48,6 @@ export class NewbieTopicsComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    console.log('NewbieTopicsComponent:ngOnInit')
     this.listenForUserProfile();
 
     this.listenForUserType();

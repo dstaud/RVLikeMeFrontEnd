@@ -68,28 +68,11 @@
     <div>
       <span></span>
     </div>
-<!--     <div>
-      <mat-form-field appearance="outline">
-        <mat-icon matPrefix fontSet="material-icons-outlined">lock</mat-icon>
-        <mat-label>Confirm password</mat-label>
-        <input matInput
-                [type]="hidePassword ? 'password' : 'text'"
-                placeholder="Confirm Password"
-                formControlName="passwordConfirm"
-                autocapitalize="none"
-                autocomplete="new-password"
-                required>
-        <mat-error *ngIf="!form.controls.passwordConfirm.pristine &&
-                          form.controls.passwordConfirm.hasError('required')">
-          Please re-enter your <strong>Password</strong>
-        </mat-error>
-      </mat-form-field>
-    </div> -->
     <div class="button">
-      <button [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+      <button [disabled]="!form.valid" type="submit" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
     </div>
     <div class="button">
-      <button *ngIf="containerDialog"class="mat-raised-button" (click)="onCancel()">Cancel</button>
+      <button *ngIf="containerDialog" type="button" class="mat-raised-button" (click)="onCancel()">Cancel</button>
     </div>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

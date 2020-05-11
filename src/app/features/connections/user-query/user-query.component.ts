@@ -51,41 +51,41 @@ export class UserQueryComponent implements OnInit {
   ngOnInit() {
     let sharedData: any;
     let backPath;
-
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/signin');
-    }
     let self = this;
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    this.showSpinner = true;
+    if (!this.authSvc.isLoggedIn()) {
+      backPath = this.location.path().substring(1, this.location.path().length);
+      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      this.router.navigateByUrl('/?e=signin');
+    } else {
+      this.showSpinner = true;
 
-    console.log('UserQueryComponent:ngOnInit: in ngOnInit');
+      console.log('UserQueryComponent:ngOnInit: in ngOnInit');
 
-    if (this.shareDataSvc.getData()) {
-      let sharedData = this.shareDataSvc.getData();
-      if (sharedData.matches !== undefined) {
-        console.log('UserQueryComponent:ngOnInit: matches exists?', sharedData.matches);
-        this.matches = sharedData.matches;
-        console.log('UserQueryComponent:ngOnInit: matches=', this.matches);
+      if (this.shareDataSvc.getData()) {
+        let sharedData = this.shareDataSvc.getData();
+        if (sharedData.matches !== undefined) {
+          console.log('UserQueryComponent:ngOnInit: matches exists?', sharedData.matches);
+          this.matches = sharedData.matches;
+          console.log('UserQueryComponent:ngOnInit: matches=', this.matches);
 
-        this.listenForColorTheme();
+          this.listenForColorTheme();
 
-        this.getQueryResults();
+          this.getQueryResults();
 
-        this.listenForUserProfile();
+          this.listenForUserProfile();
 
+        } else {
+          console.log('UserQueryComponent:ngOnInit: going to connections/main');
+          this.router.navigateByUrl('/connections/main');
+        }
       } else {
         console.log('UserQueryComponent:ngOnInit: going to connections/main');
         this.router.navigateByUrl('/connections/main');
       }
-    } else {
-      console.log('UserQueryComponent:ngOnInit: going to connections/main');
-      this.router.navigateByUrl('/connections/main');
     }
   }
 

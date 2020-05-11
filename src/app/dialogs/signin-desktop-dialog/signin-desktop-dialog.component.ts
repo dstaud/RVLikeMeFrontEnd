@@ -20,10 +20,7 @@ export class SigninDesktopDialogComponent implements OnInit {
   }
 
   formComplete(event: string) {
+    console.log('SigninInDesktopDialog:formComplete: event=', event);
     this.dialogRef.close(event);
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close('canceled');
   }
 }
