@@ -16,6 +16,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -64,6 +65,7 @@ export class MainComponent implements OnInit {
               private route: ActivatedRoute,
               private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
+              private sentry: SentryMonitorService,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
@@ -102,17 +104,6 @@ export class MainComponent implements OnInit {
       this.routeSubscription.unsubscribe();
     }
   }
-
-
-  // Called from child component if user clicks on the cancel button there.
-  // In this case, clear the array of checked items and hide query child component.
-/*   onCancelQuery(event: boolean) {
-    this.param = '';
-    for (let i = this.checkArray.length; i >= 0; i--) {
-      this.checkArray.removeAt(i);
-    }
-    this.showQueryResults = false;
-  } */
 
 
   onProfile() {
@@ -311,7 +302,7 @@ export class MainComponent implements OnInit {
       this.theme = themeData.valueOf();
       console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
     }, error => {
-      console.error(error);
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 
@@ -329,7 +320,7 @@ export class MainComponent implements OnInit {
         this.checkArray.push(new FormControl(this.param));
       }
     }, error => {
-      console.error(error);
+      this.sentry.logError({"message":"unable to listen for parameters","error":error});
     });
   }
 
@@ -345,7 +336,7 @@ export class MainComponent implements OnInit {
       this.displayMatches(counts);
     }, (error) => {
       this.showSpinner = false;
-      console.error(error);
+      this.sentry.logError({"message":"unable to listen for like me counts","error":error});
     });
   }
 

@@ -13,7 +13,8 @@ import { ShareDataService } from '@services/share-data.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { ThemeService } from '@services/theme.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
-import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
+import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -41,16 +42,21 @@ export class SendMessageComponent implements OnInit {
   private originalMsgCount: number = 0;
   private newConversation: boolean = false;
   private userConversations: Observable<Iconversation[]>;
+  private profile: IuserProfile;
+  private userProfile: Observable<IuserProfile>;
+  private sendMessageEmails: boolean;
 
   constructor(private shareDataSvc: ShareDataService,
               private authSvc: AuthenticationService,
               private messagesSvc: MessagesService,
               private location: Location,
+              private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private newMsgCountSvc: NewMessageCountService,
               private themeSvc: ThemeService,
               private emailSmtpSvc: EmailSmtpService,
               private router: Router,
+              private sentry: SentryMonitorService,
               fb: FormBuilder) {
                 this.form = fb.group({
                   message: new FormControl('', Validators.required)
@@ -128,6 +134,19 @@ export class SendMessageComponent implements OnInit {
   }
 
 
+  // If user clicks to see story of another user, go to MyStory component
+  onYourStory() {
+    let userParams = this.packageParamsForMessaging();
+    let params = '{"userID":"' + this.toUserID + '",' +
+                      '"userIdViewer":"' + this.fromUserID + '",' +
+                      '"params":' + userParams + '}';
+    console.log('SendMessageComponent:onYourStory: params=', params);
+    this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
+    this.shareDataSvc.setData(params);
+    this.router.navigateByUrl('/profile/mystory');
+  }
+
+
   // Get previous messages in this conversation for display
   private getMessages() {
     this.userConversations = this.messagesSvc.conversation$;
@@ -167,6 +186,19 @@ export class SendMessageComponent implements OnInit {
     });
   }
 
+
+  private getOtherUserProfile() {
+    this.profileSvc.getUserProfile(this.toUserID)
+    .subscribe(profileResult => {
+      this.sendMessageEmails = profileResult.sendMessageEmails;
+      console.log('SendMessageComponent:getOtherUserProfile: sendMessageEmails=', this.sendMessageEmails);
+    }, error => {
+      console.log('SendMessageComponent:getOtherUserProfile: Error getting other user profile=', error);
+      throw new Error(error);
+    })
+  }
+
+
   // This component expects data passed through a shared data service.
   // If no data (because user bookmarked this page perhaps), then redirect to message-list component.
   // Once have parameters, take action
@@ -195,7 +227,7 @@ export class SendMessageComponent implements OnInit {
       if (paramData.conversationID && paramData.conversationID !== 'null') {
         this.conversationID = paramData.conversationID;
       }
-
+      this.getOtherUserProfile();
       this.getMessages();
     }
   }
@@ -211,20 +243,35 @@ export class SendMessageComponent implements OnInit {
   }
 
 
+  private packageParamsForMessaging(): string {
+    let params: string;
+    console.log('SendMessageComponent:packageParamsForMessaging displayName=', this.fromDisplayName);
+    params = '{"fromUserID":"' + this.fromUserID + '",' +
+              '"fromDisplayName":"' + this.fromDisplayName + '",' +
+              '"fromProfileImageUrl":"' + this.fromProfileImageUrl + '",' +
+              '"toUserID":"' + this.toUserID + '",' +
+              '"toDisplayName":"' + this.toDisplayName + '",' +
+              '"toProfileImageUrl":"' + this.toProfileImageUrl + '"}';
+
+    console.log('SendMessageComponent:packageParamsForMessaging: params=', params);
+    return params;
+  }
+
+
   // Send notification to recipient about new message
   private sendNotificationToRecipient() {
-    this.authSvc.getOtherUserEmail(this.toUserID)
-    .subscribe(userResult => {
-      console.log('SendMessageComponent:sendNotificationToRecipient: userResult=', userResult);
-      this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
-      .subscribe(emailResult => {
-        console.log('SendMessageComponent:sendNotificationToRecipient: emailResult=', emailResult);
+    if (this.sendMessageEmails) {
+      this.authSvc.getOtherUserEmail(this.toUserID)
+      .subscribe(userResult => {
+        this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
+        .subscribe(emailResult => {
+        }, error => {
+          this.sentry.logError(error);
+        });
       }, error => {
-        console.log('SendMessageComponent:sendNotificationToRecipient: error sending email=', error);
+        this.sentry.logError(error);
       });
-    }, error => {
-      console.log('SendMessageComponent:sendNotificationToRecipient: error getting other user=', error);
-    });
+    }
   }
 
 

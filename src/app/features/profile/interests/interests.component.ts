@@ -126,9 +126,10 @@ ngOnInit() {
 
       this.showSpinner = false;
       this.form.enable();
-    }, (error) => {
+    }, error => {
       this.showSpinner = false;
-      console.error(error);
+      console.error('InterestsComponent:listenForUserProfile: error getting profile=', error);
+      throw new error(error);
     });
   }
 }

@@ -35,16 +35,14 @@ export class HttpInterceptorService implements HttpInterceptor {
         authReq = request;
     }
 
+    // If timeout, retry up to 3 times with delay
     return next.handle(authReq).pipe(
       retryWhen(errors => errors
         .pipe(
           concatMap((error, count) => {
-            console.log('HttpInterceptorService: in retryWhen error=', error, ' count=', count);
             if (count < 3 && (error.status == 504)) {
-              console.log('HttpInterceptorService: 504 retry count=', count);
               return of(error);
             }
-            console.log('HttpInterceptorService: after 504 retries. error status=', error.error);
             return throwError(error.error);
           }),
           delay(500)
@@ -66,23 +64,6 @@ export class HttpInterceptorService implements HttpInterceptor {
         }
       })
     );
-/*     return next.handle(authReq).pipe(retry(3),
-      catchError((error: HttpErrorResponse) => {
-        if (error instanceof HttpErrorResponse) {
-          // server-side error
-          this.httpError.status = error.status;
-          this.httpError.message = error.message;
-          console.log('HttpInterceptor: Server Side error for request', authReq);
-          console.log('HttpInterceptor: Server Side error: ', this.httpError);
-          return throwError(this.httpError);
-        } else {
-          // client-side error
-          console.log('HttpInterceptor: Client Side error for request', authReq);
-          console.log('HttpInterceptor: Client Side error: ', error);
-          return throwError(error);
-        }
-      })
-    ); */
   }
 
   constructor(private WindowRef: WindowService) { }
@@ -94,8 +75,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     let dataSvcURL = environment.dataServiceURL;
 
     if (environment.production && hostLocation.includes('localhost')) {
-      // Override back-end URL with localhost if testing Service Worker with production /dist files
-      // dataSvcURL = 'http://localhost:3000/' + 'api/posts';
+      // Override back-end URL with localhost if testing Service Worker
       dataSvcURL = 'http://localhost:3000';
     }
     if (dataSvcURL.substring(dataSvcURL.length - 1, dataSvcURL.length) === '/') {

@@ -11,6 +11,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
 import { UserTypeService } from '@services/user-type.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SuggestTopicDialogComponent } from '@dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 
@@ -43,6 +44,7 @@ export class NewbieTopicsComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private dialog: MatDialog,
               private shared: SharedComponent,
+              private sentry: SentryMonitorService,
               private userTypeSvc: UserTypeService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
@@ -78,6 +80,7 @@ export class NewbieTopicsComponent implements OnInit {
         }, error => {
           this.showSpinner = false;
           console.error('NewbieTopicsComponent:onOpenSuggestTopicDialog: throw error ', error);
+          throw new Error(error);
         });
 
         this.shared.openSnackBar('Thank you for your suggestion! The information has been sent on','message', 4000);
@@ -99,7 +102,7 @@ export class NewbieTopicsComponent implements OnInit {
         console.log('HelpNewbieTopics:onTopic: topic added=', topicResult);
       }, error => {
         if (error.status === 403) {
-          console.log('HelpNewbieTopics:onTopic: error=', error.message);
+          this.sentry.logError({"status":403,"message":"unable to listen for like me counts","error":error});
         } else {
           throw new Error(error);
         }
@@ -181,7 +184,6 @@ export class NewbieTopicsComponent implements OnInit {
     for (let i=0; i < this.authorizedTopics.length; i++) {
       if (topicID === this.authorizedTopics[i].topicID) {
         this.authorizedTopics[i]._id = _id;
-        console.log('NewbieTopicsComponent:updateAuthorizedTopics: updated array=', this.authorizedTopics[i]);
       }
     }
   }

@@ -109,12 +109,11 @@ export class NewbieLinksComponent implements OnInit {
                                         this.profile.displayName,
                                         this.profile.profileImageUrl)
     .subscribe(linkResult => {
-      console.log('SuggestTopicComponent:onSubmit: link added=', linkResult);
       this.showSpinner = false;
       this.showAddLink = false;
       this.getNewbieLinks();
     }, error => {
-      console.log('SuggestTopicComponent:onSubmit: error=', error);
+      console.log('NewbieLinksComponent:onSubmit: error=', error);
       this.showSpinner = false;
       throw Error(error);
     })
@@ -171,7 +170,7 @@ export class NewbieLinksComponent implements OnInit {
       }
 
     }, (error) => {
-      console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
+      console.error('NewbieLinksComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }
@@ -183,7 +182,7 @@ export class NewbieLinksComponent implements OnInit {
     .subscribe(type => {
       this.userType = type;
     }, (error) => {
-      console.error('TopicComponent:listenForUserType: error ', error);
+      console.error('NewbieLinksComponent:listenForUserType: error ', error);
       throw new Error(error);
     });
   }

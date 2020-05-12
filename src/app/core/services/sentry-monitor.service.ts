@@ -1,10 +1,13 @@
 import { Injectable} from '@angular/core';
 import * as Sentry from '@sentry/browser';
 import { ItokenPayload } from '@services/data-services/authentication.service';
+import { environment } from '@environments/environment';
 
 // After user authorized, save the user context to be used by Sentry if error in production
 @Injectable({providedIn: 'root'})
 export class SentryMonitorService {
+
+  constructor() { }
 
   monitorUser(user: ItokenPayload): void {
     Sentry.configureScope(scope => {
@@ -12,5 +15,9 @@ export class SentryMonitorService {
         email: user.email
       });
     });
+  }
+
+  logError(error: any) {
+    Sentry.captureException(error);
   }
 }

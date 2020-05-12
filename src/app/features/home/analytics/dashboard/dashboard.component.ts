@@ -11,6 +11,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService } from '@services/share-data.service';
 import { ThemeService } from '@services/theme.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-dashboard',
@@ -26,11 +27,12 @@ export class DashboardComponent implements OnInit {
   private profile: IuserProfile;
 
   constructor(public translate: TranslateService,
-              private auth: AuthenticationService,
+              private authSvc: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
               private shareDataSvc: ShareDataService,
               private themeSvc: ThemeService,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
 
@@ -41,7 +43,7 @@ export class DashboardComponent implements OnInit {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    if (!this.auth.isLoggedIn()) {
+    if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
@@ -84,7 +86,7 @@ export class DashboardComponent implements OnInit {
         this.experiencedHelp = false;
       }
     }, (error) => {
-      console.error('HomeComponent:listenForUserProfile: error getting profile ', error);
+      console.error('HomeDashboardComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }
@@ -97,7 +99,7 @@ export class DashboardComponent implements OnInit {
       this.theme = themeData.valueOf();
       console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
     }, error => {
-      console.error(error);
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 }

@@ -61,7 +61,7 @@ export class TopicComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
       this.profile = profile;
-    }, (error) => {
+    }, error => {
       console.error('TopicComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
@@ -93,7 +93,7 @@ export class TopicComponent implements OnInit {
         this.header = 'newbie-topics.component.' + this.topicID + 'HeaderNewbie';
       }
 
-    }, (error) => {
+    }, error => {
       console.error('TopicComponent:listenForUserType: error ', error);
       throw new Error(error);
     });

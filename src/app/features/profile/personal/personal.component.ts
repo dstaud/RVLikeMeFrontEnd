@@ -12,6 +12,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { DesktopMaxWidthService } from './../../../core/services/desktop-max-width.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
@@ -164,6 +165,7 @@ export class PersonalComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
               private desktopMaxWidthSvc: DesktopMaxWidthService,
+              private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -268,7 +270,7 @@ export class PersonalComponent implements OnInit {
       this.desktopMaxWidth = maxWidth;
       this.setDialogWindowDimensions();
     }, (error) => {
-      console.error('PostsComponent:listenForDesktopMaxWidth: error getting maxWidth ', error);
+      this.sentry.logError({"message":"error listening for desktop max width","error":error});
       this.desktopMaxWidth = 1140;
       this.setDialogWindowDimensions();
     });
@@ -336,6 +338,8 @@ export class PersonalComponent implements OnInit {
             this.profileSvc.deleteTempProfileImage(this.tempProfileImage)
             .subscribe(responseData => {
               console.log('PersonalComponent:OpenImageCropperDialog: deleted temp profile image, data=', responseData);
+            }, error => {
+              this.sentry.logError({"message":"error deleting temp profile image","error":error});
             })
           })
         } else {
@@ -374,6 +378,8 @@ export class PersonalComponent implements OnInit {
         }
         this.showSpinner = false;
       }
+    }, error => {
+      this.sentry.logError({"message":"error closing dialog","error":error});
     });
   }
 

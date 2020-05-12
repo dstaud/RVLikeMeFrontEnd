@@ -92,14 +92,13 @@ export class ChangeUsernameComponent implements OnInit {
         this.shared.openSnackBar('Username updated successfully', 'message');
       }, error => {
         this.showSpinner = false;
-        console.log('in error!', error);
         this.httpError = true;
         if (error.status === 401) {
           this.httpErrorText = 'Invalid email address or password';
         } else if (error.status === 403) {
           this.httpErrorText = 'Email already exists';
         } else {
-          console.log('ChangeUsernameComponent:onSubmit: throw error ', error);
+          console.error('ChangeUsernameComponent:onSubmit: throw error ', error);
           throw new Error(error);
         }
       });

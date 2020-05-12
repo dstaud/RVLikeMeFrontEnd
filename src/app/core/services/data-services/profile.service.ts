@@ -49,6 +49,7 @@ export interface IuserProfile {
   notifySubscription: string;
   rigImageUrls: Array<string>;
   lifestyleImageUrls: Array<string>;
+  sendMessageEmails: boolean;
 }
 
 @Injectable({
@@ -99,7 +100,8 @@ export class ProfileService {
     forums: [],
     notifySubscription: null,
     rigImageUrls: [],
-    lifestyleImageUrls: []
+    lifestyleImageUrls: [],
+    sendMessageEmails: true
   };
   private profileSubscription: any;
 
@@ -109,6 +111,48 @@ export class ProfileService {
 
   constructor(private shared: SharedComponent,
               private http: HttpClient) { }
+
+
+  addGroupToProfile(profileID: string, groupID: string): Observable<any> {
+    let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
+    let groupJSON = JSON.parse(group);
+    return this.http.put(`/api/profile-forums`, groupJSON, {});
+  }
+
+  addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    return this.http.put(`/api/profile-lifestyle-image`, imageUrlJSON, {});
+  }
+
+  addRigImageUrlToProfile(profileID: string, rigImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
+  }
+
+  deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
+  }
+
+  deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
+    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
+    let imageUrlJSON = JSON.parse(imageUrl);
+    return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
+  }
+
+  deleteTempProfileImage(imageUrl: string): Observable<any> {
+    let image = '{"imageUrl":"' + imageUrl + '"}';
+    let imageUrlJSON = JSON.parse(image);
+    return this.http.put(`/api/profile-delete-temp-image`, imageUrlJSON, {});
+  }
+
+  distributeProfileUpdate(userProfile: IuserProfile) {
+    this.dataStore.profile = userProfile;
+    this._profile.next(Object.assign({}, this.dataStore).profile);
+  }
 
   getProfile(reset?: boolean) {
     if (reset) {
@@ -155,6 +199,7 @@ export class ProfileService {
       this.dataStore.profile.notifySubscription = null;
       this.dataStore.profile.rigImageUrls = [];
       this.dataStore.profile.lifestyleImageUrls = [];
+      this.dataStore.profile.sendMessageEmails = true;
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)
@@ -168,63 +213,29 @@ export class ProfileService {
     }
   }
 
-  // Get profile for a user based on user ID
+  getNewBrands(): Observable<any> {
+    return this.http.get(`/api/profile-new-brands`);
+  }
+
   getUserProfile(userID: string): Observable<any> {
     let param = JSON.parse('{"userID":"' + userID + '"}');
     return this.http.get(`/api/profile-user`, { params: param });
   }
 
-  getNewBrands(): Observable<any> {
-    return this.http.get(`/api/profile-new-brands`);
-  }
-
-  distributeProfileUpdate(userProfile: IuserProfile) {
-    this.dataStore.profile = userProfile;
-    this._profile.next(Object.assign({}, this.dataStore).profile);
-  }
-
   updateProfile(userProfile: IuserProfile): Observable<any> {
-    console.log('ProfileService:updateProfile: profile=', userProfile);
     return this.http.put(`/api/profile`, userProfile, {});
   }
 
-  addGroupToProfile(profileID: string, groupID: string): Observable<any> {
-    let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
-    let groupJSON = JSON.parse(group);
-    return this.http.put(`/api/profile-forums`, groupJSON, {});
+  updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
+    var params = '{"profileID":"' + profileID + '",' +
+                  '"attribute":"' + attribute + '",' +
+                  '"value":"' + value + '"}';
+
+    console.log('ProfileService:updateProfileAttribute: params=', params);
+    return this.http.put(`/api/profile-attribute-update`, params, {});
   }
 
-  addRigImageUrlToProfile(profileID: string, rigImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
-    return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
-  }
-
-  deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
-    return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
-  }
-
-  addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
-    return this.http.put(`/api/profile-lifestyle-image`, imageUrlJSON, {});
-  }
-
-  deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
-    return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
-  }
-
-  deleteTempProfileImage(imageUrl: string): Observable<any> {
-    let image = '{"imageUrl":"' + imageUrl + '"}';
-    let imageUrlJSON = JSON.parse(image);
-    return this.http.put(`/api/profile-delete-temp-image`, imageUrlJSON, {});
-  }
-
-  public dispose() {
+  dispose() {
     this.profileSubscription.unsubscribe();
   }
 

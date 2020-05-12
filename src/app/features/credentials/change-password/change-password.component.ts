@@ -92,7 +92,6 @@ export class ChangePasswordComponent implements OnInit {
       if (error.status === 401) {
         this.httpError = true;
         this.httpErrorText = 'Current password is not valid';
-        // this.form.controls.currentPassword.setErrors({required: false});
         this.showSpinner = false;
         this.form.enable();
       } else {

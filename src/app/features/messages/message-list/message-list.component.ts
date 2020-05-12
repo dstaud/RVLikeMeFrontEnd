@@ -89,6 +89,9 @@ export class MessageListComponent implements OnInit {
         this.conversations = conversations;
         this.showSpinner = false;
       }
+    }, error => {
+      console.error('MessageList:listenForUserConversations: unable to get conversations. Error=', error);
+      throw new Error(error);
     });
   }
 
@@ -104,8 +107,9 @@ export class MessageListComponent implements OnInit {
         this.userID = this.profile.userID;
         this.displayName = this.profile.displayName;
       }
-    }, (error) => {
-      console.error(error);
+    }, error => {
+      console.error('MessageListComponent:listenForUserProfile: error getting user profile. error=', error);
+      throw new Error(error);
     });
   }
 

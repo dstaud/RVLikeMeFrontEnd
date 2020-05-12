@@ -11,6 +11,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-forums-list',
@@ -35,6 +36,7 @@ export class ForumsListComponent implements OnInit {
               public translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private themeSvc: ThemeService,
+              private sentry: SentryMonitorService,
               private shareDataSvc: ShareDataService) { }
 
   ngOnInit(): void {
@@ -134,6 +136,8 @@ export class ForumsListComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 
@@ -148,8 +152,9 @@ export class ForumsListComponent implements OnInit {
       if (this.profile._id) {
         this.groupListDisplayAttributes = this.getGroups();
       }
-    }, (error) => {
-      console.error(error);
+    }, error => {
+      console.error('ForumsListComponent:listenForUserProfile: unable to get profile. error =', error);
+      throw new Error(error);
     });
   }
 }

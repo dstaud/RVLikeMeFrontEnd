@@ -14,6 +14,7 @@ import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 
 @Component({
@@ -53,6 +54,7 @@ export class MainComponent implements OnInit {
               private router: Router,
               private shareDataSvc: ShareDataService,
               private forumSvc: ForumService,
+              private sentry: SentryMonitorService,
               private themeSvc: ThemeService) {
               }
 
@@ -116,21 +118,17 @@ export class MainComponent implements OnInit {
     if (!this.shareDataSvc.getData()) {
       this.router.navigateByUrl('/forums/forums-list');
     } else {
-      console.log('ForumsComponent:getGroup: getdata=', this.shareDataSvc.getData());
       paramData = JSON.parse(this.shareDataSvc.getData());
       this.forumType = paramData.forumType;
 
       this.showSpinner = true;
-      console.log('ForumsComponent:getGroup: type=', paramData.forumType);
       if (paramData.forumType === 'topic') {
         this.forumSvc.getGroupByTopic(paramData.topicID)
         .subscribe(groupFromServer => {
           this.groupID = groupFromServer._id;
           this.topicID = groupFromServer.topic;
           this.topicDesc = groupFromServer.topicDesc;
-          console.log('ForumsComponent:getGroup: TopicID=', this.topicID, 'TopicDesc=', this.topicDesc);
           this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
-          console.log('ForumsComponent:getGroup: back from get posts')
           this.showSpinner = false;
         }, error => {
           if (error.status === 404) {
@@ -139,9 +137,7 @@ export class MainComponent implements OnInit {
               this.groupID = groupTopic._id;
               this.topicID = groupTopic.topic;
               this.topicDesc = groupTopic.topicDesc;
-              console.log('ForumsComponent:getGroup: TopicID=', this.topicID, 'TopicDesc=', this.topicDesc);
               this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
-              console.log('ForumsComponent:getGroup2: back from get posts')
               this.showSpinner = false;
             })
           }
@@ -162,7 +158,6 @@ export class MainComponent implements OnInit {
             }
 
             this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
-            console.log('ForumsComponent:getGroup3: back from get posts')
             this.showSpinner = false;
 
           });
@@ -178,10 +173,8 @@ export class MainComponent implements OnInit {
           }
 
           keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
-          console.log('ForumsComponent:getGroup: keyValues=', keyValue);
           names = keyValue[0];
           values = keyValue[1];
-          console.log('ForumsComponent:getGroup: names=', names, ' values=', values);
           this.checkIfUserProfileHasGroupAndUpdate(names, values);
         }
       }
@@ -245,7 +238,6 @@ export class MainComponent implements OnInit {
       // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
         this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
-        console.log('ForumsComponent:checkIfUserProfileHasGroupAndUpdate: back from get posts')
         this.showSpinner = false;
       } else {
         this.createGroupForum(names, values);
@@ -256,7 +248,7 @@ export class MainComponent implements OnInit {
         this.createGroupForum(names, values);
       } else {
         this.showSpinner = false;
-        console.error('ForumsComponent:getGroup: throw error ', error);
+        console.error('ForumsMainComponent:getGroup: throw error ', error);
         throw new Error(error);
       }
     });
@@ -326,7 +318,7 @@ export class MainComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      console.error(error);
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 
@@ -342,7 +334,7 @@ export class MainComponent implements OnInit {
         this.groupsListFromUserProfile = this.profile.forums;
       }
     }, error => {
-      console.error('ForumsComponent:listenForUserProfile: error getting profile ', error);
+      console.error('ForumsMainComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }
@@ -365,7 +357,7 @@ export class MainComponent implements OnInit {
         this.showSpinner = false;
       }, error => {
         this.showSpinner = false;
-        console.error('ForumsComponent:updateProfileGroups: throw error ', error);
+        console.error('ForumsMainComponent:updateProfileGroups: throw error ', error);
         throw new Error(error);
       });
     }

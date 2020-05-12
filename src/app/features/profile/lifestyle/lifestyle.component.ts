@@ -11,6 +11,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -165,6 +166,7 @@ export class LifestyleComponent implements OnInit {
               private router: Router,
               private authSvc: AuthenticationService,
               private uploadImageSvc: UploadImageService,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -276,6 +278,8 @@ export class LifestyleComponent implements OnInit {
       } else if (result !== 'ok') {
         this.changeImage(row, result);
       }
+    }, error => {
+      this.sentry.logError({"message":"error closing dialog","error":error});
     });
   }
 
@@ -288,6 +292,8 @@ export class LifestyleComponent implements OnInit {
       } else {
         this.profileSvc.getProfile();
       }
+    }, error => {
+      this.sentry.logError({"message":"error deleting lifestyle image url from profile","error":error});
     })
   }
 
@@ -402,6 +408,8 @@ export class LifestyleComponent implements OnInit {
           this.form.patchValue({[control]: selection});
         }
       }
+    }, error => {
+      this.sentry.logError({"message":"error closing dialog","error":error});
     });
   }
 

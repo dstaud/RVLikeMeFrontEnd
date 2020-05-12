@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { environment } from '@environments/environment';
 import { Observable} from 'rxjs';
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -11,6 +10,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-about',
@@ -31,6 +31,7 @@ export class AboutComponent implements OnInit {
               private profileSvc: ProfileService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private shareDataSvc: ShareDataService,
+              private sentry: SentryMonitorService,
               private router: Router) {
               }
 
@@ -75,8 +76,8 @@ export class AboutComponent implements OnInit {
       this.daveProfileImageUrl = dave.profileImageUrl;
       console.log('AboutComponent:getDaveInfo: dave=', dave);
     }, error => {
-      if (error.status !== 404) {
-        console.error('AboutComponent:getDaveCredentials: error getting user credentials ', error);
+      if (error.status === 404) {
+        this.sentry.logError({"status":404, "message":"Dave's credentials not found!"});
       }
     });
   }

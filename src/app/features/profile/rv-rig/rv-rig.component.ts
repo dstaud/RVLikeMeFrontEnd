@@ -15,6 +15,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { RigService, IrigData } from '@services/data-services/rig.service';
 import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -105,6 +106,7 @@ export class RvRigComponent implements OnInit {
               private location: Location,
               private desktopMaxWidthSvc: DesktopMaxWidthService,
               private uploadImageSvc: UploadImageService,
+              private sentry: SentryMonitorService,
               private rigSvc: RigService,
               private activateBackArrowSvc: ActivateBackArrowService) {}
 
@@ -213,6 +215,8 @@ export class RvRigComponent implements OnInit {
       } else if (result !== 'ok') {
         this.changeImage(row, result);
       }
+    }, error => {
+      this.sentry.logError({"message":"error deleting rig image","error":error});
     });
   }
 
@@ -259,6 +263,8 @@ export class RvRigComponent implements OnInit {
       } else {
         this.profileSvc.getProfile();
       }
+    }, error => {
+      this.sentry.logError({"message":"error uploading rig image","error":error});
     })
   }
 
@@ -298,6 +304,7 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
+      console.error('RvRigComponent:getRigData: error getting rig data=', error);
       throw new Error(error);
     })
   }
@@ -321,8 +328,8 @@ export class RvRigComponent implements OnInit {
     .subscribe(maxWidth => {
       this.desktopMaxWidth = maxWidth;
       this.setDialogWindowDimensions();
-    }, (error) => {
-      console.error('PostsComponent:listenForDesktopMaxWidth: error getting maxWidth ', error);
+    }, error => {
+      this.sentry.logError({"message":"error listening for desktop max width","error":error});
       this.desktopMaxWidth = 1140;
       this.setDialogWindowDimensions();
     });
@@ -401,6 +408,8 @@ export class RvRigComponent implements OnInit {
           this[control].patchValue(selection);
         }
       }
+    }, error => {
+      this.sentry.logError({"message":"error closing dialog","error":error});
     });
   }
 
@@ -454,11 +463,9 @@ export class RvRigComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     if (!event) {
-      console.log('RVRigComponent:updateSelectItem: patching value to null');
       this.profile[control] = null;
       this[control].patchValue(null);
     } else {
-      console.log('RVRigComponent:updateSelectItem: setting profile and updating to =', event);
       this.profile[control] = event;
     }
     this.updateRig(control);

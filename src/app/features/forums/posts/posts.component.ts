@@ -16,6 +16,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 export type FadeState = 'visible' | 'hidden';
 @Component({
@@ -88,6 +89,7 @@ export class PostsComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private desktopMaxWidthSvc: DesktopMaxWidthService,
               private router: Router,
+              private sentry: SentryMonitorService,
               private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -305,9 +307,7 @@ export class PostsComponent implements OnInit {
         this.showFirstPost = true;
         this.showSpinner = false;
       } else {
-        console.log('PostsComponent:getPostsFromDatabase: post=', postResult);
         this.comments= [];
-        console.log('PostsComponent:getPostsFromDatabase: create comments array');
         for (let j=0; j < postResult[0].comments.length; j++) {
           comment = this.createCommentsArrayEntry(postResult[0].comments[j]);
           postComments.push(comment);
@@ -322,7 +322,6 @@ export class PostsComponent implements OnInit {
         } else {
           this.startCommentsIndex.push(0);
         }
-        console.log('PostsComponent:getPostsFromDatabase: create posts array');
         for (let i=1; i < postResult.length; i++) {
           postComments = [];
           for (let j=0; j < postResult[i].comments.length; j++) {
@@ -347,7 +346,6 @@ export class PostsComponent implements OnInit {
         this.showFirstPost = false;
         this.showSpinner = false;
       }
-      console.log('PostsComponent:getPostsFromDatabase: leaving this function');
     }, error => {
       this.showSpinner = false;
       console.error('PostsComponent:getPosts: throw error ', error);
@@ -363,7 +361,7 @@ export class PostsComponent implements OnInit {
       this.desktopMaxWidth = maxWidth;
       this.setDialogDimensions();
     }, (error) => {
-      console.error('PostsComponent:listenForDesktopMaxWidth: error getting maxWidth ', error);
+      this.sentry.logError({"message":"unable to listen for desktop max width","error":error});
       this.desktopMaxWidth = 1140;
       this.setDialogDimensions();
     });

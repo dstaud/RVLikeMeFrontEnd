@@ -1,18 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SwUpdate, SwPush } from '@angular/service-worker';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { environment } from '@environments/environment';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { SubscribeNotificationsService } from '@services/data-services/subscribe-notifications.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { ThemeService } from '@services/theme.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-settings',
@@ -24,22 +22,20 @@ export class SettingsComponent implements OnInit {
 
   showSpinner: boolean = false;
   showInstallLink:boolean = false;
+  profileID: string;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
-  private profileID: string;
   private event: any;
 
-  constructor(private swUpdate: SwUpdate,
-              private swPush: SwPush,
-              private profileSvc: ProfileService,
+  constructor(private profileSvc: ProfileService,
               private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               private location: Location,
+              private sentry: SentryMonitorService,
               private beforeInstallEventSvc: BeforeInstallEventService,
-              private themeSvc: ThemeService,
-              private subscribeNotificationsSvc: SubscribeNotificationsService) { }
+              private themeSvc: ThemeService) { }
 
   ngOnInit(): void {
     let backPath;
@@ -81,60 +77,6 @@ export class SettingsComponent implements OnInit {
   }
 
 
-  onNotify() {
-    this.showSpinner = true;
-    console.log('SideNavComponent:onNotify: in onNotify');
-    console.log('SideNavComponent:onNotify: notify=', this.profile.notifySubscription);
-    this.subscribeNotificationsSvc.sendNotificationTest(this.profile.notifySubscription)
-    .subscribe(notifyResult => {
-      console.log('onNotify: message should be on the way', notifyResult);
-      this.showSpinner = false;
-    }, error => {
-      console.error('onNotify: throw error ', error);
-      throw new Error(error);
-    })
-  }
-
-
-  // Subscribe to push notifications
-  onSubscribeNotifications() {
-    console.log('onSubscribeNotifications: swUpdate enabled=', this.swUpdate.isEnabled);
-    if (this.swUpdate.isEnabled) {
-      this.showSpinner = true;
-      console.log('onSubscribeNotifications: swUpdate is enabled. requesting sub with key=', environment.vapidPublicKey);
-      this.swPush.requestSubscription({
-        serverPublicKey: environment.vapidPublicKey
-      })
-      .then(subscription => {
-        console.log('onSubscribeNotifications: calling server with subscription ', subscription);
-        this.subscribeNotificationsSvc.subscribeToNotifications(this.profileID, subscription)
-        .subscribe(subscribeResults => {
-          console.log('onSubscribeNotifications: received server response=', subscribeResults);
-          this.showSpinner = false;
-        }, error => {
-          console.error('onSubscribeNotifications: throw error ', error);
-          throw new Error(error);
-        })
-      })
-      .catch(err => console.error("Could not subscribe to notifications", err));
-    }
-  }
-
-
-  // Unsubscribe from push notifications
-  onUnsubscribeNotifications() {
-    this.showSpinner = true;
-    this.subscribeNotificationsSvc.unsubscribeFromNotifications(this.profileID)
-    .subscribe(unsubscribeResults => {
-      console.log('onSubscribeNotifications: received server response=', unsubscribeResults);
-      this.showSpinner = false;
-    }, error => {
-      console.error('onSubscribeNotifications: throw error ', error);
-      throw new Error(error);
-    });
-  }
-
-
   // Toggle between light and dark theme as user selectes
   onSelectTheme(theme: string) {
     this.themeSvc.setGlobalColorTheme(theme);
@@ -144,7 +86,7 @@ export class SettingsComponent implements OnInit {
     .subscribe ((responseData) => {
       console.log('SettingsComponent:onSelectTheme: update color theme ', responseData);
     }, error => {
-      console.log('HeaderMobileComponent:selectTheme: throw error ', error);
+      this.sentry.logError({"message":"error listening for color theme","error":error});
     });
   }
 
@@ -171,7 +113,7 @@ export class SettingsComponent implements OnInit {
       console.log('SettingsComponent:listenForTheme: got theme=', theme);
       this.theme = theme;
     }, error => {
-      console.error('SettingsComponent:listenForTheme: error getting theme ', error);
+      this.sentry.logError({"message":"error listening for color theme","error":error});
       this.theme = 'light-theme';
     });
   }

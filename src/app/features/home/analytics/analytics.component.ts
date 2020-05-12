@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LikemeCountsService, IlikeMeCounts, IgroupByCounts } from '@services/data-services/likeme-counts.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { ShareDataService } from './../../../core/services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 export interface Ilegend {
   label: string,
@@ -53,6 +54,7 @@ export class AnalyticsComponent implements OnInit {
               private translate: TranslateService,
               private router: Router,
               private shareDataSvc: ShareDataService,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService) {
   }
 
@@ -106,17 +108,14 @@ export class AnalyticsComponent implements OnInit {
       if (this.allUsersCount > 0) {
         this.showAllUsersCount = true;
       }
-
-    }, (error) => {
-      console.error(error);
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for like me counts","error":error});
     });
   }
 
   private processCounts(control: string, counts: IgroupByCounts) {
     let legend: string = '';
     let otherCount: number = 0;
-
-    console.log('AnalyticsComponentprocessCountsCounts: data=', counts);
 
     if (control === 'rigType') {
       this.processRigTypeCounts(control, counts);
@@ -153,9 +152,6 @@ export class AnalyticsComponent implements OnInit {
       this.controlLegends.push(JSON.parse(legend));
       this.controlData.push(counts[control][counts[control].length - 1].count);
     }
-
-    console.log('AnalyticsComponent:processCounts: counts array=', this.controlData);
-    console.log('AnalyticsComponent:processCounts: counts label array=', this.controlLegends);
   }
 
 
@@ -200,8 +196,5 @@ export class AnalyticsComponent implements OnInit {
     legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.other') + ': ' +
               this.controlData[2] + ' RVers'+ '","color":"' + this.chartColor[2] + '"}';
     this.controlLegends.push(JSON.parse(legend));
-
-    console.log('AnalyticsComponent:processRigTypeCounts: counts array=', this.controlData);
-    console.log('AnalyticsComponent:processRigTypeCounts: counts label array=', this.controlLegends);
   }
 }

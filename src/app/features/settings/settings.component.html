@@ -1,5 +1,8 @@
 <div class="mat-app-background background">
   <h2 class="mat-title">Settings</h2>
+
+  <app-rvlm-notification-settings></app-rvlm-notification-settings>
+
   <p *ngIf="theme === 'light-theme'">
     <a mat-menu-item (click)="onSelectTheme('dark-theme')">
       <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
@@ -12,30 +15,6 @@
       {{ "account.lightTheme" | translate }}
     </a>
   </p>
-  <p>
-    <a mat-menu-item
-      (click)="onSubscribeNotifications()">
-      <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
-      <span class="nav-caption">{{ "menu.subscribe" | translate }}</span>
-    </a>
-  </p>
-
-  <p>
-    <a mat-menu-item
-      (click)="onUnsubscribeNotifications()">
-      <mat-icon fontSet="material-icons-outlined" >remove_circle</mat-icon>
-      <span class="nav-caption">{{ "menu.unsubscribe" | translate }}</span>
-    </a>
-  </p>
-
-  <p>
-    <a mat-menu-item
-      (click)="onNotify()">
-      <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
-      <span class="nav-caption">notify</span>
-    </a>
-  </p>
-
   <p>
     <a mat-menu-item
       *ngIf="showInstallLink"

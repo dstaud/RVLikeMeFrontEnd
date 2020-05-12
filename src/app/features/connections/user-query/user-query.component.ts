@@ -12,8 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService } from '@services/share-data.service';
-
-import { SharedComponent } from '@shared/shared.component';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-user-query',
@@ -46,6 +45,7 @@ export class UserQueryComponent implements OnInit {
               private likeMeCountsSvc: LikemeCountsService,
               private router: Router,
               private shareDataSvc: ShareDataService,
+              private sentry: SentryMonitorService,
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
@@ -141,6 +141,8 @@ export class UserQueryComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
       console.log('ForumsListComponent:listenForColorTheme: Theme=', this.theme);
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 

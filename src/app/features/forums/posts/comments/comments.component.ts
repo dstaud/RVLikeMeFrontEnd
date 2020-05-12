@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { Router } from '@angular/router';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { Observable } from 'rxjs';
 
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService } from '@services/share-data.service';
 
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-comments',
@@ -30,6 +30,7 @@ export class CommentsComponent implements OnInit {
   constructor(private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private sentry: SentryMonitorService,
               private router: Router) {}
 
   ngOnInit(): void {
@@ -52,7 +53,7 @@ export class CommentsComponent implements OnInit {
                       '"userIdViewer":"' + this.userID + '",' +
                       '"params":' + userParams + '}';
     console.log('CommentsComponent:onYourStory: params=', params);
-    this.activateBackArrowSvc.setBackRoute('forums-list', 'forward');
+    this.activateBackArrowSvc.setBackRoute('forms/forums-list', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/profile/mystory');
   }
@@ -64,6 +65,8 @@ export class CommentsComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 
@@ -78,7 +81,6 @@ export class CommentsComponent implements OnInit {
               '"toDisplayName":"' + toDisplayName + '",' +
               '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
 
-    console.log('PostsComponent:navigateToMessages: params=', params);
     return params;
   }
 

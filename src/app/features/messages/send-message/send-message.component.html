@@ -1,9 +1,10 @@
 <div class="mat-app-background mat-body-1 container">
   <div class="posts">
-    <div>
+    <div class="your-story">
       <img class="image profile-image"
             [src]="toProfileImageUrl"
-            style="width:40px;height:40px;">
+            style="width:40px;height:40px;"
+            (click)=onYourStory()>
     </div>
     <div class="name-and-date">
       <div class="display-name">

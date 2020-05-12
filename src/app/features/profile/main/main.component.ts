@@ -12,6 +12,7 @@ import { LanguageService } from '@services/language.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 
@@ -81,6 +82,7 @@ export class MainComponent implements OnInit {
               private language: LanguageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private sentry: SentryMonitorService,
               private shareDataSvc: ShareDataService,
               private router: Router,
               fb: FormBuilder) {
@@ -298,7 +300,6 @@ export class MainComponent implements OnInit {
         this.aboutMeExperienced = true;
       }
 
-      console.log('ProfileComponent:listenForUserProfile: ', this.profile)
       this.determinePercentComplete(profileResult);
 
       this.showSpinner = false;
@@ -351,6 +352,8 @@ export class MainComponent implements OnInit {
           });
         }
       }
+    }, error => {
+      this.sentry.logError({"message":"error closing dialog","error":error});
     });
   }
 
