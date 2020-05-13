@@ -76,6 +76,7 @@ export class RegisterUserComponent implements OnInit {
               });
               this.headerVisibleSvc.toggleHeaderVisible(true);
               this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+              this.activateBackArrowSvc.setBackRoute('', 'forward');
 }
 
   ngOnInit() {

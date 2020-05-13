@@ -16,7 +16,8 @@
   </div>
   <span class="fill-space"></span>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Home page"
           routerLink="/home/dashboard"
@@ -29,7 +30,8 @@
     </div>
   </button>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Find others like me"
           routerLink="/connections/main"
@@ -42,7 +44,8 @@
     </div>
   </button>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Connect in Group Forums"
           routerLink="/forums/forums-list"
@@ -55,7 +58,8 @@
     </div>
   </button>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Messages"
           routerLink="/messages/message-list"
@@ -75,7 +79,8 @@
     </div>
   </button>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Learn about RV lifestyle"
           routerLink="/newbie/need-help-newbie">
@@ -87,7 +92,8 @@
     </div>
   </button>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="Profile"
           routerLink="/profile/main"
@@ -100,7 +106,8 @@
     </div>
   </button>
 
-  <button mat-button
+  <button *ngIf="userAuthorized"
+          mat-button
           class="toolbar-icon"
           matTooltip="About RVLikeMe"
           routerLink="/about"

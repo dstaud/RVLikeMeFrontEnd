@@ -74,9 +74,14 @@ export class SigninComponent implements OnInit {
                 password: new FormControl({value: '', disabled: this.showSpinner},
                                            Validators.required)
               });
-
-              this.headerVisibleSvc.toggleHeaderVisible(true);
-              this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+              if (this.containerDialog) {
+                this.headerVisibleSvc.toggleHeaderVisible(false);
+                this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+              } else {
+                this.headerVisibleSvc.toggleHeaderVisible(true);
+                this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+                this.activateBackArrowSvc.setBackRoute('', 'forward');
+              }
               this.setReturnRoute();
   }
 

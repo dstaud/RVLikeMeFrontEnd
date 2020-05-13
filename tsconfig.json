@@ -27,7 +27,8 @@
         "@shared/*": ["app/shared/*"],
         "@dialogs/*": ["app/dialogs/*"],
         "@assets/*": ["assets/*"],
-        "@environments/*": ["environments/*"]
+        "@environments/*": ["environments/*"],
+        "@pageNotFound/*": ["app/core/navigation/page-not-found/*"]
     }
   },
   "angularCompilerOptions": {

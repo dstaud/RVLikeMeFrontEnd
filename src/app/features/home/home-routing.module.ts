@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './analytics/dashboard/dashboard.component';
 import { DashboardDrilldownComponent } from './analytics/dashboard-drilldown/dashboard-drilldown.component';
+import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent,
@@ -10,7 +11,8 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'dashboard-drilldown', component: DashboardDrilldownComponent }
     ]
-  }
+  },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MessagesComponent } from './messages.component';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageListComponent } from './message-list/message-list.component';
+import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
 
 const routes: Routes = [
   { path: '', component: MessagesComponent,
@@ -10,7 +11,8 @@ const routes: Routes = [
       { path: 'send-message', component: SendMessageComponent },
       { path: 'message-list', component: MessageListComponent }
     ]
-}
+  },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

@@ -8,17 +8,20 @@ import { RvRigComponent } from './rv-rig/rv-rig.component';
 import { InterestsComponent } from './interests/interests.component';
 import { MainComponent } from './main/main.component';
 import { YourStoryComponent } from './your-story/your-story.component';
+import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
 
 const routes: Routes = [
   { path: '', component:ProfileComponent,
     children: [
-    { path: 'main', component: MainComponent},
-    { path: 'personal', component: PersonalComponent },
-    { path: 'lifestyle', component: LifestyleComponent },
-    { path: 'rig', component: RvRigComponent },
-    { path: 'interests', component: InterestsComponent },
-    { path: 'mystory', component: YourStoryComponent },
-  ]}
+      { path: 'main', component: MainComponent},
+      { path: 'personal', component: PersonalComponent },
+      { path: 'lifestyle', component: LifestyleComponent },
+      { path: 'rig', component: RvRigComponent },
+      { path: 'interests', component: InterestsComponent },
+      { path: 'mystory', component: YourStoryComponent },
+    ]
+  },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

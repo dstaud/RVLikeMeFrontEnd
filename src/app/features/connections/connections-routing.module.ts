@@ -4,14 +4,17 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MainComponent } from './main/main.component';
 import { UserQueryComponent } from './user-query/user-query.component';
+import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
 
 
 const routes: Routes = [
   { path: '', component: ConnectionsComponent,
-  children: [
-    { path: 'main', component: MainComponent},
-    { path: 'user-query', component: UserQueryComponent },
-  ]  }
+    children: [
+      { path: 'main', component: MainComponent},
+      { path: 'user-query', component: UserQueryComponent },
+    ]
+  },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
