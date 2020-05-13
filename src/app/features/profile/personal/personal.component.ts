@@ -216,12 +216,6 @@ export class PersonalComponent implements OnInit {
   }
 
 
-  // Give user more space to enter their story
-  // onMyStory() {
-  //   this.openMyStoryDialog(this.profile.myStory);
-  // }
-
-
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onProfileImageSelected(event: any) {
     let fileType: string = 'profile';
@@ -247,7 +241,7 @@ export class PersonalComponent implements OnInit {
     } else {
       this.profile[control] = this.form.controls[control].value;
     }
-    this.updatePersonal(control);
+    this.updatePersonal(control, this.profile[control]);
   }
 
   onUpdateSelectItem(control: string, event) {
@@ -259,7 +253,7 @@ export class PersonalComponent implements OnInit {
     } else {
       this.profile[control] = event;
     }
-    this.updatePersonal(control);
+    this.updatePersonal(control, this.profile[control]);
   }
 
 
@@ -330,7 +324,7 @@ export class PersonalComponent implements OnInit {
           croppedImageBase64 = result;
           this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
             this.profile.profileImageUrl = uploadedFileUrl;
-            this.updatePersonal('profileImage');
+            this.updatePersonal('profileImageUrl', this.profile.profileImageUrl);
             this.profileImageUrl = this.profile.profileImageUrl;
             this.profileImageLabel = 'personal.component.changeProfilePic'
             this.showSpinner = false;
@@ -399,9 +393,11 @@ export class PersonalComponent implements OnInit {
 
 
   // Update data in profile document on database
-  private updatePersonal(control: string) {
+  private updatePersonal(control: string, value: any) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this.profileSvc.updateProfile(this.profile)
+
+    this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
+    // this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
