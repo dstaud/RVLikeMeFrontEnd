@@ -62,8 +62,8 @@ export class ForumService {
     return this.http.post(`/api/forum-group`, keyValues, {});
   }
 
-  addGroupTopic(topic: string, topicDesc: string): Observable<any> {
-    let keyValues = '{"topic":"' + topic + '","topicDesc":"' + topicDesc + '"}';
+  addGroupTopic(topicID: string, topicDesc: string): Observable<any> {
+    let keyValues = '{"topicID":"' + topicID + '","topicDesc":"' + topicDesc + '"}';
 
     return this.http.post(`/api/forum-topic`, JSON.parse(keyValues), {});
   }

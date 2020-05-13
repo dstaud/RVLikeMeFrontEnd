@@ -9,7 +9,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { ThemeService } from '@services/theme.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
@@ -156,13 +156,19 @@ export class SendMessageComponent implements OnInit {
 
   // If user clicks to see story of another user, go to MyStory component
   onYourStory() {
-    let userParams = this.packageParamsForMessaging();
-    let params = '{"userID":"' + this.toUserID + '",' +
-                      '"userIdViewer":"' + this.fromUserID + '",' +
-                      '"params":' + userParams + '}';
+    let userParams:ImessageShareData = this.packageParamsForMessaging();
+    let params:ImyStory = {
+      userID: this.toUserID,
+      userIdViewer: this.fromUserID,
+      params: userParams
+    }
+
+    // let params = '{"userID":"' + this.toUserID + '",' +
+    //                   '"userIdViewer":"' + this.fromUserID + '",' +
+    //                   '"params":' + userParams + '}';
     console.log('SendMessageComponent:onYourStory: params=', params);
-    this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
-    this.shareDataSvc.setData(params);
+    this.activateBackArrowSvc.setBackRoute('messages/send-message', 'forward');
+    this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
   }
 
@@ -226,10 +232,10 @@ export class SendMessageComponent implements OnInit {
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
     let paramData: any;
 
-    if (!this.shareDataSvc.getData()) {
+    if (!this.shareDataSvc.getData('message').fromUserID) {
       this.router.navigateByUrl('/messages/message-list');
     } else {
-      paramData = this.shareDataSvc.getData();
+      paramData = this.shareDataSvc.getData('message');
       this.fromUserID = paramData.fromUserID;
       this.fromDisplayName = paramData.fromDisplayName;
       if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {
@@ -263,15 +269,24 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  private packageParamsForMessaging(): string {
-    let params: string;
-    console.log('SendMessageComponent:packageParamsForMessaging displayName=', this.fromDisplayName);
-    params = '{"fromUserID":"' + this.fromUserID + '",' +
-              '"fromDisplayName":"' + this.fromDisplayName + '",' +
-              '"fromProfileImageUrl":"' + this.fromProfileImageUrl + '",' +
-              '"toUserID":"' + this.toUserID + '",' +
-              '"toDisplayName":"' + this.toDisplayName + '",' +
-              '"toProfileImageUrl":"' + this.toProfileImageUrl + '"}';
+  private packageParamsForMessaging(): ImessageShareData {
+    let params:ImessageShareData = {
+      fromUserID: this.fromUserID,
+      fromDisplayName: this.fromDisplayName,
+      fromProfileImageUrl: this.fromProfileImageUrl,
+      toUserID: this.toUserID,
+      toDisplayName: this.toDisplayName,
+      toProfileImageUrl: this.toProfileImageUrl
+    }
+
+    // let params: string;
+    // console.log('SendMessageComponent:packageParamsForMessaging displayName=', this.fromDisplayName);
+    // params = '{"fromUserID":"' + this.fromUserID + '",' +
+    //           '"fromDisplayName":"' + this.fromDisplayName + '",' +
+    //           '"fromProfileImageUrl":"' + this.fromProfileImageUrl + '",' +
+    //           '"toUserID":"' + this.toUserID + '",' +
+    //           '"toDisplayName":"' + this.toDisplayName + '",' +
+    //           '"toProfileImageUrl":"' + this.toProfileImageUrl + '"}';
 
     console.log('SendMessageComponent:packageParamsForMessaging: params=', params);
     return params;

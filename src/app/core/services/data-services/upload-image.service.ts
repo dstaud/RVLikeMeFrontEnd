@@ -36,6 +36,7 @@ export class UploadImageService {
   }
 
 
+
   // Upload image file to server
   uploadImage(imageFile: File, fileType: string, cb: CallableFunction) {
     let fd = new FormData();
@@ -114,13 +115,21 @@ export class UploadImageService {
     imageFromSource = <File>event.target.files[0];
     fileName = imageFromSource['name'];
 
-    // Get image orientation so can adjust it when compressing
-    exifr.orientation(imageFromSource).catch(err => undefined).then(orient => {
-      orientation = orient;
-    });
-
-    // Compress file before uploading to server
+    // Compress file before uploading to server - Not sure what's going on here, but only this configuration with compress outside of orientation.then works
+    // I thought wait until orientation is done so essentially put inside then, or tried chaining another callback but those did NOT work.  I would have
+    // expected either of those to work and this one not to...
+    // Then I commented  out exifr which actually gets the orientation and now orientation is undefined...but it works now with an undefined orientation!
+    // The only thing I can think of, is when I do not pass an orientation, it realizes it is undefined and gets the right orientation through some error
+    // handling, which is nice.  The orientation that I'm passing just must not be right, but it looks like just this ENUM that I copied out.  If i Pass a 6
+    // it ignores it!
+    // I originally tried to use the upload that is included with the compressFile that gets the orientation, but had to remove it because would not
+    // work on the iPhone.   I had to upload myself, and then, I thought, get the orientation myself and then call compress.
     reader.onload = (event: any) => {
+      // Get image orientation so can adjust it when compressing
+      // exifr.orientation(imageFromSource).catch(err => undefined).then(orient => {
+      //   orientation = orient;
+      // });
+      // console.log('compressing file.  Do I have orientation?  orientation=', orientation);
       this.compressFile(event.target.result, fileName, orientation, (imageFile: File) => {
         cb(imageFile);
       });

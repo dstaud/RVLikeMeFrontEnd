@@ -10,7 +10,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ThemeService } from '@services/theme.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
@@ -33,7 +33,7 @@ export class ForumsListComponent implements OnInit {
               private authSvc: AuthenticationService,
               private location: Location,
               private profileSvc: ProfileService,
-              public translate: TranslateService,
+              private translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
@@ -70,13 +70,20 @@ export class ForumsListComponent implements OnInit {
   // If user selects a group, configure query params and go to group forums
   onGroupSelect(groupItem: number) {
     let group = this.groupsListFromUserProfile[groupItem];
-    let params: string;
+    let params: IforumsMain;
 
-    params = '{"_id":"' + group._id + '",' +
-              '"forumType":"group",' +
-              '"theme":"' + this.theme + '"}';
+    // params = '{"_id":"' + group._id + '",' +
+    //           '"forumType":"group",' +
+    //           '"theme":"' + this.theme + '"}';
 
-    this.shareDataSvc.setData(params);
+    params = {
+      _id: group._id,
+      forumType: 'group',
+      theme: this.theme
+    }
+
+
+    this.shareDataSvc.setData('forumsMain', params);
     this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
     this.router.navigateByUrl('/forums/main');
   }

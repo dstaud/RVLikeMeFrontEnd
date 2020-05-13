@@ -32,22 +32,12 @@ export class LearnMoreComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private router: Router) {
 
-              let params: any;
-
-              if (this.shareDataSvc.getData()) {
-                params = JSON.parse(this.shareDataSvc.getData());
-                console.log('LearnMoreComponent:ngOnInit: params= ', params)
-                this.containerDesktop = params.desktop;
-                console.log('LearnMoreComponent:ngOnInit: set containerDesktop to ', this.containerDesktop)
+              if (window.innerWidth > 600) {
+                this.containerDesktop = true;
               } else {
-                if (window.innerWidth > 600) {
-                  this.containerDesktop = true;
-                } else {
-                  this.headerVisibleSvc.toggleHeaderVisible(true);
-                  this.activateBackArrowSvc.setBackRoute('', 'forward');
-                }
+                this.headerVisibleSvc.toggleHeaderVisible(true);
+                this.activateBackArrowSvc.setBackRoute('', 'forward');
               }
-
   }
 
   ngOnInit() {

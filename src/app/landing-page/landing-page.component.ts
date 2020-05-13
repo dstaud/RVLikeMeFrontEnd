@@ -6,7 +6,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
-import { ShareDataService } from './../core/services/share-data.service';
+import { ShareDataService, Isignin } from './../core/services/share-data.service';
 
 import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
@@ -59,21 +59,9 @@ export class LandingPageComponent implements OnInit {
 
 
   onLearnMore() {
-    let params: string;
-
-    let desktop: boolean = false;
-
-    if (this.windowWidth > 600) {
-      desktop = true;
-    }
-
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.activateBackArrowSvc.setBackRoute('', 'forward');
-
-    params = '{"desktop":' + desktop + '}'
-    console.log('LandingPageComponent:onLearnMore: params=', params);
-    this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/learn-more');
   }
 
@@ -99,7 +87,10 @@ export class LandingPageComponent implements OnInit {
   // When user selects signin, if mobile, go to signin component.
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
-    this.shareDataSvc.setData(true) // To indicate to signin page coming from landing page
+    let param: Isignin = {
+      fromLandingPage: true
+    }
+    this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
     if (this.windowWidth > 600) {
       this.openSigninDialog((result: string) => {
         console.log('LandingPageComponent:onSignIn: back from dialog. result=', result);

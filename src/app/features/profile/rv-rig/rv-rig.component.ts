@@ -40,7 +40,7 @@ export class RvRigComponent implements OnInit {
   @Output()
   optionSelected: EventEmitter<MatAutocompleteSelectedEvent>
 
-
+  // Could not use reactive forms for this form only because of the auto-complete of brand.  Couldn't get that to work with Reactive forms.
   rigBrand = new FormControl('');
   rigType = new FormControl('');
   rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
@@ -123,6 +123,8 @@ export class RvRigComponent implements OnInit {
       this.router.navigateByUrl('/?e=signin');
     } else {
       this.listenForDesktopMaxWidth();
+
+      this.formEnable('disable');
 
       this.showSpinner = true;
 
@@ -269,6 +271,25 @@ export class RvRigComponent implements OnInit {
   }
 
 
+  private formEnable(action: string) {
+    if (action === 'disable') {
+      this.rigBrand.disable();
+      this.rigType.disable();
+      this.rigLength.disable();
+      this.rigModel.disable();
+      this.rigYear.disable();
+    }
+
+    if (action === 'enable') {
+      this.rigBrand.enable();
+      this.rigType.enable();
+      this.rigLength.enable();
+      this.rigModel.enable();
+      this.rigYear.enable();
+    }
+  }
+
+
   private getBrandInfo(brand: string): RigBrandManufacturer {
     let brandID: string = null;
     let manufacturer: string = null;
@@ -300,6 +321,8 @@ export class RvRigComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
+
+      this.formEnable('enable');
 
       this.showSpinner = false;
     }, error => {

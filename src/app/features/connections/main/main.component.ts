@@ -15,7 +15,7 @@ import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/like
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ThemeService } from '@services/theme.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SharedComponent } from '@shared/shared.component';
@@ -52,7 +52,6 @@ export class MainComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
   private routeSubscription: any;
   private allUsersCount: number;
-  private queryParams: string;
   private allCountsReceived: boolean = false;
 
   constructor(private translate: TranslateService,
@@ -72,6 +71,11 @@ export class MainComponent implements OnInit {
                 });
               }
 
+  // To speed up load of the dashboard, I broke up getting the like-me counts into two pieces.  Here I have the three from the dashboard show up first
+  // with the checkbox if user clicked from dashboard.   Then it comes back sometime later with all of them.  Spinner shows working to get more
+  // but could not have the checkboxes that were there disabled.   User can click while spinner is going which is bad.  Tried several things
+  // to make that work and finally decided MVP for release 1 is OK without that.
+  // I could, in the second like-me count call, just get the remaining counts and append them.  That may work.
   ngOnInit() {
     let backPath;
     let self = this;
@@ -245,19 +249,20 @@ export class MainComponent implements OnInit {
     let name;
     let value;
     let i: number = 0;
-
-    this.queryParams = '{';
+    let queryParams:IforumsMain = {
+      forumType: 'group',
+      theme: this.theme
+    }
     this.activateBackArrowSvc.setBackRoute('connections/main', 'forward');
     this.checkArray.controls.forEach((item: FormControl) => {
       name = item.value;
       value = this.profile[item.value];
-      this.queryParams = this.queryParams + '"' + name + '":"' + value + '",';
+      queryParams[name] = value;
+      console.log('ConnectionsMain:onForum: name=', name, ' value=', value, 'queryParam=', queryParams[name])
       i++;
     });
-    this.queryParams = this.queryParams + '"forumType":"group",';
-    this.queryParams = this.queryParams + '"theme":"' + this.theme + '"}'
-
-    this.shareDataSvc.setData(this.queryParams);
+    console.log('ConnectionsMain:onForum: queryParams=', queryParams)
+    this.shareDataSvc.setData('forumsMain', queryParams);
     this.router.navigateByUrl('/forums/main');
   }
 
@@ -268,18 +273,22 @@ export class MainComponent implements OnInit {
     let name = '';
     let value = '';
     let i: number = 0;
-
-    this.matches = [];
+    let matches: Array<IuserQuery> = [];
+    let likeMeItem:IuserQuery;
 
     this.checkArray.controls.forEach((item: FormControl) => {
+      likeMeItem = {};
+
       name = item.value;
       value = this.profile[item.value];
-      this.likeMeItem = '{"name":"' + name + '", "value":"' + value + '"}'
-      this.likeMeItem = JSON.parse(this.likeMeItem);
-      this.matches.push(this.likeMeItem);
+
+      likeMeItem[name] = value;
+      matches.push(likeMeItem);
       i++;
     });
-    this.shareDataSvc.setData({"matches":this.matches});
+
+    console.log('ConnectionsMain:onQuery: params=', matches);
+    this.shareDataSvc.setData('userQuery',matches);
     this.activateBackArrowSvc.setBackRoute('connections/main', 'forward');
     this.router.navigateByUrl('/connections/user-query');
   }

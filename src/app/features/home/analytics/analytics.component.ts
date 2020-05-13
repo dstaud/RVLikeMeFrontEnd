@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { LikemeCountsService, IlikeMeCounts, IgroupByCounts } from '@services/data-services/likeme-counts.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
-import { ShareDataService } from './../../../core/services/share-data.service';
+import { ShareDataService, IdashboardDrilldown } from './../../../core/services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 export interface Ilegend {
@@ -68,8 +68,11 @@ export class AnalyticsComponent implements OnInit {
   ngOnDestroy() {}
 
   onChart() {
-    let params = '{"control":"' + this.control + '"}'
-    this.shareDataSvc.setData(params);
+    let params:IdashboardDrilldown = {
+      control: this.control
+    }
+
+    this.shareDataSvc.setData('dashboardDrilldown', params);
 
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/home/dashboard-drilldown');

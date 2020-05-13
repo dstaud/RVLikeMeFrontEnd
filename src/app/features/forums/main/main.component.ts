@@ -13,7 +13,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ForumService } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ThemeService } from '@services/theme.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 
@@ -115,12 +115,12 @@ export class MainComponent implements OnInit {
     let values: string;
     let paramData: any;
 
-    if (!this.shareDataSvc.getData()) {
+    if (!this.shareDataSvc.getData('forumsMain')) {
       this.router.navigateByUrl('/forums/forums-list');
     } else {
-      paramData = JSON.parse(this.shareDataSvc.getData());
+      let paramData:IforumsMain = this.shareDataSvc.getData('forumsMain');
       this.forumType = paramData.forumType;
-
+      console.log('ForumsMain:getGroups: paramData=', paramData);
       this.showSpinner = true;
       if (paramData.forumType === 'topic') {
         this.forumSvc.getGroupByTopic(paramData.topicID)
@@ -132,7 +132,7 @@ export class MainComponent implements OnInit {
           this.showSpinner = false;
         }, error => {
           if (error.status === 404) {
-            this.forumSvc.addGroupTopic(paramData.topic, paramData.topicDesc)
+            this.forumSvc.addGroupTopic(paramData.topicID, paramData.topicDesc)
             .subscribe(groupTopic => {
               this.groupID = groupTopic._id;
               this.topicID = groupTopic.topic;
@@ -144,6 +144,7 @@ export class MainComponent implements OnInit {
         });
       } else {
         if (paramData._id) {
+          console.log('ForumsMain:getGroups: id=', paramData._id);
           this.groupID = paramData._id;
           this.forumSvc.getGroupByID(paramData._id)
           .subscribe(groupFromServer => {
@@ -162,6 +163,7 @@ export class MainComponent implements OnInit {
 
           });
         } else {
+          console.log('ForumsMain:getGroups: params=', paramData);
           this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
           this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
 
@@ -186,7 +188,7 @@ export class MainComponent implements OnInit {
   private getGroupCodeAttributes(group: any): Array<string> {
     let name;
     let groupProfileCodeAttributesFromGroup = [];
-
+    console.log('ForumsMain:getGroupCodeAttributes: group=', group);
     for (name in group) {
       if (!this.reservedField(name)) {
         groupProfileCodeAttributesFromGroup.push(name);

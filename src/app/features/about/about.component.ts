@@ -9,7 +9,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
@@ -55,13 +55,19 @@ export class AboutComponent implements OnInit {
 
   onDaveStory() {
     if (this.daveID) {
-      let userParams = this.packageParamsForMessaging();
-      console.log('AboutComponent:onDaveStory: userParams=', userParams);
-      let params = '{"userID":"' + this.daveID + '",' +
-                        '"userIdViewer":"' + this.profile.userID + '",' +
-                        '"params":' + userParams + '}';
+      let userParams:ImessageShareData = this.packageParamsForMessaging();
+
+      let params:ImyStory = {
+        userID: this.daveID,
+        userIdViewer: this.profile.userID,
+        params: userParams
+      }
+
+      // let params = '{"userID":"' + this.daveID + '",' +
+      //                   '"userIdViewer":"' + this.profile.userID + '",' +
+      //                   '"params":' + userParams + '}';
       this.activateBackArrowSvc.setBackRoute('about', 'forward');
-      this.shareDataSvc.setData(params);
+      this.shareDataSvc.setData('myStory',params);
       this.router.navigateByUrl('/profile/mystory');
     }
   }
@@ -98,14 +104,23 @@ export class AboutComponent implements OnInit {
   }
 
 
-  private packageParamsForMessaging(): string {
-    let params: string;
-    params = '{"fromUserID":"' + this.profile.userID + '",' +
-              '"fromDisplayName":"' + this.profile.displayName + '",' +
-              '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
-              '"toUserID":"' + this.daveID + '",' +
-              '"toDisplayName":"' + this.daveDisplayName + '",' +
-              '"toProfileImageUrl":"' + this.daveProfileImageUrl + '"}';
+  private packageParamsForMessaging(): ImessageShareData {
+    // let params: string;
+    // params = '{"fromUserID":"' + this.profile.userID + '",' +
+    //           '"fromDisplayName":"' + this.profile.displayName + '",' +
+    //           '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
+    //           '"toUserID":"' + this.daveID + '",' +
+    //           '"toDisplayName":"' + this.daveDisplayName + '",' +
+    //           '"toProfileImageUrl":"' + this.daveProfileImageUrl + '"}';
+
+    let params:ImessageShareData = {
+      fromUserID: this.profile.userID,
+      fromDisplayName: this.profile.displayName,
+      fromProfileImageUrl: this.profile.profileImageUrl,
+      toUserID: this.daveID,
+      toDisplayName: this.daveDisplayName,
+      toProfileImageUrl: this.daveProfileImageUrl
+    }
 
     return params;
   }

@@ -1,17 +1,13 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { UUID } from 'angular2-uuid';
-
-import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, Isignin } from '@services/share-data.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
-import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
 
 @Component({
@@ -65,7 +61,10 @@ export class RegisterConfirmComponent implements OnInit {
   // When user selects signin, if mobile, go to signin component.
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
-    this.shareDataSvc.setData(true) // To indicate to signin page coming from landing page
+    let param: Isignin = {
+      fromLandingPage: true
+    }
+    this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.router.navigateByUrl('/?e=signin'); // go directly to login page.  Will pop up as dialog if desktop

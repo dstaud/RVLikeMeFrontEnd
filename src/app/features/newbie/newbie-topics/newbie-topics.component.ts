@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NewbieTopicsService } from '@services/data-services/newbie-topics.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, InewbieTopic } from '@services/share-data.service';
 import { UserTypeService } from '@services/user-type.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
@@ -92,7 +92,7 @@ export class NewbieTopicsComponent implements OnInit {
 
 
   onTopic(topicID: string, topicDesc: string) {
-    let params: string;
+    let params: InewbieTopic;
 
     console.log('HelpNewbieTopics:onTopic: checking topic=', topicID);
     if (!this.findTopic(topicID)) {
@@ -109,8 +109,12 @@ export class NewbieTopicsComponent implements OnInit {
       });
     }
 
-    params = '{"topicID":"' + topicID + '","topicDesc":"' + topicDesc + '"}';
-    this.shareDataSvc.setData(params);
+    params = {
+      topicID: topicID,
+      topicDesc: topicDesc
+    }
+
+    this.shareDataSvc.setData('newbieTopic', params);
     this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie', 'forward');
     this.router.navigateByUrl('/newbie/topic');
   }

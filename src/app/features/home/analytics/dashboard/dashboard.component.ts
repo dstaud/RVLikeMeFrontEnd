@@ -9,7 +9,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { ThemeService } from '@services/theme.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
 
   private userProfile: Observable<IuserProfile>;
   private profile: IuserProfile;
+  private dashboardInfo: Idashboard
 
   constructor(public translate: TranslateService,
               private authSvc: AuthenticationService,
@@ -48,6 +49,8 @@ export class DashboardComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      this.dashboardInfo = this.shareDataSvc.getData('dashboard'); // not yet using this.  Problem is, if they are using as app, won't log in a lot.  But may be useful
+
       this.listenForColorTheme();
 
       this.listenForUserProfile();
@@ -64,8 +67,12 @@ export class DashboardComponent implements OnInit {
 
 
   onNewbieTopics() {
-    let params = '{"displayName":"' + this.profile.displayName + '","profileImageUrl":"' + this.profile.profileImageUrl + '"}'
-    this.shareDataSvc.setData(params);
+    // let params:InewbieHelp = {
+    //   displayName: this.profile.displayName,
+    //   profileImageUrl: this.profile.profileImageUrl
+    // }
+
+    // this.shareDataSvc.setData('newbieHelp', params);
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/newbie/need-help-newbie');
   }

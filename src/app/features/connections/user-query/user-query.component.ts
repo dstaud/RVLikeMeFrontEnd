@@ -11,7 +11,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
 import { ThemeService } from '@services/theme.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
@@ -29,7 +29,7 @@ export class UserQueryComponent implements OnInit {
   showNoConnections: boolean = false;
   disableSingleMatchForumOffer: boolean = true;
   queryMatches: boolean = false;
-  matches: Array<{name: string, value: string}> = [];
+  matches: Array<IuserQuery> = [];
   queryResultMessagePrefix: string;
   matchResults = [];
   theme: string;
@@ -49,6 +49,7 @@ export class UserQueryComponent implements OnInit {
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
+    console.log('UserQueryComponent:ngOnInit:')
     let sharedData: any;
     let backPath;
     let self = this;
@@ -63,13 +64,10 @@ export class UserQueryComponent implements OnInit {
     } else {
       this.showSpinner = true;
 
-      console.log('UserQueryComponent:ngOnInit: in ngOnInit');
+      console.log('UserQueryComponent:ngOnInit: getData=', this.shareDataSvc.getData('userQuery'));
 
-      if (this.shareDataSvc.getData()) {
-        let sharedData = this.shareDataSvc.getData();
-        if (sharedData.matches !== undefined) {
-          console.log('UserQueryComponent:ngOnInit: matches exists?', sharedData.matches);
-          this.matches = sharedData.matches;
+      if (this.shareDataSvc.getData('userQuery').length > 0) {
+          this.matches = this.shareDataSvc.getData('userQuery');
           console.log('UserQueryComponent:ngOnInit: matches=', this.matches);
 
           this.listenForColorTheme();
@@ -77,11 +75,6 @@ export class UserQueryComponent implements OnInit {
           this.getQueryResults();
 
           this.listenForUserProfile();
-
-        } else {
-          console.log('UserQueryComponent:ngOnInit: going to connections/main');
-          this.router.navigateByUrl('/connections/main');
-        }
       } else {
         console.log('UserQueryComponent:ngOnInit: going to connections/main');
         this.router.navigateByUrl('/connections/main');
@@ -102,21 +95,20 @@ export class UserQueryComponent implements OnInit {
   onSelectForumGroup() {
     let name: string;
     let value: any;
-
-    let queryParams = '{';
-    name = this.matches[0].name;
-    value = this.matches[0].value;
-    queryParams = queryParams + '"' + name + '":"' + value + '"';
-    for (let i=1; i < this.matches.length; i++) {
-      name = this.matches[i].name;
-      value = this.matches[i].value;
-      queryParams = queryParams + ',"' + name + '":"' + value + '"';
+    let queryParams:IforumsMain = {
+      forumType: 'group'
     }
-    queryParams = queryParams + ',"forumType":"group"';
-    queryParams = queryParams + '}'
 
-    this.shareDataSvc.setData(queryParams);
-    this.activateBackArrowSvc.setBackRoute('', 'nostack');
+    console.log('UserQuery:onSelectFormGroup: matches=', this.matches);
+    this.matches.forEach((item: IuserQuery) => {
+      name = Object.keys(item)[0];
+      value = Object.values(item)[0];
+
+      queryParams[name] = value;
+    });
+
+    this.shareDataSvc.setData('forumsMain', queryParams);
+    this.activateBackArrowSvc.setBackRoute('connections/user-query', 'forward');
     this.router.navigateByUrl('/forums/main');
   }
 
@@ -126,6 +118,7 @@ export class UserQueryComponent implements OnInit {
     console.log('UserQueryComponent:getQueryResults: matches=', this.matches);
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
     .subscribe(matchResults => {
+      console.log('UserQueryComponent:getQueryResults: matchResults=', matchResults);
       this.matchQueryParams(matchResults);
     }, error => {
       console.error('UserQueryComponent:getQueryResults: throw error ', error);
@@ -163,6 +156,8 @@ export class UserQueryComponent implements OnInit {
 
   private matchQueryParams(matchResults) {
     let likeMeAnswer: string;
+    let name: string;
+    let value: any;
 
     if (matchResults === 0) {
       this.queryResultMessagePrefix = this.translate.instant(
@@ -181,27 +176,31 @@ export class UserQueryComponent implements OnInit {
       }
     }
 
+    console.log('UserQueryComponent:matchQueryParams: matches=', this.matches);
     // determine appropriate group attribute names for display and store in array
     // this.queryParam = '{';
     for (let i=0; i < this.matches.length; i++) {
+      console.log('UserQueryComponent:matchQueryParams: keys=', Object.keys(this.matches[0]))
+      name = Object.keys(this.matches[i])[0];
+      value = Object.values(this.matches[i])[0];
 
       // get original answers for those checked
-      if (this.matches[i].value === 'true') {
+      if (value) {
         likeMeAnswer = this.translate.instant(
-                            'interests.component.' + this.matches[i].name
+                            'interests.component.' + name
         );
       } else {
 /*           likeMeDesc = this.translate.instant( // What is this?  I think not needed
                             'connections.component.' + this.matches[i].name
           ); */
-          if (this.matches[i].name === 'yearOfBirth') {
+          if (name === 'yearOfBirth') {
             likeMeAnswer = this.translate.instant(
-                                'profile.component.' + this.matches[i].name
+                                'profile.component.' + name
               );
           } else {
             likeMeAnswer = this.translate.instant(
-                                'profile.component.list.' + this.matches[i].name.toLowerCase() +
-                                '.' + this.matches[i].value.toLowerCase()
+                                'profile.component.list.' + name.toLowerCase() +
+                                '.' + value.toLowerCase()
               );
           }
       }

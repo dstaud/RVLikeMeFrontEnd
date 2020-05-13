@@ -7,7 +7,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { MessagesService, Iconversation, Imessage } from '@services/data-services/messages.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 
@@ -116,7 +116,7 @@ export class MessageListComponent implements OnInit {
 
   // Set parameters for selected row
   private setParameters(row) {
-    let params: any;
+    let params: ImessageShareData;
     let fromUserID: string;
     let fromDisplayName: string;
     let fromProfileImageUrl: string;
@@ -142,14 +142,16 @@ export class MessageListComponent implements OnInit {
     }
     conversationID = this.conversations[row]._id;
 
-    params = '{"fromUserID":"' + fromUserID + '",' +
-            '"fromDisplayName":"' +fromDisplayName + '",' +
-            '"fromProfileImageUrl":"' + fromProfileImageUrl + '",' +
-            '"toUserID":"' + toUserID + '",' +
-            '"toDisplayName":"' + toDisplayName + '",' +
-            '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
-            '"conversationID":"' + conversationID + '"}';
+    params = {
+      fromUserID: fromUserID,
+      fromDisplayName: fromDisplayName,
+      fromProfileImageUrl: fromProfileImageUrl,
+      toUserID: toUserID,
+      toDisplayName: toDisplayName,
+      toProfileImageUrl: toProfileImageUrl,
+      conversationID: conversationID
+    }
 
-    this.shareDataSvc.setData(JSON.parse(params));
+    this.shareDataSvc.setData('message', params);
   }
 }

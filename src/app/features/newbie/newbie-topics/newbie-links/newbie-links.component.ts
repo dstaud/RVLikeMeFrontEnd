@@ -11,7 +11,8 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { UserTypeService } from '@services/user-type.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
+import { getMatFormFieldPlaceholderConflictError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-rvlm-newbie-links',
@@ -123,15 +124,23 @@ export class NewbieLinksComponent implements OnInit {
 
   // When user clicks to see the story of another user, navigate to myStory page
   onYourStory(row: string) {
-    let userParams = this.packageParamsForMessaging(row);
-    let params = '{"userID":"' + this.newbieLinks[row].createdBy + '",' +
-                      '"userIdViewer":"' + this.profile._id + '",' +
-                      '"params":' + userParams + ',' +
-                      '"topicID":"' + this.topicID + '",' +
-                      '"topicDesc":"' + this.topicDesc + '"}';
-    console.log('NewbieLinksComponent:onYourStory: parmas=', params);
+    let userParams:ImessageShareData = this.packageParamsForMessaging(row);
+    let params:ImyStory = {
+      userID: this.newbieLinks[row].createdBy,
+      userIdViewer: this.profile.userID,
+      params: userParams,
+      topicID: this.topicID,
+      topicDesc: this.topicDesc
+    }
+
+    // let params = '{"userID":"' + this.newbieLinks[row].createdBy + '",' +
+    //                   '"userIdViewer":"' + this.profile._id + '",' +
+    //                   '"params":' + userParams + ',' +
+    //                   '"topicID":"' + this.topicID + '",' +
+    //                   '"topicDesc":"' + this.topicDesc + '"}';
+    // console.log('NewbieLinksComponent:onYourStory: parmas=', params);
     this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
-    this.shareDataSvc.setData(params);
+    this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
   }
 
@@ -188,14 +197,23 @@ export class NewbieLinksComponent implements OnInit {
   }
 
 
-  private packageParamsForMessaging(row): string {
-    let params: string;
-    params = '{"fromUserID":"' + this.profile._id + '",' +
-              '"fromDisplayName":"' + this.profile.displayName + '",' +
-              '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
-              '"toUserID":"' + this.newbieLinks[row].createdBy + '",' +
-              '"toDisplayName":"' + this.newbieLinks[row].createdByDisplayName + '",' +
-              '"toProfileImageUrl":"' + this.newbieLinks[row].createdByProfileImageUrl + '"}';
+  private packageParamsForMessaging(row): ImessageShareData {
+    let params:ImessageShareData = {
+      fromUserID: this.profile.userID,
+      fromDisplayName: this.profile.displayName,
+      fromProfileImageUrl: this.profile.profileImageUrl,
+      toUserID: this.newbieLinks[row].createdBy,
+      toDisplayName: this.newbieLinks[row].createdByDisplayName,
+      toProfileImageUrl: this.newbieLinks[row].createdByProfileImageUrl
+    }
+
+    // let params: string;
+    // params = '{"fromUserID":"' + this.profile._id + '",' +
+    //           '"fromDisplayName":"' + this.profile.displayName + '",' +
+    //           '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
+    //           '"toUserID":"' + this.newbieLinks[row].createdBy + '",' +
+    //           '"toDisplayName":"' + this.newbieLinks[row].createdByDisplayName + '",' +
+    //           '"toProfileImageUrl":"' + this.newbieLinks[row].createdByProfileImageUrl + '"}';
 
     return params;
   }

@@ -12,7 +12,7 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
 import { SharedComponent } from '@shared/shared.component';
@@ -46,6 +46,7 @@ export class SigninComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private returnRoute: string = '';
+  private nbrLogins: number;
   private credentials: ItokenPayload = {
     _id: '',
     email: '',
@@ -157,6 +158,7 @@ export class SigninComponent implements OnInit {
       if (responseData.admin) {
         this.authSvc.setUserToAdmin(true);
       }
+      this.nbrLogins = responseData.nbrLogins;
       this.profileSvc.getProfile();
       this.listenForUserProfile();
     }, error => {
@@ -187,6 +189,9 @@ export class SigninComponent implements OnInit {
 
   // If user used a bookmark to go to a certain page, go there after valid signin
   private handleReturnRoute() {
+    let params: Idashboard = {
+      nbrLogins: this.nbrLogins
+    }
     console.log('SigninComponent:handleReturnRoute: in handle return route=', this.returnRoute);
     if (this.returnRoute && this.returnRoute !== '') {
       // User booked-marked a specific page which can route too after authorization
@@ -201,8 +206,7 @@ export class SigninComponent implements OnInit {
         this.formComplete.emit(this.formCompleted);
       } else {
         // After user authorizied go to home page
-        let params = '{"nbrLogins":"' + this.credentials.nbrLogins + '"}';
-        this.ShareDataSvc.setData(params);
+        this.ShareDataSvc.setData('dashboard', params);
         this.router.navigateByUrl('/home/dashboard');
         this.activateBackArrowSvc.setBackRoute('');
       }

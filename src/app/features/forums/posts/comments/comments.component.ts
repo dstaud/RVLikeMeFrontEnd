@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ThemeService } from '@services/theme.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
@@ -49,13 +49,19 @@ export class CommentsComponent implements OnInit {
 
   // If user clicks to see story of another user, go to MyStory component
   onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
-    let userParams = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
-    let params = '{"userID":"' + toUserID + '",' +
-                      '"userIdViewer":"' + this.userID + '",' +
-                      '"params":' + userParams + '}';
+    let userParams:ImessageShareData = this.packageParamsForMessaging(toUserID, toDisplayName, toProfileImageUrl);
+    let params:ImyStory = {
+      userID: toUserID,
+      userIdViewer: this.userID,
+      params: userParams
+    }
+
+    // let params = '{"userID":"' + toUserID + '",' +
+    //                   '"userIdViewer":"' + this.userID + '",' +
+    //                   '"params":' + userParams + '}';
     console.log('CommentsComponent:onYourStory: params=', params);
     // this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
-    this.shareDataSvc.setData(params);
+    this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
   }
 
@@ -72,15 +78,23 @@ export class CommentsComponent implements OnInit {
   }
 
 
-  private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): string {
-    let params: string;
-    console.log('PostsComponent:navigateToMessages: displayName=', this.displayName);
-    params = '{"fromUserID":"' + this.userID + '",' +
-              '"fromDisplayName":"' + this.displayName + '",' +
-              '"fromProfileImageUrl":"' + this.profileImageUrl + '",' +
-              '"toUserID":"' + toUserID + '",' +
-              '"toDisplayName":"' + toDisplayName + '",' +
-              '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
+  private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): ImessageShareData {
+    let params:ImessageShareData = {
+      fromUserID: this.userID,
+      fromDisplayName: this.displayName,
+      fromProfileImageUrl: this.profileImageUrl,
+      toUserID: toUserID,
+      toDisplayName: toDisplayName,
+      toProfileImageUrl: toProfileImageUrl
+    }
+
+    // let params: string;
+    // params = '{"fromUserID":"' + this.userID + '",' +
+    //           '"fromDisplayName":"' + this.displayName + '",' +
+    //           '"fromProfileImageUrl":"' + this.profileImageUrl + '",' +
+    //           '"toUserID":"' + toUserID + '",' +
+    //           '"toDisplayName":"' + toDisplayName + '",' +
+    //           '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
 
     return params;
   }

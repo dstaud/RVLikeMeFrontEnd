@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService } from '@services/data-services/profile.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 
@@ -69,7 +69,7 @@ export class YourStoryComponent implements OnInit {
   // Navigate to send messages for the user whose story viewing
   onMessageUser() {
     this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
-    this.shareDataSvc.setData(this.paramsForMessaging);
+    this.shareDataSvc.setData('messages/send-message', this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');
   }
 
@@ -95,10 +95,10 @@ export class YourStoryComponent implements OnInit {
   private getParameters() {
     let paramData: any;
 
-    if (!this.shareDataSvc.getData()) {
+    if (!this.shareDataSvc.getData('myStory').userID) {
       this.router.navigateByUrl('/forums/main');
     } else {
-      paramData = JSON.parse(this.shareDataSvc.getData());
+      paramData = this.shareDataSvc.getData('myStory');
       this.userID = paramData.userID;
       this.userIdViewer = paramData.userIdViewer;
       this.paramsForMessaging = paramData.params;

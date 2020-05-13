@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { IuserQuery } from '@services/share-data.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -182,16 +183,32 @@ export class LikemeCountsService {
     });
   }
 
-  getUserQueryCounts(query): Observable<any> {
+  getUserQueryCounts(query: Array<IuserQuery>): Observable<any> {
+    let attribute: string;
+    let attributeValue: any;
+    let i: number = 0;
+    let name: string;
+    let value: any;
+
+    console.log('getUserQueryCounts: query=', query);
 
     // Append the user's multiple query profile attributes into name/value delimited strings
-    let name = query[0].name;
-    let value = query[0].value;
+    query.forEach((item: IuserQuery) => {
+      console.log('getUserQueryCounts: item=', item);
+      attribute = Object.keys(item)[0];
+      attributeValue = Object.values(item)[0];
+      console.log('getUserQueryCounts: attribute=', attribute, ' attributeValue=', attributeValue);
+      if (i === 0) {
+        name = attribute;
+        value = attributeValue;
+      } else {
+        name = name + '|' + attribute;
+        value = value + '|' + attributeValue;
+      }
+      i++
+    });
 
-    for (let i=1; i < query.length; i++) {
-      name = name + '|' + query[i].name;
-      value = value + '|' + query[i].value;
-    }
+    console.log('getUserQueryCounts: name=', name, ' value=', value);
 
     return this.http.get(`/api/user-query`, { params: {name, value}});
   }

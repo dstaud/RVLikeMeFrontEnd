@@ -45,9 +45,9 @@ export class DashboardDrilldownComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
-      params = this.shareDataSvc.getData();
-      if (params) {
-      this.control = JSON.parse(params).control;
+      params = this.shareDataSvc.getData('dashboardDrilldown');
+      if (params.control) {
+      this.control = params.control;
 
       this.listenForGroupByCounts(this.control);
       } else {

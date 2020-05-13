@@ -6,7 +6,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ShareDataService } from '@services/share-data.service';
+import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { UserTypeService } from '@services/user-type.service';
 
 @Component({
@@ -41,11 +41,14 @@ export class TopicComponent implements OnInit {
 
 
   onGroup() {
-    let params: string;
+    let params:IforumsMain = {
+      forumType: 'topic',
+      topicID: this.topicID,
+      topicDesc: this.topicDesc
+    }
 
     this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
-    params = '{"forumType":"topic","topicID":"' + this.topicID + '","topicDesc":"' + this.topicDesc + '" }'
-    this.shareDataSvc.setData(params);
+    this.shareDataSvc.setData('forumsMain', params);
     this.router.navigateByUrl('/forums/main');
   }
 
@@ -74,7 +77,7 @@ export class TopicComponent implements OnInit {
     .subscribe(type => {
       this.userType = type;
 
-      if (!this.shareDataSvc.getData()) {
+      if (!this.shareDataSvc.getData('newbieTopic').topicID) {
         if (type = 'expert') {
           this.router.navigateByUrl('/newbie/help-newbie');
         } else {
@@ -82,7 +85,7 @@ export class TopicComponent implements OnInit {
         }
       }
 
-      let params = JSON.parse(this.shareDataSvc.getData());
+      let params = this.shareDataSvc.getData('newbieTopic');
       this.topicID = params.topicID;
       this.topicDesc = params.topicDesc;
 
