@@ -113,12 +113,14 @@ export class MainComponent implements OnInit {
     let keyValue: Array<string>;
     let names: string;
     let values: string;
-    let paramData: any;
+    let paramData: IforumsMain;
 
-    if (!this.shareDataSvc.getData('forumsMain')) {
+    paramData = this.shareDataSvc.getData('forumsMain');
+    console.log('ForumsMainComponent:getGroup: data=', paramData);
+
+    if (!this.valuesExist(paramData)) {
       this.router.navigateByUrl('/forums/forums-list');
     } else {
-      let paramData:IforumsMain = this.shareDataSvc.getData('forumsMain');
       this.forumType = paramData.forumType;
       console.log('ForumsMain:getGroups: paramData=', paramData);
       this.showSpinner = true;
@@ -342,6 +344,13 @@ export class MainComponent implements OnInit {
   }
 
 
+  private reservedField(name: string): boolean {
+    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' || name === '__v' || name === 'theme' || name === 'forumType') {
+      return true;
+    } else { return false }
+  }
+
+
   // Update group forum array in user's profile with new group they are associated with.
   private updateProfileGroups() {
     let groupFound = false;
@@ -365,9 +374,21 @@ export class MainComponent implements OnInit {
     }
   }
 
-  private reservedField(name: string): boolean {
-    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' || name === '__v' || name === 'theme' || name === 'forumType') {
-      return true;
-    } else { return false }
+
+  private valuesExist(params: IforumsMain): boolean {
+    let foundValue: boolean = false;
+    let keys = Object.keys(params);
+    let values = Object.values(params);
+
+    console.log('ForumsMainComponent:verifyInputData: keys=', keys);
+    console.log('ForumsMainComponent:verifyInputData: values=', values);
+
+    values.forEach((item: any) => {
+      if (item) {
+        foundValue = true;
+      }
+    });
+
+    return foundValue;
   }
 }

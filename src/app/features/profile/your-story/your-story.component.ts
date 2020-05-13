@@ -96,7 +96,7 @@ export class YourStoryComponent implements OnInit {
     let paramData: any;
 
     if (!this.shareDataSvc.getData('myStory').userID) {
-      this.router.navigateByUrl('/forums/main');
+      this.router.navigateByUrl('/home/dashboard');
     } else {
       paramData = this.shareDataSvc.getData('myStory');
       this.userID = paramData.userID;
