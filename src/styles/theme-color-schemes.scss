@@ -1,3 +1,39 @@
+// Color pallet for 'light-theme'
+$cyan-primary: mat-palette($mat-cyan, 700, 300, 900);
+$cyan-accent: mat-palette($mat-green, A200);
+$cyan-warn: mat-palette($mat-red, 500);
+$cyan-background-color: map_get($mat-gray, 50);
+
+$cyan-theme: mat-light-theme(
+  $cyan-primary,
+  $cyan-accent,
+  $cyan-warn
+);
+
+$cyan-background: map-get($cyan-theme, background);
+$cyan-background: map_merge($cyan-background, (background: $cyan-background-color));
+$cyan-theme: map_merge($cyan-theme, (background: $cyan-background));
+
+// Color pallet for 'dark-theme'
+$dark-primary: mat-palette($mat-blue-grey, 600, 300, 900);
+$dark-accent: mat-palette($mat-green, 600);
+$dark-warn: mat-palette($mat-red, 500);
+$dark-background-color: map_get($mat-gray, 700);
+
+$dark-theme: mat-dark-theme(
+  $dark-primary,
+  $dark-accent,
+  $dark-warn
+);
+
+$dark-background: map-get($dark-theme, background);
+$dark-background: map_merge($dark-background, (background: $dark-background-color));
+$dark-theme: map_merge($dark-theme, (background: $dark-background));
+
+
+
+
+
 $light-primary: mat-palette($mat-indigo, 800, 300, 900);
 $light-accent: mat-palette($mat-light-blue);
 $light-warn: mat-palette($mat-pink, 600);
@@ -28,15 +64,6 @@ $deep-purple-theme: mat-light-theme(
   $deep-purple-warn
 );
 
-$cyan-primary: mat-palette($mat-cyan, 700, 300, 900);
-$cyan-accent: mat-palette($mat-green, A200);
-$cyan-warn: mat-palette($mat-red, 500);
-
-$cyan-theme: mat-light-theme(
-  $cyan-primary,
-  $cyan-accent,
-  $cyan-warn
-);
 
 $orange-primary: mat-palette($mat-deep-orange, 700, 300, 900);
 $orange-accent: mat-palette($mat-blue-grey, 400);
@@ -56,16 +83,6 @@ $white-theme: mat-light-theme(
   $white-primary,
   $white-accent,
   $white-warn
-);
-
-$dark-primary: mat-palette($mat-blue-grey, 700, 300, 900);
-$dark-accent: mat-palette($mat-brown, 600);
-$dark-warn: mat-palette($mat-red, 500);
-
-$dark-theme: mat-dark-theme(
-  $dark-primary,
-  $dark-accent,
-  $dark-warn
 );
 
 /* $orange-dark-primary: mat-palette($mat-deep-orange, 700, 300, 900);

@@ -2,14 +2,18 @@
   line-height: 1.4;
 }
 
+.large-input {
+  width: 250px;
+}
+
 .comment-input {
-  // float:left;
+  float:left;
   margin-right: 5px;
 }
 
-// .button {
-//   margin-top: 5px;
-// }
+.button {
+  margin-top: 4px;
+}
 
 .spinner {
   position: fixed;

@@ -1,0 +1,12 @@
+@import './../../../../styles/_variables';
+
+footer {
+  position: fixed;
+  bottom: 0px;
+  overflow: hide;
+  width: $max-width;
+}
+
+.footer-height {
+  height: 50px;
+}

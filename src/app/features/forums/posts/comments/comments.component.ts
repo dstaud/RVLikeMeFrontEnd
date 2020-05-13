@@ -8,6 +8,7 @@ import { ShareDataService } from '@services/share-data.service';
 
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { Icomments } from '@services/data-services/forum.service';
 
 @Component({
   selector: 'app-rvlm-comments',
@@ -17,7 +18,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 export class CommentsComponent implements OnInit {
 
   @Input('postIndex') postIndex: number;
-  @Input('comments') comments: [[]];
+  @Input('comments') comments: Array<Icomments> = [];
   @Input('startCommentsIndex') startCommentsIndex: number;
   @Input('commentsLength') commentsLength: number;
   @Input('colorTheme') theme: string;
@@ -53,7 +54,7 @@ export class CommentsComponent implements OnInit {
                       '"userIdViewer":"' + this.userID + '",' +
                       '"params":' + userParams + '}';
     console.log('CommentsComponent:onYourStory: params=', params);
-    this.activateBackArrowSvc.setBackRoute('forms/forums-list', 'forward');
+    // this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
     this.shareDataSvc.setData(params);
     this.router.navigateByUrl('/profile/mystory');
   }

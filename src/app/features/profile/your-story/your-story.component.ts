@@ -98,7 +98,6 @@ export class YourStoryComponent implements OnInit {
     if (!this.shareDataSvc.getData()) {
       this.router.navigateByUrl('/forums/main');
     } else {
-      console.log('YourStoryComponent:getParameters: story params=', paramData);
       paramData = JSON.parse(this.shareDataSvc.getData());
       this.userID = paramData.userID;
       this.userIdViewer = paramData.userIdViewer;

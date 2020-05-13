@@ -101,7 +101,7 @@
               </button>
             </div>
 
-            <div class="comments" [hidden]="!showPostComments[i]">
+            <div [@commentSlideInOut]="commentsOpen[i]" class="comments" [hidden]="!showPostComments[i]">
 
               <app-rvlm-add-comment [postIndex]="i"
                                     [postID]="posts[i]._id"

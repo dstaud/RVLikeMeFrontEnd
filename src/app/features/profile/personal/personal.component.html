@@ -65,18 +65,17 @@
       </div>
 
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="large-input">
           <mat-label>{{ "personal.component.myStory" | translate }}</mat-label>
           <textarea matInput
                     type="text"
-                    class="large-input"
+                    rows="12"
                     placeholder="My story"
                     formControlName="myStory"
-                    (click)="onMyStory()"
                     (blur)="onUpdateDataPoint('myStory')">
           </textarea>
         </mat-form-field>
-        <mat-icon class="icon" *ngIf="showdisplayNameSaveIcon">save</mat-icon>
+        <mat-icon class="icon" *ngIf="showmyStorySaveIcon">save</mat-icon>
       </div>
       <div>
         <mat-form-field appearance="outline">

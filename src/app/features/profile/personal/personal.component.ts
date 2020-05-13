@@ -217,9 +217,9 @@ export class PersonalComponent implements OnInit {
 
 
   // Give user more space to enter their story
-  onMyStory() {
-    this.openMyStoryDialog(this.profile.myStory);
-  }
+  // onMyStory() {
+  //   this.openMyStoryDialog(this.profile.myStory);
+  // }
 
 
   // When user opts to upload an image compress and upload to server and update the profile with new URL
@@ -353,35 +353,35 @@ export class PersonalComponent implements OnInit {
 
 
   // Let user update their story in a dialog with a lot more space to comfortably enter
-  private openMyStoryDialog(myStory: string): void {
-    const dialogRef = this.dialog.open(MyStoryDialogComponent, {
-      width: this.dialogWidthDisplay,
-      height: '80%',
-      disableClose: true,
-      data: { myStory: myStory }
-    });
+  // private openMyStoryDialog(myStory: string): void {
+  //   const dialogRef = this.dialog.open(MyStoryDialogComponent, {
+  //     width: this.dialogWidthDisplay,
+  //     height: '80%',
+  //     disableClose: true,
+  //     data: { myStory: myStory }
+  //   });
 
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result) {
-        if (result !== 'canceled') {
-          this.form.patchValue({'myStory': result});
-          this.onUpdateDataPoint('myStory');
-        } else {
-          this.showSpinner = false;
-        }
-      } else {
-        if (this.profile.myStory) {
-          this.form.patchValue({'myStory': result});
-          this.onUpdateDataPoint('myStory');
-        }
-        this.showSpinner = false;
-      }
-    }, error => {
-      this.sentry.logError({"message":"error closing dialog","error":error});
-    });
-  }
+  //   dialogRef.afterClosed()
+  //   .pipe(untilComponentDestroyed(this))
+  //   .subscribe(result => {
+  //     if (result) {
+  //       if (result !== 'canceled') {
+  //         this.form.patchValue({'myStory': result});
+  //         this.onUpdateDataPoint('myStory');
+  //       } else {
+  //         this.showSpinner = false;
+  //       }
+  //     } else {
+  //       if (this.profile.myStory) {
+  //         this.form.patchValue({'myStory': result});
+  //         this.onUpdateDataPoint('myStory');
+  //       }
+  //       this.showSpinner = false;
+  //     }
+  //   }, error => {
+  //     this.sentry.logError({"message":"error closing dialog","error":error});
+  //   });
+  // }
 
 
   // Get window size to determine how to present dialog windows

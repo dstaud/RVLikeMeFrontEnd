@@ -3,16 +3,19 @@
       <app-rvlm-sidenav-list (sideNavClosed)="sidenav.close()"></app-rvlm-sidenav-list>
     </mat-sidenav>
     <mat-sidenav-content fxLayout="column">
+
       <app-rvlm-header *ngIf="headerDesktopVisible || userAuthorized"
                         [newMessageCount]=newMessageCount
                         (sidenavToggle)="sidenav.toggle()"
                         fxHide fxShow.gt-sm>
       </app-rvlm-header>
+
       <app-rvlm-header-mobile *ngIf="headerVisible || userAuthorized"
                               [newMessageCount]=newMessageCount
                               (sidenavToggle)="sidenav.toggle()"
                               fxHide fxShow.lt-sm>
       </app-rvlm-header-mobile>
+
       <main [@triggerName]="prepareRoute(outlet)" class="container mat-app-background"
             [ngClass]="{
                       'bottom-bar-spacing': !headerDesktopVisible && userAuthorized && !iphoneModelxPlus,
@@ -20,6 +23,15 @@
                     }">
         <router-outlet #outlet="outlet" (activate)="onActivate($event)"></router-outlet>
       </main>
-      <app-rvlm-footer *ngIf="userAuthorized" (sidenavToggle)="sidenav.toggle()" fxHide fxShow.lt-sm></app-rvlm-footer>
+
+      <app-rvlm-footer *ngIf="userAuthorized"
+                        (sidenavToggle)="sidenav.toggle()"
+                        fxHide fxShow.lt-sm>
+      </app-rvlm-footer>
+
+      <app-rvlm-footer-desktop *ngIf="headerDesktopVisible || userAuthorized"
+                                fxHide fxShow.gt-sm>
+      </app-rvlm-footer-desktop>
+
     </mat-sidenav-content>
 </mat-sidenav-container>

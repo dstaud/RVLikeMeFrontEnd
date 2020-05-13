@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { CommentsComponent } from './comments/comments.component';
 
-import { ForumService } from '@services/data-services/forum.service';
+import { ForumService, Icomments } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -19,6 +19,19 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 export type FadeState = 'visible' | 'hidden';
+
+export interface Iposts {
+  _id: string,
+  createdBy: string,
+  body: string,
+  displayName: string,
+  profileImageUrl: string,
+  postPhotoUrl: string,
+  commentCount: number,
+  reactionCount: number,
+  createdAt: Date
+}
+
 @Component({
   selector: 'app-rvlm-posts',
   templateUrl: './posts.component.html',
@@ -38,7 +51,22 @@ export type FadeState = 'visible' | 'hidden';
       })),
       transition('in => out', animate('400ms ease-in-out')),
       transition('out => in', animate('400ms ease-in-out'))
-    ])
+    ]),
+    trigger('commentSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
   ]
 })
 
@@ -60,13 +88,14 @@ export class PostsComponent implements OnInit {
   displayName: string;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   posts: Array<any> = [];
-  comments: Array<Array<JSON>> = [];
+  comments: Array<Array<Icomments>> = [];
   currentPostRow: number;
   liked: Array<boolean> = [];
   userNewbie: boolean = false;
   forumType: string;
 
   addPostOpen: string = 'out';
+  commentsOpen: Array<string> = [];
 
   showSpinner = false;
   showPosts = false;
@@ -125,6 +154,7 @@ export class PostsComponent implements OnInit {
 
   // When user clicks comment, open up the comments for viewing
   onComment(row: number) {
+    this.commentsOpen[row] = this.commentsOpen[row] === 'out' ? 'in' : 'out';
     this.showPostComments[row] = !this.showPostComments[row];
   }
 
@@ -252,33 +282,39 @@ export class PostsComponent implements OnInit {
   }
 
 
-  private createCommentsArrayEntry(comment): JSON {
-    let newComment = '{"comment":"' + comment.comment + '",' +
-    '"displayName":"' + comment.displayName + '",' +
-    '"profileImageUrl":"' + comment.profileImageUrl + '",' +
-    '"createdAt":"' + comment.createdAt + '",' +
-    '"createdBy":"' + comment.createdBy + '"}';
-    return JSON.parse(newComment);
+  private createCommentsArrayEntry(comment): Icomments {
+    let newComment: Icomments = {
+      comment: comment.comment,
+      displayName: comment.displayName,
+      profileImageUrl: comment.profileImageUrl,
+      createdAt: comment.createdAt,
+      createdBy: comment.createdBy
+    }
+
+    return newComment;
   }
 
 
-  private createPostsArrayEntry(post): JSON {
+  private createPostsArrayEntry(post): Iposts {
     let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
     let photoUrl: string = '';
 
     if (post.photoUrl !== 'undefined') {
       photoUrl = post.photoUrl;
     }
-    let newPost = '{"_id":"' + post._id + '",' +
-    '"createdBy":"' + post.createdBy + '",' +
-    '"body":"' + bodyEscaped + '",' +
-    '"displayName":"' + post.userDisplayName + '",' +
-    '"profileImageUrl":"' + post.userProfileUrl + '",' +
-    '"postPhotoUrl":"' + photoUrl + '",' +
-    '"commentCount":"' + post.comments.length + '",' +
-    '"reactionCount":"' + post.reactions.length + '",' +
-    '"createdAt":"' + post.createdAt + '"}';
-    return JSON.parse(newPost);
+    let newPost: Iposts = {
+      _id: post._id,
+      createdBy: post.createdBy,
+      body: bodyEscaped,
+      displayName: post.userDisplayName,
+      profileImageUrl: post.userProfileUrl,
+      postPhotoUrl: photoUrl,
+      commentCount: post.comments.length,
+      reactionCount: post.reactions.length,
+      createdAt: post.createdAt
+    }
+
+    return newPost;
   }
 
 
@@ -293,9 +329,9 @@ export class PostsComponent implements OnInit {
 
   // Get all posts for the group
   private getPostsFromDatabase() {
-    let post: JSON;
-    let comment: JSON;
-    let postComments: Array<JSON> = [];
+    let post: Iposts;
+    let comment: Icomments;
+    let postComments: Array<Icomments> = [];
 
     this.posts = [];
 
@@ -315,6 +351,7 @@ export class PostsComponent implements OnInit {
         }
         post = this.createPostsArrayEntry(postResult[0]);
         this.posts.push(post);
+        this.commentsOpen.push('out');
         this.comments.push(postComments);
         this.showPostComments.push(false);
         if (postComments.length > 4) {
@@ -327,6 +364,7 @@ export class PostsComponent implements OnInit {
           for (let j=0; j < postResult[i].comments.length; j++) {
             comment = this.createCommentsArrayEntry(postResult[i].comments[j]);
             postComments.push(comment);
+            this.commentsOpen.push('out');
           }
           post = this.createPostsArrayEntry(postResult[i]);
           this.posts.push(post);

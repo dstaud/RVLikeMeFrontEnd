@@ -50,6 +50,7 @@ import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-p
 import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
 import { RegisterDesktopDialogComponent } from './dialogs/register-desktop-dialog/register-desktop-dialog.component';
 import { SigninDesktopDialogComponent } from './dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
+import { FooterDesktopComponent } from './core/navigation/footer-desktop/footer-desktop.component';
 
 
 Sentry.init({
@@ -100,7 +101,8 @@ export function getErrorHandler(): ErrorHandler {
     ForgotPasswordComponent,
     PasswordResetComponent,
     RegisterDesktopDialogComponent,
-    SigninDesktopDialogComponent
+    SigninDesktopDialogComponent,
+    FooterDesktopComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

@@ -443,8 +443,6 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-  // TODO: don't update whole profile.  Just update specific field updated here.
-
   private updateLifestyle(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.profileSvc.updateProfile(this.profile)

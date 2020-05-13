@@ -11,6 +11,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SubscribeNotificationsService } from '@services/data-services/subscribe-notifications.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { environment } from '@environments/environment';
 
@@ -24,6 +25,7 @@ export class NotificationSettingsComponent implements OnInit {
 
   showSpinner: boolean = false;
   showsendMessageNotificationEmailsSaveIcon: boolean = false;
+  showPushNotifications: boolean = false;
 
   private profileID: string;
   private sendMessageEmails: boolean;
@@ -37,11 +39,14 @@ export class NotificationSettingsComponent implements OnInit {
               private location: Location,
               private swUpdate: SwUpdate,
               private swPush: SwPush,
+              private sentry: SentryMonitorService,
               private subscribeNotificationsSvc: SubscribeNotificationsService,
               fb: FormBuilder) {
               this.form = fb.group({
                 sendMessageNotificationEmails: new FormControl('')
               });
+
+              this.listenForAdmin();
 }
 
   ngOnInit(): void {
@@ -124,6 +129,25 @@ export class NotificationSettingsComponent implements OnInit {
       this.showsendMessageNotificationEmailsSaveIcon = false;
       console.error('NotificationSettingsComponent:updateSendMessageEmails: throw error ', error);
       throw new Error(error);
+    });
+  }
+
+
+  // For now, not releasing push notifications to users, but want to be able to test myself so only turning on for me
+  private listenForAdmin() {
+    this.authSvc.getUser()
+    .subscribe(user => {
+      this.authSvc.getDaveInfo()
+      .subscribe(daveInfo => {
+        console.log('NotificationSettingsComponent:listenForAdmin: useremail=', user.email, ' daveemail=', daveInfo);
+        if (user.email === daveInfo.email) {
+          this.showPushNotifications = true;
+        }
+      }, error => {
+        this.sentry.logError({"message":"Error getting Dave Info","error":error});
+      });
+    }, error => {
+      this.sentry.logError({"message":"Error getting user Info","error":error});
     });
   }
 

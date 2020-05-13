@@ -1,33 +1,35 @@
-<div>
+<div class="notifications">
   <form [formGroup]="form">
     <mat-checkbox formControlName="sendMessageNotificationEmails"
-                  class="checkbox"
                   (change)="onUpdateSendMessageEmails($event)">
                   Send message notification emails
     </mat-checkbox>
     <mat-icon class="icon" *ngIf="showsendMessageNotificationEmailsSaveIcon">save</mat-icon>
   </form>
 </div>
-<p>
-  <a mat-menu-item
-    (click)="onSubscribeNotifications()">
-    <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
-    <span class="nav-caption">{{ "menu.subscribe" | translate }}</span>
-  </a>
-</p>
+<br>
+<div *ngIf="showPushNotifications">
+  <p>
+    <a mat-menu-item
+      (click)="onSubscribeNotifications()">
+      <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
+      <span class="nav-caption">{{ "menu.subscribe" | translate }}</span>
+    </a>
+  </p>
 
-<p>
-  <a mat-menu-item
-    (click)="onUnsubscribeNotifications()">
-    <mat-icon fontSet="material-icons-outlined" >remove_circle</mat-icon>
-    <span class="nav-caption">{{ "menu.unsubscribe" | translate }}</span>
-  </a>
-</p>
-<p>
-  <a mat-menu-item
-    (click)="onNotify()">
-    <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
-    <span class="nav-caption">notify</span>
-  </a>
-</p>
+  <p>
+    <a mat-menu-item
+      (click)="onUnsubscribeNotifications()">
+      <mat-icon fontSet="material-icons-outlined" >remove_circle</mat-icon>
+      <span class="nav-caption">{{ "menu.unsubscribe" | translate }}</span>
+    </a>
+  </p>
+  <p>
+    <a mat-menu-item
+      (click)="onNotify()">
+      <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
+      <span class="nav-caption">notify</span>
+    </a>
+  </p>
+</div>
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

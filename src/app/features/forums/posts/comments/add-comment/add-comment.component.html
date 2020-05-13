@@ -1,29 +1,25 @@
 <div class="mat-body-1 container">
   <form [formGroup]="form">
-    <mat-form-field appearance="outline" class="comment-input">
-      <mat-label>{{ "add-comment.component.comment" | translate }}</mat-label>
-
-        <input *ngIf="showSmallFieldInitial"
-                matInput
-                type="text"
-                placeholder="{{ 'add-comment.component.comment' | translate }}"
-                formControlName="comment"
-                cdkFocusInitial
-                (click)="showSmallFieldInitial=false">
-
-        <textarea *ngIf="!showSmallFieldInitial"
-                  matInput
-                  class="text"
-                  type="text"
-                  placeholder="{{ 'add-comment.component.comment' | translate }}"
-                  formControlName="comment"
-                  cdkFocusInitial>
-        </textarea>
-
-    </mat-form-field>
+    <div class="comment-input">
+      <div >
+        <mat-form-field appearance="outline" class="large-input">
+          <mat-label>{{ "add-comment.component.comment" | translate }}</mat-label>
+          <textarea matInput
+                    class="text"
+                    rows={{textAreaRows}}
+                    type="text"
+                    placeholder="{{ 'add-comment.component.comment' | translate }}"
+                    formControlName="comment"
+                    cdkFocusInitial
+                    (click)="onInput(5)"
+                    (blur)="onInput(1)">
+          </textarea>
+        </mat-form-field>
+      </div>
+    </div>
 
     <button [disabled]="!postButtonActive"
-            class="mat-raised-button mat-primary"
+            class="mat-raised-button mat-primary button"
             (click)="onSubmit()">
             {{ "add-comment.component.post" | translate }}
     </button>

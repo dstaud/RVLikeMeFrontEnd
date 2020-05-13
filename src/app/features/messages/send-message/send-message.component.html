@@ -12,14 +12,14 @@
       </div>
     </div>
   </div>
-  <div class="messages">
-    <div *ngFor="let message of messages">
-      <div [ngClass]="{'message-right': message.createdBy === fromUserID,
-                        'message-left': message.createdBy !== fromUserID,
-                        'message-left-dark': message.createdBy !== fromUserID && theme === 'dark-theme',
-                        'message-left-light': message.createdBy !== fromUserID && theme === 'light-theme',
-                        'message-right-dark': message.createdBy === fromUserID && theme === 'dark-theme',
-                        'message-right-light': message.createdBy === fromUserID && theme === 'light-theme'}">
+  <div #scrollable class="messages">
+    <div *ngFor="let message of messages"
+          [ngClass]="{'message-right': message.createdBy === fromUserID,
+                    'message-left': message.createdBy !== fromUserID,
+                    'message-left-dark': message.createdBy !== fromUserID && theme === 'dark-theme',
+                    'message-left-light': message.createdBy !== fromUserID && theme === 'light-theme',
+                    'message-right-dark': message.createdBy === fromUserID && theme === 'dark-theme',
+                    'message-right-light': message.createdBy === fromUserID && theme === 'light-theme'}">
         <div *ngIf="message.createdBy !== fromUserID"
               class="profile-image">
           <img class="image"
@@ -28,7 +28,6 @@
         </div>
         <span class="message-text">{{message.message}}</span>
       </div>
-    </div>
   </div>
   <div class="new-message">
     <form [formGroup]="form">

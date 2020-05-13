@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewChecked, DoCheck, ElementRef, IterableDiffer, IterableDiffers } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -24,6 +24,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 export class SendMessageComponent implements OnInit {
 
   @ViewChild(FormGroupDirective) myForm;
+  @ViewChild('scrollable') private scrollable: ElementRef;
 
   form: FormGroup;
   fromUserID: string;
@@ -45,6 +46,9 @@ export class SendMessageComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private sendMessageEmails: boolean;
+  private shouldScrollDown: boolean;
+  private numberOfMessagesChanged: boolean;
+  private iterableDiffer;
 
   constructor(private shareDataSvc: ShareDataService,
               private authSvc: AuthenticationService,
@@ -57,10 +61,12 @@ export class SendMessageComponent implements OnInit {
               private emailSmtpSvc: EmailSmtpService,
               private router: Router,
               private sentry: SentryMonitorService,
+              private iterableDiffers: IterableDiffers,
               fb: FormBuilder) {
                 this.form = fb.group({
                   message: new FormControl('', Validators.required)
                 });
+              this.iterableDiffer = this.iterableDiffers.find([]).create(null);
      }
 
   ngOnInit(): void {
@@ -81,6 +87,20 @@ export class SendMessageComponent implements OnInit {
     }
   }
 
+  ngDoCheck(): void {
+    if (this.iterableDiffer.diff(this.messages)) {
+        this.numberOfMessagesChanged = true;
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    const isScrolledDown = Math.abs(this.scrollable.nativeElement.scrollHeight - this.scrollable.nativeElement.scrollTop - this.scrollable.nativeElement.clientHeight) <= 3.0;
+
+    if (this.numberOfMessagesChanged && !isScrolledDown) {
+        this.scrollToBottom();
+        this.numberOfMessagesChanged = false;
+    }
+  }
 
   ngOnDestroy() { }
 
@@ -255,6 +275,18 @@ export class SendMessageComponent implements OnInit {
 
     console.log('SendMessageComponent:packageParamsForMessaging: params=', params);
     return params;
+  }
+
+
+  scrollToBottom() {
+    try {
+        console.log('SendMessageComponent:scrollToBottom: top before=', this.scrollable.nativeElement.scrollTop )
+        console.log('SendMessageComponent:scrollToBottom: height=', this.scrollable.nativeElement.scrollHeight)
+        this.scrollable.nativeElement.scrollTop = this.scrollable.nativeElement.scrollHeight;
+        console.log('SendMessageComponent:scrollToBottom: top after=', this.scrollable.nativeElement.scrollTop )
+    } catch (e) {
+        console.error('SendMessageComponent:scrollToBottom:', e);
+    }
   }
 
 

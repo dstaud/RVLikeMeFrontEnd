@@ -46,9 +46,13 @@ export class DashboardDrilldownComponent implements OnInit {
       this.router.navigateByUrl('/?e=signin');
     } else {
       params = this.shareDataSvc.getData();
+      if (params) {
       this.control = JSON.parse(params).control;
 
       this.listenForGroupByCounts(this.control);
+      } else {
+        this.router.navigateByUrl('/home/dashboard');
+      }
     }
   }
 

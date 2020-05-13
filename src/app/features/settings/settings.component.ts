@@ -35,7 +35,9 @@ export class SettingsComponent implements OnInit {
               private location: Location,
               private sentry: SentryMonitorService,
               private beforeInstallEventSvc: BeforeInstallEventService,
-              private themeSvc: ThemeService) { }
+              private themeSvc: ThemeService) {
+
+  }
 
   ngOnInit(): void {
     let backPath;
@@ -49,6 +51,8 @@ export class SettingsComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      this.showSpinner = true;
+
       this.listenBeforeInstall();
 
       this.listenForTheme();
@@ -127,8 +131,10 @@ export class SettingsComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
       this.profileID = profile._id;
+      this.showSpinner = false;
     }, error => {
       console.error('SettingsComponent:listenForUserProfile: error getting profile ', error);
+      this.showSpinner = false;
       throw new Error(error);
     });
   }

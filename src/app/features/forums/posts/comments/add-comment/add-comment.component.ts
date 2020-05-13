@@ -23,6 +23,7 @@ export class AddCommentComponent implements OnInit {
   @Output() postCommentComplete = new EventEmitter()
 
   form: FormGroup;
+  textAreaRows: number = 1;
   showSpinner = false;
   postButtonActive = false;
   showSmallFieldInitial = true;
@@ -41,6 +42,12 @@ export class AddCommentComponent implements OnInit {
     .subscribe(selectedValue => {
       this.postButtonActive = true;
     })
+  }
+
+
+  // Expand and contract comment input height as user clicks and leaves
+  onInput(rows: number) {
+    this.textAreaRows = rows;
   }
 
 

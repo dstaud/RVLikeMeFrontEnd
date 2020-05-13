@@ -66,20 +66,10 @@ export class RegisterConfirmComponent implements OnInit {
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
     this.shareDataSvc.setData(true) // To indicate to signin page coming from landing page
-    if (this.windowWidth > 600) {
-      this.openDialog('signin', (result: string) => {
-        if (result === 'complete') {
-          this.activateBackArrowSvc.setBackRoute('', 'forward');
-          this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-          this.router.navigateByUrl('/home/dashboard');
-        }
-      });
-    } else {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-      this.router.navigateByUrl('/signin');
+      this.router.navigateByUrl('/?e=signin'); // go directly to login page.  Will pop up as dialog if desktop
       this.activateBackArrowSvc.setBackRoute('', 'forward');
-    }
   }
 
 
@@ -117,22 +107,6 @@ export class RegisterConfirmComponent implements OnInit {
     });
   }
 
-
-  // For Desktop users, present register / signin as a dialog
-  private openDialog(component: string, cb: CallableFunction): void {
-    const dialogRef = this.dialog.open(RegisterDesktopDialogComponent, {
-      width: '340px',
-      height: '525px',
-      disableClose: true,
-      data: { component: component }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-        cb(result);
-    });
-  }
 
   sendWelcomeEmail(email: string, token: string) {
     let sendTo = email;

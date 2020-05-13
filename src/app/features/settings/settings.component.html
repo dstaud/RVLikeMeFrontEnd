@@ -1,8 +1,5 @@
 <div class="mat-app-background background">
   <h2 class="mat-title">Settings</h2>
-
-  <app-rvlm-notification-settings></app-rvlm-notification-settings>
-
   <p *ngIf="theme === 'light-theme'">
     <a mat-menu-item (click)="onSelectTheme('dark-theme')">
       <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
@@ -22,6 +19,9 @@
       <mat-icon fontSet="material-icons-outlined" >save_alt</mat-icon>
       <span class="nav-caption">{{ "menu.install" | translate }}</span>
     </a>
+  </p>
+  <p>
+    <app-rvlm-notification-settings></app-rvlm-notification-settings>
   </p>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

@@ -28,12 +28,6 @@ import { UsingEmailService } from './core/services/using-email.service';
 import { routeTransitionAnimations } from './route-transition-animations';
 
 
-// TODO: Make sure unsubscribing to all subscriptions appropriately
-// TODO: Add push notifications and location information
-// TODO: Can the side-to-side shimmy because web page on IOS be handled?
-// TODO: On iphone, after SW detects new version and user opts to upgrade, it crashes with 504 timeout getting profile
-// TODO: Nested back arrows
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

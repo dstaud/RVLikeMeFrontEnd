@@ -3,6 +3,14 @@ import { HttpClient} from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
+export interface Icomments {
+  comment: string,
+  displayName: string,
+  profileImageUrl: string,
+  createdAt: Date,
+  createdBy: string
+}
+
 @Injectable({
   providedIn: 'root'
 })

@@ -30,8 +30,7 @@ export class ImageCropperComponent implements OnInit {
   private showDestination = false;
 
 
-  constructor() {
-   }
+  constructor() {this.showSpinner = true;}
 
   ngOnInit() {
   }
@@ -40,9 +39,9 @@ export class ImageCropperComponent implements OnInit {
     this.createImageCropperObject();
   }
 
-  onRotateImage(degrees: number) {
-    this.cropper.rotate(degrees);
-  }
+  // onRotateImage(degrees: number) {
+  //   this.cropper.rotate(degrees);
+  // }
 
   // Called from dialog container when user clicks OK on the dialog, so updated image can be sent back up the chain
   notifyDone() {
@@ -52,7 +51,6 @@ export class ImageCropperComponent implements OnInit {
 
   // Use third-party image cropper
   private createImageCropperObject() {
-    this.showSpinner = true;
     let self = this;
 
     this.cropper = new Cropper(this.imageElement.nativeElement, {
