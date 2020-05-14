@@ -1,0 +1,75 @@
+<div class="container container-desktop mat-body-1"
+    [ngClass]="containerDialog? 'container-desktop' : 'container'">
+  <p class="mat-title">Update Post</p>
+  <div class="author">
+    <div>
+      <img class="image profile-image-post"
+                [src]="post.userProfileUrl"
+                style="width:40px;height:40px;">
+    </div>
+    <div class="name-and-date">
+      <div class="display-name">
+        {{ post.userDisplayName }}
+      </div>
+      <div>
+        {{ post.createdAt | date:'short'}}
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'add-post.component.body' | translate }}</mat-label>
+        <textarea matInput
+                  rows="5"
+                  type="text"
+                  placeholder="{{ 'add-post.component.whatToSay' | translate }}"
+                  formControlName="post">
+        </textarea>
+      </mat-form-field>
+    </form>
+    <div *ngIf="post.photoUrl">
+      <div>
+        <button class="replace hyperlink" mat-button (click)="fileInput.click()">
+          <input #fileInput type="file"
+                  (change)="onChangePhoto($event)"
+                  accept = "image/*"
+                  style="display:none;"/>
+            <span>Replace Photo</span>
+        </button>
+        <button class="delete hyperlink" mat-button (click)="onDeletePhoto()">
+          <span>Delete Photo</span>
+        </button>
+
+      </div>
+      <div class="pic">
+        <img class="postImage" [src]="post.photoUrl">
+      </div>
+    </div>
+    <div *ngIf="!post.photoUrl">
+      <button class="photo" mat-button (click)="fileInput.click()">
+        <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
+        <input #fileInput type="file"
+                (change)="onPhoto($event)"
+                accept = "image/*"
+                style="display:none;"/>
+          <span class="add-photo-text">{{ 'add-post.component.photo' | translate }}</span>
+      </button>
+    </div>
+    <div class="button">
+      <button type="submit"
+              class="mat-raised-button mat-primary"
+              (click)="onPost()">
+              {{ 'add-post.component.post' | translate }}
+      </button>
+    </div>
+    <div class="button">
+      <button type="button"
+              class="mat-raised-button"
+              (click)="onCancel()">
+              {{ 'add-post.component.cancel' | translate }}
+      </button>
+    </div>
+  </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>

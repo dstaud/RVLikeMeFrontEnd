@@ -38,7 +38,6 @@ import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.compone
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
-import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
@@ -91,7 +90,6 @@ export function getErrorHandler(): ErrorHandler {
     MyStoryDialogComponent,
     ImageViewDialogComponent,
     ForumsListComponent,
-    UpdatePostDialogComponent,
     YourStoryComponent,
     SuggestTopicDialogComponent,
     AdminComponent,

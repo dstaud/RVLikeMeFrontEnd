@@ -42,9 +42,9 @@
             <div>
               <mat-menu #beforeMenu="matMenu"
                         xPosition="before">
-                <button mat-menu-item (click)="onOpenUpdatePostDialog(i)">
+                <button mat-menu-item (click)="onUpdatePost(i)">
                   <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
-                  {{ 'posts.component.update' | translate }}
+                  {{ 'posts.component.updateText' | translate }}
                 </button>
               </mat-menu>
             </div>
@@ -105,7 +105,6 @@
 
               <app-rvlm-add-comment [postIndex]="i"
                                     [postID]="posts[i]._id"
-                                    [postTitle]="posts[i].title"
                                     [displayName]="displayName"
                                     [profileImageUrl]="profileImageUrl"
                                     (postCommentComplete)="postCommentComplete($event)">

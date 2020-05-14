@@ -20,6 +20,14 @@ export class ForumService {
 
   constructor(private http: HttpClient) { }
 
+
+  deletePostImage(imageUrl: string): Observable<any> {
+    let image = '{"imageUrl":"' + imageUrl + '"}';
+    let imageUrlJSON = JSON.parse(image);
+    console.log('deletePostImage: update=', imageUrlJSON);
+    return this.http.put(`/api/post-delete-image`, imageUrlJSON, {});
+  }
+
   getGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');
     let kValues = values.split('|');
@@ -69,7 +77,6 @@ export class ForumService {
   }
 
   addPost(groupID: string, post:string, displayName: string, profileImageUrl: string, postPhotoUrl: string): Observable<any> {
-    // let titleEscaped = this.escapeJsonReservedCharacters(title);
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"groupID":"' + groupID +
                 // '","title":"' + titleEscaped +
@@ -86,14 +93,14 @@ export class ForumService {
     return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
   }
 
-  updatePost(postID: string, post:string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.
-    // let titleEscaped = this.escapeJsonReservedCharacters(title);
+  updatePost(postID: string, post:string, postPhotoUrl: string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"postID":"' + postID +
-                // '","title":"' + titleEscaped +
                 '","body":"' + postEscaped +
+                '","postPhotoUrl":"' + postPhotoUrl +
                 '"}'
     let bodyJSON = JSON.parse(body);
+    console.log('updatePost: update=', bodyJSON);
     return this.http.put(`/api/forum-post`, bodyJSON, {});
   }
 

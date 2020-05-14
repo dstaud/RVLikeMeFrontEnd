@@ -485,7 +485,7 @@
     "firstPostTopic": "RVers experimentados aún no han publicado",
     "comments": "Comentarios",
     "like": "me gusta",
-    "update": "Actualizar publicación"
+    "updateText": "Actualizar publicación"
   },
   "add-post.component": {
     "post": "Enviar",

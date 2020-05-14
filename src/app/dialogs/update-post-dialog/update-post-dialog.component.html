@@ -1,18 +1,4 @@
-<div class="mat-app-background">
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'posts.component.post' | translate }}</mat-label>
-      <textarea matInput
-          type="text"
-          placeholder="{{ 'messages.component.whatsay' | translate }}"
-          [style.height]="fieldHeight"
-          formControlName="post"
-          cdkFocusInitial>
-      </textarea>
-    </mat-form-field>
-  </form>
-</div>
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-button (click)="onNoClick()">{{ 'messages.component.cancel' | translate }}</button>
-  <button id="btnOK" mat-button (click)="onOK()">{{ 'messages.component.ok' | translate }}</button>
-</div>
+<app-rvlm-update-post
+  [containerDialog]="true"
+  (formComplete)="formComplete($event)">
+</app-rvlm-update-post>

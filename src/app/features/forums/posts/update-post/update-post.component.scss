@@ -1,0 +1,96 @@
+@import './../../../../../styles/_variables';
+
+.container {
+  margin-top: 50px;
+  padding: 10px;
+}
+
+.container-desktop {
+  padding: 10px;
+  margin-top: 0px;
+}
+
+.hyperlink {
+  color: $primary-color;
+  cursor: pointer;
+}
+
+.author {
+  clear: left;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.image {
+  border-radius: 50%;
+}
+
+.profile-image-post {
+  float: left;
+}
+
+.postImage {
+  clear: left;
+  clear: right;
+  width: 100%;
+}
+
+.name-and-date {
+  margin-left: 50px;
+  font-size: 80%;
+  line-height: 1.5;
+}
+
+.display-name {
+  font-weight: bold;
+}
+
+.body {
+  white-space: pre-line; // Convert JSON escaped \n back to new lines/line break for display'
+  clear: left;
+  margin-top: 15px;
+}
+
+mat-form-field {
+  line-height: 1.4;
+  width: 100%;
+}
+
+.replace {
+  float: left;
+}
+
+.delete {
+  float: right;
+}
+
+.pic {
+  padding-top: 30px;
+}
+
+.photo {
+  padding: 0;
+  margin-bottom: 15px;
+}
+
+.add-photo-text {
+  padding-left: 5px;
+}
+
+.button {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+

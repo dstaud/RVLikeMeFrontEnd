@@ -11,7 +11,7 @@ import { CommentsComponent } from './comments/comments.component';
 
 import { ForumService, Icomments } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, ImyStory, Ipost } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 
@@ -87,7 +87,7 @@ export class PostsComponent implements OnInit {
   userID: string;
   displayName: string;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
-  posts: Array<any> = [];
+  posts: Array<Iposts> = [];
   comments: Array<Array<Icomments>> = [];
   currentPostRow: number;
   liked: Array<boolean> = [];
@@ -182,34 +182,34 @@ export class PostsComponent implements OnInit {
   }
 
 
-  // Open dialog for user to update their post
-  onOpenUpdatePostDialog(row: number): void {
-    const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
-      width: this.dialogWidthDisplay,
-      height: '80%',
-      disableClose: true,
-      data: { post: this.posts[row].body }
-    });
+  onUpdatePost(row: number) {
+    let post: Ipost = {
+      groupID: this.posts[row]._id,
+      userDisplayName: this.posts[row].displayName,
+      userProfileUrl: this.posts[row].profileImageUrl,
+      body: this.posts[row].body,
+      photoUrl: this.posts[row].postPhotoUrl,
+      createdBy: this.posts[row].createdBy,
+      createdAt: this.posts[row].createdAt
+    }
+    this.shareDataSvc.setData('post', post);
 
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result !== 'canceled') {
-        this.forumSvc.updatePost(this.posts[row]._id, result)
-        .subscribe(postResult => {
-          this.posts[row].body = postResult.body;
-          this.showSpinner = false;
-        }, error => {
-          this.showSpinner = false;
-          console.error('PostsComponent:openUpdatePostDialog: throw error ', error);
-          throw new Error(error);
-        });
-      } else {
-        this.showSpinner = false;
-      }
-    });
+    if (this.windowWidth > 600) {
+      this.openUpdatePostDialog((result: any) => {
+        console.log('PostsComponent:onUpdatePost: back from dialog. result=', result);
+        if (result !== 'canceled') {
+          console.log('PostsComponent:onUpdatePost: result=', result);
+          post = result;
+          this.posts[row].body = post.body;
+          this.posts[row].postPhotoUrl = post.photoUrl;
+        }
+      });
+    } else {
+      this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
+      this.router.navigateByUrl('/forums/update-post');
+    }
+
   }
-
 
   // When user clicks to see the story of another user, navigate to myStory page
   onYourStory(toUserID: string, toDisplayName: string, toProfileImageUrl: string) {
@@ -432,6 +432,19 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  private openUpdatePostDialog(cb: CallableFunction): void {
+    const dialogRef = this.dialog.open(UpdatePostDialogComponent, {
+      width: '400px',
+      height: '550px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+        cb(result);
+    });
+  }
 
   private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): ImessageShareData {
     // let params: string;

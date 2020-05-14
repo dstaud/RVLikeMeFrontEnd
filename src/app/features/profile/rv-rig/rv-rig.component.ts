@@ -188,16 +188,22 @@ export class RvRigComponent implements OnInit {
 
   // Field auto-update processing
   onUpdateDataPoint(control: string) {
+    let controlValue: string;
+
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
     console.log('rigComponent:OnUpdateDatapoint: control=', control, ' value=', this[control].value);
+    controlValue = this[control].value;
+    controlValue = controlValue.trim();
+    this[control].patchValue(controlValue);
     if (this[control].value === '') {
       this.profile[control] = null;
-      this[control] = null;
+      this[control].patchValue(null);
     } else {
       this.profile[control] = this[control].value;
     }
     this.updateRig(control, this.profile[control]);
+    console.log('rigComponent:onUpdateDataPoint: finished here');
   }
 
   // View rig image larger
@@ -315,6 +321,7 @@ export class RvRigComponent implements OnInit {
     this.rigSvc.getRigData()
     .pipe(untilComponentDestroyed(this))
     .subscribe(rigData => {
+      console.log('RigComponent: getRigData: rigData=', rigData);
       this.rigData = rigData;
       this.rigBrand.patchValue(this.profile.rigBrand);
       this.brandSelected = null;
@@ -370,7 +377,7 @@ export class RvRigComponent implements OnInit {
     .subscribe(profileResult => {
       if (profileResult.firstName) {
         this.profile = profileResult;
-
+        console.log('RigComponent:listenForProfileuser: profile=', this.profile);
         // If user selected other on a form field, need to get the data they entered
         if (this.handleOtherData('rigType')) {
           this.rigTypeFormValue = 'other';

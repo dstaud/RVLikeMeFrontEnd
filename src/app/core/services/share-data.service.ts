@@ -106,6 +106,16 @@ export interface Idashboard {
   nbrLogins: number
 }
 
+export interface Ipost {
+  groupID: string,
+  userDisplayName: string,
+  userProfileUrl: string,
+  body: string,
+  photoUrl: string,
+  createdBy: string,
+  createdAt: Date
+}
+
 export interface IshareData {
   forumsMain: IforumsMain,
   myStory: ImyStory,
@@ -115,7 +125,8 @@ export interface IshareData {
   message: ImessageShareData,
   newbieTopic: InewbieTopic,
   signin: Isignin,
-  dashboard: Idashboard
+  dashboard: Idashboard,
+  post: Ipost
 }
 
 
@@ -201,6 +212,15 @@ export class ShareDataService {
     },
     dashboard: {
       nbrLogins: null
+    },
+    post: {
+      groupID: null,
+      userDisplayName: null,
+      userProfileUrl: null,
+      body: null,
+      photoUrl: null,
+      createdBy: null,
+      createdAt: null
     }
   }
 
@@ -208,11 +228,13 @@ export class ShareDataService {
 
   setData(type: string, data:any) {
       this.data[type] = data;
-      console.log('ShareDataSvc:setData: data=', data);
+      console.log('ShareDataSvc:setData: type=' + type, ', data=', this.data[type]);
+      console.log('ShareDataSvc:setData: all data=', this.data);
   }
 
   getData(type: string):any {
       console.log('ShareDataSvc:getData: type=', type, ' data.type=', this.data[type]);
+      console.log('ShareDataSvc:getData: all data=', this.data);
       return this.data[type];
   }
 }
