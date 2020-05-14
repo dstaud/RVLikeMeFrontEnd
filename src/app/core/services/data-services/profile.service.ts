@@ -222,10 +222,6 @@ export class ProfileService {
     return this.http.get(`/api/profile-user`, { params: param });
   }
 
-  updateProfile(userProfile: IuserProfile): Observable<any> {
-    return this.http.put(`/api/profile`, userProfile, {});
-  }
-
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
     var params = '{"profileID":"' + profileID + '",' +
                   '"attribute":"' + attribute + '",' +

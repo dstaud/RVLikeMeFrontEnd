@@ -120,7 +120,7 @@ export class MainComponent implements OnInit {
     this.showhelpNewbiesSaveIcon = true;
     this.profile.helpNewbies = event.target.value;
 
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, 'helpNewbies', this.profile.helpNewbies)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showhelpNewbiesSaveIcon = false;
@@ -190,7 +190,7 @@ export class MainComponent implements OnInit {
   onSetLanguage(entry: string) {
     this.showLanguageSaveIcon = true;
     this.profile.language = this.form.controls.language.value;
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, 'language', this.profile.language)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showLanguageSaveIcon = false;
@@ -413,7 +413,7 @@ export class MainComponent implements OnInit {
       }
     }
     this.showAboutMeSaveIcon = true;
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, 'aboutMe', this.profile.aboutMe)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showAboutMeSaveIcon = false;

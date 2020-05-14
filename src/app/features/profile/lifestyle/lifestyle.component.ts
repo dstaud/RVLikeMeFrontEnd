@@ -221,7 +221,7 @@ export class LifestyleComponent implements OnInit {
   onHelpNewbies(event: any) {
     this.showhelpNewbiesSaveIcon = true;
     this.profile.helpNewbies = event.target.value;
-    this.updateLifestyle('helpNewbies');
+    this.updateLifestyle('helpNewbies', this.profile.helpNewbies);
   }
 
 
@@ -439,19 +439,19 @@ export class LifestyleComponent implements OnInit {
         this.profile[control] = event;
       }
     }
-    this.updateLifestyle(control);
+    this.updateLifestyle(control, this.profile[control]);
   }
 
 
-  private updateLifestyle(control: string) {
+  private updateLifestyle(control: string, value: any) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
       // this.profileSvc.distributeProfileUpdate(this.profile);
       if (control === 'aboutMe') {
-        if (this.profile.aboutMe === 'experienced') {
+        if (value === 'experienced') {
           this.aboutMeExperienced = true;
         } else {
           this.aboutMeExperienced = false;

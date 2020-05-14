@@ -190,13 +190,14 @@ export class RvRigComponent implements OnInit {
   onUpdateDataPoint(control: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
+    console.log('rigComponent:OnUpdateDatapoint: control=', control, ' value=', this[control].value);
     if (this[control].value === '') {
       this.profile[control] = null;
       this[control] = null;
     } else {
       this.profile[control] = this[control].value;
     }
-    this.updateRig(control);
+    this.updateRig(control, this.profile[control]);
   }
 
   // View rig image larger
@@ -243,7 +244,9 @@ export class RvRigComponent implements OnInit {
       this.profile.rigBrandID = null;
       this.profile.rigManufacturer = null;
     }
-    this.updateRig('rigBrand');
+    this.updateRig('rigBrand', this.profile.rigBrand);
+    this.updateRig('rigBrandID', this.profile.rigBrandID);
+    this.updateRig('rigManufacturer', this.profile.rigManufacturer);
   }
 
 
@@ -415,7 +418,7 @@ export class RvRigComponent implements OnInit {
             // this[control] = result;
             this.profile[control] = '@' + result;
             this[SaveIcon] = true;
-            this.updateRig(control);
+            this.updateRig(control, this.profile[control]);
           }
         }
       } else { // No value was returned
@@ -467,17 +470,20 @@ export class RvRigComponent implements OnInit {
 
 
   // Update form field data on server
-  private updateRig(control: string) {
+  private updateRig(control: string, value: any) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    this.profileSvc.updateProfile(this.profile)
+    console.log('RigComponent:updateRig: profileID=', this.profile._id, ' control=', control, ' value=', value);
+    this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
+      console.log('RigComponent:updateRig: back from update, before save icon, data=', responseData);
       this[SaveIcon] = false;
     }, error => {
       this[SaveIcon] = false;
       console.error('RigComponent:updateRig: throw error ', error);
       throw new Error(error);
     });
+    console.log('RigComponent:updateRig: back from update, before back from subscribe');
   }
 
 
@@ -491,6 +497,6 @@ export class RvRigComponent implements OnInit {
     } else {
       this.profile[control] = event;
     }
-    this.updateRig(control);
+    this.updateRig(control, this.profile[control]);
   }
 }

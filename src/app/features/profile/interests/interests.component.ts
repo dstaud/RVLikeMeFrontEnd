@@ -88,7 +88,7 @@ ngOnInit() {
   onUpdateInterest(control: string, event: any) {
     this.showSaveIcon = true;
     this.profile[control] = event.checked;
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, control, this.profile[control])
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showSaveIcon = false;

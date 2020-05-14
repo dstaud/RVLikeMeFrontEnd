@@ -85,7 +85,7 @@ export class SettingsComponent implements OnInit {
   onSelectTheme(theme: string) {
     this.themeSvc.setGlobalColorTheme(theme);
     this.profile.colorThemePreference = theme;
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       console.log('SettingsComponent:onSelectTheme: update color theme ', responseData);

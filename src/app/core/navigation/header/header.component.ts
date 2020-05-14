@@ -130,7 +130,7 @@ export class HeaderComponent implements OnInit {
 
     this.themeSvc.setGlobalColorTheme(theme);
     this.profile.colorThemePreference = theme;
-    this.profileSvc.updateProfile(this.profile)
+    this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       console.log('update color theme response = ', responseData);
