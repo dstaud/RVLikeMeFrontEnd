@@ -66,6 +66,7 @@ export class PersonalComponent implements OnInit {
   showgenderSaveIcon = false;
   showmyStorySaveIcon = false;
   showprofileImageSaveIcon = true;
+  containerDialog: boolean = false;
 
 
   /**** Select form select field option data. ****/
@@ -144,8 +145,6 @@ export class PersonalComponent implements OnInit {
   // Interface for Profile data
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
-  private containerDialog: boolean = false;
-
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.

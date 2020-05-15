@@ -223,9 +223,10 @@ export class ProfileService {
   }
 
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
+    let attributeEscaped = this.escapeJsonReservedCharacters(value);
     var params = '{"profileID":"' + profileID + '",' +
                   '"attribute":"' + attribute + '",' +
-                  '"value":"' + value + '"}';
+                  '"value":"' +  attributeEscaped + '"}';
 
     console.log('ProfileService:updateProfileAttribute: params=', params);
     return this.http.put(`/api/profile-attribute-update`, params, {});
@@ -235,4 +236,11 @@ export class ProfileService {
     this.profileSubscription.unsubscribe();
   }
 
+  private escapeJsonReservedCharacters(string: string): string {
+    let newString = string;
+    newString = newString.replace(/"/g, "'").trim();
+    newString = newString.replace(/\\/g, "|");
+    newString = newString.replace(/\n/g, "\\n");
+    return newString;
+  }
 }
