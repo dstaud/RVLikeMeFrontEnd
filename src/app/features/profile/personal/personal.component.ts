@@ -145,6 +145,7 @@ export class PersonalComponent implements OnInit {
   // Interface for Profile data
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private returnRoute: string;
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -189,14 +190,16 @@ export class PersonalComponent implements OnInit {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
+    if (window.innerWidth > 600) {
+      this.containerDialog = true;
+      this.setReturnRoute();
+    }
+
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
-      if (window.innerWidth > 600) {
-        this.containerDialog = true;
-      }
 
       this.form.disable();
 
@@ -211,6 +214,13 @@ export class PersonalComponent implements OnInit {
   // Form validation error handling
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
+  }
+
+
+  onBack() {
+    let route = '/' + this.returnRoute
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl(route);
   }
 
 
@@ -326,6 +336,30 @@ export class PersonalComponent implements OnInit {
     });
   }
 
+
+  private setReturnRoute() {
+    let returnStack: Array<string> = [];
+    let i: number;
+
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      returnStack = data;
+      i = returnStack.length - 1;
+      if (returnStack.length > 0) {
+        if (returnStack[i].substring(0, 1) === '*') {
+            this.returnRoute = returnStack[i].substring(1, returnStack[i].length);
+        } else {
+          this.returnRoute = returnStack[i];
+        }
+      } else {
+          this.returnRoute = '';
+      }
+      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
+    }, error => {
+      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+    });
+  }
 
   // Update data in profile document on database
   private updatePersonal(control: string, value: any) {

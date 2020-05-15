@@ -1,15 +1,12 @@
-.spinner {
-  position: fixed;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
+@import './../../../../styles/_variables';
 
-.background {
+.container {
   padding: 10px;
   margin-top: 50px;
+}
+
+.hyperlink {
+  color: $primary-color
 }
 
 .save-icon {
@@ -24,4 +21,13 @@ mat-form-field {
 .checkbox {
   padding-right: 30px;
   line-height: 2.5;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

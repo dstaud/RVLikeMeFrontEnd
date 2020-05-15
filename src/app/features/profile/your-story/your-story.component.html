@@ -1,5 +1,13 @@
-<div class="mat-app-background container">
+<div class="mat-app-background mat-body-1"
+    [ngClass]="desktopUser && comingFromProfile? 'container-desktop' : 'container'">
   <a href=""></a> <!-- prevents auto-scrolling to bottom of page for a long story, because will scroll to first anchor tag it finds -->
+  <button *ngIf="desktopUser && !comingFromProfile"
+          type="button"
+          mat-button
+          class="hyperlink"
+          (click)="onBack()">
+          << Go Back
+  </button>
   <div>
     <div>
       <div>

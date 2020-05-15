@@ -1,4 +1,12 @@
-<div class="mat-app-background container mat-body-1">
+<div class="container mat-app-background mat-body-1">
+  <button *ngIf="desktopUser"
+          type="button"
+          mat-button
+          class="hyperlink"
+          (click)="onBack()">
+          << Go Back
+  </button>
+  <p class="mat-title">Profile - My Rig</p>
   <div class="rig-images">
     <div class="row">
       <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">

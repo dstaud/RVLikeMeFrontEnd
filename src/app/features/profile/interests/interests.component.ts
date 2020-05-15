@@ -30,6 +30,7 @@ export class InterestsComponent implements OnInit {
   musicalInstrument: boolean = false;
   programming: boolean = false;
   mobileInternet: boolean = false;
+  desktopUser: boolean = false;
 
 
   // Spinner is for initial load from the database only.
@@ -39,6 +40,7 @@ export class InterestsComponent implements OnInit {
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private returnRoute: string;
 
   constructor(private profileSvc: ProfileService,
               private location: Location,
@@ -68,6 +70,10 @@ ngOnInit() {
   window.onpopstate = function(event) {
     self.activateBackArrowSvc.setBackRoute('', 'backward');
   };
+  if (window.innerWidth > 600) {
+    this.desktopUser = true;
+    this.setReturnRoute();
+  }
 
   this.showSpinner = true;
   if (!this.authSvc.isLoggedIn()) {
@@ -82,6 +88,13 @@ ngOnInit() {
 }
 
   ngOnDestroy() {};
+
+
+  onBack() {
+    let route = '/' + this.returnRoute
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl(route);
+  }
 
 
   // Update profile on server when user checks an interest
@@ -130,6 +143,31 @@ ngOnInit() {
       this.showSpinner = false;
       console.error('InterestsComponent:listenForUserProfile: error getting profile=', error);
       throw new error(error);
+    });
+  }
+
+
+  private setReturnRoute() {
+    let returnStack: Array<string> = [];
+    let i: number;
+
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      returnStack = data;
+      i = returnStack.length - 1;
+      if (returnStack.length > 0) {
+        if (returnStack[i].substring(0, 1) === '*') {
+            this.returnRoute = returnStack[i].substring(1, returnStack[i].length);
+        } else {
+          this.returnRoute = returnStack[i];
+        }
+      } else {
+          this.returnRoute = '';
+      }
+      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
+    }, error => {
+      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });
   }
 }

@@ -73,9 +73,10 @@ export class SendMessageComponent implements OnInit {
     let backPath: string;
     let self = this;
     window.onpopstate = function(event) {
+      console.log('SendMessageComponent:ngOnInit: going backward?')
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
-
+    console.log('SendMessageComponent:ngOnInit:')
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
@@ -232,6 +233,7 @@ export class SendMessageComponent implements OnInit {
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
     let paramData: any;
 
+    console.log('SendMessageComponent:getParameters: params=',this.shareDataSvc.getData('message') )
     if (!this.shareDataSvc.getData('message').fromUserID) {
       this.router.navigateByUrl('/messages/message-list');
     } else {

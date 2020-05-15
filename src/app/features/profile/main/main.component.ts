@@ -38,6 +38,7 @@ export class MainComponent implements OnInit {
   rigEnteredMostInfo: boolean = false;
   interestsIndicator: string;
   interestsIndClass: string;
+  desktopUser: boolean = false;
 
   showSpinner = false;
 
@@ -64,6 +65,10 @@ export class MainComponent implements OnInit {
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
+
+    if (window.innerWidth > 600) {
+      this.desktopUser = true;
+    }
 
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
@@ -109,9 +114,6 @@ export class MainComponent implements OnInit {
       params: userParams
     }
 
-    // let params = '{"userID":"' + this.profile.userID + '",' +
-    //                   '"userIdViewer":"' + this.profile.userID + '",' +
-    //                   '"params":' + userParams + '}';
     this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
@@ -210,6 +212,17 @@ export class MainComponent implements OnInit {
       }
 
       this.determinePercentComplete(profileResult);
+
+      // Make sure embedded story has data it needs
+      if (this.desktopUser) {
+        let userParams:ImessageShareData = this.packageParamsForMessaging();
+        let params:ImyStory = {
+          userID: this.profile.userID,
+          userIdViewer: this.profile.userID,
+          params: userParams
+        }
+        this.shareDataSvc.setData('myStory', params);
+      }
 
       this.showSpinner = false;
     }, (error) => {

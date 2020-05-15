@@ -64,6 +64,7 @@ export class LifestyleComponent implements OnInit {
   form: FormGroup;
   lifestyleImageUrls: Array<string> = [];
   aboutMeExperienced: boolean = false;
+  desktopUser: boolean = false;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -152,6 +153,7 @@ export class LifestyleComponent implements OnInit {
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private returnRoute: string;
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -187,6 +189,11 @@ export class LifestyleComponent implements OnInit {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
+    if (window.innerWidth > 600) {
+      this.desktopUser = true;
+      this.setReturnRoute();
+    }
+
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
@@ -216,6 +223,13 @@ export class LifestyleComponent implements OnInit {
         this.form.enable();
       });
     });
+  }
+
+
+  onBack() {
+    let route = '/' + this.returnRoute
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl(route);
   }
 
 
@@ -429,6 +443,31 @@ export class LifestyleComponent implements OnInit {
       }
     }
     return result;
+  }
+
+
+  private setReturnRoute() {
+    let returnStack: Array<string> = [];
+    let i: number;
+
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      returnStack = data;
+      i = returnStack.length - 1;
+      if (returnStack.length > 0) {
+        if (returnStack[i].substring(0, 1) === '*') {
+            this.returnRoute = returnStack[i].substring(1, returnStack[i].length);
+        } else {
+          this.returnRoute = returnStack[i];
+        }
+      } else {
+          this.returnRoute = '';
+      }
+      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
+    }, error => {
+      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+    });
   }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,11 +14,13 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 @Component({
-  selector: 'app-your-story',
+  selector: 'app-rvlm-your-story',
   templateUrl: './your-story.component.html',
   styleUrls: ['./your-story.component.scss']
 })
 export class YourStoryComponent implements OnInit {
+  @Input('comingFromProfile') comingFromProfile: boolean;
+
   userID : string;
   userMyStory: string;
   userProfileImage: string = './../../../../assets/images/no-profile-pic.jpg';
@@ -33,8 +35,10 @@ export class YourStoryComponent implements OnInit {
   showRigBrand: boolean = false;
   rigImageUrls: Array<string> = [];
   lifestyleImageUrls: Array<string> = [];
+  desktopUser: boolean = false;
 
   private paramsForMessaging: string;
+  private returnRoute: string
 
   constructor(private profileSvc: ProfileService,
               private dialog: MatDialog,
@@ -46,6 +50,11 @@ export class YourStoryComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+    if (window.innerWidth > 600) {
+      this.desktopUser = true;
+      this.setReturnRoute();
+    }
+
     let backPath;
     let self = this;
     window.onpopstate = function(event) {
@@ -63,13 +72,16 @@ export class YourStoryComponent implements OnInit {
 
   ngOnDestroy() {}
 
-  // TODO: maintain data if user goes back to this component from Send Messages
-
+  onBack() {
+    let route = '/' + this.returnRoute
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl(route);
+  }
 
   // Navigate to send messages for the user whose story viewing
   onMessageUser() {
     this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
-    this.shareDataSvc.setData('messages/send-message', this.paramsForMessaging);
+    this.shareDataSvc.setData('message', this.paramsForMessaging);
     this.router.navigateByUrl('/messages/send-message');
   }
 
@@ -95,14 +107,12 @@ export class YourStoryComponent implements OnInit {
   private getParameters() {
     let paramData: any;
 
-    if (!this.shareDataSvc.getData('myStory').userID) {
-      this.router.navigateByUrl('/home/dashboard');
-    } else {
+    if (this.shareDataSvc.getData('myStory').userID) {
       paramData = this.shareDataSvc.getData('myStory');
       this.userID = paramData.userID;
       this.userIdViewer = paramData.userIdViewer;
       this.paramsForMessaging = paramData.params;
-
+      console.log('YourStoryComponent:getParameters: paramData=', paramData);
       this.listenForUserProfile();
     }
   }
@@ -117,6 +127,7 @@ export class YourStoryComponent implements OnInit {
       } else {
         this.userMyStory = profileResult.displayName + ' has not yet published a story';
       }
+      console.log('YourStoryComponent:listenForUserProfile: my story=', this.userMyStory)
       if (profileResult.profileImageUrl) {
         this.userProfileImage = profileResult.profileImageUrl;
       }
@@ -163,6 +174,31 @@ export class YourStoryComponent implements OnInit {
     }, error => {
       console.error('YourStoryComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
+    });
+  }
+
+
+  private setReturnRoute() {
+    let returnStack: Array<string> = [];
+    let i: number;
+
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      returnStack = data;
+      i = returnStack.length - 1;
+      if (returnStack.length > 0) {
+        if (returnStack[i].substring(0, 1) === '*') {
+            this.returnRoute = returnStack[i].substring(1, returnStack[i].length);
+        } else {
+          this.returnRoute = returnStack[i];
+        }
+      } else {
+          this.returnRoute = '';
+      }
+      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
+    }, error => {
+      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });
   }
 }

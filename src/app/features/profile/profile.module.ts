@@ -13,6 +13,7 @@ import { RvRigComponent } from './rv-rig/rv-rig.component';
 import { LifestyleComponent } from './lifestyle/lifestyle.component';
 import { InterestsComponent } from './interests/interests.component';
 import { MainComponent } from './main/main.component';
+import { YourStoryComponent } from './your-story/your-story.component';
 
 
 
@@ -25,7 +26,8 @@ import { MainComponent } from './main/main.component';
     ImageCropperComponent,
     InterestsComponent,
     ImageDialogComponent,
-    MainComponent
+    MainComponent,
+    YourStoryComponent
   ],
   imports: [
     CommonModule,

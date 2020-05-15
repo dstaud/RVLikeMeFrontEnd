@@ -1,4 +1,12 @@
-<div class="background">
+<div class="container mat-app-background mat-body-1">
+  <button *ngIf="desktopUser"
+          type="button"
+          mat-button
+          class="hyperlink"
+          (click)="onBack()">
+          << Go Back
+  </button>
+  <p class="mat-title">Profile - My Interests</p>
   <div>
     <p class="mat-body">{{ "interests.component.explanation" | translate}}</p>
   </div>

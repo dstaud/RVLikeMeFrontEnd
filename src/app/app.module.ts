@@ -30,7 +30,6 @@ import { ForumsListComponent } from './features/forums/forums-list/forums-list.c
 
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
-import { YourStoryComponent } from './features/profile/your-story/your-story.component';
 
 import { ThemeService } from '@services/theme.service';
 import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
@@ -39,7 +38,6 @@ import { WindowService } from '@services/window.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
-import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
@@ -94,10 +92,8 @@ export function getErrorHandler(): ErrorHandler {
     LearnMoreComponent,
     OtherDialogComponent,
     InstallDialogComponent,
-    MyStoryDialogComponent,
     ImageViewDialogComponent,
     ForumsListComponent,
-    YourStoryComponent,
     SuggestTopicDialogComponent,
     AdminComponent,
     EmailComponent,
