@@ -161,13 +161,15 @@ export class RvRigComponent implements OnInit {
   onRigImageSelected(event: any) {
     let fileType: string = 'rig';
 
-    this.showSpinner = true;
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.updateProfileRigImageUrls(uploadedFileUrl);
-        this.showSpinner = false;
+    if (event.target.files[0]) {
+      this.showSpinner = true;
+      this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+        this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+          this.updateProfileRigImageUrls(uploadedFileUrl);
+          this.showSpinner = false;
+        });
       });
-    });
+    }
   }
 
 

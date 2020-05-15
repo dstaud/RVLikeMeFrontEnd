@@ -1,6 +1,15 @@
-import { Component, OnInit, ViewChild, Input, Output, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input, Output, ElementRef, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Cropper from 'cropperjs';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+
+import { ShareDataService, IprofileImage } from '@services/share-data.service';
+import { UploadImageService } from '@services/data-services/upload-image.service';
+import { ProfileService } from '@services/data-services/profile.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
+
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-image-cropper',
@@ -12,28 +21,49 @@ export class ImageCropperComponent implements OnInit {
   // Inject a reference to the original source image in the HTML (#image) for use as imageElement in the Typescript.
   @ViewChild('image', {static: false }) imageElement: ElementRef;
 
-  // Original image passed from the dialog through this component's selector in the dialog compoment template
-  @Input('originalImage') imageSource: string;
-
-  // Image may be a profile image or other image like a pic of their rig or any image they want to upload for apost.
-  @Input('imageType') imageType: string;
-
-  // Send updated image back to the dialog through the reference obtained through the selector
-  @Output() updatedImage = new EventEmitter()
+  @Output() formComplete = new EventEmitter()
+  public formCompleted: string;
 
   imageDestination: string = '';
   showImageDestination: boolean = false;
   showSpinner: boolean = false;
+  imageSource: string;
+  containerDialog: boolean = false;
 
   private cropper: Cropper;
+  private profileID: string;
+  private newImageUrl: string;
 
   private showDestination = false;
 
 
-  constructor() {this.showSpinner = true;}
+  constructor(private shareDataSvc: ShareDataService,
+              private router: Router,
+              private Shared: SharedComponent,
+              private sentry: SentryMonitorService,
+              private uploadImageSvc: UploadImageService,
+              private profileSvc: ProfileService) {this.showSpinner = true;}
 
   ngOnInit() {
+    if (window.innerWidth > 600) {
+      this.containerDialog = true;
+    }
+    console.log('ImageCropperComponent:ngOnInit: data=', this.shareDataSvc.getData('profileImage'));
+    if (!this.shareDataSvc.getData('profileImage').imageSource) {
+      if (this.containerDialog) {
+        this.formComplete.emit('canceled');
+      } else {
+        this.router.navigateByUrl('/profile/main');
+      }
+    } else {
+      let data = this.shareDataSvc.getData('profileImage');
+      this.imageSource = data.imageSource;
+      this.profileID = data.profileID;
+      console.log('ImageCropperComponent:ngOnInit: imageSource=', this.imageSource);
+    }
   }
+
+  ngOnDestroy() {}
 
   ngAfterViewInit() {
     this.createImageCropperObject();
@@ -43,9 +73,25 @@ export class ImageCropperComponent implements OnInit {
   //   this.cropper.rotate(degrees);
   // }
 
-  // Called from dialog container when user clicks OK on the dialog, so updated image can be sent back up the chain
-  notifyDone() {
-    this.updatedImage.emit(this.imageDestination);
+
+  onCancel() {
+    let imageData: IprofileImage = {
+      profileID: null,
+      imageSource: null,
+      newImageUrl: null
+    }
+    if (this.containerDialog) {
+      this.formComplete.emit('canceled');
+    } else {
+      this.shareDataSvc.setData('profileImage', imageData);
+      this.router.navigateByUrl('/profile/personal');
+    }
+  }
+
+
+  onSubmit() {
+    this.showSpinner = true;
+    this.saveNewImage();
   }
 
 
@@ -68,5 +114,59 @@ export class ImageCropperComponent implements OnInit {
         self.showSpinner = false;
       }
     });
+  }
+
+
+  private saveNewImage() {
+    let croppedImageBase64 = this.imageDestination;
+    this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
+      this.newImageUrl = uploadedFileUrl
+      this.updateImageUrlInProfile(uploadedFileUrl);
+    })
+  }
+
+
+  // Update data in profile document on database
+  private updateImageUrlInProfile(profileImageUrl: string) {
+    this.profileSvc.updateProfileAttribute(this.profileID, 'profileImageUrl', profileImageUrl)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((profileData) => {
+      this.profileSvc.distributeProfileUpdate(profileData);
+      this.profileSvc.deleteTempProfileImage(this.imageSource)
+      .subscribe(responseData => {
+        this.showSpinner = false;
+        // this.Shared.openSnackBar("New profile image saved. Going back to profile in a few seconds","message", 3000);
+        this.routeBackToProfile();
+      }, error => {
+        this.sentry.logError({"message":"error deleting temp profile image","error":error});
+        this.showSpinner = false;
+        // this.Shared.openSnackBar("New profile image saved. Going back to profile in a few seconds","message", 3000);
+        this.routeBackToProfile();
+      });
+    }, error => {
+      this.showSpinner = false;
+      console.error('ImageCropperComponent:updateImageUrlInProfile: throw error ', error);
+      throw new Error(error);
+    });
+  }
+
+
+  private routeBackToProfile() {
+    let imageData: IprofileImage = {
+      profileID: null,
+      imageSource: null,
+      newImageUrl: null
+    }
+    // let self = this;
+
+    if (this.containerDialog) {
+      this.formComplete.emit(this.newImageUrl);
+    } else {
+      this.shareDataSvc.setData('profileImage', imageData);
+      this.router.navigateByUrl('/profile/personal');
+    }
+    // setTimeout(function () {
+    //   self.router.navigateByUrl('/profile/personal');
+    // }, 2000);
   }
 }

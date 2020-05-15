@@ -47,9 +47,9 @@ export class DashboardDrilldownComponent implements OnInit {
     } else {
       params = this.shareDataSvc.getData('dashboardDrilldown');
       if (params.control) {
-      this.control = params.control;
+        this.control = params.control;
 
-      this.listenForGroupByCounts(this.control);
+        this.listenForGroupByCounts(this.control);
       } else {
         this.router.navigateByUrl('/home/dashboard');
       }

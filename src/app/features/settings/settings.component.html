@@ -12,12 +12,31 @@
       {{ "account.lightTheme" | translate }}
     </a>
   </p>
+
+  <form [formGroup]="form">
+    <div class="form">
+      <p>Select language for the site</p>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-select formControlName="language"
+                      placeholder="{{ 'profile.component.preferred-language' | translate }}"
+                      (selectionChange)="onSetLanguage($event.source.value)"
+                      aria-label="select language">
+            <mat-option value='en'>{{ "profile.component.english" | translate }}</mat-option>
+            <mat-option value='es'>{{ "profile.component.spanish" | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showLanguageSaveIcon">save</mat-icon>
+      </div>
+    </div>
+  </form>
+
   <p>
     <a mat-menu-item
       *ngIf="showInstallLink"
       (click)="onInstallApp()">
       <mat-icon fontSet="material-icons-outlined" >save_alt</mat-icon>
-      <span class="nav-caption">{{ "menu.install" | translate }}</span>
+      <span>{{ "menu.install" | translate }}</span>
     </a>
   </p>
   <p>

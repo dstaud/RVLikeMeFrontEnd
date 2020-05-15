@@ -36,6 +36,7 @@ export class AboutComponent implements OnInit {
               }
 
   ngOnInit() {
+    console.log('AboutComponent:ntOnInit:')
     let backPath: string;
     let self = this;
     window.onpopstate = function(event) {

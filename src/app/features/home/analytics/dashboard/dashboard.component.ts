@@ -104,7 +104,6 @@ export class DashboardComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
     }, error => {
       this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });

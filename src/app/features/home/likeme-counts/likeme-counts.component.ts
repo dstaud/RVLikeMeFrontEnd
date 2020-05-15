@@ -155,7 +155,6 @@ export class LikemeCountsComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
-      console.log('ProfilePercent:ngOnInit: got new profile data=', profileResult);
       this.profile = profileResult;
 
     }, error => {

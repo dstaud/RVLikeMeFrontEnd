@@ -13,7 +13,6 @@ export class ProfileComponent implements OnInit {
               private location: Location) {}
 
   ngOnInit() {
-    console.log('ProfileComponenet:ngOnInit: path=', this.location.path());
     if (this.location.path() === '/profile') {
       this.router.navigateByUrl('/profile/main');
     }

@@ -230,14 +230,17 @@ export class LifestyleComponent implements OnInit {
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onLifestyleImageSelected(event: any) {
     let fileType: string = 'lifestyle';
+    console.log('LifestyleComponent:onLifestyleImageSelected: file=', event.target.files[0]);
 
-    this.showSpinner = true;
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.updateProfileLifestyleImageUrls(uploadedFileUrl);
-        this.showSpinner = false;
+    if (event.target.files[0]) {
+      this.showSpinner = true;
+      this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+        this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+          this.updateProfileLifestyleImageUrls(uploadedFileUrl);
+          this.showSpinner = false;
+        });
       });
-    });
+    }
   }
 
 

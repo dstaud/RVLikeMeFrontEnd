@@ -164,7 +164,6 @@ export class NotificationSettingsComponent implements OnInit {
       this.form.patchValue({
         sendMessageNotificationEmails: this.sendMessageEmails
       })
-      console.log('SettingsComponent:listenForUserProfile: sendMessageEmails=', profile.sendMessageEmails);
     }, error => {
       console.error('SettingsComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);

@@ -9,6 +9,7 @@ import { InterestsComponent } from './interests/interests.component';
 import { MainComponent } from './main/main.component';
 import { YourStoryComponent } from './your-story/your-story.component';
 import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
+import { ImageCropperComponent } from './image-cropper/image-cropper.component';
 
 const routes: Routes = [
   { path: '', component:ProfileComponent,
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'rig', component: RvRigComponent },
       { path: 'interests', component: InterestsComponent },
       { path: 'mystory', component: YourStoryComponent },
+      { path: 'profile-image', component: ImageCropperComponent },
     ]
   },
   { path: '**', component: PageNotFoundComponent }

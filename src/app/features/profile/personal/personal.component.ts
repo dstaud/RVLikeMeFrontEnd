@@ -13,9 +13,9 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { DesktopMaxWidthService } from './../../../core/services/desktop-max-width.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { ShareDataService, IprofileImage } from '@services/share-data.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
-import { MyStoryDialogComponent } from '@dialogs/my-story-dialog/my-story-dialog.component';
 
 
 /**** Interfaces for data for form selects ****/
@@ -144,19 +144,15 @@ export class PersonalComponent implements OnInit {
   // Interface for Profile data
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private containerDialog: boolean = false;
 
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
-  @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any) {
-    $event.returnValue = true;
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.setDialogWindowDimensions();
-  }
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any) {
+  //   $event.returnValue = true;
+  // }
 
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
@@ -164,6 +160,7 @@ export class PersonalComponent implements OnInit {
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private sharedDataSvc: ShareDataService,
               private desktopMaxWidthSvc: DesktopMaxWidthService,
               private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
@@ -198,7 +195,9 @@ export class PersonalComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
-      this.listenForDesktopMaxWidth();
+      if (window.innerWidth > 600) {
+        this.containerDialog = true;
+      }
 
       this.form.disable();
 
@@ -219,15 +218,33 @@ export class PersonalComponent implements OnInit {
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onProfileImageSelected(event: any) {
     let fileType: string = 'profile';
+    console.log('PersonalComponent:onProfileImageSelected profile image selected');
 
-    this.showSpinner = true;
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.tempProfileImage = uploadedFileUrl;
-        this.showSpinner = false;
-        this.openImageCropperDialog(uploadedFileUrl, 'profile');
+    if (event.target.files[0]) {
+      this.showSpinner = true;
+      this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
+        this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
+          console.log('PersonalComponent:back from upload');
+          this.tempProfileImage = uploadedFileUrl;
+          this.showSpinner = false;
+          // this.openImageCropperDialog(uploadedFileUrl, 'profile');
+          let imageData: IprofileImage = {
+            profileID: this.profile._id,
+            imageSource: uploadedFileUrl
+          }
+          this.sharedDataSvc.setData('profileImage', imageData);
+
+          if (this.containerDialog) {
+            console.log('PersonalComponent:onProfileImageSelected opening container dialog');
+            this.openImageCropperDialog(uploadedFileUrl)
+          } else {
+            console.log('PersonalComponent:onProfileImageSelected going to profile-image');
+            this.activateBackArrowSvc.setBackRoute('profile/personal', 'forward');
+            this.router.navigateByUrl('/profile/profile-image');
+          }
+        });
       });
-    });
+    }
   }
 
 
@@ -244,6 +261,7 @@ export class PersonalComponent implements OnInit {
     this.updatePersonal(control, this.profile[control]);
   }
 
+
   onUpdateSelectItem(control: string, event) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
@@ -254,20 +272,6 @@ export class PersonalComponent implements OnInit {
       this.profile[control] = event;
     }
     this.updatePersonal(control, this.profile[control]);
-  }
-
-
-  private listenForDesktopMaxWidth() {
-    this.desktopMaxWidthSvc.desktopMaxWidth
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(maxWidth => {
-      this.desktopMaxWidth = maxWidth;
-      this.setDialogWindowDimensions();
-    }, (error) => {
-      this.sentry.logError({"message":"error listening for desktop max width","error":error});
-      this.desktopMaxWidth = 1140;
-      this.setDialogWindowDimensions();
-    });
   }
 
 
@@ -307,88 +311,20 @@ export class PersonalComponent implements OnInit {
   // TODO: can we feed the compressed file directly to image cropper without having to save temp image on S3 and then delete it?
 
   // Present image for user to crop
-  private openImageCropperDialog(imageSource: string, imageType: string): void {
+  private openImageCropperDialog(imageSource: string): void {
     let croppedImageBase64: string;
     const dialogRef = this.dialog.open(ImageDialogComponent, {
-      width: this.dialogWidthDisplay,
-      height: '90%',
-      disableClose: true,
-      data: { image: imageSource, imageType: imageType }
+      width: '400px',
+      height: '550px',
+      disableClose: true
     });
 
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      if (result) {
-        if (result !== 'canceled') {
-          croppedImageBase64 = result;
-          this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
-            this.profile.profileImageUrl = uploadedFileUrl;
-            this.updatePersonal('profileImageUrl', this.profile.profileImageUrl);
-            this.profileImageUrl = this.profile.profileImageUrl;
-            this.profileImageLabel = 'personal.component.changeProfilePic'
-            this.showSpinner = false;
-            this.profileSvc.distributeProfileUpdate(this.profile); //TODO: it seems that this is causing jump to profile page?
-            this.profileSvc.deleteTempProfileImage(this.tempProfileImage)
-            .subscribe(responseData => {
-              console.log('PersonalComponent:OpenImageCropperDialog: deleted temp profile image, data=', responseData);
-            }, error => {
-              this.sentry.logError({"message":"error deleting temp profile image","error":error});
-            })
-          })
-        } else {
-          this.showSpinner = false;
-        }
-      } else {
-        this.showSpinner = false;
-      }
+      console.log('PersonComponent:openImageCropperDialog: result=', result);
+      this.showSpinner = false;
     });
-  }
-
-
-  // Let user update their story in a dialog with a lot more space to comfortably enter
-  // private openMyStoryDialog(myStory: string): void {
-  //   const dialogRef = this.dialog.open(MyStoryDialogComponent, {
-  //     width: this.dialogWidthDisplay,
-  //     height: '80%',
-  //     disableClose: true,
-  //     data: { myStory: myStory }
-  //   });
-
-  //   dialogRef.afterClosed()
-  //   .pipe(untilComponentDestroyed(this))
-  //   .subscribe(result => {
-  //     if (result) {
-  //       if (result !== 'canceled') {
-  //         this.form.patchValue({'myStory': result});
-  //         this.onUpdateDataPoint('myStory');
-  //       } else {
-  //         this.showSpinner = false;
-  //       }
-  //     } else {
-  //       if (this.profile.myStory) {
-  //         this.form.patchValue({'myStory': result});
-  //         this.onUpdateDataPoint('myStory');
-  //       }
-  //       this.showSpinner = false;
-  //     }
-  //   }, error => {
-  //     this.sentry.logError({"message":"error closing dialog","error":error});
-  //   });
-  // }
-
-
-  // Get window size to determine how to present dialog windows
-  private setDialogWindowDimensions() {
-    this.windowWidth = window.innerWidth;
-    if (this.windowWidth > 600) {
-      if (this.windowWidth > this.desktopMaxWidth) {
-        this.dialogWidth = this.desktopMaxWidth * .95;
-      } else {
-        this.dialogWidth = this.windowWidth * .95;
-      }
-      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
-    }
   }
 
 

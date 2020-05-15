@@ -1,3 +1,14 @@
+
+.container {
+  margin-top: 50px;
+  padding: 10px;
+}
+
+.container-desktop {
+  padding: 10px;
+  margin-top: 0px;
+}
+
 /* Ensure the size of the image fit the container perfectly */
 .image-source {
   display: block;
@@ -19,6 +30,12 @@
 
 .destination {
   margin-top: 10px;
+}
+
+.button {
+  margin-top: 10px;
+  float: left;
+  margin-right: 10px;
 }
 
 .cropper-crop-box, .cropper-view-box {

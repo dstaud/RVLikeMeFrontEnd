@@ -8,6 +8,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { Injector, APP_INITIALIZER } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LOCATION_INITIALIZED } from '@angular/common';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import * as Sentry from '@sentry/browser';
@@ -142,11 +145,38 @@ export function getErrorHandler(): ErrorHandler {
       useClass: HttpInterceptorService,
       multi: true
     },
-    NgxImageCompressService
+    NgxImageCompressService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      deps: [TranslateService, Injector],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+// Make sure i18n language translation json files are loaded before proceeding.  This defaults to en so that won't
+// get strange behaviors where it just shows the i18n tag (i.e. home.component.profileBar5) for SOME items until translation kicks in
+// BUT, now can't change dynamically?
+// Do we need to use async/await here?
+export function appInitializerFactory(translate: TranslateService, injector: Injector) {
+  return () => new Promise<any>((resolve: any) => {
+    const locationInitialized = injector.get(LOCATION_INITIALIZED, Promise.resolve(null));
+      locationInitialized.then(() => {
+      const langToSet = 'en'
+      translate.setDefaultLang('en');
+      translate.use(langToSet).subscribe(() => {
+        console.info(`Successfully initialized '${langToSet}' language.'`);
+      }, err => {
+        console.error(`Problem with '${langToSet}' language initialization.'`);
+      }, () => {
+        resolve(null);
+      });
+    });
+  });
+}
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {

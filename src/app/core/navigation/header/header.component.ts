@@ -80,8 +80,6 @@ export class HeaderComponent implements OnInit {
     if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
     }
-    console.log('HeaderComponent:ngOnInit: newMessageCount=', this.newMessageCount);
-
   }
 
   ngOnDestroy() {}
@@ -133,10 +131,9 @@ export class HeaderComponent implements OnInit {
     this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      console.log('update color theme response = ', responseData);
       // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
-      console.log('HeaderComponent:selectTheme: throw error ', error);
+      console.error('HeaderComponent:selectTheme: throw error ', error);
       throw new Error(error);
     });
   }

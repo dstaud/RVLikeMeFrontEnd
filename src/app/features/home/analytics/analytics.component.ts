@@ -59,7 +59,6 @@ export class AnalyticsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('AnalyticsComponent:ngOnInit:')
     this.listenForLikeMeCounts();
 
     this.listenForGroupByCounts(this.control);
@@ -85,7 +84,6 @@ export class AnalyticsComponent implements OnInit {
     this.groupByCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
-      console.log('AnalyticsComponent:listenForGroupByCounts: data=', counts);
       if (counts[control][0]._id !== '' && this.controlLegends.length === 0) {
 
         this.processCounts(control, counts);
@@ -94,7 +92,7 @@ export class AnalyticsComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      console.log('AnalyticsComponent:listenForGroupByCounts: error=', error);
+      console.error('AnalyticsComponent:listenForGroupByCounts: error=', error);
       this.showSpinner = false;
       throw new Error(error);
     });

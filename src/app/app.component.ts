@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
   private userConversations: Observable<Iconversation[]>;
 
-  constructor(public translateSvc: TranslateService,
+  constructor(public translate: TranslateService,
               private deviceSvc: DeviceService,
               private themeSvc: ThemeService,
               private language: LanguageService,
@@ -150,10 +150,9 @@ export class AppComponent implements OnInit {
     .subscribe(systemResult => {
       if (systemResult.length > 0) {
         this.UsingEmailSvc.setUseEmail(systemResult[0].useEmail);
-        console.log('AppComponent:getSystemConfiguration: useEmail set to', systemResult[0].useEmail);
       }
     }, error => {
-      console.log('AppComponent:getSystemConfiguration: error=', error);
+      console.error('AppComponent:getSystemConfiguration: error=', error);
     })
   }
 
@@ -164,7 +163,6 @@ export class AppComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('AppComponent:ngOnInit: Theme=', this.theme);
     });
   }
 
@@ -175,7 +173,6 @@ export class AppComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(fontData => {
       this.font = fontData.valueOf();
-      console.log('AppComponent:ngOnInit: Font=', this.font);
     });
   }
 
@@ -185,14 +182,12 @@ export class AppComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(header => {
       this.headerVisible = header.valueOf();
-      console.log('AppComponent.listenForChangeInHeaderVisibility: this.headerVisible=', this.headerVisible);
     });
 
     this.headerVisibleSvc.headerDesktopVisible$
     .pipe(untilComponentDestroyed(this))
     .subscribe(header => {
       this.headerDesktopVisible = header.valueOf();
-      console.log('AppComponent.listenForChangeInHeaderVisibility: this.headerDesktopVisible=', this.headerDesktopVisible);
     });
   }
 
@@ -282,13 +277,11 @@ export class AppComponent implements OnInit {
     this.userProfile
     // .pipe(untilComponentDestroyed(this))
     .subscribe(profile => {
-      console.log('AppComponent:ngOnInit: got new profile=', profile);
-      if (profile.language) {
-        console.log('AppComponent:ngOnInit: Setting Language to ', profile.language);
+      if (profile._id) {
         this.language.setLanguage(profile.language);
-      } else {
-        console.log('AppComponent:ngOnInit: Setting Language to default');
-        this.language.setLanguage('en');
+        // this.translate.get('init').subscribe((text:string) => {
+        //   this.language.setLanguage(profile.language);
+        //   });
       }
       if (profile.colorThemePreference) {
         this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
@@ -315,8 +308,7 @@ export class AppComponent implements OnInit {
         this.messagesSvc.getConversations();
       }
     }, (error) => {
-      console.error(error);
-      console.log('error, setting language to default');
+      console.error('AppComponent:listenForUserProfile: error listening for profile=', error);
       this.language.setLanguage('en');
       this.themeSvc.setGlobalColorTheme('light-theme');
     });

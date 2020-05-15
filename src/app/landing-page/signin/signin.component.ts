@@ -94,14 +94,6 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.windowWidth = window.innerWidth;
-
-    if (environment.production) {
-      this.privacyPolicyLink = 'https://rvlikeme.com/documents/privacy-policy.html';
-      this.termsLink = 'https://rvlikeme.com/documents/terms-of-service.html';
-    } else {
-      this.privacyPolicyLink = 'localhost:4200/documents/privacy-policy.html';
-      this.termsLink = 'localhost:4200/documents/terms-of-service.html';
-    }
   }
 
   ngOnDestroy() {};
@@ -117,14 +109,13 @@ export class SigninComponent implements OnInit {
     let sendTo = this.credentials.email;
     let toFirstName = null;
 
-    console.log('SigninComponent:onActivateEmail: token=', this.token);
+    this.showSpinner = true;
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.token)
     .subscribe(emailResult => {
-      console.log('email sent!  result=', emailResult);
+      this.showSpinner = false;
       this.shared.openSnackBar('An email was sent to ' + this.form.controls.username.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
 
       if (this.containerDialog) {
-        console.log('SigninComponent:onActivateEmail:')
         this.formCompleted = 'complete';
         this.formComplete.emit(this.formCompleted);
       } else {
@@ -132,7 +123,7 @@ export class SigninComponent implements OnInit {
         this.router.navigateByUrl('');
       }
     }, error => {
-      console.log('SigninComponent:onActivateEmail: error sending email: ', error);
+      console.error('SigninComponent:onActivateEmail: error sending email: ', error);
     })
   }
 
@@ -153,7 +144,6 @@ export class SigninComponent implements OnInit {
     if (document === 'privacy') {
       if (this.windowWidth > 600) {
         this.openPrivacyPolicyDialog(this.containerDialog, (result: string) => {
-          console.log('SigninComponent:onDocument: back from dialog. result=', result);
           if (result === 'complete') {
             this.activateBackArrowSvc.setBackRoute('signin', 'forward');
             this.router.navigateByUrl('/privacy-policy');
@@ -166,7 +156,6 @@ export class SigninComponent implements OnInit {
     } else if (document === 'terms') {
       if (this.windowWidth > 600) {
         this.openTermsOfServiceDialog(this.containerDialog, (result: string) => {
-          console.log('SigninComponent:onDocument: back from dialog. result=', result);
           if (result === 'complete') {
             this.activateBackArrowSvc.setBackRoute('signin', 'forward');
             this.router.navigateByUrl('/terms-of-service');
@@ -206,28 +195,26 @@ export class SigninComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       // Once logged in, get the users profile for distribution throughout the app
-      console.log('SigninComponent:onSubmit response=', responseData);
       if (responseData.admin) {
         this.authSvc.setUserToAdmin(true);
       }
       this.nbrLogins = responseData.nbrLogins;
       this.profileSvc.getProfile();
-      this.listenForUserProfile();
+      this.authSvc.setUserToAuthorized(true);
+      this.showSpinner = false;
+      this.handleReturnRoute();
     }, error => {
       this.showSpinner = false;
       this.authSvc.setUserToAuthorized(false);
-      console.log('in error!', error);
       this.httpError = true;
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else if (error.status === 403) {
         this.notActive = true;
-        console.log('SigninComponenet:onSubmit not active, token=', JSON.parse(error.message).token);
         this.token = JSON.parse(error.message).token
         this.httpErrorText = 'This account is not yet active.  Please check for an email from rvlikeme.com to activate.  If you do not see the email, look in your spam or trash folders.';
       } else {
         this.httpErrorText = 'Please connect to Internet and retry';
-        console.warn('ERROR: ', error);
         if (error.message.includes('Unknown Error')) {
           this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
           this.httpErrorText = 'Please connect to Internet and try again';
@@ -244,10 +231,9 @@ export class SigninComponent implements OnInit {
     let params: Idashboard = {
       nbrLogins: this.nbrLogins
     }
-    console.log('SigninComponent:handleReturnRoute: in handle return route=', this.returnRoute);
+
     if (this.returnRoute && this.returnRoute !== '') {
       // User booked-marked a specific page which can route too after authorization
-      console.log('SigninComponent:handleReturnRoute: return route=', this.returnRoute);
       this.formCompleted = 'complete';
       this.formComplete.emit(this.formCompleted);
       this.activateBackArrowSvc.setBackRoute('');
@@ -263,30 +249,6 @@ export class SigninComponent implements OnInit {
         this.activateBackArrowSvc.setBackRoute('');
       }
     }
-  }
-
-
-  private listenForUserProfile() {
-    this.userProfile = this.profileSvc.profile;
-    this.userProfile
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(profileResult => {
-      this.profile = profileResult;
-      this.setLanguage(profileResult);
-      this.setColorTheme(profileResult);
-      this.authSvc.setUserToAuthorized(true);
-      this.showSpinner = false;
-      this.handleReturnRoute();
-
-    }, error => {
-      console.error('SigninComponent:onSubmit: Error authorizing ', error);
-      this.showSpinner = false;
-      this.httpError = true;
-      this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
-      this.language.setLanguage('en');
-      this.themeSvc.setGlobalColorTheme('light-theme')
-      this.shared.openSnackBar('It looks like you are having trouble connecting to the Internet','error', 5000);
-    });
   }
 
 
@@ -335,10 +297,8 @@ export class SigninComponent implements OnInit {
   // Set user chosen language or set to default of US English
   private setLanguage(profile) {
     if (profile.language) {
-      console.log('Signin, set language to ', profile.language);
       this.language.setLanguage(profile.language);
     } else {
-      console.log('Signin, set language to default');
       this.language.setLanguage('en');
     }
   }

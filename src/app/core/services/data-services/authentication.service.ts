@@ -124,7 +124,6 @@ export class AuthenticationService {
       map((data: ItokenResponse) => {
         if (data.token) {
           this.saveToken(data.token);
-          console.log('AuthenticationService:login: TOKEN=', data.token);
         }
         this.sentryMonitorSvc.monitorUser(user);
         return data;
@@ -143,7 +142,6 @@ export class AuthenticationService {
   registerUser(user: ItokenPayload, firstName: string): Observable<any> {
     let base;
     let params = '{"credentials":' + JSON.stringify(user) + ',"firstName":"' + firstName + '"}';
-    console.log('AuthenticationService:registerUser: params=', params);
     base = this.http.post(`/api/register`, params);
     const request = base.pipe(
       map((data: ItokenResponse) => {
@@ -181,7 +179,6 @@ export class AuthenticationService {
     const token = this.getToken();
     let payload;
     if (token) {
-      console.log('token=', token);
       payload = token.split('.')[1];
       payload = window.atob(payload);
       this.sentryMonitorSvc.monitorUser(JSON.parse(payload));

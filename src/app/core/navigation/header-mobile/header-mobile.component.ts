@@ -111,7 +111,6 @@ export class HeaderMobileComponent implements OnInit {
   returnToBackRoute() {
     let route = '/' + this.returnRoute
     this.activateBackArrowSvc.setBackRoute('', 'backward');
-    console.log('HeaderMobileComponent:returnToBackRoute: routing to ', route);
     if (route === '/') {
       this.headerVisibleSvc.toggleHeaderVisible(false);
     }
@@ -169,7 +168,6 @@ export class HeaderMobileComponent implements OnInit {
   // Set arrow based on device
   private setDeviceSettings() {
     this.device = this.deviceSvc.device;
-    console.log('DEVICE=', this.device)
 
     if (this.device === 'iPhone') {
       // arrow_back_ios icon not coming up at all regardless of this if
@@ -187,7 +185,6 @@ export class HeaderMobileComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       returnStack = data;
-      console.log('HeaderMobileComonent:setReturnRoute: return stack=', returnStack);
       i = returnStack.length - 1;
       if (returnStack.length > 0) {
         if (returnStack[i].substring(0, 1) === '*') {
@@ -203,7 +200,6 @@ export class HeaderMobileComponent implements OnInit {
           this.showBackArrow = false;
           this.autoRoute = false;
       }
-        console.log('HeaderMobileComonent:setReturnRoute: return route=', this.returnRoute);
     }, error => {
       console.error('HeaderMobileComponent:setReturnRoute: error setting return route ', error);
     });

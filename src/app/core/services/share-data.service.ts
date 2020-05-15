@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { IuserProfile } from './data-services/profile.service';
 
 export interface IforumsMain {
@@ -116,6 +116,12 @@ export interface Ipost {
   createdAt: Date
 }
 
+export interface IprofileImage {
+  profileID: string,
+  imageSource: string,
+  newImageUrl?: string
+}
+
 export interface IshareData {
   forumsMain: IforumsMain,
   myStory: ImyStory,
@@ -126,7 +132,8 @@ export interface IshareData {
   newbieTopic: InewbieTopic,
   signin: Isignin,
   dashboard: Idashboard,
-  post: Ipost
+  post: Ipost,
+  profileImage: IprofileImage
 }
 
 
@@ -221,6 +228,11 @@ export class ShareDataService {
       photoUrl: null,
       createdBy: null,
       createdAt: null
+    },
+    profileImage: {
+      profileID: null,
+      imageSource: null,
+      newImageUrl: null
     }
   }
 
@@ -228,13 +240,9 @@ export class ShareDataService {
 
   setData(type: string, data:any) {
       this.data[type] = data;
-      console.log('ShareDataSvc:setData: type=' + type, ', data=', this.data[type]);
-      console.log('ShareDataSvc:setData: all data=', this.data);
   }
 
   getData(type: string):any {
-      console.log('ShareDataSvc:getData: type=', type, ' data.type=', this.data[type]);
-      console.log('ShareDataSvc:getData: all data=', this.data);
       return this.data[type];
   }
 }
