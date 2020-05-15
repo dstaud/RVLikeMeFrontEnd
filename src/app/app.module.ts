@@ -50,6 +50,10 @@ import { PasswordResetComponent } from './landing-page/password-reset/password-r
 import { RegisterDesktopDialogComponent } from './dialogs/register-desktop-dialog/register-desktop-dialog.component';
 import { SigninDesktopDialogComponent } from './dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { FooterDesktopComponent } from './core/navigation/footer-desktop/footer-desktop.component';
+import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
+import { PrivacyPolicyDialogComponent } from './dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
+import { TermsDialogComponent } from './dialogs/terms-dialog/terms-dialog.component';
 
 
 Sentry.init({
@@ -100,7 +104,11 @@ export function getErrorHandler(): ErrorHandler {
     PasswordResetComponent,
     RegisterDesktopDialogComponent,
     SigninDesktopDialogComponent,
-    FooterDesktopComponent
+    FooterDesktopComponent,
+    PrivacyPolicyComponent,
+    TermsOfServiceComponent,
+    PrivacyPolicyDialogComponent,
+    TermsDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

@@ -16,7 +16,9 @@
     "settings": "ajustes",
     "install": "instalar aplicación",
     "subscribe": "suscribirse notificaciones",
-    "unsubscribe": "darse de baja de notificacioness"
+    "unsubscribe": "darse de baja de notificacioness",
+    "privacy": "Política de privacidad",
+    "terms": "Términos de servicio"
   },
   "register.component": {
     "header": "Registrarse"

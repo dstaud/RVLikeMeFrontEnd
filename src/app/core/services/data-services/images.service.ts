@@ -4,7 +4,6 @@ import { HttpClient} from '@angular/common/http';
 import { WindowService } from './../window.service';
 import { environment } from '@environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +24,7 @@ export class ImageService {
   }
 
   uploadProfileImageBase64(image: string) {
-    let imagePackage = {'image': image}
+    let imagePackage = {"image":image}
     return this.http.post(`${this.dataSvcURL}/upload-image`, imagePackage,
     { headers: { Authorization: `Bearer ${this.getToken()}` },
     reportProgress: true,

@@ -6,7 +6,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
-import { ShareDataService, Isignin } from './../core/services/share-data.service';
+import { ShareDataService, Isignin } from '@services/share-data.service';
 
 import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';

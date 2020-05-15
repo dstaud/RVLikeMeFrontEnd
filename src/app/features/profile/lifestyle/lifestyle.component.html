@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="get-image">
-    <button [disabled]="lifestyleImageUrls.length === 3" mat-button (click)="fileInput.click()">
+    <button [disabled]="lifestyleImageUrls.length === 3 || showSpinner" mat-button (click)="fileInput.click()">
       <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
       <input #fileInput type="file"
               (change)="onLifestyleImageSelected($event)"

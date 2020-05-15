@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { environment } from '@environments/environment';
 
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
@@ -15,6 +17,8 @@ import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
 import { SharedComponent } from '@shared/shared.component';
+import { PrivacyPolicyDialogComponent } from '@dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
+import { TermsDialogComponent } from '@dialogs/terms-dialog/terms-dialog.component';
 
 
 @Component({
@@ -37,6 +41,8 @@ export class SigninComponent implements OnInit {
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
   token: string;
+  privacyPolicyLink: string;
+  termsLink: string;
 
   showSpinner = false;
   showSignin = true;
@@ -46,6 +52,7 @@ export class SigninComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
   private returnRoute: string = '';
   private nbrLogins: number;
+  private windowWidth: number;
   private credentials: ItokenPayload = {
     _id: '',
     email: '',
@@ -66,6 +73,7 @@ export class SigninComponent implements OnInit {
               private emailSmtpSvc: EmailSmtpService,
               private themeSvc: ThemeService,
               private language: LanguageService,
+              private dialog: MatDialog,
               fb: FormBuilder) {
               this.form = fb.group({
                 username: new FormControl({value: '', disabled: this.showSpinner},
@@ -85,6 +93,15 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.windowWidth = window.innerWidth;
+
+    if (environment.production) {
+      this.privacyPolicyLink = 'https://rvlikeme.com/documents/privacy-policy.html';
+      this.termsLink = 'https://rvlikeme.com/documents/terms-of-service.html';
+    } else {
+      this.privacyPolicyLink = 'localhost:4200/documents/privacy-policy.html';
+      this.termsLink = 'localhost:4200/documents/terms-of-service.html';
+    }
   }
 
   ngOnDestroy() {};
@@ -119,6 +136,12 @@ export class SigninComponent implements OnInit {
     })
   }
 
+  onBackFromReset(event: any) {
+    this.showPasswordReset = false;
+    this.showSignin = true;
+  }
+
+
    // For desktop only, have cancel button because in a dialog
    onCancel() {
     this.formCompleted = 'canceled';
@@ -126,9 +149,34 @@ export class SigninComponent implements OnInit {
   }
 
 
-  onBackFromReset(event: any) {
-    this.showPasswordReset = false;
-    this.showSignin = true;
+  onDocument(document) {
+    if (document === 'privacy') {
+      if (this.windowWidth > 600) {
+        this.openPrivacyPolicyDialog(this.containerDialog, (result: string) => {
+          console.log('SigninComponent:onDocument: back from dialog. result=', result);
+          if (result === 'complete') {
+            this.activateBackArrowSvc.setBackRoute('signin', 'forward');
+            this.router.navigateByUrl('/privacy-policy');
+          }
+        });
+      } else {
+        this.activateBackArrowSvc.setBackRoute('signin', 'forward');
+        this.router.navigateByUrl('/privacy-policy');
+      }
+    } else if (document === 'terms') {
+      if (this.windowWidth > 600) {
+        this.openTermsOfServiceDialog(this.containerDialog, (result: string) => {
+          console.log('SigninComponent:onDocument: back from dialog. result=', result);
+          if (result === 'complete') {
+            this.activateBackArrowSvc.setBackRoute('signin', 'forward');
+            this.router.navigateByUrl('/terms-of-service');
+          }
+        });
+      } else {
+        this.activateBackArrowSvc.setBackRoute('signin', 'forward');
+        this.router.navigateByUrl('/terms-of-service');
+      }
+    }
   }
 
 
@@ -238,6 +286,38 @@ export class SigninComponent implements OnInit {
       this.language.setLanguage('en');
       this.themeSvc.setGlobalColorTheme('light-theme')
       this.shared.openSnackBar('It looks like you are having trouble connecting to the Internet','error', 5000);
+    });
+  }
+
+
+  private openPrivacyPolicyDialog(containerDialog, cb: CallableFunction): void {
+    const dialogRef = this.dialog.open(PrivacyPolicyDialogComponent, {
+      width: '400px',
+      height: '550px',
+      disableClose: true,
+      data: {containerDialog: true}
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+        cb(result);
+    });
+  }
+
+
+  private openTermsOfServiceDialog(containerDialog, cb: CallableFunction): void {
+    const dialogRef = this.dialog.open(TermsDialogComponent, {
+      width: '400px',
+      height: '550px',
+      disableClose: true,
+      data: {containerDialog: true}
+    });
+
+    dialogRef.afterClosed()
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(result => {
+        cb(result);
     });
   }
 

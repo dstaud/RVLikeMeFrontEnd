@@ -88,25 +88,25 @@ export class HeaderComponent implements OnInit {
 
   changeProfileImage() {
     this.router.navigateByUrl('/profile/personal');
-    this.activateBackArrowSvc.setBackRoute('/profile/main');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
   }
 
 
   updateProfile() {
     this.router.navigateByUrl('/profile/main');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 
 
   changePassword() {
     this.router.navigateByUrl('/credentials/change-password');
-    this.activateBackArrowSvc.setBackRoute('/home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 
 
   changeUsername() {
     this.router.navigateByUrl('/credentials/change-username');
-    this.activateBackArrowSvc.setBackRoute('/home/dashboard');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 
 

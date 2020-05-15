@@ -71,19 +71,19 @@ export class HeaderMobileComponent implements OnInit {
 
   onChangeProfileImage() {
     this.router.navigateByUrl('/profile/personal');
-    this.activateBackArrowSvc.setBackRoute('/profile/main', 'forward');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
   }
 
 
   onChangePassword() {
     this.router.navigateByUrl('/credentials/change-password');
-    this.activateBackArrowSvc.setBackRoute('/home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 
 
   onChangeUsername() {
     this.router.navigateByUrl('/credentials/change-username');
-    this.activateBackArrowSvc.setBackRoute('/home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 
 

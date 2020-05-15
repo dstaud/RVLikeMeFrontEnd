@@ -16,7 +16,9 @@
     "settings": "settings",
     "install": "install app",
     "subscribe": "subscribe notifications",
-    "unsubscribe": "unsubscribe notifications"
+    "unsubscribe": "unsubscribe notifications",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
   },
   "register.component": {
     "header": "Register"

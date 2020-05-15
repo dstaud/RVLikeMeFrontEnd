@@ -11,6 +11,8 @@ import { AdminComponent } from './features/admin/admin.component';
 import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
 import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
 import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
+import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
+import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   { path: 'connections',
@@ -69,6 +71,8 @@ const routes: Routes = [
   { path: 'password-reset', component: PasswordResetComponent },
   { path: 'learn-more', component: LearnMoreComponent },
   { path: 'register-confirm', component: RegisterConfirmComponent },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: '', component: LandingPageComponent, data: { animationState: 'One' } },
   { path: '**', component: PageNotFoundComponent }
 ];

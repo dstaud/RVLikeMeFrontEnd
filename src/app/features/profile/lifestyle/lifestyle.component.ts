@@ -208,10 +208,12 @@ export class LifestyleComponent implements OnInit {
     let fileType: string = 'lifestyle';
 
     this.showSpinner = true;
+    this.form.disable();
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], uploadedFileUrl);
         this.showSpinner = false;
+        this.form.enable();
       });
     });
   }

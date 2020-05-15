@@ -7,6 +7,14 @@
     <mat-icon fontSet="material-icons-outlined" >rv_hookup</mat-icon>
     <span class="nav-caption">{{ "menu.about" | translate }}</span>
   </a>
+  <a mat-menu-item id="routePrivacty" (click)="onDocument('privacy')">
+    <mat-icon fontSet="material-icons-outlined" >policy</mat-icon>
+    <span class="nav-caption">{{ "menu.privacy" | translate }}</span>
+  </a>
+  <a mat-menu-item id="routePrivacty" (click)="onDocument('terms')">
+    <mat-icon fontSet="material-icons-outlined" >policy</mat-icon>
+    <span class="nav-caption">{{ "menu.terms" | translate }}</span>
+  </a>
   <a *ngIf="userAdmin" mat-menu-item id="routeAdmin" (click)="onAdmin()">
     <mat-icon fontSet="material-icons-outlined" >settings</mat-icon>
     <span class="nav-caption">Administrator</span>

@@ -59,8 +59,8 @@
     <br>
     <div>
       <span class="legal">Logging in means that you agree to
-        our <a class="hyperlink" href="https://rvlikeme.com/privacy-policy">Privacy Policy</a>
-        and <a class="hyperlink" href="https://rvlikeme.com/terms">Terms of Service</a></span>
+        our <a class="hyperlink" href="{{ privacyPolicyLink }}" (click)="onDocument('privacy')">Privacy Policy</a>
+        and <a class="hyperlink" href="{{ termsLink }}" (click)="onDocument('terms')">Terms of Service</a></span>
     </div>
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 
