@@ -23,7 +23,6 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-
   //  Provide access to methods on the Posts component
   @ViewChild(PostsComponent)
   public posts: PostsComponent;

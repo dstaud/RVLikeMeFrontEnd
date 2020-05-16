@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
+import { CommonModule } from '@angular/common';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -13,6 +14,12 @@ import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-p
 import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
 import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
 import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-policy.component';
+
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',
+  scrollOffset: [0, 50],
+};
 
 const routes: Routes = [
   { path: 'connections',
@@ -78,7 +85,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [CommonModule, RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -24,3 +24,48 @@
   <button mat-stroked-button class="button" (click)="onSignIn()">Log in</button>
   <button mat-stroked-button class="button" (click)="onLearnMore()">What is RV Like Me?</button>
 </div>
+<br>
+<mat-divider></mat-divider>
+<div class="marketing-container">
+  <p class="marketing mat-title">Some of the features you will find inside RV Like Me</p>
+  <div fxLayout="row wrap"
+        fxLayout.lt-sm="column"
+        fxLayoutGap="10px"
+        fxLayoutAlign="center">
+    <ng-container>
+      <app-rvlm-card-graphic
+        *ngIf="cardNbr !== 1"
+        class="card"
+        fxFlex="0 1 calc(33.3% - 20px)"
+        fxFlex.lt-md="0 1 calc(50% - 20px)"
+        fxFlex.lt-sm="100%"
+        (click)="onRegisterUser()">
+      </app-rvlm-card-graphic>
+      <app-rvlm-card-likeme
+        *ngIf="cardNbr !== 2"
+        class="card"
+        fxFlex="0 1 calc(33.3% - 20px)"
+        fxFlex.lt-md="0 1 calc(50% - 20px)"
+        fxFlex.lt-sm="100%"
+        (click)="onRegisterUser()">
+      </app-rvlm-card-likeme>
+      <app-rvlm-card-newbie
+        *ngIf="cardNbr !== 3"
+        class="card"
+        fxFlex="0 1 calc(33.3% - 20px)"
+        fxFlex.lt-md="0 1 calc(50% - 20px)"
+        fxFlex.lt-sm="100%"
+        (click)="onRegisterUser()">
+      </app-rvlm-card-newbie>
+      <app-rvlm-card-story
+        *ngIf="cardNbr !== 4"
+        class="card"
+        fxFlex="0 1 calc(33.3% - 20px)"
+        fxFlex.lt-md="0 1 calc(50% - 20px)"
+        fxFlex.lt-sm="100%"
+        (click)="onRegisterUser()">
+      </app-rvlm-card-story>
+    </ng-container>
+  </div>
+
+</div>

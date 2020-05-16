@@ -113,7 +113,8 @@ export interface Ipost {
   body: string,
   photoUrl: string,
   createdBy: string,
-  createdAt: Date
+  createdAt: Date,
+  fragment?: string
 }
 
 export interface IprofileImage {
@@ -227,7 +228,8 @@ export class ShareDataService {
       body: null,
       photoUrl: null,
       createdBy: null,
-      createdAt: null
+      createdAt: null,
+      fragment: null
     },
     profileImage: {
       profileID: null,

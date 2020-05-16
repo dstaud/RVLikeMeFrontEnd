@@ -18,7 +18,7 @@
 
       <main [@triggerName]="prepareRoute(outlet)" class="container mat-app-background"
             [ngClass]="{
-                      'bottom-bar-spacing': !headerDesktopVisible && userAuthorized && !iphoneModelxPlus,
+                      'bottom-bar-spacing': userAuthorized && !iphoneModelxPlus,
                       'bottom-bar-spacing-xplus': userAuthorized && iphoneModelxPlus
                     }">
         <router-outlet #outlet="outlet" (activate)="onActivate($event)"></router-outlet>

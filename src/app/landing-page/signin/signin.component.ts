@@ -256,7 +256,7 @@ export class SigninComponent implements OnInit {
     const dialogRef = this.dialog.open(PrivacyPolicyDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true,
+      disableClose: false,
       data: {containerDialog: true}
     });
 
@@ -272,7 +272,7 @@ export class SigninComponent implements OnInit {
     const dialogRef = this.dialog.open(TermsDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true,
+      disableClose: false,
       data: {containerDialog: true}
     });
 

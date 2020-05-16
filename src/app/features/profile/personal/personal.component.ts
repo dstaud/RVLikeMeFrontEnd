@@ -325,7 +325,8 @@ export class PersonalComponent implements OnInit {
     const dialogRef = this.dialog.open(ImageDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true
+      disableClose: true,
+      hasBackdrop: true
     });
 
     dialogRef.afterClosed()

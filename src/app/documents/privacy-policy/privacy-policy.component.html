@@ -1,6 +1,5 @@
 <div ngClass="mat-app-background mat-body-1"
-    [ngClass.xs]="{'container': true, 'container-desktop': false}"
-    [ngClass.md]="{'container': false, 'container-desktop': true}">
+    [ngClass]="containerDialog? 'container-desktop' : 'container'">
   <a href=""></a> <!-- prevents auto-scrolling to bottom of page for a long story, because will scroll to first anchor tag it finds -->
   <h1>Privacy Policy</h1>
   <p>RV Like Me believes it is important to protect and respect the privacy of our members, users, and visitors. This Privacy Policy covers our treatment of personally identifiable information collected by rvlikeme.com.</p>

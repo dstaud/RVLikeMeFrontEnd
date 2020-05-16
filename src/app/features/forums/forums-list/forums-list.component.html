@@ -8,8 +8,7 @@
     </div>
   </div>
 
-  <!-- TODO: Don't show no groups unless really no groups.  Right now shows and then jumps to groups when arrive -->
-  <div *ngIf="groupListDisplayAttributes.length === 0" class="group-list">
+  <div *ngIf="groupListDisplayAttributes.length === 0 && !showSpinner" class="group-list">
     <div><span class="mat-title">{{ 'forums.component.myGroups' | translate }}</span></div>
       <p>{{ 'forums.component.noGroups1' | translate }}.
         {{ 'forums.component.noGroups2' | translate }}
@@ -20,5 +19,4 @@
       </p>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
-
 </div>

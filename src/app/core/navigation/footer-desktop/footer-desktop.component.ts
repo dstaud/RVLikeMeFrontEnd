@@ -37,7 +37,8 @@ export class FooterDesktopComponent implements OnInit {
     const dialogRef = this.dialog.open(PrivacyPolicyDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true,
+      disableClose: false,
+      hasBackdrop: true,
       data: {containerDialog: true}
     });
 
@@ -53,7 +54,8 @@ export class FooterDesktopComponent implements OnInit {
     const dialogRef = this.dialog.open(TermsDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true,
+      disableClose: false,
+      hasBackdrop: true,
       data: {containerDialog: true}
     });
 

@@ -90,12 +90,6 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  updateProfile() {
-    this.router.navigateByUrl('/profile/main');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-  }
-
-
   changePassword() {
     this.router.navigateByUrl('/credentials/change-password');
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
@@ -123,6 +117,11 @@ export class HeaderComponent implements OnInit {
   }
 
 
+  onToolbarIcon() {
+    this.router.navigateByUrl('/about');
+  }
+
+
   selectTheme(theme: string) {
     this.lightTheme = !this.lightTheme;
 
@@ -140,5 +139,11 @@ export class HeaderComponent implements OnInit {
 
   public onToggleSidenav = () => {
     this.sidenavToggle.emit();
+  }
+
+
+  updateProfile() {
+    this.router.navigateByUrl('/profile/main');
+    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 }

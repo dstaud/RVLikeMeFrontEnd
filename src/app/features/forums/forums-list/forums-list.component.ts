@@ -21,6 +21,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 export class ForumsListComponent implements OnInit {
   groupListDisplayAttributes = [];
   theme: string;
+  gotProfile: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -51,6 +52,8 @@ export class ForumsListComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      this.showSpinner = true;
+
       this.listenForColorTheme();
 
       this.listenForUserProfile();
@@ -158,9 +161,11 @@ export class ForumsListComponent implements OnInit {
       this.profile = data;
       if (this.profile._id) {
         this.groupListDisplayAttributes = this.getGroups();
+        this.showSpinner = false;
       }
     }, error => {
       console.error('ForumsListComponent:listenForUserProfile: unable to get profile. error =', error);
+      this.showSpinner = false;
       throw new Error(error);
     });
   }

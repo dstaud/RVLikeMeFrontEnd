@@ -18,6 +18,7 @@ import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog
 })
 export class LandingPageComponent implements OnInit {
   landingImage: string;
+  cardNbr: number;
   logoClass: string;
   logoDesktopLeft: string;
   showLearnMoreDesktop: boolean = false;
@@ -45,6 +46,9 @@ export class LandingPageComponent implements OnInit {
   ngOnInit() {
     // Randomly pick one of 3 landing page RV images
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
+
+    this.cardNbr = Math.floor(Math.random() * 4) + 1;
+    console.log('LandingPageCOmponent:ngOnInit: card number=', this.cardNbr);
 
     this.setImageBasedOnScreenWidth();
 
@@ -141,7 +145,8 @@ export class LandingPageComponent implements OnInit {
     const dialogRef = this.dialog.open(RegisterDesktopDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true
+      disableClose: true,
+      hasBackdrop: true
     });
 
     dialogRef.afterClosed()
@@ -155,7 +160,8 @@ export class LandingPageComponent implements OnInit {
     const dialogRef = this.dialog.open(SigninDesktopDialogComponent, {
       width: '400px',
       height: '550px',
-      disableClose: true
+      disableClose: true,
+      hasBackdrop: true
     });
 
     dialogRef.afterClosed()

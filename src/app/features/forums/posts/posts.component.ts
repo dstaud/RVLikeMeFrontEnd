@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@an
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { ViewportScroller } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -29,7 +30,8 @@ export interface Iposts {
   postPhotoUrl: string,
   commentCount: number,
   reactionCount: number,
-  createdAt: Date
+  createdAt: Date,
+  fragment?: string
 }
 
 @Component({
@@ -71,7 +73,6 @@ export interface Iposts {
 })
 
 export class PostsComponent implements OnInit {
-
   @Input('colorTheme') theme: string;
 
   // Provide access to methods on comments component and update post component
@@ -89,7 +90,6 @@ export class PostsComponent implements OnInit {
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   posts: Array<Iposts> = [];
   comments: Array<Array<Icomments>> = [];
-  currentPostRow: number;
   liked: Array<boolean> = [];
   userNewbie: boolean = false;
   forumType: string;
@@ -103,6 +103,7 @@ export class PostsComponent implements OnInit {
   showPostComments: Array<boolean> = [];
   showUpdatePost: Array<boolean> = [];
   startCommentsIndex: Array<number> = [];
+  fragmentLink="lk3";
 
   private windowWidth: any;
   private dialogWidth: number;
@@ -110,6 +111,7 @@ export class PostsComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private desktopMaxWidth: number;
+  private fragmentNbr: number = 0;
 
   constructor(private forumSvc: ForumService,
               private profileSvc: ProfileService,
@@ -119,6 +121,7 @@ export class PostsComponent implements OnInit {
               private desktopMaxWidthSvc: DesktopMaxWidthService,
               private router: Router,
               private sentry: SentryMonitorService,
+              private viewportScroller: ViewportScroller,
               private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -129,6 +132,9 @@ export class PostsComponent implements OnInit {
 
   ngOnDestroy() {}
 
+  onScrollToTop() {
+    this.viewportScroller.scrollToAnchor('top');
+  }
 
   // Get all posts for group passed from forums component.
   getPosts(groupID: string, forumType: string, profileImageUrl: string, displayName: string): void {
@@ -177,8 +183,8 @@ export class PostsComponent implements OnInit {
 
 
   // When user clicks to show all comments, set the start index to zero
-  onShowAllComments() {
-    this.startCommentsIndex[this.currentPostRow] = 0;
+  onShowAllComments(row) {
+    this.startCommentsIndex[row] = 0;
   }
 
 
@@ -240,7 +246,6 @@ export class PostsComponent implements OnInit {
       this.showPostComments.unshift(false);
       this.startCommentsIndex.unshift(0);
       this.showPosts = true;
-      this.currentPostRow = 0;
     }
     this.addPostOpen = this.addPostOpen === 'out' ? 'in' : 'out';
   }
@@ -305,10 +310,16 @@ export class PostsComponent implements OnInit {
   private createPostsArrayEntry(post): Iposts {
     let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
     let photoUrl: string = '';
+    let fragmentLink: string;
+
 
     if (post.photoUrl !== 'undefined') {
       photoUrl = post.photoUrl;
     }
+
+    fragmentLink = 'lk' + this.fragmentNbr;
+    this.fragmentNbr++;
+
     let newPost: Iposts = {
       _id: post._id,
       createdBy: post.createdBy,
@@ -318,7 +329,8 @@ export class PostsComponent implements OnInit {
       postPhotoUrl: photoUrl,
       commentCount: post.comments.length,
       reactionCount: post.reactions.length,
-      createdAt: post.createdAt
+      createdAt: post.createdAt,
+      fragment: fragmentLink
     }
 
     return newPost;

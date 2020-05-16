@@ -632,6 +632,6 @@
     "questions": "Si tiene alguna pregunta o sugerencia para mejorar esta aplicación web, no dude en ponerse en contacto conmigo en",
     "body1": "Cuando comencé RVing estaba buscando un proyecto para mejorar mis habilidades de desarrollo de software y se me ocurrió la idea de RV Like Me; una aplicación web donde los usuarios pueden encontrar y conectarse más fácilmente con otros RVers que RV como lo hacen.",
     "body2": "Lo que hace que esta aplicación web funcione es su información de perfil. Entiendo que puede ser incómodo proporcionar esta información, pero sin ella, esta aplicación no es muy útil.",
-    "body3": "Por eso no necesito que te identifiques. En su lugar, elige un nombre para mostrar y eso es todo lo que tengo en mi base de datos y todos los demás usuarios lo verán."
+    "body3": "Por eso no necesito que te identifiques. En su lugar, elige un nombre para mostrar, de modo que los únicos nombres que tengo en mi base de datos son su nombre y su nombre para mostrar, y eso es todo lo que verán los demás usuarios."
   }
 }

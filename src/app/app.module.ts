@@ -55,6 +55,10 @@ import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-polic
 import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
 import { PrivacyPolicyDialogComponent } from './dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
 import { TermsDialogComponent } from './dialogs/terms-dialog/terms-dialog.component';
+import { GraphicComponent } from './landing-page/cards/graphic/graphic.component';
+import { LikemeComponent } from './landing-page/cards/likeme/likeme.component';
+import { NewbieComponent } from './landing-page/cards/newbie/newbie.component';
+import { StoryComponent } from './landing-page/cards/story/story.component';
 
 
 Sentry.init({
@@ -107,7 +111,11 @@ export function getErrorHandler(): ErrorHandler {
     PrivacyPolicyComponent,
     TermsOfServiceComponent,
     PrivacyPolicyDialogComponent,
-    TermsDialogComponent
+    TermsDialogComponent,
+    GraphicComponent,
+    LikemeComponent,
+    NewbieComponent,
+    StoryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

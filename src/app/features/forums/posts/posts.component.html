@@ -1,4 +1,8 @@
 <div class="container mat-body-1">
+  <div id="top"></div>
+  <!-- <a [routerLink]='"."' [fragment]="fragmentLink">jump to link {{fragmentLink}}</a> -->
+  <!-- Apparently there are bugs with anchor scrolling in Angular especially with components nested in sidenav and worse if route animations
+  So, will have to wait on this -->
   <div [hidden]="forumType === 'topic' && userNewbie">
     <div id="profileImage" class="profile-image">
       <img class="image"
@@ -20,7 +24,6 @@
     </app-rvlm-add-post>
   </div>
   <div class="posts-container">
-    <mat-divider *ngIf="posts.length > 0"></mat-divider>
     <div *ngIf="showFirstPost && forumType === 'group'" class="first-post">
       {{ 'posts.component.firstPost' | translate }}
     </div>
@@ -28,7 +31,7 @@
       {{ 'posts.component.firstPostTopic' | translate }}
     </div>
     <div [hidden]="!showPosts">
-        <div *ngFor="let post of posts; let i=index">
+        <div *ngFor="let post of posts; let i=index" [attr.id]="posts[i].fragment">
           <div class="posts">
             <div>
               <div *ngIf="posts[i].createdBy === userID">
@@ -118,7 +121,7 @@
                                   [displayName]="displayName"
                                   [profileImageUrl]="profileImageUrl"
                                   [userID]="userID"
-                                  (showAllComments)="onShowAllComments()">
+                                  (showAllComments)="onShowAllComments(i)">
               </app-rvlm-comments>
             </div>
             <mat-divider></mat-divider>
