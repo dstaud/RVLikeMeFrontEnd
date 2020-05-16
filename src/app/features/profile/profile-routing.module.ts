@@ -10,6 +10,7 @@ import { MainComponent } from './main/main.component';
 import { YourStoryComponent } from './your-story/your-story.component';
 import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
 import { ImageCropperComponent } from './image-cropper/image-cropper.component';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 
 const routes: Routes = [
   { path: '', component:ProfileComponent,
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'interests', component: InterestsComponent },
       { path: 'mystory', component: YourStoryComponent },
       { path: 'profile-image', component: ImageCropperComponent },
+      { path: 'image-viewer', component: ImageViewerComponent }
     ]
   },
   { path: '**', component: PageNotFoundComponent }

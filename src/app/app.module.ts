@@ -38,7 +38,6 @@ import { WindowService } from '@services/window.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
-import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
@@ -96,7 +95,6 @@ export function getErrorHandler(): ErrorHandler {
     LearnMoreComponent,
     OtherDialogComponent,
     InstallDialogComponent,
-    ImageViewDialogComponent,
     ForumsListComponent,
     SuggestTopicDialogComponent,
     AdminComponent,

@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +17,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { RigService, IrigData } from '@services/data-services/rig.service';
 import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { ShareDataService, IviewImage } from '@services/share-data.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -110,6 +112,7 @@ export class RvRigComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
               private rigSvc: RigService,
+              private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService) {}
 
   ngOnInit() {
@@ -222,24 +225,40 @@ export class RvRigComponent implements OnInit {
     console.log('rigComponent:onUpdateDataPoint: finished here');
   }
 
+
+  onViewImage(row: number) {
+    let imageData: IviewImage = {
+      profileID: this.profile._id,
+      imageType: 'rig',
+      imageOwner: true,
+      imageSource: this.rigImageUrls[row]
+    }
+    this.shareDataSvc.setData('viewImage', imageData);
+
+    if (this.desktopUser) {
+      this.openImageViewDialog(row);
+    } else {
+      this.activateBackArrowSvc.setBackRoute('profile/rig', 'forward');
+      this.router.navigateByUrl('/profile/image-viewer');
+    }
+  }
+
+
   // View rig image larger
   openImageViewDialog(row: number): void {
     let imageUrl = this.rigImageUrls[row];
 
     const dialogRef = this.dialog.open(ImageViewDialogComponent, {
-      width: '95%',
-      maxWidth: 600,
-      data: {imageUrl: imageUrl, alter: true }
+      width: '600px',
+      // height: '550px',
+      disableClose: true,
+      hasBackdrop: true
     });
 
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      if (result === 'delete') {
-        this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], '');
-      } else if (result !== 'ok') {
-        this.changeImage(row, result);
-      }
+      console.log('RigComponent:openImageViewDialog: result=', result);
     }, error => {
       this.sentry.logError({"message":"error deleting rig image","error":error});
     });

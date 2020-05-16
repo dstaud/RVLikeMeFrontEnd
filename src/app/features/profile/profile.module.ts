@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ImageCropperComponent } from './image-cropper/image-cropper.component';
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
+import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 import { ProfileComponent } from './profile.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProfileRoutingModule } from './profile-routing.module';
@@ -14,6 +15,7 @@ import { LifestyleComponent } from './lifestyle/lifestyle.component';
 import { InterestsComponent } from './interests/interests.component';
 import { MainComponent } from './main/main.component';
 import { YourStoryComponent } from './your-story/your-story.component';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 
 
 
@@ -26,8 +28,10 @@ import { YourStoryComponent } from './your-story/your-story.component';
     ImageCropperComponent,
     InterestsComponent,
     ImageDialogComponent,
+    ImageViewDialogComponent,
     MainComponent,
-    YourStoryComponent
+    YourStoryComponent,
+    ImageViewerComponent
   ],
   imports: [
     CommonModule,

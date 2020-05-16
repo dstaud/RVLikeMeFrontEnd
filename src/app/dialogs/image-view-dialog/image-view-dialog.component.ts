@@ -18,4 +18,9 @@ export class ImageViewDialogComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  formComplete(event: string) {
+    this.dialogRef.close(event);
+  }
+
 }

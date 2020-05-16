@@ -123,6 +123,15 @@ export interface IprofileImage {
   newImageUrl?: string
 }
 
+export interface IviewImage {
+  profileID?: string,
+  imageType: string,
+  imageSource: string,
+  imageOwner: boolean
+  newImageUrl?: string
+}
+
+
 export interface IshareData {
   forumsMain: IforumsMain,
   myStory: ImyStory,
@@ -134,7 +143,8 @@ export interface IshareData {
   signin: Isignin,
   dashboard: Idashboard,
   post: Ipost,
-  profileImage: IprofileImage
+  profileImage: IprofileImage,
+  viewImage: IviewImage
 }
 
 
@@ -235,16 +245,26 @@ export class ShareDataService {
       profileID: null,
       imageSource: null,
       newImageUrl: null
+    },
+    viewImage: {
+      profileID: null,
+      imageType: null,
+      imageSource: null,
+      imageOwner: false,
+      newImageUrl: null
     }
+
   }
 
   constructor() { }
 
   setData(type: string, data:any) {
-      this.data[type] = data;
+    console.log('ShareDataService:setData: data=', data);
+    this.data[type] = data;
   }
 
   getData(type: string):any {
-      return this.data[type];
+    console.log('ShareDataService:getData: data=', this.data[type]);
+    return this.data[type];
   }
 }

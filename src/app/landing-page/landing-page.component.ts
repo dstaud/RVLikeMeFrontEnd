@@ -48,7 +48,7 @@ export class LandingPageComponent implements OnInit {
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
 
     this.cardNbr = Math.floor(Math.random() * 4) + 1;
-    console.log('LandingPageCOmponent:ngOnInit: card number=', this.cardNbr);
+    console.log('LandingPageCOmponent:ngOnInit: width=', window.innerWidth);
 
     this.setImageBasedOnScreenWidth();
 

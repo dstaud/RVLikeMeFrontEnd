@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService } from '@services/data-services/profile.service';
-import { ShareDataService, ImessageShareData } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, IviewImage } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 
@@ -86,6 +86,18 @@ export class YourStoryComponent implements OnInit {
   }
 
 
+  onViewImage(imageUrl: string) {
+    let imageData: IviewImage = {
+      imageType: 'mystory',
+      imageOwner: false,
+      imageSource: imageUrl
+    }
+    this.shareDataSvc.setData('viewImage', imageData);
+
+    this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
+    this.router.navigateByUrl('/profile/image-viewer');
+  }
+
   // View rig image larger
   openImageViewDialog(imageUrl: string): void {
 
@@ -114,6 +126,8 @@ export class YourStoryComponent implements OnInit {
       this.paramsForMessaging = paramData.params;
       console.log('YourStoryComponent:getParameters: paramData=', paramData);
       this.listenForUserProfile();
+    } else {
+      this.router.navigateByUrl('/home/dashboard');
     }
   }
 

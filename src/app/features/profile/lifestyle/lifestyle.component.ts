@@ -12,6 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { ShareDataService, IviewImage } from '@services/share-data.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
@@ -170,6 +171,7 @@ export class LifestyleComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private shareDataSvc: ShareDataService,
               fb: FormBuilder) {
               this.form = fb.group({
                 aboutMe: new FormControl(''),
@@ -279,24 +281,39 @@ export class LifestyleComponent implements OnInit {
   }
 
 
+  onViewImage(row: number) {
+    let imageData: IviewImage = {
+      profileID: this.profile._id,
+      imageType: 'lifestyle',
+      imageOwner: true,
+      imageSource: this.lifestyleImageUrls[row]
+    }
+    this.shareDataSvc.setData('viewImage', imageData);
+
+    if (this.desktopUser) {
+      this.openImageViewDialog(row);
+    } else {
+      this.activateBackArrowSvc.setBackRoute('profile/lifestyle', 'forward');
+      this.router.navigateByUrl('/profile/image-viewer');
+    }
+  }
+
+
   // View lifestyle image larger
   openImageViewDialog(row: number): void {
     let imageUrl = this.lifestyleImageUrls[row];
 
     const dialogRef = this.dialog.open(ImageViewDialogComponent, {
-      width: '95%',
-      maxWidth: 600,
-      data: {imageUrl: imageUrl, alter: true }
+      width: '600px',
+      // height: '550px',
+      disableClose: true,
+      hasBackdrop: true
     });
 
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      if (result === 'delete') {
-        this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], '');
-      } else if (result !== 'ok') {
-        this.changeImage(row, result);
-      }
+      console.log('LifestyleComponent:openImageViewDialog: result=', result);
     }, error => {
       this.sentry.logError({"message":"error closing dialog","error":error});
     });

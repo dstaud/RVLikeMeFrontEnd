@@ -91,7 +91,11 @@ export class ImageCropperComponent implements OnInit {
 
   onSubmit() {
     this.showSpinner = true;
-    this.saveNewImage();
+    let croppedImageBase64 = this.imageDestination;
+    this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
+      this.newImageUrl = uploadedFileUrl
+      this.updateImageUrlInProfile(uploadedFileUrl);
+    });
   }
 
 
@@ -114,15 +118,6 @@ export class ImageCropperComponent implements OnInit {
         self.showSpinner = false;
       }
     });
-  }
-
-
-  private saveNewImage() {
-    let croppedImageBase64 = this.imageDestination;
-    this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
-      this.newImageUrl = uploadedFileUrl
-      this.updateImageUrlInProfile(uploadedFileUrl);
-    })
   }
 
 

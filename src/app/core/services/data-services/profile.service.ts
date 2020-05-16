@@ -134,6 +134,7 @@ export class ProfileService {
   deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
+    console.log('ProfileService:deleteLifestyleImage: params=', imageUrlJSON);
     return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
   }
 

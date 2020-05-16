@@ -1,14 +1,5 @@
-<div>
-  <img class="image" [src]="data.imageUrl">
-</div>
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-button (click)="dialogRef.close('ok')">{{ 'imageviewdialog.component.ok' | translate }}</button>
-  <button *ngIf="data.alter" mat-button (click)="fileInput.click()">
-    <input #fileInput type="file"
-            accept = "image/*"
-            (change)="dialogRef.close($event)"
-            style="display:none;"/>
-      <span>{{ 'imageviewdialog.component.change' | translate }}</span>
-  </button>
-  <button *ngIf="data.alter" mat-button (click)="dialogRef.close('delete')">{{ 'imageviewdialog.component.delete' | translate }}</button>
+<div class="mat-app-background">
+  <app-rvlm-image-viewer
+    (formComplete)="formComplete($event)">
+  </app-rvlm-image-viewer>
 </div>

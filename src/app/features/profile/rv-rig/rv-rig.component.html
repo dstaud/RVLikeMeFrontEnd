@@ -11,13 +11,13 @@
     <div class="row">
       <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">
         <div class="img-container">
-          <img [src]="rigImageUrl" style="width:95%" (click)="openImageViewDialog(i)">
+          <img class="image" [src]="rigImageUrl" style="width:95%" (click)="onViewImage(i)">
         </div>
       </div>
     </div>
   </div>
   <div class="get-image">
-    <button [disabled]="rigImageUrls.length === 3" mat-button (click)="fileInput.click()">
+    <button [disabled]="rigImageUrls.length >= 3" mat-button (click)="fileInput.click()">
       <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
       <input #fileInput type="file"
               (change)="onRigImageSelected($event)"
