@@ -94,17 +94,22 @@ export class YourStoryComponent implements OnInit {
     }
     this.shareDataSvc.setData('viewImage', imageData);
 
-    this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
-    this.router.navigateByUrl('/profile/image-viewer');
+    if (this.desktopUser) {
+      this.openImageViewDialog(imageUrl);
+    } else {
+      this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
+      this.router.navigateByUrl('/profile/image-viewer');
+    }
   }
 
   // View rig image larger
   openImageViewDialog(imageUrl: string): void {
 
     const dialogRef = this.dialog.open(ImageViewDialogComponent, {
-      width: '95%',
-      maxWidth: 600,
-      data: {imageUrl: imageUrl, Alter: false }
+      width: '600px',
+      // height: '550px',
+      disableClose: true,
+      hasBackdrop: true
     });
 
     dialogRef.afterClosed()

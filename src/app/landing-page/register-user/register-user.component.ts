@@ -9,7 +9,6 @@ import { AuthenticationService, ItokenPayload, ItokenResponse } from '@services/
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
-import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { UsingEmailService } from '@services/using-email.service';
@@ -80,8 +79,6 @@ export class RegisterUserComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.onBeforeInstallEventOfferInstallApp();
-
     this.listenForSystemConfiguration();
   }
 
@@ -118,48 +115,6 @@ export class RegisterUserComponent implements OnInit {
     }, error => {
       console.log('RegisterUserComponent:listenForSystemConfiguration: error=', error);
     })
-  }
-
-
-  // Get the event handle when beforeInstallEvent fired that allows for app installation.
-  // When fired, offer user option to install app from menu
-  private onBeforeInstallEventOfferInstallApp() {
-    this.event = this.beforeInstallEventSvc.beforeInstallEvent$
-    this.event
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(data => {
-      if (data !== null) {
-        this.presentInstallOption = true;
-        this.event = data.valueOf();
-      }
-    });
-  }
-
-
-  // App Install Option
-  private openInstallDialog(): void {
-    const dialogRef = this.dialog.open(InstallDialogComponent, {
-      width: '250px',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result !== 'canceled') {
-        this.event.prompt();
-
-        // Wait for the user to respond to the prompt
-        this.event.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('RegisterUserComponent:openInstallDialog: User accepted the install prompt');
-            this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
-          } else {
-            console.log('RegisterUserComponent:openInstallDialog: User dismissed the install prompt');
-          }
-        });
-      }
-    });
   }
 
 
@@ -260,7 +215,7 @@ export class RegisterUserComponent implements OnInit {
       console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
       this.showSpinner = false;
       this.httpError = true;
-      this.httpErrorText = "Unable to send registration email.  Please contact dave@rvlikeme.com";
+      this.httpErrorText = "Unable to send registration email.  Please try again soon.";
       this.authSvc.logout();
     })
   }

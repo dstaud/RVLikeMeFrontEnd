@@ -212,22 +212,6 @@ export class LifestyleComponent implements OnInit {
   ngOnDestroy() {};
 
 
-  // If user selects change, then have the user select a new file and then delete the old one before uploading the new one
-  changeImage(row: number, event: any) {
-    let fileType: string = 'lifestyle';
-
-    this.showSpinner = true;
-    this.form.disable();
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.deleteLifestyleImageUrlFromProfile(this.lifestyleImageUrls[row], uploadedFileUrl);
-        this.showSpinner = false;
-        this.form.enable();
-      });
-    });
-  }
-
-
   onBack() {
     let route = '/' + this.returnRoute
     this.activateBackArrowSvc.setBackRoute('', 'backward');
@@ -319,19 +303,6 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
-
-  private deleteLifestyleImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
-    this.profileSvc.deleteLifestyleImageUrlFromProfile(this.profile._id, imageUrl)
-    .subscribe(imageResult => {
-      if (newImageFileUrl) {
-        this.updateProfileLifestyleImageUrls(newImageFileUrl);
-      } else {
-        this.profileSvc.getProfile();
-      }
-    }, error => {
-      this.sentry.logError({"message":"error deleting lifestyle image url from profile","error":error});
-    })
-  }
 
 
   private listenForUserProfile() {

@@ -160,20 +160,6 @@ export class RvRigComponent implements OnInit {
   }
 
 
-  // If user selects change, then have the user select a new file and then delete the old one before uploading the new one
-  changeImage(row: number, event: any) {
-    let fileType: string = 'rig';
-
-    this.showSpinner = true;
-    this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
-      this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.deleteRigImageUrlFromProfile(this.rigImageUrls[row], uploadedFileUrl);
-        this.showSpinner = false;
-      });
-    });
-  }
-
-
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onRigImageSelected(event: any) {
     let fileType: string = 'rig';
@@ -297,21 +283,6 @@ export class RvRigComponent implements OnInit {
 
     return this.rigData.filter(brand => brand.brand.toLowerCase().includes(filterValue)); // Match anywhere in the brand string.
     // return this.rigData.filter(brand => brand.brand.toLowerCase().indexOf(filterValue) === 0); // Just match beginning of brands. This is faster but not as nice
-  }
-
-
-  // Delete the image url from the user's profile
-  private deleteRigImageUrlFromProfile(imageUrl: string, newImageFileUrl: string) {
-    this.profileSvc.deleteRigImageUrlFromProfile(this.profile._id, imageUrl)
-    .subscribe(imageResult => {
-      if (newImageFileUrl) {
-        this.updateProfileRigImageUrls(newImageFileUrl);
-      } else {
-        this.profileSvc.getProfile();
-      }
-    }, error => {
-      this.sentry.logError({"message":"error uploading rig image","error":error});
-    })
   }
 
 

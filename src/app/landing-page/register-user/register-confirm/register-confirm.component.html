@@ -20,6 +20,7 @@
   </div>
   <div *ngIf="!httpError && !showSpinner" class="body">
     <p class="mat-subheading-2 welcome">Your account is now activated.<br>Welcome to RVLikeMe.com</p>
+    <p *ngIf="presentInstallOption">install?</p>
   </div>
   <div *ngIf="httpError && !showSpinner" class="body welcome">
     <mat-error class="mat-subheading-2">{{httpErrorText}}</mat-error>
