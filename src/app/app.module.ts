@@ -37,7 +37,6 @@ import { ProfileService } from '@services/data-services/profile.service';
 import { WindowService } from '@services/window.service';
 
 import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-import { InstallDialogComponent } from '@dialogs/install-dialog/install-dialog.component';
 
 import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
@@ -62,7 +61,8 @@ import { StoryComponent } from './landing-page/cards/story/story.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
-  environment: environment.name
+  // environment: environment.name
+  environment: 'Production'
 });
 
 @Injectable()
@@ -94,7 +94,6 @@ export function getErrorHandler(): ErrorHandler {
     RegisterUserComponent,
     LearnMoreComponent,
     OtherDialogComponent,
-    InstallDialogComponent,
     ForumsListComponent,
     SuggestTopicDialogComponent,
     AdminComponent,

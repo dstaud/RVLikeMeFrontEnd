@@ -144,7 +144,7 @@ export class AuthenticationService {
     let params = '{"credentials":' + JSON.stringify(user) + ',"firstName":"' + firstName + '"}';
     base = this.http.post(`/api/register`, params);
     const request = base.pipe(
-      map((data: ItokenResponse) => {
+      map((data: ItokenResponse) => { // Saving token here, but may be better to save on register confirm.  However, would have to make sure the email confirm is on
         if (data.token) {
           this.saveToken(data.token);
         }
@@ -161,6 +161,13 @@ export class AuthenticationService {
 
   setUserToAdmin(admin): void {
     this._userAdmin.next(admin);
+  }
+
+  updateInstallFlag(install: boolean, device: string): Observable<any> {
+    let body = '{"install":"' + install + '",' +
+                '"device":"' + device + '"}';
+
+    return this.http.put(`/api/install-flag`, JSON.parse(body), {});
   }
 
   updateLoginCount(): Observable<any> {

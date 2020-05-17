@@ -99,7 +99,9 @@ export interface InewbieHelp {
 }
 
 export interface Isignin {
-  fromLandingPage: boolean
+  fromLandingPage: boolean,
+  install?: boolean,
+  installDevice?: string
 }
 
 export interface Idashboard {
@@ -226,7 +228,9 @@ export class ShareDataService {
       topicDesc: null
     },
     signin: {
-      fromLandingPage: false
+      fromLandingPage: false,
+      install: false,
+      installDevice: null
     },
     dashboard: {
       nbrLogins: null

@@ -71,6 +71,7 @@ export class AppComponent implements OnInit {
               private swUpdate: SwUpdate,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
+    this.deviceSvc.getDeviceInfo();
 
     this.router.events
     .pipe(

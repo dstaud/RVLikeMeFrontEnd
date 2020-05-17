@@ -1,3 +1,4 @@
+import { Isignin } from './../../core/services/share-data.service';
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
@@ -15,6 +16,7 @@ import { LanguageService } from '@services/language.service';
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
+import { DeviceService } from '@services/device.service';
 
 import { SharedComponent } from '@shared/shared.component';
 import { PrivacyPolicyDialogComponent } from '@dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
@@ -48,6 +50,8 @@ export class SigninComponent implements OnInit {
   showSignin = true;
   showPasswordReset = false;
 
+  private device: string;
+  private install: boolean;
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private returnRoute: string = '';
@@ -72,6 +76,7 @@ export class SigninComponent implements OnInit {
               private router: Router,
               private emailSmtpSvc: EmailSmtpService,
               private themeSvc: ThemeService,
+              private deviceSvc: DeviceService,
               private language: LanguageService,
               private dialog: MatDialog,
               fb: FormBuilder) {
@@ -94,6 +99,11 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.windowWidth = window.innerWidth;
+
+    let params: Isignin = this.ShareDataSvc.getData('signin');
+    console.log('SigninComponent: device params=', params);
+    this.install = params.install;
+    this.device = params.installDevice;
   }
 
   ngOnDestroy() {};
@@ -189,6 +199,7 @@ export class SigninComponent implements OnInit {
     this.httpErrorText = '';
     this.showSpinner = true;
     this.notActive = false;
+    this.form.disable();
 
     // Login the user
     this.authSvc.login(this.credentials)
@@ -201,10 +212,14 @@ export class SigninComponent implements OnInit {
       this.nbrLogins = responseData.nbrLogins;
       this.profileSvc.getProfile();
       this.authSvc.setUserToAuthorized(true);
+
+      this.updateInstallFlag();
+
       this.showSpinner = false;
       this.handleReturnRoute();
     }, error => {
       this.showSpinner = false;
+      this.form.enable();
       this.authSvc.setUserToAuthorized(false);
       this.httpError = true;
       if (error.status === 401) {
@@ -212,6 +227,7 @@ export class SigninComponent implements OnInit {
       } else if (error.status === 403) {
         this.notActive = true;
         this.token = JSON.parse(error.message).token
+        console.log('SigninComponent:onSubmit token=', this.token)
         this.httpErrorText = 'This account is not yet active.  Please check for an email from rvlikeme.com to activate.  If you do not see the email, look in your spam or trash folders.';
       } else {
         this.httpErrorText = 'Please connect to Internet and retry';
@@ -319,5 +335,26 @@ export class SigninComponent implements OnInit {
         }
       }
     });
+  }
+
+  private updateInstallFlag() {
+    this.authSvc.getUser()
+    .subscribe(credentials => {
+      console.log('SigninComponent:updateInstallFlag: credentials=', credentials);
+      if (!credentials.install && !credentials.installDevice) {
+        console.log('SigninComponent:updateInstallFlag: install=', this.install, ' device=', this.device);
+        if (!this.install && this.device) {
+          this.authSvc.updateInstallFlag(this.install, this.device)
+          .subscribe(credentialsResult => {
+            console.log('SigninComponent:updateInstallFlag: flag updated result=', credentialsResult);
+          }, error => {
+            console.error('SigninComponent:updateInstallFlag: error updating install flag', error);
+          });
+        }
+      }
+    }, error => {
+      console.error('SigninComponent:updateInstallFlag: error=', error);
+    })
+
   }
 }

@@ -36,7 +36,7 @@
                   placeholder="Password"
                   autocapitalize="none"
                   formControlName="password"
-                  autocomplete="new-password"
+
                   required>
           <mat-error *ngIf="errorHandling('password', 'required')">
             Please enter your <strong>Password</strong>
@@ -62,6 +62,10 @@
         our <span class="hyperlink" (click)="onDocument('privacy')">Privacy Policy</span>
         and <span class="hyperlink" (click)="onDocument('terms')">Terms of Service</span>
       </span>
+    </div>
+    <br>
+    <div>
+      <span class="legal">If you are experiencing issues registering or logging in, please email <a class = "hyperlink" href="mailto:dave@rvlikeme.com">dave@rvlikeme.com</a></span>
     </div>
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 

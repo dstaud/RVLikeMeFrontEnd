@@ -28,6 +28,8 @@ export class LandingPageComponent implements OnInit {
   private windowWidth: number;
   private landingImageNbr: number;
   private routeSubscription: any;
+  private install: boolean;
+  private installDevice: string;
 
   // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
@@ -44,11 +46,15 @@ export class LandingPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    let params: Isignin;
+
     // Randomly pick one of 3 landing page RV images
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
-
     this.cardNbr = Math.floor(Math.random() * 4) + 1;
-    console.log('LandingPageCOmponent:ngOnInit: width=', window.innerWidth);
+
+    params = this.shareDataSvc.getData('signin');
+    this.install = params.install;
+    this.installDevice = params.installDevice;
 
     this.setImageBasedOnScreenWidth();
 
@@ -92,7 +98,9 @@ export class LandingPageComponent implements OnInit {
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
     let param: Isignin = {
-      fromLandingPage: true
+      fromLandingPage: true,
+      install: this.install,
+      installDevice: this.installDevice
     }
     this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
     if (this.windowWidth > 600) {

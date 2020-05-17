@@ -42,6 +42,7 @@ export class DeviceService {
         this.iPhoneModelXPlus = true;
         console.log('setting plusx to true');
     }
+    console.log('Device=', this.device);
   }
 
   // Determine appropriate font theme for user device

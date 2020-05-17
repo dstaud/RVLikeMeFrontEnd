@@ -4,6 +4,7 @@ import { Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { take } from 'rxjs/operators';
 
 import { AuthenticationService, ItokenPayload, ItokenResponse } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -130,6 +131,7 @@ export class RegisterUserComponent implements OnInit {
     }
 
     this.showSpinner = true;
+    this.form.disable();
 
     console.log('RegisterUserComponent:RegisterUser: credential=', this.credentials)
     this.authSvc.registerUser(this.credentials, this.form.controls.firstName.value)
@@ -150,13 +152,18 @@ export class RegisterUserComponent implements OnInit {
       }
     }, error => {
       this.showSpinner = false;
+      this.form.enable();
       this.httpError = true;
       console.log('RegisterUser:RegisterUser: error=', error);
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else {
         if (error.status === 403) {
-          this.httpErrorText = 'Email address already registered';
+          console.log('RegisterUser: 403. active=', error.active);
+          this.getActivationToken(true);
+          this.httpErrorText = 'It looks like you already tried to register.  Another registration email was sent to ' + this.credentials.email + '. Please activate your account from this email.  Check your trash or spam folder if you cannot find the email.';
+          this.showSpinner = false;
+          this.form.enable();
         } else {
           console.warn('ERROR: ', error);
           if (error.message.includes('Unknown Error')) {
@@ -186,21 +193,22 @@ export class RegisterUserComponent implements OnInit {
     }, 2000);
   }
 
-  private getActivationToken() {
+  private getActivationToken(stay?: boolean) {
     let noExpire: boolean = true;
+    console.log('RegisterUserComponent:onSubmit: getting new token');
 
     this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
     .subscribe(tokenResult => {
-      console.log('ForgotPasswordComponent:onSubmit: tokenResult=', tokenResult);
-        this.sendRegisterEmail(tokenResult.token);
+      console.log('RegisterUserComponent:onSubmit: tokenResult=', tokenResult);
+        this.sendRegisterEmail(tokenResult.token, stay);
     }, error => {
-      console.log('ForgotPasswordComponent:onSubmit: error getting token=', error);
+      console.log('RegisterUserComponent:onSubmit: error getting token=', error);
       throw new Error(error);
     });
   }
 
 
-  private sendRegisterEmail(token: string) {
+  private sendRegisterEmail(token: string, stay?: boolean) {
     let sendTo = this.credentials.email;
     let toFirstName = this.form.controls.firstName.value;
 
@@ -209,8 +217,10 @@ export class RegisterUserComponent implements OnInit {
     .subscribe(emailResult => {
       console.log('email sent!  result=', emailResult);
       this.showSpinner = false;
-      this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
-      this.registrationComplete();
+      if (!stay) { // Stay means user tried to register again without confirming.  Different messaing and don't want this message
+        this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
+        this.registrationComplete();
+      }
     }, error => {
       console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
       this.showSpinner = false;
