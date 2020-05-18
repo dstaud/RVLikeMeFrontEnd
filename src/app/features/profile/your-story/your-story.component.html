@@ -32,14 +32,25 @@
     </div>
   </div>
   <div class="attributes">
-    <p><span class="attribute-label">{{ 'yourstory.component.experience' | translate }}: </span>{{ userAboutMe | translate }}</p>
+
+    <div class="row">
+      <div class="attribute-label column">
+        Blog links:
+      </div>
+      <div class="column" >
+        <div *ngFor="let link of blogLinks; let i=index">
+          <a href="{{ link.link }}" class="hyperlink external link" target="_blank"><span>{{ link.linkDesc }}</span></a><br>
+        </div>
+      </div>
+    </div>
+
     <p><span class="attribute-label">{{ 'yourstory.component.howrv' | translate }}: </span>{{ userRvUse | translate }}</p>
     <div class="row">
       <div class="attribute-label column">
         {{ 'yourstory.component.rigtype' | translate }}:
       </div>
       <div class="column">{{ userRigType | translate }}<br>
-                          <span *ngIf="showRigBrand"> {{ userRigYear }} {{ userRigBrand }} - {{ userRigModel }}</span>
+          <span *ngIf="showRigBrand"> {{ userRigYear }} {{ userRigBrand }} - {{ userRigModel }}</span>
       </div>
     </div>
     <p><span class="attribute-label">{{ 'yourstory.component.rigpics' | translate }}: </span>

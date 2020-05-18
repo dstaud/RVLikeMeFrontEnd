@@ -23,7 +23,7 @@ export class BlogLinkComponent implements OnInit {
   showAddLink: boolean = false;
   desktopUser: boolean = false;
 
-  // Interface for profile data
+  private returnRoute: string;
   private userProfile: Observable<IuserProfile>;
   private regHyperlink = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
@@ -50,6 +50,7 @@ export class BlogLinkComponent implements OnInit {
 
     if (window.innerWidth > 600) {
       this.desktopUser = true;
+      this.setReturnRoute();
     }
 
     if (!this.authSvc.isLoggedIn()) {
@@ -63,15 +64,18 @@ export class BlogLinkComponent implements OnInit {
 
   ngOnDestroy() {}
 
+
   onAddLink() {
     this.showAddLink = !this.showAddLink;
   }
 
+
   onBack() {
-    // let route = '/' + this.returnRoute
-    // this.activateBackArrowSvc.setBackRoute('', 'backward');
-    // this.router.navigateByUrl(route);
+    let route = '/' + this.returnRoute
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl(route);
   }
+
 
   onCancel() {
     this.showAddLink = false;
@@ -88,12 +92,12 @@ export class BlogLinkComponent implements OnInit {
       link = this.form.controls.link.value;
     }
     this.profileSvc.addBlogLinkToProfile(this.profile._id,
-                                this.form.controls.linkDesc.value,
-                                link)
+                                          this.form.controls.linkDesc.value,
+                                          link)
     .subscribe(linkResult => {
       this.showSpinner = false;
       this.showAddLink = false;
-      // this.getNewbieLinks();
+      this.profileSvc.getProfile();
     }, error => {
       console.log('PersonalComponent:onSubmit: error=', error);
       this.showSpinner = false;
@@ -109,11 +113,32 @@ export class BlogLinkComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
       this.blogLinks = profile.blogLinks;
-
     }, (error) => {
       console.error('NewbieLinksComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
   }
+  private setReturnRoute() {
+    let returnStack: Array<string> = [];
+    let i: number;
 
+    this.activateBackArrowSvc.route$
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(data => {
+      returnStack = data;
+      i = returnStack.length - 1;
+      if (returnStack.length > 0) {
+        if (returnStack[i].substring(0, 1) === '*') {
+            this.returnRoute = returnStack[i].substring(1, returnStack[i].length);
+        } else {
+          this.returnRoute = returnStack[i];
+        }
+      } else {
+          this.returnRoute = '';
+      }
+      console.log('BlogLinkComponent:ngOnInit: Return Route=', this.returnRoute);
+    }, error => {
+      console.error('BlogLinkComponent:setReturnRoute: error setting return route ', error);
+    });
+  }
 }

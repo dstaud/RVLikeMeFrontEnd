@@ -6,7 +6,7 @@ import { Location } from '@angular/common';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
-import { ProfileService } from '@services/data-services/profile.service';
+import { ProfileService, Iblog } from '@services/data-services/profile.service';
 import { ShareDataService, ImessageShareData, IviewImage } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -36,6 +36,7 @@ export class YourStoryComponent implements OnInit {
   rigImageUrls: Array<string> = [];
   lifestyleImageUrls: Array<string> = [];
   desktopUser: boolean = false;
+  blogLinks: Array<Iblog> = [];
 
   private paramsForMessaging: string;
   private returnRoute: string
@@ -186,6 +187,8 @@ export class YourStoryComponent implements OnInit {
       this.userRigModel = profileResult.rigModel;
       this.rigImageUrls = profileResult.rigImageUrls;
       this.lifestyleImageUrls = profileResult.lifestyleImageUrls;
+
+      this.blogLinks = profileResult.blogLinks;
 
       if (this.userRigBrand) {
         this.showRigBrand = true;

@@ -89,3 +89,21 @@
   margin-right: 1%;
   cursor: pointer;
 }
+
+.links {
+  margin-left: 10px;
+}
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.external {
+  text-decoration: none; // Don't show underline on link
+}
+
+.link {
+  line-height: 2;
+}
