@@ -23,8 +23,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
+import { PreviewLinkComponent } from '@shared/preview-link/preview-link.component';
+
 @NgModule({
-  declarations: [SharedComponent],
+  declarations: [
+    SharedComponent,
+    PreviewLinkComponent
+  ],
   exports: [
     TranslateModule,
     MatInputModule,
@@ -47,7 +52,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatTooltipModule,
     MatProgressBarModule,
     MatCheckboxModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    PreviewLinkComponent
   ],
   providers: [ SharedComponent ]
 })

@@ -34,7 +34,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     } else {
         authReq = request;
     }
-
+    console.log('httpInterceptor: request=', authReq);
     // If timeout, retry up to 3 times with delay
     return next.handle(authReq).pipe(
       retryWhen(errors => errors

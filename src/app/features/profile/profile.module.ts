@@ -19,7 +19,6 @@ import { ImageViewerComponent } from './image-viewer/image-viewer.component';
 import { BlogLinkComponent } from './blog-link/blog-link.component';
 
 
-
 @NgModule({
   declarations: [
     ProfileComponent,

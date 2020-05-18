@@ -17,6 +17,16 @@
     <div [formGroup]="form">
       <div>
         <mat-form-field appearance="outline">
+          <mat-label>Link</mat-label>
+          <input matInput
+                  type="url"
+                  placeholder="http://www.example.com"
+                  formControlName="link"
+                  (blur)="onLink()">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
           <mat-label>Link Description</mat-label>
           <input matInput
                   type="text"
@@ -25,15 +35,13 @@
                   formControlName="linkDesc">
         </mat-form-field>
       </div>
-      <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Link</mat-label>
-          <input matInput
-                  type="url"
-                  placeholder="http://www.example.com"
-                  formControlName="link">
-        </mat-form-field>
+
+      <div *ngIf="showPreview">
+        <app-rvlm-preview-link
+          [linkPreview]="preview">
+        </app-rvlm-preview-link>
       </div>
+
       <div>
         <button type="submit"
                 class="mat-raised-button mat-primary button"

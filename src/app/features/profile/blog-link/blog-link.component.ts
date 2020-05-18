@@ -9,6 +9,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ProfileService, IuserProfile, Iblog } from '@services/data-services/profile.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 
 @Component({
   selector: 'app-rvlm-blog-link',
@@ -21,7 +22,9 @@ export class BlogLinkComponent implements OnInit {
   blogLinks: Array<Iblog> = [];
   showSpinner: boolean = false;
   showAddLink: boolean = false;
+  showPreview: boolean = false;
   desktopUser: boolean = false;
+  preview: IlinkPreview
 
   private returnRoute: string;
   private userProfile: Observable<IuserProfile>;
@@ -31,6 +34,7 @@ export class BlogLinkComponent implements OnInit {
               private authSvc: AuthenticationService,
               private location: Location,
               private router: Router,
+              private linkPreviewSvc: LinkPreviewService,
               private activateBackArrowSvc: ActivateBackArrowService,
              fb: FormBuilder) {
               this.form = fb.group({
@@ -81,6 +85,13 @@ export class BlogLinkComponent implements OnInit {
 
   onCancel() {
     this.showAddLink = false;
+    if (this.preview) {
+      this.preview.description = '';
+      this.preview.image = '';
+      this.preview.title = '';
+      this.preview.url = '';
+    };
+    this.form.reset();
   }
 
 
@@ -97,6 +108,32 @@ export class BlogLinkComponent implements OnInit {
     })
   }
 
+  onLink() {
+    this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+    .subscribe(preview => {
+      console.log('BlogLinkComponent:onLink: preview=', preview);
+      if (preview.title) {
+        this.preview = preview;
+        if (this.preview.url.substring(0,7) !== 'http://') {
+          this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+        } else if (this.form.controls.link.value.substring(0,8) !== 'https://') {
+          this.preview.url = this.preview.url.substring(9,this.preview.url.length);
+        }
+        this.showPreview = true;
+      }
+    }, error => {
+      console.log('BlogLinkComponent:onLink: no link found');
+      if (this.preview) {
+        this.preview.description = '';
+        this.preview.image = '';
+        this.preview.title = '';
+        this.preview.url = '';
+      }
+      this.form.reset();
+      this.showPreview = false;
+    })
+  }
+
   onSubmit() {
     let  link: string;
     this.showSpinner = true;
@@ -106,6 +143,15 @@ export class BlogLinkComponent implements OnInit {
     } else {
       link = this.form.controls.link.value;
     }
+
+    if (this.preview) {
+      this.preview.description = '';
+      this.preview.image = '';
+      this.preview.title = '';
+      this.preview.url = '';
+    }
+    this.form.reset();
+
     this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.form.controls.linkDesc.value)
     .subscribe(profileResult => {
       this.showSpinner = false;

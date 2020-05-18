@@ -16,31 +16,47 @@
                     cdkFocusInitial>
           </textarea>
         </mat-form-field>
+
         <div *ngIf="postPhotoUrl">
           <img [src]="postPhotoUrl" class="image">
         </div>
-        <button class="photo" mat-button (click)="fileInput.click()">
-          <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
+
+        <div *ngIf="showPreview">
+          <app-rvlm-preview-link
+            [linkPreview]="preview">
+          </app-rvlm-preview-link>
+        </div>
+
+        <button [disabled]="actionsDisabled" class="action" mat-button (click)="fileInput.click()">
+          <mat-icon fontSet="material-icons-outlined">add_a_photo</mat-icon>
           <input #fileInput type="file"
                   (change)="onPhoto($event)"
                   accept = "image/*"
                   style="display:none;"/>
             <span class="add-photo-text">{{ 'add-post.component.photo' | translate }}</span>
         </button>
-      </div>
-      <div class="button">
-        <button [disabled]="!formCompleted"
-                class="mat-raised-button mat-primary"
-                (click)="onPost()">
-                {{ 'add-post.component.post' | translate }}
+        <button [disabled]="actionsDisabled" class="action" mat-button (click)="onAddLink()">
+          <mat-icon fontSet="material-icons-outlined">link</mat-icon>
+            <span class="add-photo-text">Add link</span>
         </button>
       </div>
-      <div class="button">
-        <button class="mat-raised-button"
-                (click)="onDoneWithAdd('canceled')">
-                {{ 'add-post.component.cancel' | translate }}
-        </button>
+
+      <div class="buttons">
+        <div class="button">
+          <button [disabled]="!formCompleted"
+                  class="mat-raised-button mat-primary"
+                  (click)="onPost()">
+                  {{ 'add-post.component.post' | translate }}
+          </button>
+        </div>
+        <div class="button">
+          <button class="mat-raised-button"
+                  (click)="onDoneWithAdd('canceled')">
+                  {{ 'add-post.component.cancel' | translate }}
+          </button>
+        </div>
       </div>
+
     </form>
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
   </div>

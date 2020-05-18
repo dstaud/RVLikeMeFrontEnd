@@ -12,7 +12,7 @@ import { UserTypeService } from '@services/user-type.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
-import { getMatFormFieldPlaceholderConflictError } from '@angular/material/form-field';
+import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 
 @Component({
   selector: 'app-rvlm-newbie-links',
@@ -32,6 +32,8 @@ export class NewbieLinksComponent implements OnInit {
   topicDescSentence: string;
   userType: string;
   profileImageUrl: string = './../../../../../assets/images/no-profile-pic.jpg';
+  showPreview: boolean = false;
+  preview: IlinkPreview;
 
   showSpinner: boolean = false;
   showAddLink: boolean = false;
@@ -48,6 +50,7 @@ export class NewbieLinksComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService,
               private location: Location,
+              private linkPreviewSvc: LinkPreviewService,
               private shareDataSvc: ShareDataService,
               private router: Router,
               fb: FormBuilder) {
@@ -91,7 +94,41 @@ export class NewbieLinksComponent implements OnInit {
 
   onCancel() {
     this.linkAdded.emit('cancel');
+    if (this.preview) {
+      this.preview.description = '';
+      this.preview.image = '';
+      this.preview.title = '';
+      this.preview.url = '';
+    }
+    this.form.reset();
     this.showAddLink = false;
+  }
+
+
+  onLink() {
+    this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+    .subscribe(preview => {
+      console.log('BlogLinkComponent:onLink: preview=', preview);
+      if (preview.title) {
+        this.preview = preview;
+        if (this.preview.url.substring(0,7) !== 'http://') {
+          this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+        } else if (this.form.controls.link.value.substring(0,8) !== 'https://') {
+          this.preview.url = this.preview.url.substring(9,this.preview.url.length);
+        }
+        this.showPreview = true;
+      }
+    }, error => {
+      console.log('BlogLinkComponent:onLink: no link found');
+      if (this.preview) {
+        this.preview.description = '';
+        this.preview.image = '';
+        this.preview.title = '';
+        this.preview.url = '';
+      }
+      this.form.reset();
+      this.showPreview = false;
+    })
   }
 
 
@@ -112,6 +149,13 @@ export class NewbieLinksComponent implements OnInit {
     .subscribe(linkResult => {
       this.showSpinner = false;
       this.showAddLink = false;
+      if (this.preview) {
+        this.preview.description = '';
+        this.preview.image = '';
+        this.preview.title = '';
+        this.preview.url = '';
+      }
+      this.form.reset();
       this.getNewbieLinks();
     }, error => {
       console.log('NewbieLinksComponent:onSubmit: error=', error);

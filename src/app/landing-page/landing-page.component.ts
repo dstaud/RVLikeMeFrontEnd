@@ -11,6 +11,10 @@ import { ShareDataService, Isignin } from '@services/share-data.service';
 import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
 
+export declare class FacebookParams {
+  u: string;
+}
+
 @Component({
   selector: 'app-rvlm-landing-page',
   templateUrl: './landing-page.component.html',
