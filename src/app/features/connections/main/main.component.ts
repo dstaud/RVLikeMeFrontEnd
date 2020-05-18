@@ -118,9 +118,11 @@ export class MainComponent implements OnInit {
   // Display user-readable matches with counts
   private displayMatches(counts) {
     this.allUsersCount = counts.allUsersCount;
+    console.log('ConnectionsMainComponenet:displayMatches: counts=', counts);
 
     if (counts.allCounts) {
       this.allCountsReceived = true;
+      console.log('ConnectionsMainComponenet:displayMatches: all counts=', counts.allCounts);
     }
     this.likeMeMatches = [];
 
@@ -199,7 +201,9 @@ export class MainComponent implements OnInit {
 
     // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
     // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
+    console.log('ConnectionsMainComponent:displayMatches: allUsersCount=', this.allUsersCount, ' received=', this.allCountsReceived)
     if (this.allUsersCount > 0 && this.allCountsReceived) {
+      console.log('ConnectionsMainComponent:displayMatches: done')
       this.form.get('likeMe').disable({onlySelf: true});
       this.showSpinner = false;
       if (!this.foundMatch) {

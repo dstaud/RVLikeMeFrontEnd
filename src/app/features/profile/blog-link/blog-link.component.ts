@@ -58,6 +58,8 @@ export class BlogLinkComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      this.showSpinner = true;
+
       this.listenForUserProfile();
     }
   }
@@ -82,6 +84,19 @@ export class BlogLinkComponent implements OnInit {
   }
 
 
+  onDelete(row: number) {
+    console.log('BlogLinkComponent:onDelete: blogLinks=', this.blogLinks, ' row=', row)
+    this.profileSvc.deleteBlogLinkFromProfile(this.profile._id, this.blogLinks[row]._id)
+    .subscribe(profileResult => {
+      console.log('BlogLinkComponent:onDelete: updated profile=', profileResult);
+      this.profile = profileResult;
+      this.profileSvc.getProfile();
+    }, error => {
+      console.error('BlogLinkComponent:onDelete: error deleting blog link from profile=', error);
+      throw new Error(error);
+    })
+  }
+
   onSubmit() {
     let  link: string;
     this.showSpinner = true;
@@ -91,15 +106,18 @@ export class BlogLinkComponent implements OnInit {
     } else {
       link = this.form.controls.link.value;
     }
-    this.profileSvc.addBlogLinkToProfile(this.profile._id,
-                                          this.form.controls.linkDesc.value,
-                                          link)
-    .subscribe(linkResult => {
+    this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.form.controls.linkDesc.value)
+    .subscribe(profileResult => {
       this.showSpinner = false;
       this.showAddLink = false;
+      this.blogLinks = profileResult.blogLinks;
+      this.form.patchValue({
+        linkDesc: null,
+        link: null
+      });
       this.profileSvc.getProfile();
     }, error => {
-      console.log('PersonalComponent:onSubmit: error=', error);
+      console.log('BlogLinkComponent:onSubmit: error=', error);
       this.showSpinner = false;
       throw Error(error);
     })
@@ -113,11 +131,16 @@ export class BlogLinkComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
       this.blogLinks = profile.blogLinks;
+      console.log('BlogLinkComponent:listenForUserProfile: blogLinks=', this.blogLinks)
+      this.showSpinner = false;
     }, (error) => {
-      console.error('NewbieLinksComponent:listenForUserProfile: error getting profile ', error);
+      console.error('BlogLinkComponent:listenForUserProfile: error getting profile ', error);
+      this.showSpinner = false;
       throw new Error(error);
     });
   }
+
+
   private setReturnRoute() {
     let returnStack: Array<string> = [];
     let i: number;

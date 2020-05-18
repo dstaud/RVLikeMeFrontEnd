@@ -6,9 +6,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { SharedComponent } from '@shared/shared.component';
 
 export interface Iblog {
-  linkDesc: string,
-  link: string
+  _id: string,
+  link: string,
+  linkDesc: string
 }
+
 export interface IuserProfile {
   _id: string;
   userID: string;
@@ -54,7 +56,7 @@ export interface IuserProfile {
   rigImageUrls: Array<string>;
   lifestyleImageUrls: Array<string>;
   sendMessageEmails: boolean;
-  blogLinks: Array<Iblog>;
+  blogLinks: Array<Iblog>
 }
 
 @Injectable({
@@ -119,10 +121,10 @@ export class ProfileService {
               private http: HttpClient) { }
 
 
-  addBlogLinkToProfile(profileID: string, linkDesc: string, link: string): Observable<any> {
+  addBlogLinkToProfile(profileID: string, blogLink: string, blogDesc: string): Observable<any> {
     let params = '{"profileID":"' + profileID + '",' +
-                  '"linkDesc":"' + linkDesc + '",' +
-                  '"link":"' + link + '"}';
+                  '"blogDesc":"' + blogDesc + '",' +
+                  '"blogLink":"' + blogLink + '"}';
     return this.http.put(`/api/profile-blog-link`, JSON.parse(params), {});
   }
 
@@ -142,6 +144,14 @@ export class ProfileService {
     let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
     return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
+  }
+
+  deleteBlogLinkFromProfile(profileID: string, blogID: string): Observable<any> {
+    let params = '{"profileID":"' + profileID + '",' +
+                '"blogID":"' + blogID + '"}';
+
+    console.log('ProfileService:deleteLifestyleImage: params=', JSON.parse(params));
+    return this.http.put(`/api/profile-blog-link-delete`, JSON.parse(params), {});
   }
 
   deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {

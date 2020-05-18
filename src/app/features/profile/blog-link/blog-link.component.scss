@@ -15,8 +15,18 @@
   text-decoration: none; // Don't show underline on link
 }
 
-.link {
-  line-height: 2;
+// .link {
+//   line-height: 2;
+// }
+
+.linkRow {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-bottom: 30px;
+}
+
+.links {
+  margin-top: 20px;
 }
 
 .add-link {
@@ -26,4 +36,12 @@
 
 .button {
   margin-right: 10px;
+}
+
+a {
+  margin-left: 25px;
+}
+
+.delete {
+  cursor: pointer;
 }

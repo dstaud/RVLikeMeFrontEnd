@@ -200,10 +200,14 @@ export class MainComponent implements OnInit {
     }
 
     // Blog link Data
-    if (profile.blogLinks.length === 0) {
-      this.linkOnOff = 'link_off';
+    if (profile.blogLinks) {
+      if (profile.blogLinks.length === 0) {
+        this.linkOnOff = 'link_off';
+      } else {
+        this.linkOnOff = 'link';
+      }
     } else {
-      this.linkOnOff = 'link';
+      this.linkOnOff = 'link_off';
     }
   }
 
