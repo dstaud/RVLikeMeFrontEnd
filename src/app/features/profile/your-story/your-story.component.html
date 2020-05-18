@@ -33,7 +33,7 @@
   </div>
   <div class="attributes">
 
-    <div class="row">
+    <div *ngIf="blogLinks.length > 0" class="row">
       <div class="attribute-label column">
         Blog links:
       </div>
@@ -44,7 +44,10 @@
       </div>
     </div>
 
+    <p><span class="attribute-label">Experience: </span>{{ userAboutMe | translate }}</p>
+
     <p><span class="attribute-label">{{ 'yourstory.component.howrv' | translate }}: </span>{{ userRvUse | translate }}</p>
+
     <div class="row">
       <div class="attribute-label column">
         {{ 'yourstory.component.rigtype' | translate }}:
@@ -53,6 +56,7 @@
           <span *ngIf="showRigBrand"> {{ userRigYear }} {{ userRigBrand }} - {{ userRigModel }}</span>
       </div>
     </div>
+
     <p><span class="attribute-label">{{ 'yourstory.component.rigpics' | translate }}: </span>
         <span *ngIf="rigImageUrls.length === 0">{{ 'yourstory.component.nopics' | translate }}</span></p>
     <div class="rig-images">
@@ -64,6 +68,7 @@
         </div>
       </div>
     </div>
+
     <p><span class="attribute-label">{{ 'yourstory.component.lifestylepics' | translate }}: </span>
         <span *ngIf="lifestyleImageUrls.length === 0">{{ 'yourstory.component.nopics' | translate }}</span></p>
     <div class="rig-images">

@@ -39,6 +39,7 @@ export class MainComponent implements OnInit {
   interestsIndicator: string;
   interestsIndClass: string;
   desktopUser: boolean = false;
+  linkOnOff: string = 'link_off';
 
   showSpinner = false;
 
@@ -196,6 +197,13 @@ export class MainComponent implements OnInit {
     } else {
       this.interestsIndicator = 'sentiment_dissatisfied';
       this.interestsIndClass = 'no-interests';
+    }
+
+    // Blog link Data
+    if (profile.blogLinks.length === 0) {
+      this.linkOnOff = 'link_off';
+    } else {
+      this.linkOnOff = 'link';
     }
   }
 
