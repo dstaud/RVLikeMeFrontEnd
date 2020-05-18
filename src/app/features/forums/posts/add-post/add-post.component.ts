@@ -26,16 +26,25 @@ export class AddPostComponent implements OnInit {
   formCompleted: boolean = false;
   showSpinner = false;
   actionsDisabled = false;
+  linkEntry: boolean = false;
   showPreview: boolean = false;
-  preview: IlinkPreview
+  preview: IlinkPreview = {
+    title: '',
+    description: '',
+    url: '',
+    image: ''
+  }
+  noPreview: string = '';
 
+  private regHyperlink = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
   constructor(private forumSvc: ForumService,
               private uploadImageSvc: UploadImageService,
               private linkPreviewSvc: LinkPreviewService,
               fb: FormBuilder) {
               this.form = fb.group({
-                post: new FormControl('')
+                post: new FormControl(''),
+                link: new FormControl('', Validators.pattern(this.regHyperlink))
               });
   }
 
@@ -45,7 +54,8 @@ export class AddPostComponent implements OnInit {
 
   onAddLink() {
     this.actionsDisabled = true;
-    this.getlinkPreview('https://rvlikeme.com');
+    this.linkEntry = true;
+    // need a way to let them enter the link and need a way to store it and then present it.
   }
 
 
@@ -59,6 +69,7 @@ export class AddPostComponent implements OnInit {
       this.preview.title = '';
       this.preview.url = '';
     }
+    this.showPreview = false;
     this.form.reset();
     this.postAddComplete.emit(post);
   }
@@ -82,9 +93,8 @@ export class AddPostComponent implements OnInit {
   // When user clicks post, update the database
   onPost() {
     this.showSpinner = true;
-    // let postTitle = this.form.controls.title.value;
     let postText = this.form.controls.post.value;
-    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl)
+    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl, this.preview.url)
     .subscribe(post => {
       this.onDoneWithAdd(post);
       this.showSpinner = false;
@@ -100,29 +110,41 @@ export class AddPostComponent implements OnInit {
     this.formCompleted = true;
   }
 
-  private getlinkPreview(link: string) {
-    this.linkPreviewSvc.getLinkPreview(link)
+  onLink() {
+    let postValue: string;
+
+    this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
     .subscribe(preview => {
       console.log('AddPostComponent:onLink: preview=', preview);
-      if (preview.title) {
-        this.preview = preview;
-        if (this.preview.url.substring(0,7) !== 'http://') {
-          this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-        } else if (this.form.controls.link.value.substring(0,8) !== 'https://') {
-          this.preview.url = this.preview.url.substring(9,this.preview.url.length);
-        }
-        this.showPreview = true;
+      this.preview = preview;
+      console.log('AppPostComponent:onLink: url=', this.preview.url);
+      if (this.preview.url.substring(0,7) == 'http://') {
+        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
       }
+
+      if (!this.preview.title) {
+        this.preview.title = this.preview.url;
+      }
+
+      this.showPreview = true;
+      this.linkEntry = false;
+      this.formCompleted = true;
     }, error => {
       console.log('AddPostComponent:onLink: no link found');
-      if (this.preview) {
-        this.preview.description = '';
-        this.preview.image = '';
-        this.preview.title = '';
-        this.preview.url = '';
+      this.preview.url = this.form.controls.link.value;
+      if (this.preview.url.substring(0,7) == 'http://') {
+        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
       }
+      this.preview.title = this.preview.url;
       this.form.reset();
-      this.showPreview = false;
+      this.showPreview = true;
+      this.linkEntry = false;
+      this.formCompleted = true;
+
     })
   }
 }

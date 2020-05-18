@@ -3,6 +3,20 @@ import { HttpClient} from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
+export interface Iposts {
+  _id: string,
+  createdBy: string,
+  body: string,
+  displayName: string,
+  profileImageUrl: string,
+  postPhotoUrl: string,
+  link: string,
+  commentCount: number,
+  reactionCount: number,
+  createdAt: Date,
+  fragment?: string
+}
+
 export interface Icomments {
   comment: string,
   displayName: string,
@@ -76,15 +90,16 @@ export class ForumService {
     return this.http.post(`/api/forum-topic`, JSON.parse(keyValues), {});
   }
 
-  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string, postPhotoUrl: string): Observable<any> {
+  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string, postPhotoUrl: string, link: string): Observable<any> {
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"groupID":"' + groupID +
-                // '","title":"' + titleEscaped +
                 '","body":"' + postEscaped +
                 '","displayName":"' + displayName +
                 '","profileImageUrl":"' + profileImageUrl +
                 '","postPhotoUrl":"' + postPhotoUrl +
+                '","link":"' + link +
                 '"}'
+    console.log('ForumService:addPost: body=', body);
     let bodyJSON = JSON.parse(body);
     return this.http.post(`/api/forum-post`, bodyJSON, {});
   }

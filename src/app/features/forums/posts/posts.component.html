@@ -73,6 +73,11 @@
               <div *ngIf="posts[i].postPhotoUrl">
                 <img class="postImage" [src]="posts[i].postPhotoUrl">
               </div>
+              <div *ngIf="showPreview">
+                <app-rvlm-preview-link
+                  [linkPreview]="preview">
+                </app-rvlm-preview-link>
+              </div>
               {{ posts[i].body }}
             </div>
             <div class="response hyperlink">

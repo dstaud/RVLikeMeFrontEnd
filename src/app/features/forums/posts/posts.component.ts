@@ -1,3 +1,5 @@
+import { IlinkPreview } from './../../../core/services/link-preview.service';
+import { Iblog } from './../../../core/services/data-services/profile.service';
 import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { CommentsComponent } from './comments/comments.component';
 
-import { ForumService, Icomments } from '@services/data-services/forum.service';
+import { ForumService, Icomments, Iposts } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService, ImessageShareData, ImyStory, Ipost } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -18,21 +20,10 @@ import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
+import { link } from 'fs';
 
 export type FadeState = 'visible' | 'hidden';
-
-export interface Iposts {
-  _id: string,
-  createdBy: string,
-  body: string,
-  displayName: string,
-  profileImageUrl: string,
-  postPhotoUrl: string,
-  commentCount: number,
-  reactionCount: number,
-  createdAt: Date,
-  fragment?: string
-}
 
 @Component({
   selector: 'app-rvlm-posts',
@@ -97,13 +88,20 @@ export class PostsComponent implements OnInit {
   addPostOpen: string = 'out';
   commentsOpen: Array<string> = [];
 
-  showSpinner = false;
-  showPosts = false;
-  showFirstPost = false;
+  showSpinner: boolean = false;
+  showPosts: boolean = false;
+  showFirstPost: boolean = false;
   showPostComments: Array<boolean> = [];
   showUpdatePost: Array<boolean> = [];
+  showPreview: boolean = false;
   startCommentsIndex: Array<number> = [];
   fragmentLink="lk3";
+  preview: IlinkPreview = {
+    title: '',
+    description: '',
+    url: '',
+    image: ''
+  }
 
   private windowWidth: any;
   private dialogWidth: number;
@@ -120,6 +118,7 @@ export class PostsComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private desktopMaxWidthSvc: DesktopMaxWidthService,
               private router: Router,
+              private linkPreviewSvc: LinkPreviewService,
               private sentry: SentryMonitorService,
               private viewportScroller: ViewportScroller,
               private dialog: MatDialog) { }
@@ -311,10 +310,15 @@ export class PostsComponent implements OnInit {
     let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
     let photoUrl: string = '';
     let fragmentLink: string;
+    let link: string = '';
 
 
     if (post.photoUrl !== 'undefined') {
       photoUrl = post.photoUrl;
+    }
+
+    if (post.link !== 'undefined') {
+      link = post.link;
     }
 
     fragmentLink = 'lk' + this.fragmentNbr;
@@ -327,6 +331,7 @@ export class PostsComponent implements OnInit {
       displayName: post.userDisplayName,
       profileImageUrl: post.userProfileUrl,
       postPhotoUrl: photoUrl,
+      link: link,
       commentCount: post.comments.length,
       reactionCount: post.reactions.length,
       createdAt: post.createdAt,

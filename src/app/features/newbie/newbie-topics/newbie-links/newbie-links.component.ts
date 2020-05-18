@@ -33,7 +33,12 @@ export class NewbieLinksComponent implements OnInit {
   userType: string;
   profileImageUrl: string = './../../../../../assets/images/no-profile-pic.jpg';
   showPreview: boolean = false;
-  preview: IlinkPreview;
+  preview: IlinkPreview = {
+    title: '',
+    description: '',
+    url: '',
+    image: ''
+  }
 
   showSpinner: boolean = false;
   showAddLink: boolean = false;
@@ -100,6 +105,7 @@ export class NewbieLinksComponent implements OnInit {
       this.preview.title = '';
       this.preview.url = '';
     }
+    this.showPreview = false;
     this.form.reset();
     this.showAddLink = false;
   }
@@ -109,23 +115,27 @@ export class NewbieLinksComponent implements OnInit {
     this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
     .subscribe(preview => {
       console.log('BlogLinkComponent:onLink: preview=', preview);
-      if (preview.title) {
-        this.preview = preview;
-        if (this.preview.url.substring(0,7) !== 'http://') {
-          this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-        } else if (this.form.controls.link.value.substring(0,8) !== 'https://') {
-          this.preview.url = this.preview.url.substring(9,this.preview.url.length);
-        }
-        this.showPreview = true;
+      this.preview = preview;
+      if (this.preview.url.substring(0,7) == 'http://') {
+        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
       }
+      this.showPreview = true;
+
+      if (!this.preview.title) {
+        this.preview.title = this.preview.url;
+      }
+
     }, error => {
       console.log('BlogLinkComponent:onLink: no link found');
-      if (this.preview) {
-        this.preview.description = '';
-        this.preview.image = '';
-        this.preview.title = '';
-        this.preview.url = '';
+      this.preview.url = this.form.controls.link.value;
+      if (this.preview.url.substring(0,7) == 'http://') {
+        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
       }
+      this.preview.title = this.preview.url;
       this.form.reset();
       this.showPreview = false;
     })

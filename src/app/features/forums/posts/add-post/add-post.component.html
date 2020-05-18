@@ -27,6 +27,19 @@
           </app-rvlm-preview-link>
         </div>
 
+        <div *ngIf="linkEntry">
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Link</mat-label>
+              <input matInput
+                      type="url"
+                      placeholder="http://www.example.com"
+                      formControlName="link"
+                      (blur)="onLink()">
+            </mat-form-field>
+          </div>
+        </div>
+
         <button [disabled]="actionsDisabled" class="action" mat-button (click)="fileInput.click()">
           <mat-icon fontSet="material-icons-outlined">add_a_photo</mat-icon>
           <input #fileInput type="file"
