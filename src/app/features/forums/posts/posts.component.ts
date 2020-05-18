@@ -1,5 +1,3 @@
-import { IlinkPreview } from './../../../core/services/link-preview.service';
-import { Iblog } from './../../../core/services/data-services/profile.service';
 import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -21,7 +19,6 @@ import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
-import { link } from 'fs';
 
 export type FadeState = 'visible' | 'hidden';
 
@@ -181,6 +178,12 @@ export class PostsComponent implements OnInit {
   }
 
 
+  onLink(row: number) {
+    console.log('PostsComponent:onLink: post url=', this.posts[row].link)
+    window.open(this.posts[row].link, '_blank');
+  }
+
+
   // When user clicks to show all comments, set the start index to zero
   onShowAllComments(row) {
     this.startCommentsIndex[row] = 0;
@@ -311,7 +314,9 @@ export class PostsComponent implements OnInit {
     let photoUrl: string = '';
     let fragmentLink: string;
     let link: string = '';
-
+    let linkDesc: string = '';
+    let linkTitle: string = '';
+    let linkImage: string = '';
 
     if (post.photoUrl !== 'undefined') {
       photoUrl = post.photoUrl;
@@ -319,6 +324,18 @@ export class PostsComponent implements OnInit {
 
     if (post.link !== 'undefined') {
       link = post.link;
+    }
+
+    if (post.linkDesc !== 'undefined') {
+      linkDesc = post.linkDesc;
+    }
+
+    if (post.linkTitle !== 'undefined') {
+      linkTitle = post.linkTitle;
+    }
+
+    if (post.linkImage !== 'undefined') {
+      linkImage = post.linkImage;
     }
 
     fragmentLink = 'lk' + this.fragmentNbr;
@@ -332,6 +349,9 @@ export class PostsComponent implements OnInit {
       profileImageUrl: post.userProfileUrl,
       postPhotoUrl: photoUrl,
       link: link,
+      linkDesc: linkDesc,
+      linkTitle: linkTitle,
+      linkImage: linkImage,
       commentCount: post.comments.length,
       reactionCount: post.reactions.length,
       createdAt: post.createdAt,

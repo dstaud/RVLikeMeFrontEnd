@@ -11,6 +11,9 @@ export interface Iposts {
   profileImageUrl: string,
   postPhotoUrl: string,
   link: string,
+  linkDesc: string,
+  linkTitle: string,
+  linkImage: string,
   commentCount: number,
   reactionCount: number,
   createdAt: Date,
@@ -90,14 +93,26 @@ export class ForumService {
     return this.http.post(`/api/forum-topic`, JSON.parse(keyValues), {});
   }
 
-  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string, postPhotoUrl: string, link: string): Observable<any> {
-    let postEscaped = this.escapeJsonReservedCharacters(post);
+  addPost(groupID: string, post:string, displayName: string, profileImageUrl: string,
+          postPhotoUrl: string, link: string, linkDesc: string, linkTitle: string, linkImage: string): Observable<any> {
+    console.log('ForumService:addPost: post body=', post);
+    let postEscaped: string;
+
+    if (post) {
+      postEscaped = this.escapeJsonReservedCharacters(post);
+    } else {
+      postEscaped = '';
+    }
+
     let body = '{"groupID":"' + groupID +
                 '","body":"' + postEscaped +
                 '","displayName":"' + displayName +
                 '","profileImageUrl":"' + profileImageUrl +
                 '","postPhotoUrl":"' + postPhotoUrl +
                 '","link":"' + link +
+                '","linkDesc":"' + linkDesc +
+                '","linkTitle":"' + linkTitle +
+                '","linkImage":"' + linkImage +
                 '"}'
     console.log('ForumService:addPost: body=', body);
     let bodyJSON = JSON.parse(body);

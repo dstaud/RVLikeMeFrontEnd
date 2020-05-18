@@ -73,9 +73,12 @@
               <div *ngIf="posts[i].postPhotoUrl">
                 <img class="postImage" [src]="posts[i].postPhotoUrl">
               </div>
-              <div *ngIf="showPreview">
+              <div *ngIf="posts[i].link" class="link" (click)="onLink(i)">
                 <app-rvlm-preview-link
-                  [linkPreview]="preview">
+                  [linkPreview]="{'url':posts[i].link,
+                                  'description':posts[i].linkDesc,
+                                  'title':posts[i].linkTitle,
+                                  'image':posts[i].linkImage}">
                 </app-rvlm-preview-link>
               </div>
               {{ posts[i].body }}

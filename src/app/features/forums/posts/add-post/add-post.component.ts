@@ -94,7 +94,8 @@ export class AddPostComponent implements OnInit {
   onPost() {
     this.showSpinner = true;
     let postText = this.form.controls.post.value;
-    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl, this.preview.url)
+    this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl,
+                          this.preview.url, this.preview.description, this.preview.title, this.preview.image)
     .subscribe(post => {
       this.onDoneWithAdd(post);
       this.showSpinner = false;
