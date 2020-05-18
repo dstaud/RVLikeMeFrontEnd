@@ -43,6 +43,41 @@
     <p class="mat-body">
       we are here to connect you with other RV'ers who do the RV lifestyle the way you do (or hope to do in the future)!
     </p>
-    <button mat-flat-button class="button" color="primary" (click)="registerUser()">Sign up for free</button>
+    <br>
+    <div *ngIf="!containerDesktop" class="marketing-container">
+      <p class="marketing mat-title">Some of the features you will find inside RV Like Me</p>
+      <div fxLayout="col"
+          fxLayout.lt-sm="column"
+          fxLayoutGap="10px"
+          fxLayoutAlign="center">
+        <ng-container>
+          <app-rvlm-card-graphic
+            class="card"
+            fxFlex="0 1 calc(33.3% - 20px)"
+            fxFlex.lt-sm="100%"
+            (click)="onRegisterUser()">
+          </app-rvlm-card-graphic>
+          <app-rvlm-card-likeme
+            class="card"
+            fxFlex="0 1 calc(33.3% - 20px)"
+            fxFlex.lt-sm="100%"
+            (click)="onRegisterUser()">
+          </app-rvlm-card-likeme>
+          <app-rvlm-card-newbie
+            class="card"
+            fxFlex="0 1 calc(33.3% - 20px)"
+            fxFlex.lt-sm="100%"
+            (click)="onRegisterUser()">
+          </app-rvlm-card-newbie>
+          <app-rvlm-card-story
+            class="card"
+            fxFlex="0 1 calc(33.3% - 20px)"
+            fxFlex.lt-sm="100%"
+            (click)="onRegisterUser()">
+          </app-rvlm-card-story>
+      </ng-container>
+    </div>
+    <br>
   </div>
+  <button mat-flat-button class="button" color="primary" (click)="onRegisterUser()">Sign up for free</button>
 </div>

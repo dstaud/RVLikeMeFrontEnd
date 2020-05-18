@@ -5,6 +5,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SharedComponent } from '@shared/shared.component';
 
+export interface Iblog {
+  linkDesc: string,
+  link: string
+}
 export interface IuserProfile {
   _id: string;
   userID: string;
@@ -50,6 +54,7 @@ export interface IuserProfile {
   rigImageUrls: Array<string>;
   lifestyleImageUrls: Array<string>;
   sendMessageEmails: boolean;
+  blogLinks: Array<Iblog>;
 }
 
 @Injectable({
@@ -101,7 +106,8 @@ export class ProfileService {
     notifySubscription: null,
     rigImageUrls: [],
     lifestyleImageUrls: [],
-    sendMessageEmails: true
+    sendMessageEmails: true,
+    blogLinks: []
   };
   private profileSubscription: any;
 
@@ -112,6 +118,13 @@ export class ProfileService {
   constructor(private shared: SharedComponent,
               private http: HttpClient) { }
 
+
+  addBlogLinkToProfile(profileID: string, linkDesc: string, link: string): Observable<any> {
+    let params = '{"profileID":"' + profileID + '",' +
+                  '"linkDesc":"' + linkDesc + '",' +
+                  '"link":"' + link + '"}';
+    return this.http.put(`/api/profile-blog-link`, JSON.parse(params), {});
+  }
 
   addGroupToProfile(profileID: string, groupID: string): Observable<any> {
     let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';

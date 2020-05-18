@@ -25,10 +25,9 @@
   <button mat-stroked-button class="button" (click)="onLearnMore()">What is RV Like Me?</button>
 </div>
 <br>
-<mat-divider></mat-divider>
-<div class="marketing-container">
+<div *ngIf="desktopUser" class="marketing-container">
+  <mat-divider></mat-divider>
   <p class="marketing mat-title">Some of the features you will find inside RV Like Me</p>
-  <!-- fxFlex.lt-md="0 1 calc(50% - 20px)" -->
   <div fxLayout="row wrap"
         fxLayout.lt-sm="column"
         fxLayoutGap="10px"
@@ -38,7 +37,6 @@
         *ngIf="cardNbr !== 1"
         class="card"
         fxFlex="0 1 calc(33.3% - 20px)"
-
         fxFlex.lt-sm="100%"
         (click)="onRegisterUser()">
       </app-rvlm-card-graphic>
@@ -46,7 +44,6 @@
         *ngIf="cardNbr !== 2"
         class="card"
         fxFlex="0 1 calc(33.3% - 20px)"
-
         fxFlex.lt-sm="100%"
         (click)="onRegisterUser()">
       </app-rvlm-card-likeme>
@@ -54,7 +51,6 @@
         *ngIf="cardNbr !== 3"
         class="card"
         fxFlex="0 1 calc(33.3% - 20px)"
-
         fxFlex.lt-sm="100%"
         (click)="onRegisterUser()">
       </app-rvlm-card-newbie>
@@ -62,7 +58,6 @@
         *ngIf="cardNbr !== 4"
         class="card"
         fxFlex="0 1 calc(33.3% - 20px)"
-
         fxFlex.lt-sm="100%"
         (click)="onRegisterUser()">
       </app-rvlm-card-story>

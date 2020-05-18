@@ -52,6 +52,7 @@ export class PersonalComponent implements OnInit {
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
   tempProfileImage: string;
+  containerDialog: boolean = false;
 
 
   // Spinner is for initial load from the database only.
@@ -66,8 +67,6 @@ export class PersonalComponent implements OnInit {
   showgenderSaveIcon = false;
   showmyStorySaveIcon = false;
   showprofileImageSaveIcon = true;
-  containerDialog: boolean = false;
-
 
   /**** Select form select field option data. ****/
   Genders: Gender[] = [
@@ -177,7 +176,13 @@ export class PersonalComponent implements OnInit {
                 homeCountry: new FormControl(''),
                 homeState: new FormControl(''),
                 myStory: new FormControl(''),
-                profileImage: new FormControl('')
+                profileImage: new FormControl(''),
+                linkDesc1: new FormControl(''),
+                link1: new FormControl(''),
+                linkDesc2: new FormControl(''),
+                link2: new FormControl(''),
+                linkDesc3: new FormControl(''),
+                link3: new FormControl('')
               },
                 { updateOn: 'blur' }
               );
@@ -215,7 +220,6 @@ export class PersonalComponent implements OnInit {
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
   }
-
 
   onBack() {
     let route = '/' + this.returnRoute

@@ -10,20 +10,29 @@
   <div class="rig-images">
     <div class="row">
       <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">
-        <div class="img-container">
-          <img class="image" [src]="rigImageUrl" style="width:95%" (click)="onViewImage(i)">
+        <div [ngClass]="desktopUser? 'desktop-img-container' : 'img-container'">
+          <img [ngClass]="rigImageUrl === placeholderPhotoUrl? 'image-placeholder' : 'image'"
+                [src]="rigImageUrl"
+                style="width:95%"
+                (click)="onViewImage(i)">
         </div>
       </div>
     </div>
   </div>
   <div class="get-image">
-    <button [disabled]="rigImageUrls.length >= 3" mat-button (click)="fileInput.click()">
-      <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
+    <button [disabled]="nbrRigImagePics >= 3" mat-button (click)="fileInput.click()">
+      <mat-icon fontSet="material-icons-outlined"
+                class="add-pic"
+                [ngClass]="nbrRigImagePics < 3? 'hyperlink' : 'disabled-hyperlink'">
+                add_a_photo
+      </mat-icon>
       <input #fileInput type="file"
               (change)="onRigImageSelected($event)"
               accept = "image/*"
               style="display:none;"/>
-        <span>{{ 'rig.component.uploadpics' | translate }}</span>
+        <span [ngClass]="nbrRigImagePics < 3? 'hyperlink' : 'disabled-hyperlink'">
+          {{ 'rig.component.uploadpics' | translate }}
+        </span>
     </button>
   </div>
   <form>

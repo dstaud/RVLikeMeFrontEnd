@@ -6,24 +6,33 @@
           (click)="onBack()">
           << Go Back
   </button>
-  <p class="mat-title">Profile - My RV Lifestlye</p>
+  <p class="mat-title">Profile - My RV Lifestyle</p>
   <div class="lifestyle-images">
     <div class="row">
       <div *ngFor="let lifeStyleImageUrl of lifestyleImageUrls; let i=index">
-        <div class="img-container">
-          <img class="image" [src]="lifeStyleImageUrl" style="width:95%" (click)="onViewImage(i)">
+        <div [ngClass]="desktopUser? 'desktop-img-container' : 'img-container'">
+          <img [ngClass]="lifeStyleImageUrl === placeholderPhotoUrl? 'image-placeholder' : 'image'"
+                [src]="lifeStyleImageUrl"
+                style="width:95%"
+                (click)="onViewImage(i)">
         </div>
       </div>
     </div>
   </div>
   <div class="get-image">
-    <button [disabled]="lifestyleImageUrls.length >= 3 || showSpinner" mat-button (click)="fileInput.click()">
-      <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
+    <button [disabled]="nbrLifestyleImagePics >= 3 || showSpinner" mat-button (click)="fileInput.click()">
+      <mat-icon fontSet="material-icons-outlined"
+                class="add-pic"
+                [ngClass]="nbrLifestyleImagePics < 3? 'hyperlink' : 'disabled-hyperlink'">
+                add_a_photo
+      </mat-icon>
       <input #fileInput type="file"
               (change)="onLifestyleImageSelected($event)"
               accept = "image/*"
               style="display:none;"/>
-        <span>{{ 'lifestyle.component.uploadpics' | translate }}</span>
+        <span [ngClass]="nbrLifestyleImagePics < 3? 'hyperlink' : 'disabled-hyperlink'">
+          {{ 'lifestyle.component.uploadpics' | translate }}
+        </span>
     </button>
   </div>
   <form [formGroup]="form">

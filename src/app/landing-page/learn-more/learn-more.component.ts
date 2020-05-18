@@ -41,18 +41,24 @@ export class LearnMoreComponent implements OnInit {
   }
 
   ngOnInit() {
-
     // Randomly pick one of 3 landing page RV images
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
 
     this.setImageBasedOnScreenWidth();
   }
 
-  registerUser() {
-    this.headerVisibleSvc.toggleHeaderVisible(true);
-    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.router.navigateByUrl('/register');
-    this.activateBackArrowSvc.setBackRoute('', 'forward');
+  onRegisterUser() {
+    if (this.containerDesktop) {
+      console.log('LearnMoreComponent:onRegisterUser: in desktop headed to regiseter');
+      this.headerVisibleSvc.toggleHeaderVisible(false);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.router.navigateByUrl('/?e=register');
+    } else {
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.activateBackArrowSvc.setBackRoute('learn-more', 'forward');
+      this.router.navigateByUrl('/register');
+    }
   }
 
   private setImageBasedOnScreenWidth() {

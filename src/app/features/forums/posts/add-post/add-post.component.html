@@ -11,7 +11,9 @@
                     (ngModelChange)="onTextEntered()"
                     type="text"
                     placeholder="{{ 'add-post.component.whatToSay' | translate }}"
-                    formControlName="post">
+                    formControlName="post"
+                    autofocus
+                    cdkFocusInitial>
           </textarea>
         </mat-form-field>
         <div *ngIf="postPhotoUrl">

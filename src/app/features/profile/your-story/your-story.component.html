@@ -47,9 +47,9 @@
     <div class="rig-images">
       <div class="row">
         <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">
-          <div class="img-container">
-            <img [src]="rigImageUrl" class="image" style="width:95%" (click)="onViewImage(rigImageUrl)">
-          </div>
+            <img class="image-container"
+                  [src]="rigImageUrl"
+                  (click)="onViewImage(rigImageUrl)">
         </div>
       </div>
     </div>
@@ -58,9 +58,9 @@
     <div class="rig-images">
       <div class="row">
         <div *ngFor="let lifestyleImageUrl of lifestyleImageUrls; let i=index">
-          <div class="img-container">
-            <img [src]="lifestyleImageUrl" class="image"  style="width:95%" (click)="onViewImage(lifestyleImageUrl)">
-          </div>
+            <img class="image-container"
+                  [src]="lifestyleImageUrl"
+                  (click)="onViewImage(lifestyleImageUrl)">
         </div>
       </div>
     </div>

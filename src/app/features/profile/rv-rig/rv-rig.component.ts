@@ -90,6 +90,8 @@ export class RvRigComponent implements OnInit {
   private desktopMaxWidth: number;
   private dialogWidthDisplay: string;
   private returnRoute: string;
+  placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
+  nbrRigImagePics: number = 0;
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -213,19 +215,21 @@ export class RvRigComponent implements OnInit {
 
 
   onViewImage(row: number) {
-    let imageData: IviewImage = {
-      profileID: this.profile._id,
-      imageType: 'rig',
-      imageOwner: true,
-      imageSource: this.rigImageUrls[row]
-    }
-    this.shareDataSvc.setData('viewImage', imageData);
+    if (row < this.nbrRigImagePics) { // Don't do anything if placeholder image
+      let imageData: IviewImage = {
+        profileID: this.profile._id,
+        imageType: 'rig',
+        imageOwner: true,
+        imageSource: this.rigImageUrls[row]
+      }
+      this.shareDataSvc.setData('viewImage', imageData);
 
-    if (this.desktopUser) {
-      this.openImageViewDialog(row);
-    } else {
-      this.activateBackArrowSvc.setBackRoute('profile/rig', 'forward');
-      this.router.navigateByUrl('/profile/image-viewer');
+      if (this.desktopUser) {
+        this.openImageViewDialog(row);
+      } else {
+        this.activateBackArrowSvc.setBackRoute('profile/rig', 'forward');
+        this.router.navigateByUrl('/profile/image-viewer');
+      }
     }
   }
 
@@ -390,11 +394,19 @@ export class RvRigComponent implements OnInit {
         } else {
           this.rigTypeFormValue = this.profile.rigType;
         }
+
         this.rigType.patchValue(this.rigTypeFormValue);
         this.rigYear.patchValue(this.profile.rigYear);
         this.rigLength.patchValue(this.profile.rigLength);
         this.rigModel.patchValue(this.profile.rigModel);
+
         this.rigImageUrls = this.profile.rigImageUrls;
+
+        this.nbrRigImagePics = this.rigImageUrls.length;
+
+        for (let i=this.rigImageUrls.length; i < 3; i++) {
+          this.rigImageUrls[i] = this.placeholderPhotoUrl;
+        }
         this.getRigData();
       }
     }, (error) => {

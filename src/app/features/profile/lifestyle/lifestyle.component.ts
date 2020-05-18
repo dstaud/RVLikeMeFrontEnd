@@ -66,6 +66,8 @@ export class LifestyleComponent implements OnInit {
   lifestyleImageUrls: Array<string> = [];
   aboutMeExperienced: boolean = false;
   desktopUser: boolean = false;
+  placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
+  nbrLifestyleImagePics: number = 0;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -155,6 +157,7 @@ export class LifestyleComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private returnRoute: string;
+
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -266,19 +269,22 @@ export class LifestyleComponent implements OnInit {
 
 
   onViewImage(row: number) {
-    let imageData: IviewImage = {
-      profileID: this.profile._id,
-      imageType: 'lifestyle',
-      imageOwner: true,
-      imageSource: this.lifestyleImageUrls[row]
-    }
-    this.shareDataSvc.setData('viewImage', imageData);
+    console.log('LifestyleComponent:onViewImage: row=', row, ' nbrPics=', this.nbrLifestyleImagePics)
+    if (row < this.nbrLifestyleImagePics) { // Don't do anything if placeholder image
+      let imageData: IviewImage = {
+        profileID: this.profile._id,
+        imageType: 'lifestyle',
+        imageOwner: true,
+        imageSource: this.lifestyleImageUrls[row]
+      }
+      this.shareDataSvc.setData('viewImage', imageData);
 
-    if (this.desktopUser) {
-      this.openImageViewDialog(row);
-    } else {
-      this.activateBackArrowSvc.setBackRoute('profile/lifestyle', 'forward');
-      this.router.navigateByUrl('/profile/image-viewer');
+      if (this.desktopUser) {
+        this.openImageViewDialog(row);
+      } else {
+        this.activateBackArrowSvc.setBackRoute('profile/lifestyle', 'forward');
+        this.router.navigateByUrl('/profile/image-viewer');
+      }
     }
   }
 
@@ -364,6 +370,12 @@ export class LifestyleComponent implements OnInit {
       });
 
       this.lifestyleImageUrls = this.profile.lifestyleImageUrls;
+      this.nbrLifestyleImagePics = this.lifestyleImageUrls.length;
+      console.log('LifestyleComponent:listenForUserProfile: profileImageArrayLength=', this.profile.lifestyleImageUrls.length);
+
+      for (let i=this.lifestyleImageUrls.length; i < 3; i++) {
+        this.lifestyleImageUrls[i] = this.placeholderPhotoUrl;
+      }
 
       if (this.profile.aboutMe === 'experienced') {
         this.aboutMeExperienced = true;

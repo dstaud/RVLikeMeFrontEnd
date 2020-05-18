@@ -85,6 +85,11 @@ export class MainComponent implements OnInit {
 
 
   /**** Route to sub-profile pages as user selects ****/
+  onBlogLinks() {
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
+    this.router.navigateByUrl('/profile/blog-link');
+  }
+
   onInterests() {
     this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.router.navigateByUrl('/profile/interests');

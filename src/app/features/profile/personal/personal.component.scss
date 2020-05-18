@@ -22,8 +22,22 @@ mat-form-field {
   cursor: pointer;
 }
 
+.blog-links {
+  padding: 10px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  margin-bottom: 15px;
+}
+
+.links {
+  margin-left: 20px;
+}
+
 .large-input {
-  width: 310px;
+  width: 90%;
+  max-width: 310px;
 }
 
 .desktop-input {

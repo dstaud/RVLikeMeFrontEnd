@@ -16,6 +16,7 @@ import { InterestsComponent } from './interests/interests.component';
 import { MainComponent } from './main/main.component';
 import { YourStoryComponent } from './your-story/your-story.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { BlogLinkComponent } from './blog-link/blog-link.component';
 
 
 
@@ -31,7 +32,8 @@ import { ImageViewerComponent } from './image-viewer/image-viewer.component';
     ImageViewDialogComponent,
     MainComponent,
     YourStoryComponent,
-    ImageViewerComponent
+    ImageViewerComponent,
+    BlogLinkComponent
   ],
   imports: [
     CommonModule,

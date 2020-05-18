@@ -24,6 +24,7 @@ export class LandingPageComponent implements OnInit {
   showLearnMoreDesktop: boolean = false;
   maxRvImageHeight = 'auto';
   maxRvImageWidth = '100%';
+  desktopUser: boolean = false;
 
   private windowWidth: number;
   private landingImageNbr: number;
@@ -43,11 +44,14 @@ export class LandingPageComponent implements OnInit {
               private route: ActivatedRoute,
               private shareDataSvc: ShareDataService,
               private router: Router) {
+        if (window.innerWidth > 600) {
+          this.desktopUser = true;
+        }
   }
 
   ngOnInit() {
     let params: Isignin;
-
+    console.log('LandingPageComponent:ngOnInit: desktopUser=', this.desktopUser);
     // Randomly pick one of 3 landing page RV images
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
     this.cardNbr = Math.floor(Math.random() * 4) + 1;
@@ -122,14 +126,14 @@ export class LandingPageComponent implements OnInit {
 
 
   private listenForParameters() {
-    console.log('PasswordReset:listenForParameters:');
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
+      console.log('PasswordReset:listenForParameters: params=', params);
       if (params.e === 'signin') {
         if (this.windowWidth > 600) {
           this.openSigninDialog((result: string) => {
-            console.log('LandingPageComponent:listenForParameters: back from dialog. result=', result);
+            console.log('LandingPageComponent:listenForParameters: back from signin dialog. result=', result);
             if (result === 'complete') {
               this.activateBackArrowSvc.setBackRoute('', 'forward');
               this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
@@ -139,6 +143,18 @@ export class LandingPageComponent implements OnInit {
         } else {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.router.navigateByUrl('/signin');
+        }
+      } else if (params.e === 'register') {
+        if (this.windowWidth > 600) {
+          this.openRegisterDialog((result: string) => {
+            console.log('LandingPageComponent:listenForParameters: back from register dialog. result=', result);
+            if (result === 'complete') {
+              this.onSignIn();
+            }
+          });
+        } else {
+          this.activateBackArrowSvc.setBackRoute('', 'forward');
+          this.router.navigateByUrl('/register');
         }
       }
     }, error => {

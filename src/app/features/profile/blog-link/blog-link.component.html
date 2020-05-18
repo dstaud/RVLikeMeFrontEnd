@@ -1,0 +1,59 @@
+<div class="container mat-app-background mat-body-1">
+  <button *ngIf="desktopUser"
+          type="button"
+          mat-button
+          class="hyperlink"
+          (click)="onBack()">
+          << Go Back
+  </button>
+  <p class="mat-title">Profile - Blog Links</p>
+  <div>
+    <button mat-button (click)="onAddLink()" class="hyperlink">
+      <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
+      <span>Add a blog link</span>
+    </button>
+  </div>
+  <div *ngIf="showAddLink" class="add-link">
+    <div [formGroup]="form">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Link Description</mat-label>
+          <input matInput
+                  type="text"
+                  placeholder="Link description"
+                  formControlName="linkDesc">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Link</mat-label>
+          <input matInput
+                  type="url"
+                  placeholder="http://www.example.com"
+                  formControlName="link">
+        </mat-form-field>
+      </div>
+      <div>
+        <button type="submit"
+                class="mat-raised-button mat-primary button"
+                [disabled]="!form.valid"
+                (click)="onSubmit()">
+                {{ 'newbie-links.component.submit' | translate }}
+        </button>
+        <button class="mat-raised-button"
+                (click)="onCancel()">
+                {{ 'newbie-links.component.cancel' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="links">
+    <div *ngFor="let link of blogLinks; let i=index">
+      <a href="{{ link.link }}" class="hyperlink external link" target="_blank">
+        <span>{{ link.linkDesc }}</span>
+      </a>
+    </div>
+  </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+</div>
+
