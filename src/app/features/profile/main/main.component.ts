@@ -14,8 +14,6 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
-import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-
 export interface AboutMe {
   value: string;
   viewValue: string;

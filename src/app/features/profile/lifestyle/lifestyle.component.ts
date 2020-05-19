@@ -3,6 +3,7 @@ import { FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -14,7 +15,6 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
 
-import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 
@@ -59,8 +59,116 @@ and I can't notify them. */
 @Component({
   selector: 'app-rvlm-lifestyle',
   templateUrl: './lifestyle.component.html',
-  styleUrls: ['./lifestyle.component.scss']
+  styleUrls: ['./lifestyle.component.scss'],
+  animations: [
+    trigger('helpNewbieSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('aboutMeOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('rvUseOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('worklifeOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('campsWithMeOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('boondockingOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('travelingOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
+
 export class LifestyleComponent implements OnInit {
   form: FormGroup;
   lifestyleImageUrls: Array<string> = [];
@@ -68,6 +176,15 @@ export class LifestyleComponent implements OnInit {
   desktopUser: boolean = false;
   placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
   nbrLifestyleImagePics: number = 0;
+  profile: IuserProfile;
+
+  aboutMeOtherOpen: string = 'out';
+  rvUseOtherOpen: string = 'out';
+  campsWithMeOtherOpen: string = 'out';
+  worklifeOtherOpen: string = 'out';
+  boondockingOtherOpen: string = 'out';
+  travelingOtherOpen: string = 'out';
+  helpNewbieOpen: string = 'out';
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -80,12 +197,6 @@ export class LifestyleComponent implements OnInit {
   showboondockingSaveIcon = false;
   showtravelingSaveIcon = false;
 
-  // Store 'other' value locally
-  rvUse = '';
-  worklife = '';
-  campsWithMe = '';
-  boondocking = '';
-  traveling = '';
   aboutMeFormValue = '';
   rvUseFormValue = '';
   worklifeFormValue = '';
@@ -154,7 +265,6 @@ export class LifestyleComponent implements OnInit {
     {value: 'other', viewValue: 'profile.component.list.traveling.other'},
   ];
 
-  private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private returnRoute: string;
 
@@ -178,12 +288,18 @@ export class LifestyleComponent implements OnInit {
               fb: FormBuilder) {
               this.form = fb.group({
                 aboutMe: new FormControl(''),
+                aboutMeOther: new FormControl(''),
                 helpNewbies: new FormControl(false),
                 rvUse: new FormControl(''),
+                rvUseOther: new FormControl(''),
                 worklife: new FormControl(''),
+                worklifeOther: new FormControl(''),
                 campsWithMe: new FormControl(''),
+                campsWithMeOther: new FormControl(''),
                 boondocking: new FormControl(''),
-                traveling: new FormControl('')
+                boondockingOther: new FormControl(''),
+                traveling: new FormControl(''),
+                travelingOther: new FormControl('')
                 })
 }
 
@@ -223,10 +339,12 @@ export class LifestyleComponent implements OnInit {
 
 
   // Offer chance for experienced RVer to help out newbies
-  onHelpNewbies(event: any) {
+  onHelpNewbies() {
+    let callHelpNewbiesUpdateWhenDone: boolean = false;
+
     this.showhelpNewbiesSaveIcon = true;
-    this.profile.helpNewbies = event.target.value;
-    this.updateLifestyle('helpNewbies', this.profile.helpNewbies);
+    this.profile.helpNewbies = this.form.controls.helpNewbies.value
+    this.updateLifestyle('helpNewbies', this.profile.helpNewbies, callHelpNewbiesUpdateWhenDone);
   }
 
 
@@ -247,23 +365,36 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-  // Form Select option processing
-  onSelectedSelectItem(control: string, controlDesc: string, event: string) {
+  onOther(control: string) {
+    let callHelpNewbiesUpdateWhenDone = false;
+    let otherControl = control + 'Other';
+    let value = '@' + this.form.controls[otherControl].value;
+    this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
+  }
 
-    console.log('LifestyleComponent:onSelectedSelectItem: control=', control, 'event=', event)
-    if (control === "aboutMe" && event !== 'experienced') {
-      this.profile.helpNewbies = false;
-      this.form.patchValue({ helpNewbies: 'false'});
+
+  // Form Select option processing
+  onSelectedSelectItem(control: string, controlDesc: string, value: string) {
+    let otherControl: string = control + 'OtherOpen';
+    let callHelpNewbiesUpdateWhenDone: boolean = false;
+
+    // Open up slideout for helping newbies if they are experienced.
+    if (control === 'aboutMe') {
+      if (value === 'experienced') {
+        this.helpNewbieOpen = 'in';
+      } else {
+        this.helpNewbieOpen = 'out';
+        this.profile.helpNewbies = false;
+        this.form.patchValue({ helpNewbies: 'false'});
+        callHelpNewbiesUpdateWhenDone = true;
+      }
     }
 
-    // If user chose other, set description for dialog
-    if (event === 'other') {
-      this.openOtherDialog(control, controlDesc, event);
+    if (value === 'other') {
+      this[otherControl] = 'in';
     } else {
-
-      // If user did not choose other, call the correct update processor for the field selected
-      this[control] = '';
-      this.updateDataPoint(event, control);
+      this[otherControl] = 'out';
+      this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
     }
   }
 
@@ -320,38 +451,13 @@ export class LifestyleComponent implements OnInit {
     .subscribe(profileResult => {
       this.profile = profileResult;
 
-      // If user selected other on a form field, need to get the data they entered
-      // and set the form field to display 'other'
-      if (this.otherData('aboutMe')) {
-        this.aboutMeFormValue = 'other';
-      } else {
-        this.aboutMeFormValue = this.profile.aboutMe;
-      }
-      if (this.otherData('rvUse')) {
-        this.rvUseFormValue = 'other';
-      } else {
-        this.rvUseFormValue = this.profile.rvUse;
-      }
-      if (this.otherData('worklife')) {
-        this.worklifeFormValue = 'other';
-      } else {
-        this.worklifeFormValue = this.profile.worklife;
-      }
-      if (this.otherData('campsWithMe')) {
-        this.campsWithMeFormValue = 'other';
-      } else {
-        this.campsWithMeFormValue = this.profile.campsWithMe;
-      }
-      if (this.otherData('boondocking')) {
-        this.boondockingFormValue = 'other';
-      } else {
-        this.boondockingFormValue = this.profile.boondocking;
-      }
-      if (this.otherData('traveling')) {
-        this.travelingFormValue = 'other';
-      } else {
-        this.travelingFormValue = this.profile.traveling;
-      }
+      // For controls where user can select 'other', do some special processing
+      this.otherData('aboutMe');
+      this.otherData('rvUse');
+      this.otherData('worklife');
+      this.otherData('campsWithMe');
+      this.otherData('boondocking');
+      this.otherData('traveling');
 
       if (profileResult.helpNewbies) {
         helpNewbies = profileResult.helpNewbies.toString();
@@ -371,7 +477,6 @@ export class LifestyleComponent implements OnInit {
 
       this.lifestyleImageUrls = this.profile.lifestyleImageUrls;
       this.nbrLifestyleImagePics = this.lifestyleImageUrls.length;
-      console.log('LifestyleComponent:listenForUserProfile: profileImageArrayLength=', this.profile.lifestyleImageUrls.length);
 
       for (let i=this.lifestyleImageUrls.length; i < 3; i++) {
         this.lifestyleImageUrls[i] = this.placeholderPhotoUrl;
@@ -379,6 +484,7 @@ export class LifestyleComponent implements OnInit {
 
       if (this.profile.aboutMe === 'experienced') {
         this.aboutMeExperienced = true;
+        this.helpNewbieOpen = 'in';
       }
 
       this.showSpinner = false;
@@ -391,58 +497,23 @@ export class LifestyleComponent implements OnInit {
   }
 
 
-  // Select form 'Other' Dialog
-  private openOtherDialog(control: string, name: string, event: string): void {
-    let other = '';
-    let selection = '';
-    other = this[control];
-
-    const dialogRef = this.dialog.open(OtherDialogComponent, {
-      width: '250px',
-      disableClose: true,
-      data: {name: name, other: other }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result) {
-        if (result !== 'canceled') {
-          if (this[control] !== result ) {
-            this[control] = result;
-            this.profile[control] = '@' + result;
-            this.updateDataPoint(event, control);
-          }
-        }
-      } else {
-        if (this[control]) {
-          this[control] = '';
-          this.profile[control] = null;
-          this.updateDataPoint(event, control);
-          this.form.patchValue({[control]: null});
-        } else {
-          if (this.profile[control]) {
-            selection = this.profile[control];
-          }
-          this.form.patchValue({[control]: selection});
-        }
-      }
-    }, error => {
-      this.sentry.logError({"message":"error closing dialog","error":error});
-    });
-  }
-
-
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
-  private otherData(control: string): boolean {
+  private otherData(control: string) {
+    let otherControl = control + 'Other';
+    let otherOpen = control + 'OtherOpen';
+    let formValue = control + 'FormValue';
     let result = false;
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
-        this[control] = this.profile[control].substring(1, this.profile[control].length);
-        result = true;
+        this[formValue] = 'other';
+        this.form.patchValue({
+          [otherControl]: this.profile[control].substring(1, this.profile[control].length)
+        })
+        this[otherOpen] = 'in';
+      } else {
+        this[formValue] = this.profile[control];
       }
     }
-    return result;
   }
 
 
@@ -464,7 +535,6 @@ export class LifestyleComponent implements OnInit {
       } else {
           this.returnRoute = '';
       }
-      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
     }, error => {
       console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });
@@ -472,36 +542,31 @@ export class LifestyleComponent implements OnInit {
 
 
   /**** Field auto-update processing ****/
-  private updateDataPoint(event: string, control: string) {
+  private updateDataPoint(value: string, control: string, callHelpNewbiesUpdateWhenDone: boolean) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
-    if (event === '') {
+    if (value === '') {
       this.profile[control] = null;
       this.form.patchValue({ [control]: null });
     } else {
-      if (this.form.controls[control].value !== 'other') {
-        this.profile[control] = event;
-      }
+      this.profile[control] = value;
     }
-    this.updateLifestyle(control, this.profile[control]);
+    this.updateLifestyle(control, this.profile[control], callHelpNewbiesUpdateWhenDone);
   }
 
 
-  private updateLifestyle(control: string, value: any) {
+  private updateLifestyle(control: string, value: any, callHelpNewbiesUpdateWhenDone: boolean) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
-      // this.profileSvc.distributeProfileUpdate(this.profile);
-      if (control === 'aboutMe') {
-        if (value === 'experienced') {
-          this.aboutMeExperienced = true;
-        } else {
-          this.aboutMeExperienced = false;
-        }
+      this.profileSvc.distributeProfileUpdate(this.profile);
+
+      if (callHelpNewbiesUpdateWhenDone) {
+        this.onHelpNewbies();
       }
-    }, error => {
+     }, error => {
       this[SaveIcon] = false;
       console.error('LifestyleComponent:updateLifestyle: throw error ', error);
       throw new Error(error);

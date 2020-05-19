@@ -36,8 +36,6 @@ import { HttpInterceptorService } from '@services/data-services/http-interceptor
 import { ProfileService } from '@services/data-services/profile.service';
 import { WindowService } from '@services/window.service';
 
-import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
-
 import { SharedModule } from '@shared/shared.module';
 import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 import { AdminComponent } from './features/admin/admin.component';
@@ -93,7 +91,6 @@ export function getErrorHandler(): ErrorHandler {
     SigninComponent,
     RegisterUserComponent,
     LearnMoreComponent,
-    OtherDialogComponent,
     ForumsListComponent,
     SuggestTopicDialogComponent,
     AdminComponent,

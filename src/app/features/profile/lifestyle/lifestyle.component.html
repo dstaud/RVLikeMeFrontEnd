@@ -51,18 +51,28 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showaboutMeSaveIcon">save</mat-icon>
     </div>
-    <div *ngIf="aboutMeExperienced" class="newbie">
+    <div [@aboutMeOtherSlideInOut]="aboutMeOtherOpen" class="other">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter 'other' value</mat-label>
+        <input matInput
+              type="text"
+              cdkFocusInitial
+              formControlName="aboutMeOther"
+              (blur)="onOther('aboutMe')">
+      </mat-form-field>
+    </div>
+    <div [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
         <p>As an experienced RVer, are you interested in helping newbies?</p>
         <input type="radio"
                 formControlName="helpNewbies"
                 value="true"
                 name="helpNewbies"
-                (change)="onHelpNewbies($event)">Yes
+                (change)="onHelpNewbies()">Yes
         <input type="radio"
                 formControlName="helpNewbies"
                 value="false"
                 name="helpNewbies"
-                (change)="onHelpNewbies($event)">No
+                (change)="onHelpNewbies()">No
       <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'true'">insert_emoticon</mat-icon>
       <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'false'">save</mat-icon>
     </div>
@@ -82,6 +92,16 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showrvUseSaveIcon">save</mat-icon>
     </div>
+    <div [@rvUseOtherSlideInOut]="rvUseOtherOpen" class="other">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter 'other' value</mat-label>
+        <input matInput
+              type="text"
+              cdkFocusInitial
+              formControlName="rvUseOther"
+              (blur)="onOther('rvUse')">
+      </mat-form-field>
+    </div>
 
     <div>
       <mat-form-field appearance="outline">
@@ -97,6 +117,16 @@
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showworklifeSaveIcon">save</mat-icon>
+    </div>
+    <div [@worklifeOtherSlideInOut]="worklifeOtherOpen" class="other">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter 'other' value</mat-label>
+        <input matInput
+              type="text"
+              cdkFocusInitial
+              formControlName="worklifeOther"
+              (blur)="onOther('worklife')">
+      </mat-form-field>
     </div>
 
     <div>
@@ -114,6 +144,16 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showcampsWithMeSaveIcon">save</mat-icon>
     </div>
+    <div [@campsWithMeOtherSlideInOut]="campsWithMeOtherOpen" class="other">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter 'other' value</mat-label>
+        <input matInput
+              type="text"
+              cdkFocusInitial
+              formControlName="campsWithMeOther"
+              (blur)="onOther('campsWithMe')">
+      </mat-form-field>
+    </div>
 
     <div>
       <mat-form-field appearance="outline">
@@ -130,6 +170,16 @@
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showboondockingSaveIcon">save</mat-icon>
     </div>
+    <div [@boondockingOtherSlideInOut]="boondockingOtherOpen" class="other">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter 'other' value</mat-label>
+        <input matInput
+              type="text"
+              cdkFocusInitial
+              formControlName="boondockingOther"
+              (blur)="onOther('boondocking')">
+      </mat-form-field>
+    </div>
 
     <div>
       <mat-form-field appearance="outline">
@@ -145,6 +195,16 @@
         </mat-select>
       </mat-form-field>
       <mat-icon class="icon" *ngIf="showtravelingSaveIcon">save</mat-icon>
+    </div>
+    <div [@travelingOtherSlideInOut]="travelingOtherOpen" class="other">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter 'other' value</mat-label>
+        <input matInput
+              type="text"
+              cdkFocusInitial
+              formControlName="travelingOther"
+              (blur)="onOther('traveling')">
+      </mat-form-field>
     </div>
 
   </form>

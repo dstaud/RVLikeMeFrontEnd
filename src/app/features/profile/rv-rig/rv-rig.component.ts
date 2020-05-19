@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -19,7 +20,6 @@ import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
 
-import { OtherDialogComponent } from '@dialogs/other-dialog/other-dialog.component';
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
 export interface RigType {
@@ -35,7 +35,24 @@ export interface RigBrandManufacturer {
 @Component({
   selector: 'app-rvlm-rv-rig',
   templateUrl: './rv-rig.component.html',
-  styleUrls: ['./rv-rig.component.scss']
+  styleUrls: ['./rv-rig.component.scss'],
+  animations: [
+    trigger('rigTypeOtherSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class RvRigComponent implements OnInit {
 
@@ -45,6 +62,7 @@ export class RvRigComponent implements OnInit {
   // Could not use reactive forms for this form only because of the auto-complete of brand.  Couldn't get that to work with Reactive forms.
   rigBrand = new FormControl('');
   rigType = new FormControl('');
+  rigTypeOther = new FormControl('');
   rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
   rigModel = new FormControl('');
   rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
@@ -55,6 +73,10 @@ export class RvRigComponent implements OnInit {
   rigBrands: Array<string> = [];
   filteredBrands: Observable<IrigData[]>;
   desktopUser: boolean = false;
+  placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
+  nbrRigImagePics: number = 0;
+
+  rigTypeOtherOpen: string = 'out';
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -85,24 +107,13 @@ export class RvRigComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
   private rigTypeFormValue: string = '';
-  private windowWidth: any;
-  private dialogWidth: number;
-  private desktopMaxWidth: number;
-  private dialogWidthDisplay: string;
   private returnRoute: string;
-  placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
-  nbrRigImagePics: number = 0;
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     $event.returnValue = true;
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.setDialogWindowDimensions();
   }
 
   constructor(private authSvc: AuthenticationService,
@@ -134,17 +145,12 @@ export class RvRigComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
-      this.listenForDesktopMaxWidth();
-
       this.formEnable('disable');
 
       this.showSpinner = true;
 
       this.listenForUserProfile();
     }
-
-
-
   }
 
   ngOnDestroy() {}
@@ -159,6 +165,13 @@ export class RvRigComponent implements OnInit {
 
   onBrandSelected(brand: string) {
     this.brandSelected = brand;
+  }
+
+
+  onOther(control: string) {
+    let otherControl = control + 'Other';
+    let value = '@' + this[otherControl].value;
+    this.updateSelectItem(control, value);
   }
 
 
@@ -179,17 +192,16 @@ export class RvRigComponent implements OnInit {
 
 
   // Form Select option processing
-  onSelectedSelectItem(control: string, controlDesc: string, event: string) {
+  onSelectedSelectItem(control: string, controlDesc: string, value: string) {
+    let otherControl: string = control + 'OtherOpen';
 
-    // If user chose other, set description for dialog
-    if (event === 'other') {
-      this.openOtherDialog(control, controlDesc, event);
+    if (value === 'other') {
+      this[otherControl] = 'in';
     } else {
-
-      // If user did not choose other, call the correct update processor for the field selected
-      // this[control] = '';
-      this.updateSelectItem(control, event);
+      this[otherControl] = 'out';
+      this.updateSelectItem(control, value);
     }
+
   }
 
 
@@ -294,6 +306,7 @@ export class RvRigComponent implements OnInit {
     if (action === 'disable') {
       this.rigBrand.disable();
       this.rigType.disable();
+      this.rigTypeOther.disable();
       this.rigLength.disable();
       this.rigModel.disable();
       this.rigYear.disable();
@@ -302,6 +315,7 @@ export class RvRigComponent implements OnInit {
     if (action === 'enable') {
       this.rigBrand.enable();
       this.rigType.enable();
+      this.rigTypeOther.enable();
       this.rigLength.enable();
       this.rigModel.enable();
       this.rigYear.enable();
@@ -354,28 +368,20 @@ export class RvRigComponent implements OnInit {
 
 
   // @ indicates user selected 'other' and this is what they entered.  Stored with '@' in database.
-  private handleOtherData(control: string): boolean {
-    let result = false;
+  private handleOtherData(control: string) {
+    let otherControl = control + 'Other';
+    let otherOpen = control + 'OtherOpen';
+    let formValue = control + 'FormValue';
+
     if (this.profile[control]) {
       if (this.profile[control].substring(0, 1) === '@') {
-        result = true;
+        this[formValue] = 'other';
+        this[otherControl].patchValue(this.profile[control].substring(1, this.profile[control].length));
+        this[otherOpen] = 'in';
+      } else {
+        this[formValue] = this.profile[control];
       }
     }
-    return result;
-  }
-
-
-  private listenForDesktopMaxWidth() {
-    this.desktopMaxWidthSvc.desktopMaxWidth
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(maxWidth => {
-      this.desktopMaxWidth = maxWidth;
-      this.setDialogWindowDimensions();
-    }, error => {
-      this.sentry.logError({"message":"error listening for desktop max width","error":error});
-      this.desktopMaxWidth = 1140;
-      this.setDialogWindowDimensions();
-    });
   }
 
 
@@ -388,12 +394,9 @@ export class RvRigComponent implements OnInit {
       if (profileResult.firstName) {
         this.profile = profileResult;
         console.log('RigComponent:listenForProfileuser: profile=', this.profile);
+
         // If user selected other on a form field, need to get the data they entered
-        if (this.handleOtherData('rigType')) {
-          this.rigTypeFormValue = 'other';
-        } else {
-          this.rigTypeFormValue = this.profile.rigType;
-        }
+        this.handleOtherData('rigType')
 
         this.rigType.patchValue(this.rigTypeFormValue);
         this.rigYear.patchValue(this.profile.rigYear);
@@ -414,68 +417,6 @@ export class RvRigComponent implements OnInit {
       console.error('RigComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);
     });
-  }
-
-
-  // Select form 'Other' Dialog
-  private openOtherDialog(control: string, name: string, event: string): void {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    let other = '';
-    let selection = '';
-    if (this.profile[control].substring(0,1) === '@') { // previous value was an entered other value
-      other = this.profile[control].substring(1, this.profile[control].length);
-    } else {
-      other = '';
-    }
-
-    const dialogRef = this.dialog.open(OtherDialogComponent, {
-      width: '250px',
-      disableClose: true,
-      data: {name: name, other: other }
-    });
-
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      if (result) { // A value was returned
-        if (result !== 'canceled') { // The user did not click the cancel button
-          if (other !== result ) { // The value was changed from original value
-            // this[control] = result;
-            this.profile[control] = '@' + result;
-            this[SaveIcon] = true;
-            this.updateRig(control, this.profile[control]);
-          }
-        }
-      } else { // No value was returned
-        if (this[control]) { // Control had a value before
-          // this[control] = '';
-          this.profile[control] = null;
-          this.updateSelectItem(control, result);
-          this[control].patchValue(null);
-        } else { // Control did not have a value before
-          if (this.profile[control]) {
-            selection = this.profile[control];
-          }
-          this[control].patchValue(selection);
-        }
-      }
-    }, error => {
-      this.sentry.logError({"message":"error closing dialog","error":error});
-    });
-  }
-
-
-  // Get window size to determine how to present dialog windows
-  private setDialogWindowDimensions() {
-    this.windowWidth = window.innerWidth;
-    if (this.windowWidth > 600) {
-      if (this.windowWidth > this.desktopMaxWidth) {
-        this.dialogWidth = this.desktopMaxWidth * .95;
-      } else {
-        this.dialogWidth = this.windowWidth * .95;
-      }
-      this.dialogWidthDisplay = this.dialogWidth.toString() + 'px';
-    }
   }
 
 
@@ -522,11 +463,9 @@ export class RvRigComponent implements OnInit {
   // Update form field data on server
   private updateRig(control: string, value: any) {
     let SaveIcon = 'show' + control + 'SaveIcon';
-    console.log('RigComponent:updateRig: profileID=', this.profile._id, ' control=', control, ' value=', value);
     this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      console.log('RigComponent:updateRig: back from update, before save icon, data=', responseData);
       this[SaveIcon] = false;
     }, error => {
       this[SaveIcon] = false;
@@ -538,14 +477,14 @@ export class RvRigComponent implements OnInit {
 
 
   // Pre-process form data and call update on server
-  private updateSelectItem(control: string, event: string) {
+  private updateSelectItem(control: string, value: string) {
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
-    if (!event) {
+    if (!value) {
       this.profile[control] = null;
       this[control].patchValue(null);
     } else {
-      this.profile[control] = event;
+      this.profile[control] = value;
     }
     this.updateRig(control, this.profile[control]);
   }
