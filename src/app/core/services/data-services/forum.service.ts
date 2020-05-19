@@ -38,6 +38,13 @@ export class ForumService {
   constructor(private http: HttpClient) { }
 
 
+  deletePost(postID: string): Observable<any> {
+    let post = '{"postID":"' + postID + '"}';
+    console.log('deletePostImage: update=', JSON.parse(post));
+    return this.http.put(`/api/post-delete`, JSON.parse(post), {});
+  }
+
+
   deletePostImage(imageUrl: string): Observable<any> {
     let image = '{"imageUrl":"' + imageUrl + '"}';
     let imageUrlJSON = JSON.parse(image);

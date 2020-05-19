@@ -49,6 +49,10 @@
                   <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
                   {{ 'posts.component.updateText' | translate }}
                 </button>
+                <button mat-menu-item (click)="onDeletePost(i)">
+                  <mat-icon matPrefix fontSet="material-icons-outlined">delete</mat-icon>
+                  Delete post
+                </button>
               </mat-menu>
             </div>
 

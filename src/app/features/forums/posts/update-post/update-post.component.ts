@@ -222,7 +222,9 @@ export class UpdatePostComponent implements OnInit {
           this.readyForPost  = true;
         });
       } else {
-        this.readyForPost = true;
+        if (this.form.controls.post.value) {
+          this.readyForPost = true;
+        }
         this.showLinkPreview = false;
         this.addLinkInputEnabled = false;
         this.photoAndLinkActionsDisabled = false;

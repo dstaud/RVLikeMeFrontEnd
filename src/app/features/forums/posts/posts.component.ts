@@ -1,3 +1,4 @@
+import { LikemeCountsComponent } from './../../home/likeme-counts/likeme-counts.component';
 import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -161,6 +162,21 @@ export class PostsComponent implements OnInit {
   }
 
 
+  onDeletePost(row: number) {
+    let index: number;
+
+    this.forumSvc.deletePost(this.posts[row]._id)
+    .subscribe(forumResult => {
+      console.log('PostsComponent:onDeletePost: post deleted=', forumResult);
+      this.posts.splice(row, 1);
+
+    }, error => {
+      console.error('PostsComponent:onDeletePost: error deleting post=', error);
+      throw new Error(error);
+    });
+  }
+
+
   // When user clicks like, send update to server and turn off their ability to like again
   onLike(row: number): void {
     let reaction = 'like';
@@ -224,7 +240,6 @@ export class PostsComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
       this.router.navigateByUrl('/forums/update-post');
     }
-
   }
 
   // When user clicks to see the story of another user, navigate to myStory page
@@ -326,11 +341,12 @@ export class PostsComponent implements OnInit {
     let linkTitle: string = '';
     let linkImage: string = '';
 
-    if (post.photoUrl !== 'undefined') {
+    if (post.photoUrl !== 'undefined' && post.photoUrl !== undefined) {
       photoUrl = post.photoUrl;
     }
 
-    if (post.link !== 'undefined') {
+    console.log('PostsComponent:createPostsArrayEntry: post link=', post.link)
+    if (post.link !== 'undefined' && post.link !== undefined) {
       if (post.link.substring(0,7) == 'http://') {
         link = post.link.substring(7,post.link.length);
       } else if (post.link.substring(0,8) === 'https://') {
@@ -338,15 +354,15 @@ export class PostsComponent implements OnInit {
       }
     }
 
-    if (post.linkDesc !== 'undefined') {
+    if (post.linkDesc !== 'undefined' && post.linkDesc !== undefined) {
       linkDesc = post.linkDesc;
     }
 
-    if (post.linkTitle !== 'undefined') {
+    if (post.linkTitle !== 'undefined' && post.linkTitle !== undefined) {
       linkTitle = post.linkTitle;
     }
 
-    if (post.linkImage !== 'undefined') {
+    if (post.linkImage !== 'undefined' && post.linkImage !== undefined) {
       linkImage = post.linkImage;
     }
 
