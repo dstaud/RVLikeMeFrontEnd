@@ -23,12 +23,13 @@ export class AddPostComponent implements OnInit {
 
   form: FormGroup;
   postPhotoUrl: string = '';
-  formCompleted: boolean = false;
+  postLink: string = '';
+  readyForPost: boolean = false;
   showSpinner = false;
-  actionsDisabled = false;
-  linkEntry: boolean = false;
-  showPreview: boolean = false;
-  preview: IlinkPreview = {
+  photoAndLinkActionsDisabled = false;
+  addLinkInputEnabled: boolean = false;
+  showLinkPreview: boolean = false;
+  linkPreview: IlinkPreview = {
     title: '',
     description: '',
     url: '',
@@ -53,37 +54,86 @@ export class AddPostComponent implements OnInit {
 
 
   onAddLink() {
-    this.actionsDisabled = true;
-    this.linkEntry = true;
-    // need a way to let them enter the link and need a way to store it and then present it.
+    this.photoAndLinkActionsDisabled = true;
+    this.addLinkInputEnabled = true;
   }
-
 
   // Whether canceled or posted, send the appropriate data back up the chain
   onDoneWithAdd(post: any) {
-    this.actionsDisabled = false;
+    this.photoAndLinkActionsDisabled = false;
     this.postPhotoUrl = '';
-    if (this.preview) {
-      this.preview.description = '';
-      this.preview.image = '';
-      this.preview.title = '';
-      this.preview.url = '';
+    this.postLink = '';
+    if (this.linkPreview) {
+      this.linkPreview.description = '';
+      this.linkPreview.image = '';
+      this.linkPreview.title = '';
+      this.linkPreview.url = '';
     }
-    this.showPreview = false;
+    this.showLinkPreview = false;
     this.form.reset();
     this.postAddComplete.emit(post);
   }
 
 
+  onLink() {
+    if (this.form.controls.link.valid) {
+      if (this.form.controls.link.value) {
+        this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .subscribe(preview => {
+          console.log('AddPostComponent:onLink: preview=', preview);
+          this.linkPreview = preview;
+          this.postLink = this.form.controls.link.value;
+          console.log('AppPostComponent:onLink: url=', this.linkPreview.url);
+          if (this.linkPreview.url.substring(0,7) == 'http://') {
+            this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
+          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+            this.linkPreview.url = this.linkPreview.url.substring(8,this.linkPreview.url.length);
+          }
+
+          if (!this.linkPreview.title) {
+            this.linkPreview.title = this.linkPreview.url;
+          }
+
+          this.showLinkPreview = true;
+          this.addLinkInputEnabled = false;
+          this.readyForPost = true;
+        }, error => {
+          console.log('AddPostComponent:onLink: no link found');
+          this.linkPreview.url = this.form.controls.link.value;
+          if (this.linkPreview.url.substring(0,7) == 'http://') {
+            this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
+          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+            this.linkPreview.url = this.linkPreview.url.substring(8,this.linkPreview.url.length);
+          }
+          this.linkPreview.title = this.linkPreview.url;
+          this.form.reset();
+          this.showLinkPreview = true;
+          this.addLinkInputEnabled = false;
+          this.readyForPost = true;
+        });
+      } else {
+        if (this.form.controls.post.value) {
+          this.readyForPost = true;
+        }
+        this.showLinkPreview = false;
+        this.addLinkInputEnabled = false;
+        this.photoAndLinkActionsDisabled = false;
+      }
+    } else {
+      this.readyForPost = false;
+    }
+  }
+
+
   // As user to upload image, compress and orient the image and upload to server to store.  Save the URL to store with the post
   onPhoto(event: any) {
-    this.actionsDisabled = true;
+    this.photoAndLinkActionsDisabled = true;
     let fileType: string = 'post';
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
         this.postPhotoUrl = uploadedFileUrl;
-        this.formCompleted = true;
+        this.readyForPost = true;
         this.showSpinner = false;
       });
     });
@@ -95,7 +145,7 @@ export class AddPostComponent implements OnInit {
     this.showSpinner = true;
     let postText = this.form.controls.post.value;
     this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl,
-                          this.preview.url, this.preview.description, this.preview.title, this.preview.image)
+                          this.linkPreview.url, this.linkPreview.description, this.linkPreview.title, this.linkPreview.image)
     .subscribe(post => {
       this.onDoneWithAdd(post);
       this.showSpinner = false;
@@ -108,44 +158,18 @@ export class AddPostComponent implements OnInit {
 
 
   onTextEntered() {
-    this.formCompleted = true;
-  }
-
-  onLink() {
-    let postValue: string;
-
-    this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
-    .subscribe(preview => {
-      console.log('AddPostComponent:onLink: preview=', preview);
-      this.preview = preview;
-      console.log('AppPostComponent:onLink: url=', this.preview.url);
-      if (this.preview.url.substring(0,7) == 'http://') {
-        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+    if (this.form.controls.post.value) {
+      if (this.addLinkInputEnabled && !this.form.controls.link.valid) {
+        this.readyForPost = false;
+      } else {
+        this.readyForPost = true;
       }
-
-      if (!this.preview.title) {
-        this.preview.title = this.preview.url;
+    } else {
+      if (this.postPhotoUrl || this.postLink) {
+        this.readyForPost = true;
+      } else {
+        this.readyForPost = false;
       }
-
-      this.showPreview = true;
-      this.linkEntry = false;
-      this.formCompleted = true;
-    }, error => {
-      console.log('AddPostComponent:onLink: no link found');
-      this.preview.url = this.form.controls.link.value;
-      if (this.preview.url.substring(0,7) == 'http://') {
-        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-      }
-      this.preview.title = this.preview.url;
-      this.form.reset();
-      this.showPreview = true;
-      this.linkEntry = false;
-      this.formCompleted = true;
-
-    })
+    }
   }
 }

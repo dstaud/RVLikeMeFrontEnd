@@ -196,6 +196,10 @@ export class PostsComponent implements OnInit {
       userDisplayName: this.posts[row].displayName,
       userProfileUrl: this.posts[row].profileImageUrl,
       body: this.posts[row].body,
+      link: this.posts[row].link,
+      linkDesc: this.posts[row].linkDesc,
+      linkTitle: this.posts[row].linkTitle,
+      linkImage: this.posts[row].linkImage,
       photoUrl: this.posts[row].postPhotoUrl,
       createdBy: this.posts[row].createdBy,
       createdAt: this.posts[row].createdAt
@@ -210,6 +214,10 @@ export class PostsComponent implements OnInit {
           post = result;
           this.posts[row].body = post.body;
           this.posts[row].postPhotoUrl = post.photoUrl;
+          this.posts[row].link = post.link;
+          this.posts[row].linkDesc = post.linkDesc;
+          this.posts[row].linkTitle = post.linkTitle;
+          this.posts[row].linkImage = post.linkImage;
         }
       });
     } else {
@@ -323,7 +331,11 @@ export class PostsComponent implements OnInit {
     }
 
     if (post.link !== 'undefined') {
-      link = post.link;
+      if (post.link.substring(0,7) == 'http://') {
+        link = post.link.substring(7,post.link.length);
+      } else if (post.link.substring(0,8) === 'https://') {
+        link = post.link.substring(8,post.link.length);
+      }
     }
 
     if (post.linkDesc !== 'undefined') {

@@ -123,11 +123,16 @@ export class ForumService {
     return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
   }
 
-  updatePost(postID: string, post:string, postPhotoUrl: string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.
+  updatePost(postID: string, post:string, postPhotoUrl: string,
+              link: string, linkDesc: string, linkTitle: string, linkImage: string): Observable<any> { //TODO: update doesn't work with escaped characters. It updates with those characters.
     let postEscaped = this.escapeJsonReservedCharacters(post);
     let body = '{"postID":"' + postID +
                 '","body":"' + postEscaped +
                 '","postPhotoUrl":"' + postPhotoUrl +
+                '","link":"' + link +
+                '","linkDesc":"' + linkDesc +
+                '","linkTitle":"' + linkTitle +
+                '","linkImage":"' + linkImage +
                 '"}'
     let bodyJSON = JSON.parse(body);
     console.log('updatePost: update=', bodyJSON);

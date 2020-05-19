@@ -21,13 +21,13 @@
           <img [src]="postPhotoUrl" class="image">
         </div>
 
-        <div *ngIf="showPreview">
+        <div *ngIf="showLinkPreview">
           <app-rvlm-preview-link
-            [linkPreview]="preview">
+            [linkPreview]="linkPreview">
           </app-rvlm-preview-link>
         </div>
 
-        <div *ngIf="linkEntry">
+        <div *ngIf="addLinkInputEnabled">
           <div>
             <mat-form-field appearance="outline">
               <mat-label>Link</mat-label>
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <button [disabled]="actionsDisabled" class="action" mat-button (click)="fileInput.click()">
+        <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="fileInput.click()">
           <mat-icon fontSet="material-icons-outlined">add_a_photo</mat-icon>
           <input #fileInput type="file"
                   (change)="onPhoto($event)"
@@ -48,15 +48,15 @@
                   style="display:none;"/>
             <span class="add-photo-text">{{ 'add-post.component.photo' | translate }}</span>
         </button>
-        <button [disabled]="actionsDisabled" class="action" mat-button (click)="onAddLink()">
+        <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="onAddLink()">
           <mat-icon fontSet="material-icons-outlined">link</mat-icon>
-            <span class="add-photo-text">Add link</span>
+            <span class="add-photo-text">Add website link</span>
         </button>
       </div>
 
       <div class="buttons">
         <div class="button">
-          <button [disabled]="!formCompleted"
+          <button [disabled]="!readyForPost"
                   class="mat-raised-button mat-primary"
                   (click)="onPost()">
                   {{ 'add-post.component.post' | translate }}
@@ -74,4 +74,5 @@
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
   </div>
   <br>
+  <mat-divider></mat-divider>
 </div>

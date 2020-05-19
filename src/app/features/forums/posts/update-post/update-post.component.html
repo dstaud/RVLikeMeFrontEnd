@@ -24,9 +24,24 @@
                   rows="5"
                   type="text"
                   placeholder="{{ 'add-post.component.whatToSay' | translate }}"
-                  formControlName="post">
+                  formControlName="post"
+                  (change)=onText()>
         </textarea>
       </mat-form-field>
+
+      <div *ngIf="addLinkInputEnabled">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Link</mat-label>
+            <input matInput
+                    type="url"
+                    placeholder="http://www.example.com"
+                    formControlName="link"
+                    (blur)="onLink()">
+          </mat-form-field>
+        </div>
+      </div>
+
     </form>
     <div *ngIf="post.photoUrl">
       <div>
@@ -46,29 +61,45 @@
         <img class="postImage" [src]="post.photoUrl">
       </div>
     </div>
-    <div *ngIf="!post.photoUrl">
-      <button class="photo" mat-button (click)="fileInput.click()">
-        <mat-icon fontSet="material-icons-outlined" class="add-pic">add_a_photo</mat-icon>
-        <input #fileInput type="file"
-                (change)="onPhoto($event)"
-                accept = "image/*"
-                style="display:none;"/>
-          <span class="add-photo-text">{{ 'add-post.component.photo' | translate }}</span>
+
+    <div *ngIf="showLinkPreview">
+      <button class="delete hyperlink" mat-button (click)="onDeleteLink()">
+        <span>Delete Link</span>
       </button>
+      <app-rvlm-preview-link
+        [linkPreview]="linkPreview">
+      </app-rvlm-preview-link>
     </div>
-    <div class="button">
-      <button type="submit"
-              class="mat-raised-button mat-primary"
-              (click)="onPost()">
-              {{ 'add-post.component.post' | translate }}
-      </button>
-    </div>
-    <div class="button">
-      <button type="button"
-              class="mat-raised-button"
-              (click)="onCancel()">
-              {{ 'add-post.component.cancel' | translate }}
-      </button>
+
+    <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="fileInput.click()">
+      <mat-icon fontSet="material-icons-outlined">add_a_photo</mat-icon>
+      <input #fileInput type="file"
+              (change)="onPhoto($event)"
+              accept = "image/*"
+              style="display:none;"/>
+        <span class="add-photo-text">{{ 'add-post.component.photo' | translate }}</span>
+    </button>
+    <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="onAddLink()">
+      <mat-icon fontSet="material-icons-outlined">link</mat-icon>
+        <span class="add-photo-text">Add website link</span>
+    </button>
+
+    <div class="buttons">
+      <div class="button">
+        <button [disabled]="!readyForPost"
+                type="submit"
+                class="mat-raised-button mat-primary"
+                (click)="onPost()">
+                {{ 'add-post.component.post' | translate }}
+        </button>
+      </div>
+      <div *ngIf="containerDialog" class="button">
+        <button type="button"
+                class="mat-raised-button"
+                (click)="onCancel()">
+                {{ 'add-post.component.cancel' | translate }}
+        </button>
+      </div>
     </div>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

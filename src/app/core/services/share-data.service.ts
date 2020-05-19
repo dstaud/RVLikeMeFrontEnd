@@ -114,6 +114,10 @@ export interface Ipost {
   userProfileUrl: string,
   body: string,
   photoUrl: string,
+  link: string,
+  linkDesc: string,
+  linkTitle: string,
+  linkImage: string,
   createdBy: string,
   createdAt: Date,
   fragment?: string
@@ -241,6 +245,10 @@ export class ShareDataService {
       userProfileUrl: null,
       body: null,
       photoUrl: null,
+      link: null,
+      linkDesc: null,
+      linkTitle: null,
+      linkImage: null,
       createdBy: null,
       createdAt: null,
       fragment: null
