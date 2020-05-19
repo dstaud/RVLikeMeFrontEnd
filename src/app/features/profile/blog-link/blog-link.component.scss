@@ -42,7 +42,19 @@ a {
   margin-left: 25px;
 }
 
+.buttons {
+  padding-bottom: 10px;
+}
+
 .delete {
   cursor: pointer;
 }
 
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

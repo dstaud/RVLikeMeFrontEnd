@@ -1,4 +1,3 @@
-import { LikemeCountsComponent } from './../../home/likeme-counts/likeme-counts.component';
 import { Component, OnInit, OnDestroy, Input, ViewChild, HostListener} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -157,6 +156,8 @@ export class PostsComponent implements OnInit {
 
   // When user clicks comment, open up the comments for viewing
   onComment(row: number) {
+    console.log('PostsComponent:onComment: row=', row, ' post=', this.posts[row].body, ' comments=', this.comments[row]);
+    console.log('PostsComponent:onComment: commentsOpen=', this.commentsOpen[row]);
     this.commentsOpen[row] = this.commentsOpen[row] === 'out' ? 'in' : 'out';
     this.showPostComments[row] = !this.showPostComments[row];
   }
@@ -423,8 +424,8 @@ export class PostsComponent implements OnInit {
         }
         post = this.createPostsArrayEntry(postResult[0]);
         this.posts.push(post);
-        this.commentsOpen.push('out');
         this.comments.push(postComments);
+        this.commentsOpen.push('out');
         this.showPostComments.push(false);
         if (postComments.length > 4) {
           this.startCommentsIndex.push(postComments.length - 4);
@@ -436,7 +437,6 @@ export class PostsComponent implements OnInit {
           for (let j=0; j < postResult[i].comments.length; j++) {
             comment = this.createCommentsArrayEntry(postResult[i].comments[j]);
             postComments.push(comment);
-            this.commentsOpen.push('out');
           }
           post = this.createPostsArrayEntry(postResult[i]);
           this.posts.push(post);
@@ -450,6 +450,7 @@ export class PostsComponent implements OnInit {
           }
           this.liked.push(this.checkIfLiked(postResult[i].reactions));
           this.comments.push(postComments);
+          this.commentsOpen.push('out');
         }
 
         this.showPosts = true;

@@ -27,7 +27,7 @@
           </app-rvlm-preview-link>
         </div>
 
-        <div *ngIf="addLinkInputEnabled">
+        <div [@addLinkSlideInOut]="addLinkOpen">
           <div>
             <mat-form-field appearance="outline">
               <mat-label>Link</mat-label>

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { ShareDataService, Ipost } from '@services/share-data.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -15,7 +16,24 @@ import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service
 @Component({
   selector: 'app-rvlm-update-post',
   templateUrl: './update-post.component.html',
-  styleUrls: ['./update-post.component.scss']
+  styleUrls: ['./update-post.component.scss'],
+  animations: [
+    trigger('addLinkSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class UpdatePostComponent implements OnInit {
   @Input('containerDialog') containerDialog: boolean;
@@ -29,6 +47,7 @@ export class UpdatePostComponent implements OnInit {
   photoAndLinkActionsDisabled: boolean = false;
   addLinkInputEnabled: boolean = false;
   showLinkPreview: boolean = false;
+  addLinkOpen: string = 'out';
   linkPreview: IlinkPreview = {
     title: '',
     description: '',
@@ -102,12 +121,11 @@ export class UpdatePostComponent implements OnInit {
 
 
   onCancel() {
-    console.log('UpdatePostComonent:onCancel:')
     this.formComplete.emit('canceled');
   }
 
   onAddLink() {
-    console.log('UpdatePostComonent:onAddLink:')
+    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     this.photoAndLinkActionsDisabled = true;
     this.addLinkInputEnabled = true;
     this.readyForPost = false;
@@ -115,7 +133,6 @@ export class UpdatePostComponent implements OnInit {
 
 
   onChangePhoto(event: any) {
-    console.log('UpdatePostComonent:onChangePhoto:')
     let fileType: string = 'post';
 
     this.showSpinner = true;
@@ -140,7 +157,6 @@ export class UpdatePostComponent implements OnInit {
 
 
   onDeleteLink() {
-    console.log('UpdatePostComonent:onDeleteLink:')
     this.linkPreview = {
       url: '',
       title: '',
@@ -164,7 +180,6 @@ export class UpdatePostComponent implements OnInit {
 
 
   onDeletePhoto() {
-    console.log('UpdatePostComonent:onDeletePhoto:')
     this.showSpinner = true;
     this.forumSvc.deletePostImage(this.post.photoUrl)
     .subscribe(deleteResult => {
@@ -185,9 +200,9 @@ export class UpdatePostComponent implements OnInit {
 
 
   onLink() {
-    console.log('UpdatePostComonent:onLink:')
     if (this.form.controls.link.valid) {
       if (this.form.controls.link.value) {
+        this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .subscribe(preview => {
           console.log('AddPostComponent:onLink: preview=', preview);
@@ -207,6 +222,7 @@ export class UpdatePostComponent implements OnInit {
           this.showLinkPreview = true;
           this.addLinkInputEnabled = false;
           this.readyForPost = true;
+          this.showSpinner = false;
         }, error => {
           console.log('AddPostComponent:onLink: no link found');
           this.linkPreview.url = this.form.controls.link.value;
@@ -220,6 +236,7 @@ export class UpdatePostComponent implements OnInit {
           this.showLinkPreview = true;
           this.addLinkInputEnabled = false;
           this.readyForPost  = true;
+          this.showSpinner = false;
         });
       } else {
         if (this.form.controls.post.value) {
@@ -237,7 +254,6 @@ export class UpdatePostComponent implements OnInit {
 
   // As user to upload image, compress and orient the image and upload to server to store.  Save the URL to store with the post
   onPhoto(event: any) {
-    console.log('UpdatePostComonent:onPhoto:')
     let fileType: string = 'post';
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;
@@ -269,6 +285,7 @@ export class UpdatePostComponent implements OnInit {
       } else {
         this.router.navigateByUrl('forums/main');
       }
+      this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     }, error => {
       console.error('PostsComponent:onUpdatePost: error updating post=', error);
       throw new Error(error);
@@ -276,7 +293,6 @@ export class UpdatePostComponent implements OnInit {
   }
 
   onText() {
-    console.log('UpdatePostComonent:onText:')
     if (this.form.controls.post.value) {
       if (this.addLinkInputEnabled && !this.form.controls.link.valid) {
         this.readyForPost = false;

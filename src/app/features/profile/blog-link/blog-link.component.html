@@ -13,7 +13,7 @@
       <span>Add a blog link</span>
     </button>
   </div>
-  <form *ngIf="showAddLink" class="add-link">
+  <form [@addLinkSlideInOut]="addLinkOpen" class="add-link">
     <div [formGroup]="form">
       <div>
         <mat-form-field appearance="outline">
@@ -25,7 +25,7 @@
                   (blur)="onLink()">
         </mat-form-field>
       </div>
-      <div>
+      <!-- <div>
         <mat-form-field appearance="outline">
           <mat-label>Link Description</mat-label>
           <input matInput
@@ -34,7 +34,7 @@
                   placeholder="Link description"
                   formControlName="linkDesc">
         </mat-form-field>
-      </div>
+      </div> -->
 
       <div *ngIf="showPreview">
         <app-rvlm-preview-link
@@ -42,10 +42,10 @@
         </app-rvlm-preview-link>
       </div>
 
-      <div>
+      <div class="buttons">
         <button type="submit"
                 class="mat-raised-button mat-primary button"
-                [disabled]="!form.valid"
+                [disabled]="!readyToSave"
                 (click)="onSubmit()">
                 {{ 'newbie-links.component.submit' | translate }}
         </button>
@@ -62,7 +62,7 @@
       <div class="linkRow">
         <mat-icon class="delete" (click)="onDelete(i)">highlight_off</mat-icon>
         <a href="{{ link.link }}" class="hyperlink external link" target="_blank">
-          <span>{{ link.linkDesc }}</span>
+          <span>{{ link.linkTitle }}</span>
         </a>
       </div>
     </div>

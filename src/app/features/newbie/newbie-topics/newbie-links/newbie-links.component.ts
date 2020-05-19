@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -17,7 +18,24 @@ import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service
 @Component({
   selector: 'app-rvlm-newbie-links',
   templateUrl: './newbie-links.component.html',
-  styleUrls: ['./newbie-links.component.scss']
+  styleUrls: ['./newbie-links.component.scss'],
+  animations: [
+    trigger('addLinkSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class NewbieLinksComponent implements OnInit {
   @Input('topicID') topicID: string;
@@ -31,8 +49,10 @@ export class NewbieLinksComponent implements OnInit {
   newbieLinks: Array<InewbieLinks> = [];
   topicDescSentence: string;
   userType: string;
+  readyToSave: boolean = false;
   profileImageUrl: string = './../../../../../assets/images/no-profile-pic.jpg';
   showPreview: boolean = false;
+  addLinkOpen: string = 'out';
   preview: IlinkPreview = {
     title: '',
     description: '',
@@ -44,6 +64,7 @@ export class NewbieLinksComponent implements OnInit {
   showAddLink: boolean = false;
   showLinkAuthor: boolean = false;
   showMenu: boolean = false;
+  showLinkPreview: boolean = false;
 
   // Interface for profile data
   private userProfile: Observable<IuserProfile>;
@@ -60,9 +81,9 @@ export class NewbieLinksComponent implements OnInit {
               private router: Router,
               fb: FormBuilder) {
               this.form = fb.group({
-                linkName: new FormControl('',
-                              [Validators.required,
-                                Validators.maxLength(40)]),
+                // linkName: new FormControl('',
+                //               [Validators.required,
+                //                 Validators.maxLength(40)]),
                 link: new FormControl('', [Validators.required, Validators.pattern(this.regHyperlink)])
               });
   }
@@ -94,6 +115,7 @@ export class NewbieLinksComponent implements OnInit {
 
   onAddLink() {
     this.showAddLink = !this.showAddLink;
+    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
   }
 
 
@@ -108,37 +130,55 @@ export class NewbieLinksComponent implements OnInit {
     this.showPreview = false;
     this.form.reset();
     this.showAddLink = false;
+    this.readyToSave = false;
+    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
   }
 
 
+  onGoLink(url: string) {
+    window.open(url, '_blank');
+  }
+
   onLink() {
-    this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
-    .subscribe(preview => {
-      console.log('BlogLinkComponent:onLink: preview=', preview);
-      this.preview = preview;
-      if (this.preview.url.substring(0,7) == 'http://') {
-        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-      }
-      this.showPreview = true;
+    if (this.form.controls.link.valid) {
+      if (this.form.controls.link.value) {
+        this.showSpinner = true;
+        this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .subscribe(preview => {
+          console.log('BlogLinkComponent:onLink: preview=', preview);
+          this.preview = preview;
+          if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+          }
+          this.readyToSave = true;
+          this.showPreview = true;
+          this.showSpinner = false;
 
-      if (!this.preview.title) {
-        this.preview.title = this.preview.url;
-      }
+          if (!this.preview.title) {
+            this.preview.title = this.preview.url;
+          }
 
-    }, error => {
-      console.log('BlogLinkComponent:onLink: no link found');
-      this.preview.url = this.form.controls.link.value;
-      if (this.preview.url.substring(0,7) == 'http://') {
-        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+        }, error => {
+          console.log('BlogLinkComponent:onLink: no link found');
+          this.preview.url = this.form.controls.link.value;
+          if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+          }
+          this.preview.title = this.preview.url;
+          this.readyToSave = true;
+          this.showPreview = true;
+          this.showSpinner = false;
+        });
+      } else {
+        this.readyToSave = false;
       }
-      this.preview.title = this.preview.url;
-      this.form.reset();
-      this.showPreview = false;
-    })
+    } else {
+      this.readyToSave = false;
+    }
   }
 
 
@@ -146,25 +186,32 @@ export class NewbieLinksComponent implements OnInit {
     let  link: string;
     this.showSpinner = true;
 
-    if (this.form.controls.link.value.substring(0,7) !== 'http://' && this.form.controls.link.value.substring(0,8) !== 'https://' ) {
-      link = 'http://' + this.form.controls.link.value;
-    } else {
-      link = this.form.controls.link.value;
+    link = this.preview.url;
+    console.log('NewbieLinksComponent:onSubmit: link before=', link);
+    if (link.substring(0,7) !== 'http://' && link.substring(0,8) !== 'https://' ) {
+      link = 'http://' + link;
     }
+    console.log('NewbieLinksComponent:onSubmit: link after=', link);
+
     this.newbieTopicsSvc.addNewbieLink(this.topicID,
-                                        this.form.controls.linkName.value,
+                                        this.preview.title,
                                         link,
+                                        this.preview.description,
+                                        this.preview.image,
                                         this.profile.displayName,
                                         this.profile.profileImageUrl)
     .subscribe(linkResult => {
       this.showSpinner = false;
+      this.showPreview = false;
       this.showAddLink = false;
+      this.readyToSave = false;
       if (this.preview) {
         this.preview.description = '';
         this.preview.image = '';
         this.preview.title = '';
         this.preview.url = '';
       }
+      this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
       this.form.reset();
       this.getNewbieLinks();
     }, error => {
@@ -187,12 +234,6 @@ export class NewbieLinksComponent implements OnInit {
       topicDesc: this.topicDesc
     }
 
-    // let params = '{"userID":"' + this.newbieLinks[row].createdBy + '",' +
-    //                   '"userIdViewer":"' + this.profile._id + '",' +
-    //                   '"params":' + userParams + ',' +
-    //                   '"topicID":"' + this.topicID + '",' +
-    //                   '"topicDesc":"' + this.topicDesc + '"}';
-    // console.log('NewbieLinksComponent:onYourStory: parmas=', params);
     this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
     this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
@@ -205,6 +246,7 @@ export class NewbieLinksComponent implements OnInit {
 
     this.newbieTopicsSvc.getNewbieLinks(this.topicID)
     .subscribe(linkResult => {
+      console.log('NewbieLinksComponent:getNewbieLinks:result=', linkResult);
       if (linkResult.length > 0) {
         this.showMenu = true;
       } else {
@@ -260,14 +302,6 @@ export class NewbieLinksComponent implements OnInit {
       toDisplayName: this.newbieLinks[row].createdByDisplayName,
       toProfileImageUrl: this.newbieLinks[row].createdByProfileImageUrl
     }
-
-    // let params: string;
-    // params = '{"fromUserID":"' + this.profile._id + '",' +
-    //           '"fromDisplayName":"' + this.profile.displayName + '",' +
-    //           '"fromProfileImageUrl":"' + this.profile.profileImageUrl + '",' +
-    //           '"toUserID":"' + this.newbieLinks[row].createdBy + '",' +
-    //           '"toDisplayName":"' + this.newbieLinks[row].createdByDisplayName + '",' +
-    //           '"toProfileImageUrl":"' + this.newbieLinks[row].createdByProfileImageUrl + '"}';
 
     return params;
   }

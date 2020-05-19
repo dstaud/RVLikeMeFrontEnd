@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { trigger, transition, style, animate, state } from '@angular/animations';
+
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -14,16 +16,35 @@ import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service
 @Component({
   selector: 'app-rvlm-blog-link',
   templateUrl: './blog-link.component.html',
-  styleUrls: ['./blog-link.component.scss']
+  styleUrls: ['./blog-link.component.scss'],
+  animations: [
+    trigger('addLinkSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class BlogLinkComponent implements OnInit {
   form: FormGroup;
   profile: IuserProfile;
   blogLinks: Array<Iblog> = [];
+  addLinkOpen: string = 'out';
   showSpinner: boolean = false;
   showAddLink: boolean = false;
   showPreview: boolean = false;
   desktopUser: boolean = false;
+  readyToSave: boolean = false;
   preview: IlinkPreview = {
     title: '',
     description: '',
@@ -43,9 +64,9 @@ export class BlogLinkComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
              fb: FormBuilder) {
               this.form = fb.group({
-                linkDesc: new FormControl('',
-                              [Validators.required,
-                                Validators.maxLength(40)]),
+                // linkDesc: new FormControl('',
+                //               [Validators.required,
+                //                 Validators.maxLength(40)]),
                 link: new FormControl('', [Validators.required, Validators.pattern(this.regHyperlink)])
               });
 }
@@ -78,6 +99,7 @@ export class BlogLinkComponent implements OnInit {
 
   onAddLink() {
     this.showAddLink = !this.showAddLink;
+    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
   }
 
 
@@ -97,6 +119,8 @@ export class BlogLinkComponent implements OnInit {
       this.preview.title = '';
       this.preview.url = '';
     };
+    this.readyToSave = false;
+    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     this.form.reset();
   }
 
@@ -115,62 +139,71 @@ export class BlogLinkComponent implements OnInit {
   }
 
   onLink() {
-    this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
-    .subscribe(preview => {
-      console.log('BlogLinkComponent:onLink: preview=', preview);
-      this.preview = preview;
-      if (this.preview.url.substring(0,7) == 'http://') {
-        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-      }
+    if (this.form.controls.link.valid) {
+      if (this.form.controls.link.value) {
+        this.showSpinner = true;
+        this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .subscribe(preview => {
+          console.log('BlogLinkComponent:onLink: preview=', preview);
+          this.preview = preview;
+          if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+          }
 
-      if (!this.preview.title) {
-        this.preview.title = this.preview.url;
+          if (!this.preview.title) {
+            this.preview.title = this.preview.url;
+          }
+          this.readyToSave = true;
+          this.showPreview = true;
+          this.showSpinner= false;
+        }, error => {
+          console.log('BlogLinkComponent:onLink: no link found');
+          this.preview.url = this.form.controls.link.value;
+          if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+          }
+          this.preview.title = this.preview.url;
+          this.readyToSave = true;
+          this.showPreview = true;
+          this.showSpinner = false;
+        });
+      } else {
+        this.readyToSave = false;
       }
-
-      this.showPreview = true;
-    }, error => {
-      console.log('BlogLinkComponent:onLink: no link found');
-      this.preview.url = this.form.controls.link.value;
-      if (this.preview.url.substring(0,7) == 'http://') {
-        this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-      } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-        this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-      }
-      this.preview.title = this.preview.url;
-      this.form.reset();
-      this.showPreview = false;
-    })
+    } else {
+      this.readyToSave = false;
+    }
   }
 
   onSubmit() {
     let  link: string;
     this.showSpinner = true;
 
-    if (this.form.controls.link.value.substring(0,7) !== 'http://' && this.form.controls.link.value.substring(0,8) !== 'https://' ) {
-      link = 'http://' + this.form.controls.link.value;
-    } else {
-      link = this.form.controls.link.value;
+    link = this.preview.url;
+
+    if (link.substring(0,7) !== 'http://' && link.substring(0,8) !== 'https://' ) {
+      link = 'http://' + link;
     }
 
-    if (this.preview) {
-      this.preview.description = '';
-      this.preview.image = '';
-      this.preview.title = '';
-      this.preview.url = '';
-    }
-    this.form.reset();
-
-    this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.form.controls.linkDesc.value)
+    this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.preview.description, this.preview.title, this.preview.image)
     .subscribe(profileResult => {
       this.showSpinner = false;
       this.showAddLink = false;
       this.blogLinks = profileResult.blogLinks;
-      this.form.patchValue({
-        linkDesc: null,
-        link: null
-      });
+      this.readyToSave = false;
+      this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
+      this.preview = {
+        url: '',
+        title: '',
+        description: '',
+        image: ''
+      }
+      this.showPreview = false;
+      this.form.reset()
       this.profileSvc.getProfile();
     }, error => {
       console.log('BlogLinkComponent:onSubmit: error=', error);

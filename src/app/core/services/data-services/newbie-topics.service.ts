@@ -15,8 +15,10 @@ export interface InewbieTopics {
 export interface InewbieLinks {
   _id: string;
   topicID: string;
-  linkName: string;
+  linkDesc: string;
   link: string;
+  linkImage: string;
+  linkTitle: string;
   createdBy: string;
   createdByDisplayName: string;
   createdByProfileImageUrl: string;
@@ -29,10 +31,6 @@ export interface InewbieLinks {
 export class NewbieTopicsService {
 
   constructor(private http: HttpClient) { }
-
-  getNewbieTopics(): Observable<any> {
-    return this.http.get(`/api/newbie-topics`);
-  }
 
   addNewbieTopic(topicID: string, topicDesc: string, displayName: string, profileImageUrl: string): Observable<any> {
     let keyValues = '{"topicID":"' + topicID + '",' +
@@ -71,10 +69,12 @@ export class NewbieTopicsService {
     return this.http.get(`/api/newbie-links`, { params: param  });
   }
 
-  addNewbieLink(topicID: string, linkName: string, link: string, displayName: string, profileImageUrl: string): Observable<any> {
+  addNewbieLink(topicID: string, linkTitle: string, link: string, linkDesc: string, linkImage: string, displayName: string, profileImageUrl: string): Observable<any> {
     let keyValues = '{"topicID":"' + topicID + '",' +
-                    '"linkName":"' + linkName + '",' +
+                    '"linkTitle":"' + linkTitle + '",' +
                     '"link":"' + link + '",' +
+                    '"linkDesc":"' + linkDesc + '",' +
+                    '"linkImage":"' + linkImage + '",' +
                     '"displayName":"' + displayName + '",' +
                     '"profileImageUrl":"' + profileImageUrl + '"}'
 
@@ -87,5 +87,9 @@ export class NewbieTopicsService {
     newString = newString.replace(/\\/g, "|");
     newString = newString.replace(/\n/g, "\\n");
     return newString;
+  }
+
+  getNewbieTopics(): Observable<any> {
+    return this.http.get(`/api/newbie-topics`);
   }
 }

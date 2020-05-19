@@ -8,7 +8,9 @@ import { SharedComponent } from '@shared/shared.component';
 export interface Iblog {
   _id: string,
   link: string,
-  linkDesc: string
+  linkDesc: string,
+  linkTitle: string,
+  linkImage: string
 }
 
 export interface IuserProfile {
@@ -121,9 +123,11 @@ export class ProfileService {
               private http: HttpClient) { }
 
 
-  addBlogLinkToProfile(profileID: string, blogLink: string, blogDesc: string): Observable<any> {
+  addBlogLinkToProfile(profileID: string, blogLink: string, blogDesc: string, blogTitle: string, blogImage: string): Observable<any> {
     let params = '{"profileID":"' + profileID + '",' +
                   '"blogDesc":"' + blogDesc + '",' +
+                  '"blogTitle":"' + blogTitle + '",' +
+                  '"blogImage":"' + blogImage + '",' +
                   '"blogLink":"' + blogLink + '"}';
     return this.http.put(`/api/profile-blog-link`, JSON.parse(params), {});
   }

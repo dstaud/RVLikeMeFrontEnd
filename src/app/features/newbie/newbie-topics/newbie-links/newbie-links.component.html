@@ -13,10 +13,15 @@
   <div>
     <mat-menu #beforeMenu="matMenu"
               xPosition="before">
-      <button mat-menu-item (click)="showLinkAuthor = !showLinkAuthor">
+      <button [disabled]="showLinkPreview" mat-menu-item (click)="showLinkAuthor = !showLinkAuthor">
         <mat-icon matPrefix fontSet="material-icons-outlined">create</mat-icon>
         <span *ngIf="!showLinkAuthor">{{ 'newbie-links.component.showAuthor' | translate }}</span>
         <span *ngIf="showLinkAuthor">{{ 'newbie-links.component.noShowAuthor' | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="showLinkPreview = !showLinkPreview">
+        <mat-icon matPrefix fontSet="material-icons-outlined">link</mat-icon>
+        <span *ngIf="!showLinkPreview">Show web link preview</span>
+        <span *ngIf="showLinkPreview">Hide web link preview</span>
       </button>
     </mat-menu>
   </div>
@@ -31,8 +36,8 @@
         <span>{{ 'newbie-links.component.addLink' | translate}} {{ profile.displayName }}</span>
       </button>
     </div>
-    <div *ngIf="showAddLink" class="add-link">
-      <div [formGroup]="form">
+    <div [@addLinkSlideInOut]="addLinkOpen" class="add-link">
+      <form [formGroup]="form">
         <div>
           <mat-form-field appearance="outline">
             <mat-label>{{ 'newbie-links.component.link' | translate }}</mat-label>
@@ -44,7 +49,7 @@
           </mat-form-field>
         </div>
 
-        <div>
+        <!-- <div>
           <mat-form-field appearance="outline">
             <mat-label>{{ 'newbie-links.component.linkDesc' | translate }}</mat-label>
             <input matInput
@@ -53,7 +58,7 @@
                     placeholder="Link description"
                     formControlName="linkName">
           </mat-form-field>
-        </div>
+        </div> -->
 
         <div *ngIf="showPreview">
           <app-rvlm-preview-link
@@ -61,25 +66,26 @@
           </app-rvlm-preview-link>
         </div>
 
-        <div>
+        <div class="buttons">
           <button type="submit"
                   class="mat-raised-button mat-primary button"
-                  [disabled]="!form.valid"
+                  [disabled]="!readyToSave"
                   (click)="onSubmit()">
                   {{ 'newbie-links.component.submit' | translate }}
           </button>
-          <button class="mat-raised-button"
+          <button type="button"
+                  class="mat-raised-button"
                   (click)="onCancel()">
                   {{ 'newbie-links.component.cancel' | translate }}
           </button>
         </div>
-      </div>
+      </form>
 
     </div>
     <div class="links">
-      <div *ngFor="let link of newbieLinks; let i=index">
+      <div [hidden]="showLinkPreview" *ngFor="let link of newbieLinks; let i=index">
         <a href="{{ link.link }}" class="hyperlink external link" target="_blank">
-          <span>{{ link.linkName }}</span>
+          <span>{{ link.linkTitle }}</span>
         </a>
         <div *ngIf="showLinkAuthor" class="author" (click)="onYourStory(i)">
           <div>
@@ -96,6 +102,16 @@
             </div>
             <br>
           </div>
+        </div>
+      </div>
+      <div [hidden]="!showLinkPreview" *ngFor="let link of newbieLinks; let i=index">
+        <div (click)="onGoLink(link.link)">
+          <app-rvlm-preview-link
+            [linkPreview]="{'url':link.link,
+                            'description':link.linkDesc,
+                            'title':link.linkTitle,
+                            'image':link.linkImage}">
+        </app-rvlm-preview-link>
         </div>
       </div>
     </div>

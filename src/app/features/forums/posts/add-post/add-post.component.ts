@@ -1,6 +1,7 @@
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { ForumService } from '@services/data-services/forum.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
@@ -9,8 +10,26 @@ import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service
 @Component({
   selector: 'app-rvlm-add-post',
   templateUrl: './add-post.component.html',
-  styleUrls: ['./add-post.component.scss']
+  styleUrls: ['./add-post.component.scss'],
+  animations: [
+    trigger('addLinkSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
+
 export class AddPostComponent implements OnInit {
 
   @Input('groupID') groupID: string;
@@ -29,6 +48,7 @@ export class AddPostComponent implements OnInit {
   photoAndLinkActionsDisabled = false;
   addLinkInputEnabled: boolean = false;
   showLinkPreview: boolean = false;
+  addLinkOpen: string = 'out';
   linkPreview: IlinkPreview = {
     title: '',
     description: '',
@@ -54,6 +74,7 @@ export class AddPostComponent implements OnInit {
 
 
   onAddLink() {
+    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     this.photoAndLinkActionsDisabled = true;
     this.addLinkInputEnabled = true;
   }
@@ -70,14 +91,19 @@ export class AddPostComponent implements OnInit {
       this.linkPreview.url = '';
     }
     this.showLinkPreview = false;
+    this.addLinkInputEnabled = false;
     this.form.reset();
     this.postAddComplete.emit(post);
+    if (this.addLinkOpen === 'in') {
+      this.addLinkOpen = 'out';
+    }
   }
 
 
   onLink() {
     if (this.form.controls.link.valid) {
       if (this.form.controls.link.value) {
+        this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .subscribe(preview => {
           console.log('AddPostComponent:onLink: preview=', preview);
@@ -96,7 +122,10 @@ export class AddPostComponent implements OnInit {
 
           this.showLinkPreview = true;
           this.addLinkInputEnabled = false;
+          this.photoAndLinkActionsDisabled = true;
           this.readyForPost = true;
+          this.showSpinner = false;
+          this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
         }, error => {
           console.log('AddPostComponent:onLink: no link found');
           this.linkPreview.url = this.form.controls.link.value;
@@ -109,7 +138,10 @@ export class AddPostComponent implements OnInit {
           this.form.reset();
           this.showLinkPreview = true;
           this.addLinkInputEnabled = false;
+          this.photoAndLinkActionsDisabled = true;
           this.readyForPost = true;
+          this.showSpinner = false;
+          this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
         });
       } else {
         if (this.form.controls.post.value) {
