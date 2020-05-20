@@ -15,6 +15,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 
 @Component({
@@ -54,6 +55,7 @@ export class MainComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private forumSvc: ForumService,
               private sentry: SentryMonitorService,
+              private device: DeviceService,
               private themeSvc: ThemeService) {
               }
 
@@ -79,11 +81,19 @@ export class MainComponent implements OnInit {
 
   ngOnDestroy() {}
 
-  // TODO: Add transitions for things like adding post
 
-  onSearch() {
-    // TODO: Add search capability for group discussions
-    console.log('search');
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
   }
 
 

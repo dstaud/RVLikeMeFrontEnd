@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -11,9 +11,9 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
-import { DesktopMaxWidthService } from './../../../core/services/desktop-max-width.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IprofileImage } from '@services/share-data.service';
+import { DeviceService } from '@services/device.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
@@ -160,9 +160,9 @@ export class PersonalComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
               private sharedDataSvc: ShareDataService,
-              private desktopMaxWidthSvc: DesktopMaxWidthService,
               private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
+              private device: DeviceService,
               fb: FormBuilder) {
               this.form = fb.group({
                 firstName: new FormControl('', Validators.required),
@@ -216,9 +216,25 @@ export class PersonalComponent implements OnInit {
 
   ngOnDestroy() {};
 
+
   // Form validation error handling
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
+  }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
   }
 
   onBack() {

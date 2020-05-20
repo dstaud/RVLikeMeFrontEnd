@@ -7,10 +7,11 @@ import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
+import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-about',
@@ -32,11 +33,11 @@ export class AboutComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
-              private router: Router) {
+              private router: Router,
+              private device: DeviceService) {
               }
 
   ngOnInit() {
-    console.log('AboutComponent:ntOnInit:')
     let backPath: string;
     let self = this;
     window.onpopstate = function(event) {
@@ -53,6 +54,20 @@ export class AboutComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
   onDaveStory() {
     if (this.daveID) {

@@ -1,14 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { isNumber } from 'util';
-import { Observable, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-// import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
@@ -17,8 +15,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
-
-import { SharedComponent } from '@shared/shared.component';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-connections-main',
@@ -65,6 +62,7 @@ export class MainComponent implements OnInit {
               private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
+              private device: DeviceService,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
@@ -107,6 +105,21 @@ export class MainComponent implements OnInit {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
+  }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
   }
 
 

@@ -173,16 +173,17 @@
         "wy": "de Wyoming"
       },
       "rvuse": {
-        "ft": "viajes de tiempo completo RVing",
-        "fs": "que son estacionarias a tiempo completo",
-        "fp": "que F.T. con P.T. de viaje",
-        "ps": "que P.T. viajar con base de operaciones",
+        "fth": "ese viaje de tiempo completo con base de operaciones",
+        "ftn": "ese viaje de tiempo completo, sin base de operaciones",
+        "fs": "Ese estacionario a tiempo completo",
+        "fp": "que en su mayoría se quedan en un solo lugar",
+        "tfw": "ese viaje por trabajo",
+        "ps": "ese viaje de medio tiempo con base en el hogar",
         "ny": "quiero ser RVers!"
       },
       "worklife": {
         "retired": "que están retirados",
         "military": "que estan en el ejercito",
-        "work-travel": "que están trabajando F.T./traveling",
         "workamping": "que son de trabajo",
         "work-full-time": "que trabajan a tiempo completo",
         "work-part-time": "que trabajan a tiempo parcial",
@@ -345,17 +346,18 @@
         "wy": "Wyoming"
       },
       "rvuse": {
-        "ft": "viajes de tiempo completo RVing",
-        "fs": "RVing estacionario a tiempo completo",
-        "fp": "tiempo completo con viajes de medio tiempo RVing",
-        "ps": "viajes de medio tiempo RVing con una base de operaciones",
+        "fth": "viaje a tiempo completo con base de operaciones",
+        "ftn": "viajes de tiempo completo - sin base de operaciones",
+        "fs": "Estacionario a tiempo completo",
+        "fp": "en su mayoría permanecer en un solo lugar",
+        "tfw": "viajar por trabajo",
+        "ps": "viajes de medio tiempo con base en el hogar",
         "ny": "quiero ser un RVer",
         "other": "Otro"
       },
       "worklife": {
         "retired": "retirado",
         "military": "en la fuerza militar",
-        "work-travel": "trabajando a tiempo completo mientras viaja",
         "workamping": "workamping",
         "work-full-time": "trabajando a tiempo completo",
         "work-part-time": "trabajando a tiempo parcial",
@@ -364,10 +366,11 @@
       },
       "campswithme": {
         "single": "por mi mismo",
-        "partner": "con un cónyuge o pareja",
-        "children": "Con niños",
-        "family": "El familia",
-        "friend": "Un amigo(s)",
+        "partner": "cónyuge / pareja",
+        "children": "niños pequeños",
+        "children2": "niños mayores",
+        "family": "toda la familia",
+        "friend": "un amigo(s)",
         "other": "Otro"
       },
       "boondocking": {
@@ -598,7 +601,7 @@
       "rvuse": {
         "ft": "Viaje a tiempo completo RVer",
         "fs": "RVer estacionario a tiempo completo",
-        "fp": "F.T. con P.T. viajes RVer",
+        "fp": "en su mayoría permanecer en un solo lugar",
         "ps": "P.T. viajes con base en el hogar RVer",
         "ny": "RVer quiere ser",
         "other": "Otro",

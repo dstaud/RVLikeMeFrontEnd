@@ -1,4 +1,4 @@
-<div class="mat-app-background container mat-body-1">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <p class="mat-title">{{ 'analytics.component.title.' + control.toLowerCase() | translate}}</p>
   <div *ngFor="let group of groupData">
     <p>{{ group }}</p>

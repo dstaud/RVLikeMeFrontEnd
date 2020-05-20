@@ -173,25 +173,29 @@
         "wy": "from Wyoming"
       },
       "rvuse": {
-        "ft": "full-time travel RVing",
-        "fs": "that are full-time stationary",
-        "fp": "that F.T. with P.T. traveling",
-        "ps": "that P.T. travel w home-base",
-        "ny": "want to be RVers!"
+        "fth": "that full-time travel with home base",
+        "ftn": "that full-time travel - no home base",
+        "fs": "that full-time stationary",
+        "fp": "that mostly stay in one place",
+        "tfw": "that travel for work",
+        "ps": "that part-time travel w home-base",
+        "ny": "an RVer wanna-be!",
+        "other": "Other"
       },
       "worklife": {
-        "retired": "that are retired",
-        "military": "that are in the military",
-        "work-travel": "that are working F.T./traveling",
-        "workamping": "that are workamping",
         "work-full-time": "that are working full-time",
         "work-part-time": "that are working part-time",
-        "onleave": "on leave/disability"
+        "workamping": "that are workamping",
+        "retired": "that are retired",
+        "military": "that are in the military",
+        "onleave": "that are currently not working",
+        "other": "Other"
       },
       "campswithme": {
         "single": "that RV by themselves",
         "partner": "that RV with spouse/partner",
-        "children": "that RV with their children",
+        "children": "that RV with small children",
+        "children2": "that RV with older children",
         "family": "that RV with their family",
         "friend": "that RV with a friend(s)"
       },
@@ -347,28 +351,30 @@
         "wy": "Wyoming"
       },
       "rvuse": {
-        "ft": "full-time travel RV",
+        "fth": "full-time travel with home base",
+        "ftn": "full-time travel - no home base",
         "fs": "full-time stationary",
-        "fp": "F.T. with P.T. travel",
-        "ps": "P.T. travel w home-base",
+        "fp": "mostly stay in one place",
+        "tfw": "travel for work",
+        "ps": "part-time travel w home-base",
         "ny": "an RVer wanna-be!",
         "other": "Other"
       },
       "worklife": {
-        "retired": "retired",
-        "military": "in the military",
-        "work-travel": "working F.T./traveling",
-        "workamping": "workamping",
         "work-full-time": "working full-time",
         "work-part-time": "working part-time",
-        "onleave": "on leave/disability",
+        "workamping": "workamping",
+        "retired": "retired",
+        "military": "in the military",
+        "onleave": "currently not working",
         "other": "Other"
       },
       "campswithme": {
         "single": "by myself",
-        "partner": "with spouse/partner",
-        "children": "with my children",
-        "family": "the family",
+        "partner": "spouse/partner",
+        "children": "small children",
+        "children2": "older children",
+        "family": "the whole family",
         "friend": "a friend(s)",
         "other": "Other"
       },
@@ -602,11 +608,13 @@
         "notdefined": "Did not enter in profile"
       },
       "rvuse": {
-        "ft": "Full-time travel RVer",
-        "fs": "Full-time stationary RVer",
-        "fp": "F.T. with P.T. travel RVer",
-        "ps": "P.T. travel w home-base RVer",
-        "ny": "RVer wanna-be",
+        "fth": "full-time travel with home base",
+        "ftn": "full-time travel - no home base",
+        "fs": "full-time stationary",
+        "fp": "mostly stay in one place",
+        "tfw": "travel for work",
+        "ps": "part-time travel w home-base",
+        "ny": "an RVer wanna-be!",
         "other": "Other",
         "notdefined": "Did not enter in profile"
       },

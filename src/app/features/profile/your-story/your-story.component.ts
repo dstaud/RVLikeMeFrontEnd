@@ -10,6 +10,7 @@ import { ProfileService, Iblog } from '@services/data-services/profile.service';
 import { ShareDataService, ImessageShareData, IviewImage } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { DeviceService } from '@services/device.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
@@ -48,6 +49,7 @@ export class YourStoryComponent implements OnInit {
               private location: Location,
               private shareDataSvc: ShareDataService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private device: DeviceService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -72,6 +74,26 @@ export class YourStoryComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.desktopUser && this.comingFromProfile) {
+      containerClass = 'container-desktop';
+    } else {
+      if (this.device.iPhoneModelXPlus) {
+        bottomSpacing = 'bottom-bar-spacing-xplus';
+      } else {
+        bottomSpacing = 'bottom-bar-spacing';
+      }
+      containerClass = 'container ' + bottomSpacing;
+    }
+
+    return containerClass;
+  }
+
 
   onBack() {
     let route = '/' + this.returnRoute

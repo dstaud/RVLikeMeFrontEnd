@@ -19,6 +19,7 @@ import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
+import { DeviceService } from '@services/device.service';
 
 export type FadeState = 'visible' | 'hidden';
 
@@ -118,6 +119,7 @@ export class PostsComponent implements OnInit {
               private linkPreviewSvc: LinkPreviewService,
               private sentry: SentryMonitorService,
               private viewportScroller: ViewportScroller,
+              private device: DeviceService,
               private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -127,6 +129,21 @@ export class PostsComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
+
 
   onScrollToTop() {
     this.viewportScroller.scrollToAnchor('top');

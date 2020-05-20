@@ -8,6 +8,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { DeviceService } from '@services/device.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -37,6 +38,7 @@ export class ChangeUsernameComponent implements OnInit {
               private location: Location,
               private router: Router,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private device: DeviceService,
               fb: FormBuilder) {
               this.form = fb.group({
                 username: new FormControl('', [Validators.required, Validators.email]),
@@ -70,6 +72,21 @@ export class ChangeUsernameComponent implements OnInit {
   // Form validation error handling
   errorHandling = (control: string, error: string) => {
     return this.form.controls[control].hasError(error);
+  }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
   }
 
 

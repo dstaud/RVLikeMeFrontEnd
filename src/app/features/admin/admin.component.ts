@@ -8,6 +8,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AdminService } from '@services/data-services/admin.service';
 import { ProfileService } from '@services/data-services/profile.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
+import { DeviceService } from '@services/device.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -31,6 +32,7 @@ export class AdminComponent implements OnInit {
               private adminSvc: AdminService,
               private profileSvc: ProfileService,
               private EmailSmtpSvc: EmailSmtpService,
+              private device: DeviceService,
               fb: FormBuilder) {
                 this.form = fb.group({
                   rvFileName: new FormControl('', Validators.required)
@@ -56,6 +58,20 @@ export class AdminComponent implements OnInit {
         }
       });
     }
+  }
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
   }
 
   onBrandsByManufacturer() {

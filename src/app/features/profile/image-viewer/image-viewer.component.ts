@@ -7,6 +7,7 @@ import { ShareDataService, IviewImage } from '@services/share-data.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { ProfileService } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-image-viewer',
@@ -30,6 +31,7 @@ export class ImageViewerComponent implements OnInit {
               private router: Router,
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
+              private device: DeviceService,
               private profileSvc: ProfileService) { }
 
   ngOnInit(): void {
@@ -52,6 +54,25 @@ export class ImageViewerComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.containerDialog) {
+      containerClass = 'container-desktop';
+    } else {
+      if (this.device.iPhoneModelXPlus) {
+        bottomSpacing = 'bottom-bar-spacing-xplus';
+      } else {
+        bottomSpacing = 'bottom-bar-spacing';
+      }
+      containerClass = 'container ' + bottomSpacing;
+    }
+
+    return containerClass;
+  }
 
 
   onChange(event: any) {

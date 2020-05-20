@@ -1,4 +1,4 @@
-<div class="container mat-app-background mat-body-1">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <button *ngIf="desktopUser"
           type="button"
           mat-button
@@ -61,7 +61,10 @@
               (blur)="onOther('aboutMe')">
       </mat-form-field>
     </div>
-    <div [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
+    <div *ngIf="newbieOpen === 'in'" [@newbieSlideInOut]="newbieOpen" class="newbie">
+      <p>As someone new to RVing, if unsure, select answers that align with your expectations so we can connect you with like-minded RVers</p>
+    </div>
+    <div *ngIf="helpNewbieOpen === 'in'" [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
         <p>As an experienced RVer, are you interested in helping newbies?</p>
         <input type="radio"
                 formControlName="helpNewbies"
@@ -180,7 +183,7 @@
               (blur)="onOther('boondocking')">
       </mat-form-field>
     </div>
-
+<!--
     <div>
       <mat-form-field appearance="outline">
         <mat-label>{{ "lifestyle.component.travelingDesc" | translate }}</mat-label>
@@ -205,8 +208,29 @@
               formControlName="travelingOther"
               (blur)="onOther('traveling')">
       </mat-form-field>
-    </div>
+    </div> -->
 
+    <mat-divider></mat-divider>
+    <div class="suggest">
+      <br>
+      <button mat-button type="button" (click)="onSuggestLifestyleOpen()">Suggest a new lifestyle item not shown above</button>
+      <div [@suggestLifestyleSlideInOut]="suggestLifestyleOpen" class="other">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Suggest lifestyle item</mat-label>
+            <input matInput
+                  type="text"
+                  placeholder="suggestion"
+                  cdkFocusInitial
+                  (change)="readyToSuggest = true"
+                  formControlName="suggestLifestyle">
+          </mat-form-field>
+        </div>
+        <div>
+          <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestLifestyle()">Submit</button>
+        </div>
+      </div>
+    </div>
   </form>
   <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

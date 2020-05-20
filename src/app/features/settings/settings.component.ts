@@ -13,6 +13,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LanguageService } from '@services/language.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-settings',
@@ -40,6 +41,7 @@ export class SettingsComponent implements OnInit {
               private sentry: SentryMonitorService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private themeSvc: ThemeService,
+              private device: DeviceService,
               fb: FormBuilder) {
                 this.form = fb.group({
                   language: ['en', Validators.required],
@@ -71,6 +73,21 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   // If user chooses to install the app on their home screen

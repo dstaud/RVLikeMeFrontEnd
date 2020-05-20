@@ -1,5 +1,4 @@
-<div class="mat-app-background mat-body-1"
-    [ngClass]="containerDialog? 'container-desktop' : 'container'">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
     <p class="mat-title">Profile Image</p>
     <div>
       <img #image class="image-source" [src]="imageSource" crossorigin>

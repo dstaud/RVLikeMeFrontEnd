@@ -1,4 +1,4 @@
-<div class="mat-app-background container mat-body-1">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <p class="mat-title">{{ 'aboutme.component.heading' | translate}}</p>
   <div>
     <img src="./../../../assets/images/dave.jpg" class="dave-image" (click)="onDaveStory()">

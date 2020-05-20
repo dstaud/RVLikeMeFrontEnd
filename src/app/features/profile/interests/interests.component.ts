@@ -12,6 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { AdminService } from '@services/data-services/admin.service';
+import { DeviceService } from '@services/device.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -73,6 +74,7 @@ export class InterestsComponent implements OnInit {
               private shared: SharedComponent,
               private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private device: DeviceService,
               fb: FormBuilder) {
               this.form = fb.group({
                 atv: new FormControl(''),
@@ -117,6 +119,21 @@ ngOnInit() {
   ngOnDestroy() {};
 
 
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
+
+
   onBack() {
     let route = '/' + this.returnRoute
     this.activateBackArrowSvc.setBackRoute('', 'backward');
@@ -139,7 +156,7 @@ ngOnInit() {
         });
         this.readyToSuggest = false;
         this.suggestInterestOpen = 'out';
-        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+        this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       }, error => {
         console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);
         this.showSpinner = false;
@@ -149,7 +166,7 @@ ngOnInit() {
         });
         this.readyToSuggest = false;
         this.sentry.logError(error);
-        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+        this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       });
     }
   }

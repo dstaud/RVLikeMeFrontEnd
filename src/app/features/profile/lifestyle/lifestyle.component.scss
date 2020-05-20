@@ -5,6 +5,15 @@
   margin-top: 50px;
 }
 
+.bottom-bar-spacing {
+  margin-bottom: 50px;
+}
+
+.bottom-bar-spacing-xplus {
+  margin-bottom: 80px;
+}
+
+
 .hyperlink {
   color: $primary-color
 }
@@ -25,8 +34,13 @@ mat-form-field {
   cursor: pointer;
 }
 
+// leave this here.  Used to switch from using another
 .image-placeholder {
 
+}
+
+.suggest {
+  margin-bottom: 20px;
 }
 
 .get-image {

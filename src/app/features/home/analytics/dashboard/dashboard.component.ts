@@ -12,6 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { ThemeService } from '@services/theme.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-dashboard',
@@ -35,6 +36,7 @@ export class DashboardComponent implements OnInit {
               private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private device: DeviceService,
               private router: Router) { }
 
   ngOnInit() {
@@ -58,6 +60,21 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   onHelpNewbieTopic() {

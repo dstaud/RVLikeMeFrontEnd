@@ -13,6 +13,7 @@ import { LikemeCountsService } from '@services/data-services/likeme-counts.servi
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-user-query',
@@ -46,6 +47,7 @@ export class UserQueryComponent implements OnInit {
               private router: Router,
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
+              private device: DeviceService,
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
@@ -85,6 +87,21 @@ export class UserQueryComponent implements OnInit {
   ngOnDestroy() {}
 
 
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
+
+
   // If user selects cancel
   onCancel() {
     this.router.navigateByUrl('connections/main');
@@ -115,10 +132,8 @@ export class UserQueryComponent implements OnInit {
 
   // Look for matches with user-selected query parameters
   private getQueryResults() {
-    console.log('UserQueryComponent:getQueryResults: matches=', this.matches);
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
     .subscribe(matchResults => {
-      console.log('UserQueryComponent:getQueryResults: matchResults=', matchResults);
       this.matchQueryParams(matchResults);
     }, error => {
       console.error('UserQueryComponent:getQueryResults: throw error ', error);
@@ -133,7 +148,6 @@ export class UserQueryComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:listenForColorTheme: Theme=', this.theme);
     }, error => {
       this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
@@ -176,9 +190,6 @@ export class UserQueryComponent implements OnInit {
       }
     }
 
-    console.log('UserQueryComponent:matchQueryParams: matches=', this.matches);
-    // determine appropriate group attribute names for display and store in array
-    // this.queryParam = '{';
     for (let i=0; i < this.matches.length; i++) {
       console.log('UserQueryComponent:matchQueryParams: keys=', Object.keys(this.matches[0]))
       name = Object.keys(this.matches[i])[0];
@@ -190,9 +201,6 @@ export class UserQueryComponent implements OnInit {
                             'interests.component.' + name
         );
       } else {
-/*           likeMeDesc = this.translate.instant( // What is this?  I think not needed
-                            'connections.component.' + this.matches[i].name
-          ); */
           if (typeof(value) === 'number') {
             likeMeAnswer = this.translate.instant(
                                 'profile.component.' + name
@@ -205,9 +213,7 @@ export class UserQueryComponent implements OnInit {
           }
       }
       this.matchResults.push(likeMeAnswer);
-      // this.queryParam = this.queryParam + '"' + this.matches[i].name + '":"' + this.matches[i].value + '",';
     }
-    // this.queryParam = this.queryParam + '"theme":"' + this.theme + '"}';
     this.showSpinner = false;
   }
 }

@@ -12,6 +12,7 @@ import { ProfileService, IuserProfile, Iblog } from '@services/data-services/pro
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-blog-link',
@@ -62,6 +63,7 @@ export class BlogLinkComponent implements OnInit {
               private router: Router,
               private linkPreviewSvc: LinkPreviewService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private device: DeviceService,
              fb: FormBuilder) {
               this.form = fb.group({
                 // linkDesc: new FormControl('',
@@ -95,6 +97,21 @@ export class BlogLinkComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   onAddLink() {

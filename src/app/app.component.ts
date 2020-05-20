@@ -232,6 +232,7 @@ export class AppComponent implements OnInit {
       }
     });
     this.iphoneModelxPlus = this.deviceSvc.iPhoneModelXPlus;
+    console.log('AppComponent:listenForInstallPrompts: iphoneModelXPlus=', this.iphoneModelxPlus, ' userAuthorized=', this.userAuthorized);
   }
 
 

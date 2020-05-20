@@ -12,6 +12,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-forums-list',
@@ -38,6 +39,7 @@ export class ForumsListComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
+              private device: DeviceService,
               private shareDataSvc: ShareDataService) { }
 
   ngOnInit(): void {
@@ -62,6 +64,22 @@ export class ForumsListComponent implements OnInit {
 
   ngOnDestroy() {
   }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
+
 
   // If user likes the comment, add to the total for likes for the comment
   onLikeMe() {

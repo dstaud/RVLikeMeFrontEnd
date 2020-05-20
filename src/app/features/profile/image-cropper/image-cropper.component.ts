@@ -8,6 +8,7 @@ import { ShareDataService, IprofileImage } from '@services/share-data.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { ProfileService } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -42,6 +43,7 @@ export class ImageCropperComponent implements OnInit {
               private Shared: SharedComponent,
               private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
+              private device: DeviceService,
               private profileSvc: ProfileService) {this.showSpinner = true;}
 
   ngOnInit() {
@@ -72,6 +74,25 @@ export class ImageCropperComponent implements OnInit {
   // onRotateImage(degrees: number) {
   //   this.cropper.rotate(degrees);
   // }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.containerDialog) {
+      containerClass = 'container-desktop';
+    } else {
+      if (this.device.iPhoneModelXPlus) {
+        bottomSpacing = 'bottom-bar-spacing-xplus';
+      } else {
+        bottomSpacing = 'bottom-bar-spacing';
+      }
+      containerClass = 'container ' + bottomSpacing;
+    }
+
+    return containerClass;
+  }
 
 
   onCancel() {

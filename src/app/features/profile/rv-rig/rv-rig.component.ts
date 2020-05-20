@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,6 +18,7 @@ import { RigService, IrigData } from '@services/data-services/rig.service';
 import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
+import { DeviceService } from '@services/device.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
@@ -126,6 +126,7 @@ export class RvRigComponent implements OnInit {
               private sentry: SentryMonitorService,
               private rigSvc: RigService,
               private shareDataSvc: ShareDataService,
+              private device: DeviceService,
               private activateBackArrowSvc: ActivateBackArrowService) {}
 
   ngOnInit() {
@@ -154,6 +155,21 @@ export class RvRigComponent implements OnInit {
   }
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   onBack() {

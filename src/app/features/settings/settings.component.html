@@ -1,4 +1,4 @@
-<div class="mat-app-background background">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <h2 class="mat-title">Settings</h2>
   <p *ngIf="theme === 'light-theme'">
     <a mat-menu-item (click)="onSelectTheme('dark-theme')">

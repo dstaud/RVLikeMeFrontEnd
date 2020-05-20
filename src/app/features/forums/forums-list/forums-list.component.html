@@ -1,4 +1,4 @@
-<div class="mat-app-background container mat-body-1">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <div *ngIf="groupListDisplayAttributes.length > 0" class="group-list">
     <div><span class="mat-title">{{ 'forums.component.myGroups' | translate }}</span></div>
     <div *ngFor="let group of groupListDisplayAttributes; let i=index" (click)="onGroupSelect(i)">

@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
@@ -13,6 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 export interface AboutMe {
   value: string;
@@ -44,9 +44,6 @@ export class MainComponent implements OnInit {
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
 
-  private totalLifestyleFieldsWithData = 0;
-  private totalLifestyleNbrOfFields = 6;
-
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private location: Location,
@@ -55,6 +52,7 @@ export class MainComponent implements OnInit {
               private dialog: MatDialog,
               private sentry: SentryMonitorService,
               private shareDataSvc: ShareDataService,
+              private device: DeviceService,
               private router: Router) {
             }
 
@@ -81,6 +79,21 @@ export class MainComponent implements OnInit {
    }
 
    ngOnDestroy() { }
+
+
+   getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   /**** Route to sub-profile pages as user selects ****/
@@ -131,9 +144,9 @@ export class MainComponent implements OnInit {
 
     let totalRigFieldsWithData = 0;
     let totalRigNbrOfFields = 5;
-    totalPersonalFieldsWithData = 0;
-    this.totalLifestyleFieldsWithData = 0;
-    totalRigFieldsWithData = 0;
+
+    let totalLifestyleFieldsWithData = 0;
+    let totalLifestyleNbrOfFields = 5;
 
     // Personal data
     if (profile.firstName) { totalPersonalFieldsWithData++; };
@@ -155,13 +168,13 @@ export class MainComponent implements OnInit {
     }
 
     // Lifestyle data
-    if (profile.aboutMe) { this.totalLifestyleFieldsWithData++; };
-    if (profile.rvUse) { this.totalLifestyleFieldsWithData++; };
-    if (profile.worklife) { this.totalLifestyleFieldsWithData++; };
-    if (profile.campsWithMe) { this.totalLifestyleFieldsWithData++; };
-    if (profile.boondocking) { this.totalLifestyleFieldsWithData++; };
-    if (profile.traveling) { this.totalLifestyleFieldsWithData++; };
-    this.percentLifestyle = (this.totalLifestyleFieldsWithData / this.totalLifestyleNbrOfFields) * 100;
+    if (profile.aboutMe) { totalLifestyleFieldsWithData++; };
+    if (profile.rvUse) { totalLifestyleFieldsWithData++; };
+    if (profile.worklife) { totalLifestyleFieldsWithData++; };
+    if (profile.campsWithMe) { totalLifestyleFieldsWithData++; };
+    if (profile.boondocking) { totalLifestyleFieldsWithData++; };
+    if (profile.traveling) { totalLifestyleFieldsWithData++; };
+    this.percentLifestyle = (totalLifestyleFieldsWithData / totalLifestyleNbrOfFields) * 100;
     if (this.percentLifestyle < 5) {
       this.lifestyleProgressBarColor = 'warn'
     } else {

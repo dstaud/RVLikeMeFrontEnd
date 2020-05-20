@@ -66,6 +66,7 @@ export class AnalyticsComponent implements OnInit {
 
   ngOnDestroy() {}
 
+
   onChart() {
     let params:IdashboardDrilldown = {
       control: this.control

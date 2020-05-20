@@ -14,8 +14,11 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { UploadImageService } from '@services/data-services/upload-image.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
+import { AdminService } from '@services/data-services/admin.service';
+import { DeviceService } from '@services/device.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
+import { SharedComponent } from '@shared/shared.component';
 
 
 /**** Interfaces for data for form selects ****/
@@ -62,6 +65,21 @@ and I can't notify them. */
   styleUrls: ['./lifestyle.component.scss'],
   animations: [
     trigger('helpNewbieSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('newbieSlideInOut', [
       state('in', style({
         overflow: 'hidden',
         height: '*',
@@ -165,6 +183,21 @@ and I can't notify them. */
       })),
       transition('in => out', animate('400ms ease-in-out')),
       transition('out => in', animate('400ms ease-in-out'))
+    ]),
+    trigger('suggestLifestyleSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
     ])
   ]
 })
@@ -177,6 +210,8 @@ export class LifestyleComponent implements OnInit {
   placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
   nbrLifestyleImagePics: number = 0;
   profile: IuserProfile;
+  suggestLifestyleOpen: string = 'out';
+  readyToSuggest: boolean = false;
 
   aboutMeOtherOpen: string = 'out';
   rvUseOtherOpen: string = 'out';
@@ -185,6 +220,7 @@ export class LifestyleComponent implements OnInit {
   boondockingOtherOpen: string = 'out';
   travelingOtherOpen: string = 'out';
   helpNewbieOpen: string = 'out';
+  newbieOpen: string = 'out';
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -216,11 +252,13 @@ export class LifestyleComponent implements OnInit {
   /**** Select form select field option data. ****/
   RvLifestyles: RvLifestyle[] = [
     {value: '', viewValue: ''},
-    {value: 'FT', viewValue: 'profile.component.list.rvuse.ft'},
+    {value: 'FTH', viewValue: 'profile.component.list.rvuse.fth'},
+    {value: 'FTN', viewValue: 'profile.component.list.rvuse.ftn'},
     {value: 'FS', viewValue: 'profile.component.list.rvuse.fs'},
     {value: 'FP', viewValue: 'profile.component.list.rvuse.fp'},
+    {value: 'TFW', viewValue: 'profile.component.list.rvuse.tfw'},
     {value: 'PS', viewValue: 'profile.component.list.rvuse.ps'},
-    {value: 'NY', viewValue: 'profile.component.list.rvuse.ny'},
+    // {value: 'NY', viewValue: 'profile.component.list.rvuse.ny'},
     {value: 'other', viewValue: 'profile.component.list.rvuse.other'}
   ];
 
@@ -228,7 +266,6 @@ export class LifestyleComponent implements OnInit {
     {value: '', viewValue: ''},
     {value: 'retired', viewValue: 'profile.component.list.worklife.retired'},
     {value: 'military', viewValue: 'profile.component.list.worklife.military'},
-    {value: 'work-travel', viewValue: 'profile.component.list.worklife.work-travel'},
     {value: 'work-full-time', viewValue: 'profile.component.list.worklife.work-full-time'},
     {value: 'work-part-time', viewValue: 'profile.component.list.worklife.work-part-time'},
     {value: 'onleave', viewValue: 'profile.component.list.worklife.onleave'},
@@ -240,6 +277,7 @@ export class LifestyleComponent implements OnInit {
     {value: 'single', viewValue: 'profile.component.list.campswithme.single'},
     {value: 'partner', viewValue: 'profile.component.list.campswithme.partner'},
     {value: 'children', viewValue: 'profile.component.list.campswithme.children'},
+    {value: 'children2', viewValue: 'profile.component.list.campswithme.children2'},
     {value: 'family', viewValue: 'profile.component.list.campswithme.family'},
     {value: 'friend', viewValue: 'profile.component.list.campswithme.friend'},
     {value: 'other', viewValue: 'profile.component.list.campswithme.other'}
@@ -283,8 +321,11 @@ export class LifestyleComponent implements OnInit {
               private authSvc: AuthenticationService,
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
+              private adminSvc: AdminService,
+              private shared: SharedComponent,
               private activateBackArrowSvc: ActivateBackArrowService,
               private shareDataSvc: ShareDataService,
+              private device: DeviceService,
               fb: FormBuilder) {
               this.form = fb.group({
                 aboutMe: new FormControl(''),
@@ -299,7 +340,8 @@ export class LifestyleComponent implements OnInit {
                 boondocking: new FormControl(''),
                 boondockingOther: new FormControl(''),
                 traveling: new FormControl(''),
-                travelingOther: new FormControl('')
+                travelingOther: new FormControl(''),
+                suggestLifestyle: new FormControl('')
                 })
 }
 
@@ -329,6 +371,21 @@ export class LifestyleComponent implements OnInit {
    }
 
   ngOnDestroy() {};
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   onBack() {
@@ -382,11 +439,15 @@ export class LifestyleComponent implements OnInit {
     if (control === 'aboutMe') {
       if (value === 'experienced') {
         this.helpNewbieOpen = 'in';
+        this.newbieOpen = 'out';
       } else {
         this.helpNewbieOpen = 'out';
         this.profile.helpNewbies = false;
         this.form.patchValue({ helpNewbies: 'false'});
         callHelpNewbiesUpdateWhenDone = true;
+        if (value === 'dreamer' || value === 'newbie') {
+          this.newbieOpen = 'in';
+        }
       }
     }
 
@@ -396,6 +457,41 @@ export class LifestyleComponent implements OnInit {
       this[otherControl] = 'out';
       this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
     }
+  }
+
+
+  onSuggestLifestyle() {
+    let suggestionType = 'lifestyle';
+
+    this.showSpinner = true;
+    console.log('LifestyleComponent:onSuggestLifestyle: adding suggestion=', this.form.controls.suggestLifestyle.value);
+    if (this.form.controls.suggestLifestyle.value) {
+      this.adminSvc.addSuggestion(this.form.controls.suggestLifestyle.value, suggestionType,
+                                  this.profile.displayName, this.profile.profileImageUrl)
+      .subscribe(suggestResult => {
+        this.showSpinner = false;
+        this.form.patchValue({
+          suggestLifestyle: ''
+        });
+        this.readyToSuggest = false;
+        this.suggestLifestyleOpen = 'out';
+        this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+      }, error => {
+        console.error('LifestyleComponent:onSuggestLifestyle: error saving suggestion=', error);
+        this.showSpinner = false;
+        this.suggestLifestyleOpen = 'out';
+        this.form.patchValue({
+          suggestLifestyle: ''
+        });
+        this.readyToSuggest = false;
+        this.sentry.logError(error);
+        this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+      });
+    }
+  }
+
+  onSuggestLifestyleOpen() {
+    this.suggestLifestyleOpen = this.suggestLifestyleOpen === 'out' ? 'in' : 'out';
   }
 
 
@@ -485,6 +581,11 @@ export class LifestyleComponent implements OnInit {
       if (this.profile.aboutMe === 'experienced') {
         this.aboutMeExperienced = true;
         this.helpNewbieOpen = 'in';
+      } else if (this.profile.aboutMe === 'dreamer' || this.profile.aboutMe === 'newbie') {
+        this.newbieOpen = 'in';
+      } else {
+        this.helpNewbieOpen = 'out';
+        this.newbieOpen = 'out';
       }
 
       this.showSpinner = false;

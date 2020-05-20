@@ -12,6 +12,7 @@ import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ForumService } from '@services/data-services/forum.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-update-post',
@@ -69,6 +70,7 @@ export class UpdatePostComponent implements OnInit {
               private headerVisibleSvc: HeaderVisibleService,
               private uploadImageSvc: UploadImageService,
               private forumSvc: ForumService,
+              private device: DeviceService,
               fb: FormBuilder) {
                 this.form = fb.group({
                   post: new FormControl(''),
@@ -117,6 +119,25 @@ export class UpdatePostComponent implements OnInit {
         }
       }
     }
+  }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.containerDialog) {
+      containerClass = 'container-desktop';
+    } else {
+      if (this.device.iPhoneModelXPlus) {
+        bottomSpacing = 'bottom-bar-spacing-xplus';
+      } else {
+        bottomSpacing = 'bottom-bar-spacing';
+      }
+      containerClass = 'container ' + bottomSpacing;
+    }
+    console.log('class=', containerClass)
+    return containerClass;
   }
 
 
