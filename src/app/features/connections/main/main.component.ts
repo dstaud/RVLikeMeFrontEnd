@@ -96,8 +96,8 @@ export class MainComponent implements OnInit {
 
       this.listenForParameters();
 
-      // Get all of the rest of the counts not obtained by app-component.
-      this.likeMeCountsSvc.getLikeMeCountsSecondary();
+      // // Get all of the rest of the counts not obtained by app-component.
+      // this.likeMeCountsSvc.getLikeMeCountsSecondary();
 
       this.listenForLikeMeCounts();
     }

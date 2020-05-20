@@ -185,7 +185,7 @@ export class UserQueryComponent implements OnInit {
       value = Object.values(this.matches[i])[0];
 
       // get original answers for those checked
-      if (value) {
+      if (typeof(value) === 'boolean') {
         likeMeAnswer = this.translate.instant(
                             'interests.component.' + name
         );
@@ -193,7 +193,7 @@ export class UserQueryComponent implements OnInit {
 /*           likeMeDesc = this.translate.instant( // What is this?  I think not needed
                             'connections.component.' + this.matches[i].name
           ); */
-          if (name === 'yearOfBirth') {
+          if (typeof(value) === 'number') {
             likeMeAnswer = this.translate.instant(
                                 'profile.component.' + name
               );
