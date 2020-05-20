@@ -44,12 +44,14 @@
         </mat-form-field>
         <mat-icon matSuffix class="eyePassword" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
       </div>
-      <div class="button">
-        <button type="submit" class="mat-raised-button mat-primary"
-                [disabled]="!form.valid || showSpinner">Submit</button>
-      </div>
-      <div class="button">
-        <button *ngIf="containerDialog" type="button" mat-raised-button (click)="onCancel()">Cancel</button>
+      <div class="buttons">
+        <div class="button">
+          <button type="submit" class="mat-raised-button mat-primary"
+                  [disabled]="!form.valid || showSpinner">Submit</button>
+        </div>
+        <div class="button">
+          <button *ngIf="containerDialog" type="button" mat-raised-button (click)="onCancel()">Cancel</button>
+        </div>
       </div>
     </form>
 

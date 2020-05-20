@@ -37,7 +37,6 @@ import { ProfileService } from '@services/data-services/profile.service';
 import { WindowService } from '@services/window.service';
 
 import { SharedModule } from '@shared/shared.module';
-import { SuggestTopicDialogComponent } from './dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { EmailComponent } from './features/admin/email/email.component';
 import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
@@ -92,7 +91,6 @@ export function getErrorHandler(): ErrorHandler {
     RegisterUserComponent,
     LearnMoreComponent,
     ForumsListComponent,
-    SuggestTopicDialogComponent,
     AdminComponent,
     EmailComponent,
     RegisterConfirmComponent,

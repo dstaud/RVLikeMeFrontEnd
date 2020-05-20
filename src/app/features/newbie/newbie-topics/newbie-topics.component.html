@@ -6,8 +6,26 @@
   <p class="hyperlink topic" (click)="onTopic(topic.topicID, topic.topicDesc)">{{ topic.topicDesc }}</p>
 </div>
 <mat-divider></mat-divider>
-<div class="suggest">
-  <p class="hyperlink" (click)="onOpenSuggestTopicDialog()">{{ 'newbie-topics.component.suggestTopicText' | translate }}</p>
-</div>
+<br>
+
+<button mat-button type="button" (click)="onSuggestTopicOpen()">Suggest a new topic</button>
+<div [@suggestTopicSlideInOut]="suggestTopicOpen" class="other">
+  <form [formGroup]="form">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Suggest topic</mat-label>
+        <input matInput
+              type="text"
+              placeholder="suggestion"
+              cdkFocusInitial
+              (change)="readyToSuggest = true"
+              formControlName="suggestTopic">
+      </mat-form-field>
+    </div>
+    <div>
+      <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestTopic()">Submit</button>
+    </div>
+  </form>
+
 <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 

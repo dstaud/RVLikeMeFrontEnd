@@ -54,6 +54,7 @@
                 autocapitalize="none"
                 autocomplete="new-password"
                 required>
+        <mat-hint align="start">upper/lower case & nbr & special</mat-hint>
         <mat-error *ngIf="!form.controls.password.pristine &&
                           form.controls.password.hasError('required')">
           Please enter a <strong>Password</strong>
@@ -65,14 +66,13 @@
         {{hidePassword ? 'visibility_off' : 'visibility'}}
       </mat-icon>
     </div>
-    <div>
-      <span></span>
-    </div>
-    <div class="button">
-      <button [disabled]="!form.valid" type="submit" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
-    </div>
-    <div class="button">
-      <button *ngIf="containerDialog" type="button" class="mat-raised-button" (click)="onCancel()">Cancel</button>
+    <div class="buttons">
+      <div class="button">
+        <button [disabled]="!form.valid" type="submit" class="mat-raised-button mat-primary" (click)="onSubmit()">Submit</button>
+      </div>
+      <div class="button">
+        <button *ngIf="containerDialog" type="button" class="mat-raised-button" (click)="onCancel()">Cancel</button>
+      </div>
     </div>
   </form>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

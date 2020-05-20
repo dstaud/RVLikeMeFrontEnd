@@ -41,16 +41,6 @@ export class NewbieTopicsService {
     return this.http.post(`/api/newbie-topic`, JSON.parse(keyValues), {});
   }
 
-  addNewbieSuggestTopic(topic: string, displayName: string, profileImageUrl: string): Observable<any> {
-    let escapedTopic = this.escapeJsonReservedCharacters(topic);
-
-    let keyValues = '{"topic":"' + escapedTopic + '",' +
-                    '"displayName":"' + displayName + '",' +
-                    '"profileImageUrl":"' + profileImageUrl + '"}'
-
-    return this.http.post(`/api/newbie-suggest-topic`, JSON.parse(keyValues), {});
-  }
-
   addNewbieTopicPost(topicID: string, displayName: string, profileImageUrl: string, post: string, photoUrl: string): Observable<any> {
     let postEscaped = this.escapeJsonReservedCharacters(post);
 

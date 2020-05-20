@@ -16,6 +16,15 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
+  addSuggestion(suggestion: string, suggestionType: string, displayName: string, profileImageUrl: string): Observable<any> {
+    let keyValues = '{"suggestion":"' + suggestion + '",' +
+                    '"suggestionType":"' + suggestionType + '",' +
+                    '"displayName":"' + displayName + '",' +
+                    '"profileImageUrl":"' + profileImageUrl + '"}'
+
+    return this.http.post(`/api/suggestion`, JSON.parse(keyValues), {});
+  }
+
   loadRvData(jsonFileName: string): Observable<any> {
     let params = '{"jsonFileName":"' + jsonFileName + '"}';
 

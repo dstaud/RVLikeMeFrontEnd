@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder} from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -9,11 +10,32 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { AdminService } from '@services/data-services/admin.service';
+
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-interests',
   templateUrl: './interests.component.html',
-  styleUrls: ['./interests.component.scss']
+  styleUrls: ['./interests.component.scss'],
+  animations: [
+    trigger('suggestInterestSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class InterestsComponent implements OnInit {
   form: FormGroup;
@@ -31,7 +53,8 @@ export class InterestsComponent implements OnInit {
   programming: boolean = false;
   mobileInternet: boolean = false;
   desktopUser: boolean = false;
-
+  suggestInterestOpen: string = 'out';
+  readyToSuggest: boolean = false;
 
   // Spinner is for initial load from the database only.
   // The SaveIcon us shown whenever the user clicks on an interest.
@@ -46,6 +69,9 @@ export class InterestsComponent implements OnInit {
               private location: Location,
               private router: Router,
               private authSvc: AuthenticationService,
+              private adminSvc: AdminService,
+              private shared: SharedComponent,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -60,7 +86,8 @@ export class InterestsComponent implements OnInit {
                 gaming: new FormControl(''),
                 musicalInstrument: new FormControl(''),
                 programming: new FormControl(''),
-                mobileInternet: new FormControl('')
+                mobileInternet: new FormControl(''),
+                suggestInterest: new FormControl('', Validators.required)
               });
 }
 
@@ -94,6 +121,42 @@ ngOnInit() {
     let route = '/' + this.returnRoute
     this.activateBackArrowSvc.setBackRoute('', 'backward');
     this.router.navigateByUrl(route);
+  }
+
+
+  onSuggestInterest() {
+    let suggestionType = 'interest';
+
+    this.showSpinner = true;
+    console.log('InterestsComponent:onSuggestInterest: adding suggestion=', this.form.controls.suggestInterest.value);
+    if (this.form.controls.suggestInterest.value) {
+      this.adminSvc.addSuggestion(this.form.controls.suggestInterest.value, suggestionType,
+                                  this.profile.displayName, this.profile.profileImageUrl)
+      .subscribe(suggestResult => {
+        this.showSpinner = false;
+        this.form.patchValue({
+          suggestInterest: ''
+        });
+        this.readyToSuggest = false;
+        this.suggestInterestOpen = 'out';
+        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+      }, error => {
+        console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);
+        this.showSpinner = false;
+        this.suggestInterestOpen = 'out';
+        this.form.patchValue({
+          suggestInterest: ''
+        });
+        this.readyToSuggest = false;
+        this.sentry.logError(error);
+        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+      });
+    }
+  }
+
+
+  onSuggestInterestOpen() {
+    this.suggestInterestOpen = this.suggestInterestOpen === 'out' ? 'in' : 'out';
   }
 
 

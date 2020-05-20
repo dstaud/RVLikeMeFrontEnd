@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { trigger, transition, style, animate, state } from '@angular/animations';
+import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -12,8 +13,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ShareDataService, InewbieTopic } from '@services/share-data.service';
 import { UserTypeService } from '@services/user-type.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
-
-import { SuggestTopicDialogComponent } from '@dialogs/suggest-topic-dialog/suggest-topic-dialog.component';
+import { AdminService } from '@services/data-services/admin.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -26,11 +26,31 @@ export interface Itopics {
 @Component({
   selector: 'app-rvlm-newbie-topics',
   templateUrl: './newbie-topics.component.html',
-  styleUrls: ['./newbie-topics.component.scss']
+  styleUrls: ['./newbie-topics.component.scss'],
+  animations: [
+    trigger('suggestTopicSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class NewbieTopicsComponent implements OnInit {
+  form: FormGroup;
   authorizedTopics: Array<Itopics> = [];
   userType: string;
+  suggestTopicOpen: string = 'out';
+  readyToSuggest: boolean = false;
 
   showSpinner: boolean= false;
 
@@ -42,12 +62,17 @@ export class NewbieTopicsComponent implements OnInit {
               private profileSvc: ProfileService,
               private translate: TranslateService,
               private shareDataSvc: ShareDataService,
-              private dialog: MatDialog,
               private shared: SharedComponent,
               private sentry: SentryMonitorService,
+              private adminSvc: AdminService,
               private userTypeSvc: UserTypeService,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private router: Router) { }
+              private router: Router,
+              fb: FormBuilder) {
+                this.form = fb.group({
+                  suggestTopic: new FormControl('', Validators.required)
+                });
+  }
 
   ngOnInit(): void {
     this.listenForUserProfile();
@@ -62,32 +87,39 @@ export class NewbieTopicsComponent implements OnInit {
   ngOnDestroy() {}
 
 
-  // Open dialog for user to update their post
-  onOpenSuggestTopicDialog(): void {
-    const dialogRef = this.dialog.open(SuggestTopicDialogComponent, {
-      disableClose: true
-    });
 
-    dialogRef.afterClosed()
-    .pipe(untilComponentDestroyed(this))
-    .subscribe(result => {
-      this.showSpinner = true;
-      if (result !== 'canceled') {
-        this.newbieTopicsSvc.addNewbieSuggestTopic(result, this.profile.displayName, this.profile.profileImageUrl)
-        .subscribe(suggestResult => {
-          this.showSpinner = false;
-          console.error('NewbieTopicsComponent:onOpenSuggestTopicDialog: suggestion= ', suggestResult);
-        }, error => {
-          this.showSpinner = false;
-          console.error('NewbieTopicsComponent:onOpenSuggestTopicDialog: throw error ', error);
-          throw new Error(error);
-        });
+  onSuggestTopic() {
+    let suggestionType = 'newbie topic';
 
-        this.shared.openSnackBar('Thank you for your suggestion! The information has been sent on','message', 4000);
-      } else {
+    this.showSpinner = true;
+    if (this.form.controls.suggestTopic.value) {
+      this.adminSvc.addSuggestion(this.form.controls.suggestTopic.value, suggestionType,
+                                  this.profile.displayName, this.profile.profileImageUrl)
+      .subscribe(suggestResult => {
         this.showSpinner = false;
-      }
-    });
+        this.form.patchValue({
+          suggestTopic: ''
+        });
+        this.readyToSuggest = false;
+        this.suggestTopicOpen = 'out';
+        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+      }, error => {
+        this.showSpinner = false;
+        this.suggestTopicOpen = 'out';
+        this.form.patchValue({
+          suggestTopic: ''
+        });
+        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+        this.readyToSuggest = false;
+        console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);
+        this.sentry.logError(error);
+      });
+    }
+  }
+
+
+  onSuggestTopicOpen() {
+    this.suggestTopicOpen = this.suggestTopicOpen === 'out' ? 'in' : 'out';
   }
 
 

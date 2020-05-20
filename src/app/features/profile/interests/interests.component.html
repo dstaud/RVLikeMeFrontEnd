@@ -80,8 +80,26 @@
                     (change)="onUpdateInterest('travel', $event)">
                     {{ "interests.component.travel" | translate }}
       </mat-checkbox>
+      <mat-divider></mat-divider>
+      <br>
+      <button mat-button type="button" (click)="onSuggestInterestOpen()">Suggest a new interest</button>
+      <div [@suggestInterestSlideInOut]="suggestInterestOpen" class="other">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Suggest interest</mat-label>
+            <input matInput
+                  type="text"
+                  placeholder="suggestion"
+                  cdkFocusInitial
+                  (change)="readyToSuggest = true"
+                  formControlName="suggestInterest">
+          </mat-form-field>
+        </div>
+        <div>
+          <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestInterest()">Submit</button>
+        </div>
+      </div>
   </form>
-  <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 

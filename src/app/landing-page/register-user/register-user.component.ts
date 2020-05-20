@@ -159,11 +159,17 @@ export class RegisterUserComponent implements OnInit {
         this.httpErrorText = 'Invalid email address or password';
       } else {
         if (error.status === 403) {
-          console.log('RegisterUser: 403. active=', error.active);
-          this.getActivationToken(true);
-          this.httpErrorText = 'It looks like you already tried to register.  Another registration email was sent to ' + this.credentials.email + '. Please activate your account from this email.  Check your trash or spam folder if you cannot find the email.';
-          this.showSpinner = false;
-          this.form.enable();
+          console.log('RegisterUser: 403. active=', error.active)
+          if (error.active) {
+            this.httpErrorText = 'Email address is already registered.  If you have forgotten your password, click on the forgot password link on Login.';
+            this.showSpinner = false;
+            this.form.enable();
+          } else {
+            this.getActivationToken(true);
+            this.httpErrorText = 'It looks like you already tried to register.  Another registration email was sent to ' + this.credentials.email + '. Please activate your account from this email.  Check your trash or spam folder if you cannot find the email.';
+            this.showSpinner = false;
+            this.form.enable();
+          }
         } else {
           console.warn('ERROR: ', error);
           if (error.message.includes('Unknown Error')) {
