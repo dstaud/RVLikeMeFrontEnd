@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
+import { fadeAnimation } from '@shared/animations';
+
 @Component({
   selector: 'app-rvlm-newbie',
   templateUrl: './newbie.component.html',
-  styleUrls: ['./newbie.component.scss']
+  styleUrls: ['./newbie.component.scss'],
+  animations: [fadeAnimation]
 })
 export class NewbieComponent implements OnInit {
 

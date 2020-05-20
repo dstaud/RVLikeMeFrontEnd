@@ -253,7 +253,7 @@ export class ProfileService {
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
     let attributeEscaped;
     console.log('ProfileService:updateProfileAttribute: type of attribute=', typeof(value));
-    if (typeof(value) !== 'boolean' && typeof(value !== 'number')) {
+    if (typeof(value) !== 'boolean' && typeof(value !== 'number' && value)) {
       attributeEscaped = this.escapeJsonReservedCharacters(value);
     } else {
       attributeEscaped = value;

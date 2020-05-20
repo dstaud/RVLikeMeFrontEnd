@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
+import { fadeAnimation } from '@shared/animations';
+
 @Component({
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
-  styleUrls: ['./credentials.component.scss']
+  styleUrls: ['./credentials.component.scss'],
+  animations: [fadeAnimation]
 })
 export class CredentialsComponent implements OnInit {
 

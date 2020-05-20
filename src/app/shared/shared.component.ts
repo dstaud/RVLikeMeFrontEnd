@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+
 import { isNumber } from 'util';
 
 @Component({
@@ -7,6 +8,7 @@ import { isNumber } from 'util';
   templateUrl: './shared.component.html',
   styleUrls: ['./shared.component.scss']
 })
+
 export class SharedComponent implements OnInit {
 
   constructor(private snackBar: MatSnackBar) { }

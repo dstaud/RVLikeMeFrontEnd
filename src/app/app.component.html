@@ -16,12 +16,13 @@
                               fxHide fxShow.sm fxShow.lt-sm>
       </app-rvlm-header-mobile>
 
-      <main [@triggerName]="prepareRoute(outlet)" class="container mat-app-background"
+      <main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"
+            class="container mat-app-background"
             [ngClass]="{
                       'bottom-bar-spacing': userAuthorized && !iphoneModelxPlus,
                       'bottom-bar-spacing-xplus': userAuthorized && iphoneModelxPlus
                     }">
-        <router-outlet #outlet="outlet" (activate)="onActivate($event)"></router-outlet>
+        <router-outlet #o="outlet" (activate)="onActivate($event)"></router-outlet>
       </main>
 
       <app-rvlm-footer *ngIf="userAuthorized"

@@ -178,6 +178,7 @@ export class RegisterUserComponent implements OnInit {
           } else {
             this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
           }
+          this.form.enable();
         }
       }
     });
@@ -188,7 +189,6 @@ export class RegisterUserComponent implements OnInit {
     let self = this;
 
     setTimeout(function () {
-      self.authSvc.logout();
       if (self.containerDialog) {
         self.formCompleted = 'complete';
         self.formComplete.emit(self.formCompleted);
@@ -206,6 +206,7 @@ export class RegisterUserComponent implements OnInit {
     this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
     .subscribe(tokenResult => {
       console.log('RegisterUserComponent:onSubmit: tokenResult=', tokenResult);
+        this.authSvc.logout();
         this.sendRegisterEmail(tokenResult.token, stay);
     }, error => {
       console.log('RegisterUserComponent:onSubmit: error getting token=', error);
@@ -233,6 +234,7 @@ export class RegisterUserComponent implements OnInit {
       this.httpError = true;
       this.httpErrorText = "Unable to send registration email.  Please try again soon.";
       this.authSvc.logout();
+      this.form.enable();
     })
   }
 }

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { PageNotFoundComponent } from './core/navigation/page-not-found/page-not-found.component';
@@ -72,7 +71,7 @@ const routes: Routes = [
     .then(m => m.SettingsModule)
   },
   { path: 'signin', component: SigninComponent },
-  { path: 'register', component: RegisterUserComponent, data: { animationState: 'Two' } },
+  { path: 'register', component: RegisterUserComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'password-reset', component: PasswordResetComponent },
@@ -80,7 +79,7 @@ const routes: Routes = [
   { path: 'register-confirm', component: RegisterConfirmComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
-  { path: '', component: LandingPageComponent, data: { animationState: 'One' } },
+  { path: '', component: LandingPageComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 

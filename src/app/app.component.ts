@@ -25,15 +25,14 @@ import { UserTypeService } from './core/services/user-type.service';
 import { AdminService } from '@services/data-services/admin.service';
 import { UsingEmailService } from './core/services/using-email.service';
 
-import { routeTransitionAnimations } from './route-transition-animations';
-
+import { fadeAnimation } from './shared/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [DeviceService],
-  animations: [routeTransitionAnimations]
+  animations: [fadeAnimation]
 })
 
 export class AppComponent implements OnInit {
