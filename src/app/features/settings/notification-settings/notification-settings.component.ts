@@ -124,6 +124,7 @@ export class NotificationSettingsComponent implements OnInit {
     this.profileSvc.updateProfileAttribute(this.profileID, 'sendMessageEmails', sendMessageEmails)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
+      this.profileSvc.distributeProfileUpdate(responseData);
       this.showsendMessageNotificationEmailsSaveIcon = false;
     }, error => {
       this.showsendMessageNotificationEmailsSaveIcon = false;

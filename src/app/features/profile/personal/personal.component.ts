@@ -387,11 +387,10 @@ export class PersonalComponent implements OnInit {
     let SaveIcon = 'show' + control + 'SaveIcon';
 
     this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
-    // this.profileSvc.updateProfile(this.profile)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
-      // this.profileSvc.distributeProfileUpdate(this.profile);
+      this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this[SaveIcon] = false;
       console.error('PersonalComponent:updatePersonal: throw error ', error);

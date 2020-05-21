@@ -168,6 +168,7 @@ export class MainComponent implements OnInit {
     this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
+      this.profileSvc.distributeProfileUpdate(responseData);
       console.log('SettingsComponent:onSelectTheme: update color theme ', responseData);
     }, error => {
       this.sentry.logError({"message":"error listening for color theme","error":error});
@@ -182,6 +183,7 @@ export class MainComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.showLanguageSaveIcon = false;
+      this.profileSvc.distributeProfileUpdate(responseData);
       this.language.setLanguage(language);
     }, error => {
       this.showLanguageSaveIcon = false;

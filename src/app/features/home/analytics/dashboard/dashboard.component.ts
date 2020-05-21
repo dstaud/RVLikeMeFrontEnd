@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  turnInstallOff(event: boolean) {
+  turnInstallOff() {
     this.showInstallComponent = false;
   }
 

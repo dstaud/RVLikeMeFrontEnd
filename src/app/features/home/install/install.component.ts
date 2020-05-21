@@ -46,6 +46,7 @@ export class InstallComponent implements OnInit {
 
     this.profileSvc.updateProfileAttribute(this.profileID, 'hideInstall', true)
     .subscribe(profileResult => {
+      this.profileSvc.distributeProfileUpdate(profileResult);
       this.showSpinner = false;
       this.shared.openSnackBar('You can always install from Settings', 'message', 4000);
     }, error => {

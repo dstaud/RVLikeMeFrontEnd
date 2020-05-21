@@ -186,8 +186,8 @@ export class ProfileService {
   }
 
   distributeProfileUpdate(userProfile: IuserProfile) {
-    // this.dataStore.profile = userProfile;
-    // this._profile.next(Object.assign({}, this.dataStore).profile);
+    this.dataStore.profile = userProfile;
+    this._profile.next(Object.assign({}, this.dataStore).profile);
   }
 
   getProfile(reset?: boolean) {

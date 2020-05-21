@@ -184,8 +184,8 @@ ngOnInit() {
     this.profileSvc.updateProfileAttribute(this.profile._id, control, this.profile[control])
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
+      this.profileSvc.distributeProfileUpdate(responseData);
       this.showSaveIcon = false;
-      // this.profileSvc.distributeProfileUpdate(this.profile);
     }, error => {
       this.showSaveIcon = false;
       console.error('InterestsComponent:updateLifestyle: throw error ', error);

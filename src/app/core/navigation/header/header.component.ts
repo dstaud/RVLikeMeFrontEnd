@@ -130,7 +130,7 @@ export class HeaderComponent implements OnInit {
     this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      // this.profileSvc.distributeProfileUpdate(this.profile);
+      this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       console.error('HeaderComponent:selectTheme: throw error ', error);
       throw new Error(error);

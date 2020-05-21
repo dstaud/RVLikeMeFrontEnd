@@ -488,6 +488,7 @@ export class RvRigComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this[SaveIcon] = false;
+      this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this[SaveIcon] = false;
       console.error('RigComponent:updateRig: throw error ', error);
