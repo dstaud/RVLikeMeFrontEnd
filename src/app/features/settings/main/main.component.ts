@@ -106,8 +106,7 @@ export class MainComponent implements OnInit {
 
       this.listenForUserProfile();
 
-      alert('device info=' + this.device.device + ',' + this.device.os);
-      if (this.device.os === 'IOS') {
+      if (this.device.os.toLowerCase() === 'ios') {
         this.installAppleDevice = true;
       }
     }
