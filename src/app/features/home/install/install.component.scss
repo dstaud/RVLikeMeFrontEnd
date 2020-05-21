@@ -1,0 +1,36 @@
+@import './../../../../styles/_variables';
+
+.container {
+  border-radius: 25px;
+  padding: 10px;
+  background-color: $light-mode-group;
+}
+
+.welcome {
+  margin-left: 15px;
+}
+
+.hi {
+  font-weight: bold;
+}
+
+.pctCompleteMsg {
+  color: $primary-color;
+}
+
+.box-background-light {
+  background-color: $light-mode-group;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-group;
+}
+
+.installForm {
+  text-align: right;
+  font-size: 80%;
+}
+
+.spinner {
+  margin: auto;
+}

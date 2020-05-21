@@ -58,7 +58,8 @@ export interface IuserProfile {
   rigImageUrls: Array<string>;
   lifestyleImageUrls: Array<string>;
   sendMessageEmails: boolean;
-  blogLinks: Array<Iblog>
+  blogLinks: Array<Iblog>,
+  hideInstall: boolean
 }
 
 @Injectable({
@@ -111,7 +112,8 @@ export class ProfileService {
     rigImageUrls: [],
     lifestyleImageUrls: [],
     sendMessageEmails: true,
-    blogLinks: []
+    blogLinks: [],
+    hideInstall: false
   };
   private profileSubscription: any;
 
@@ -129,24 +131,28 @@ export class ProfileService {
                   '"blogTitle":"' + blogTitle + '",' +
                   '"blogImage":"' + blogImage + '",' +
                   '"blogLink":"' + blogLink + '"}';
+
     return this.http.put(`/api/profile-blog-link`, JSON.parse(params), {});
   }
 
   addGroupToProfile(profileID: string, groupID: string): Observable<any> {
     let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
     let groupJSON = JSON.parse(group);
+
     return this.http.put(`/api/profile-forums`, groupJSON, {});
   }
 
   addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
+
     return this.http.put(`/api/profile-lifestyle-image`, imageUrlJSON, {});
   }
 
   addRigImageUrlToProfile(profileID: string, rigImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
+
     return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
   }
 
@@ -161,25 +167,27 @@ export class ProfileService {
   deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
-    console.log('ProfileService:deleteLifestyleImage: params=', imageUrlJSON);
+
     return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
   }
 
   deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
     let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
     let imageUrlJSON = JSON.parse(imageUrl);
+
     return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
   }
 
   deleteTempProfileImage(imageUrl: string): Observable<any> {
     let image = '{"imageUrl":"' + imageUrl + '"}';
     let imageUrlJSON = JSON.parse(image);
+
     return this.http.put(`/api/profile-delete-temp-image`, imageUrlJSON, {});
   }
 
   distributeProfileUpdate(userProfile: IuserProfile) {
-    this.dataStore.profile = userProfile;
-    this._profile.next(Object.assign({}, this.dataStore).profile);
+    // this.dataStore.profile = userProfile;
+    // this._profile.next(Object.assign({}, this.dataStore).profile);
   }
 
   getProfile(reset?: boolean) {
@@ -228,6 +236,8 @@ export class ProfileService {
       this.dataStore.profile.rigImageUrls = [];
       this.dataStore.profile.lifestyleImageUrls = [];
       this.dataStore.profile.sendMessageEmails = true;
+      this.dataStore.profile.blogLinks = [];
+      this.dataStore.profile.hideInstall = false;
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)
@@ -264,6 +274,7 @@ export class ProfileService {
                   '"value":"' +  attributeEscaped + '"}';
 
     console.log('ProfileService:updateProfileAttribute: params=', params);
+    this._profile.next(Object.assign({}, this.dataStore).profile);
     return this.http.put(`/api/profile-attribute-update`, params, {});
   }
 

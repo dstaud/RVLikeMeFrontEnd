@@ -12,6 +12,7 @@ import { LikemeCountsComponent } from './likeme-counts/likeme-counts.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { DashboardDrilldownComponent } from './analytics/dashboard-drilldown/dashboard-drilldown.component';
 import { DashboardComponent } from './analytics/dashboard/dashboard.component';
+import { InstallComponent } from './install/install.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DashboardComponent } from './analytics/dashboard/dashboard.component';
     LikemeCountsComponent,
     AnalyticsComponent,
     DashboardDrilldownComponent,
-    DashboardComponent
+    DashboardComponent,
+    InstallComponent
   ],
   imports: [
     CommonModule,

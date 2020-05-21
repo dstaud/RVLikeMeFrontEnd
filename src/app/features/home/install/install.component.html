@@ -1,0 +1,24 @@
+<div class="container mat-body-1"
+      [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+  <div class="welcome">
+    <p>Do you want to install RV Like Me as an App for a better experience?</p>
+  </div>
+
+  <div>
+    <button [disabled]="disable" class="mat-button mat-primary" (click)="onInstallApp()">
+      Install
+    </button>
+  </div>
+
+  <div class="installForm">
+    <form [formGroup]="form">
+      <mat-checkbox formControlName="hideInstall"
+                    class="checkbox"
+                    [disabled]="disable"
+                    (change)="onHideInstall()">
+                    Do not show this again
+      </mat-checkbox>
+    </form>
+  </div>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
+</div>

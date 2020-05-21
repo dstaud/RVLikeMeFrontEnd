@@ -7,7 +7,7 @@ import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found
 import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
-  { path: '', component:SettingsComponent,
+  { path: '', component: SettingsComponent,
     children: [
       { path: 'main', component: MainComponent},
       { path: 'install', component: IphoneInstallComponent}

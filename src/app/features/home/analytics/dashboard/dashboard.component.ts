@@ -13,6 +13,7 @@ import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { ThemeService } from '@services/theme.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { BeforeInstallEventService } from '@services/before-install-event.service';
 
 @Component({
   selector: 'app-rvlm-dashboard',
@@ -23,9 +24,11 @@ export class DashboardComponent implements OnInit {
   newbie: boolean = false;
   experiencedHelp: boolean = false;
   theme: string = 'light-theme';
+  showInstallComponent: boolean = false;
+  event: any;
+  profile: IuserProfile;
 
   private userProfile: Observable<IuserProfile>;
-  private profile: IuserProfile;
   private dashboardInfo: Idashboard
 
   constructor(public translate: TranslateService,
@@ -37,6 +40,7 @@ export class DashboardComponent implements OnInit {
               private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
+              private beforeInstallEventSvc: BeforeInstallEventService,
               private router: Router) { }
 
   ngOnInit() {
@@ -95,6 +99,11 @@ export class DashboardComponent implements OnInit {
   }
 
 
+  turnInstallOff(event: boolean) {
+    this.showInstallComponent = false;
+  }
+
+
   // Get user profile
   private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
@@ -109,6 +118,24 @@ export class DashboardComponent implements OnInit {
       } else {
         this.experiencedHelp = false;
       }
+
+      console.log('DashboardComponent:listenForUserProfile: hideInstall=', this.profile.hideInstall);
+      // Get the event handle when beforeInstallEvent fired that allows for app installation.
+      // When fired, offer user option to install app from menu
+      if (this.profile.hideInstall) {
+        this.showInstallComponent = false;
+      } else {
+        this.event = this.beforeInstallEventSvc.beforeInstallEvent$
+        this.event
+        .pipe(untilComponentDestroyed(this))
+        .subscribe(data => {
+          if (data !== null) {
+            this.event = data.valueOf();
+            this.showInstallComponent = true;
+          }
+        });
+      }
+
     }, (error) => {
       console.error('HomeDashboardComponent:listenForUserProfile: error getting profile ', error);
       throw new Error(error);

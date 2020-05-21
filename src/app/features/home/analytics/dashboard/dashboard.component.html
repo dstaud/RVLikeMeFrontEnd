@@ -15,23 +15,36 @@
         <span class="hyperlink bold-hyperlink" (click)="onHelpNewbieTopic()">{{ 'home.component.expert2' | translate }}</span> {{ 'home.component.expert3' | translate }}.</p>
     </div>
   </div>
+
+  <div *ngIf="showInstallComponent" class="dashboard">
+    <app-rvlm-install
+      [event]=event
+      [hideInstall]=profile.hideInstall
+      [profileID]="profile._id"
+      (doNotShowInstall)="turnInstallOff()">
+    </app-rvlm-install>
+  </div>
+
   <div class="dashboard">
     <app-rvlm-likeme-counts
       [theme]=theme>
     </app-rvlm-likeme-counts>
   </div>
+
   <div class="dashboard">
     <app-rvlm-analytics
       [control]="'aboutMe'"
       [theme]="theme">
     </app-rvlm-analytics>
   </div>
+
   <div class="dashboard">
     <app-rvlm-analytics
       [control]="'rvUse'"
       [theme]="theme">
     </app-rvlm-analytics>
   </div>
+
   <div class="dashboard">
     <app-rvlm-analytics
       [control]="'rigType'"
