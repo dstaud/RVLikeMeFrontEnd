@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -18,7 +19,24 @@ import { DeviceService } from '@services/device.service';
 @Component({
   selector: 'app-rvlm-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
+  animations: [
+    trigger('helpInstallSlideInOut', [
+      state('in', style({
+        overflow: 'hidden',
+        height: '*',
+        width: '100%'
+      })),
+      state('out', style({
+        opacity: '0',
+        overflow: 'hidden',
+        height: '0px',
+        width: '0px'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out'))
+    ])
+  ]
 })
 export class SettingsComponent implements OnInit {
   form: FormGroup;
@@ -27,6 +45,7 @@ export class SettingsComponent implements OnInit {
   showInstallLink:boolean = false;
   showLanguageSaveIcon: boolean = false;
   profileID: string;
+  helpInstallOpen: string = 'out';
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -87,6 +106,11 @@ export class SettingsComponent implements OnInit {
     containerClass = 'container ' + bottomSpacing;
 
     return containerClass;
+  }
+
+
+  onHelpInstall() {
+    this.helpInstallOpen = this.helpInstallOpen === 'out' ? 'in' : 'out';
   }
 
 

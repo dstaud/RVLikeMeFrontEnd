@@ -31,16 +31,25 @@
     </div>
   </form>
 
-  <p>
-    <a mat-menu-item
-      *ngIf="showInstallLink"
-      (click)="onInstallApp()">
-      <mat-icon fontSet="material-icons-outlined" >save_alt</mat-icon>
-      <span>{{ "menu.install" | translate }}</span>
-    </a>
-  </p>
-  <p>
+  <div class="install">
+    <button *ngIf="showInstallLink"
+            type="button"
+             mat-menu-item
+            (click)="onInstallApp()">
+            <mat-icon matPrefix fontSet="material-icons-outlined">download</mat-icon>
+            <span>{{ "menu.install" | translate }}</span>
+    </button>
+  </div>
+  <div *ngIf="showInstallLink" class="icon">
+    <mat-icon fontSet="material-icons-outlined" (click)="onHelpInstall()">help_outline</mat-icon>
+  </div>
+  <div *ngIf="helpInstallOpen === 'in'" [@helpInstallSlideInOut]="helpInstallOpen" class="helpInstall">
+    <p>Android phones allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it.</p>
+  </div>
+
+  <div class="notifications">
     <app-rvlm-notification-settings></app-rvlm-notification-settings>
-  </p>
+  </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, Directive } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -11,12 +11,12 @@ import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { DeviceService } from '@services/device.service';
 
-
 @Component({
   selector: 'app-register-confirm',
   templateUrl: './register-confirm.component.html',
   styleUrls: ['./register-confirm.component.scss']
 })
+
 export class RegisterConfirmComponent implements OnInit {
   landingImage: string;
   maxRvImageHeight = 'auto';
@@ -29,9 +29,17 @@ export class RegisterConfirmComponent implements OnInit {
   private windowWidth: number;
   private routeSubscription: any;
   private token: string;
-  private beforeInstallEvent: any;
+  private event: any;
+  private installPrompt: any;
   private device: string;
   private install: boolean = false;
+
+  numberOfClicks = 0;
+
+//   @HostListener('click', ['$event.target'])
+//   onClick(btn) {
+//     console.log('button', btn, 'number of clicks:', this.numberOfClicks++);
+//  }
 
   // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
@@ -47,6 +55,7 @@ export class RegisterConfirmComponent implements OnInit {
               private emailSmtpSvc: EmailSmtpService,
               private deviceSvc: DeviceService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private elementRef: ElementRef,
               private router: Router) {
 
       this.route.queryParams
@@ -56,7 +65,7 @@ export class RegisterConfirmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.onBeforeInstallEventOfferInstallApp();
+    this.listenBeforeInstall();
 
     this.device = this.deviceSvc.device;
     console.log('RegisterConfirmComponent:ngOnInit: device=', this.device);
@@ -65,6 +74,11 @@ export class RegisterConfirmComponent implements OnInit {
 
     this.listenForParameters();
   }
+
+  // ngAfterViewInit() {
+  //   this.elementRef.nativeElement.querySelector('submit')
+  //                                 .addEventListener('click', this.onSignIn.bind(this));
+  // }
 
   ngOnDestroy() {}
 
@@ -77,11 +91,34 @@ export class RegisterConfirmComponent implements OnInit {
       install: this.install,
       installDevice: this.device
     }
-    this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
+
+    if(this.event) {
+      // Show the install prompt
+      this.event.prompt();
+
+      // Wait for the user to respond to the prompt
+      this.event.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+          this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+      });
+
+      this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.router.navigateByUrl('/?e=signin'); // go directly to login page.  Will pop up as dialog if desktop
       this.activateBackArrowSvc.setBackRoute('', 'forward');
+    } else {
+
+      this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
+      this.headerVisibleSvc.toggleHeaderVisible(true);
+      this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      this.router.navigateByUrl('/?e=signin'); // go directly to login page.  Will pop up as dialog if desktop
+      this.activateBackArrowSvc.setBackRoute('', 'forward');
+    }
   }
 
 
@@ -93,12 +130,10 @@ export class RegisterConfirmComponent implements OnInit {
     .subscribe(activateResult => {
       console.log('RegisterConfirmComponent:activateUser: result=', activateResult);
       this.showSpinner = false;
+
       // Since token was deleted by activate user, using this agreed-upon hard-coded token just for sending welcome email.
       this.sendWelcomeEmail(activateResult.email, '8805-1335-8153-3116');
 
-      if (this.presentInstallOption) {
-        this.presentAppInstallOption();
-      }
     }, error => {
       console.log('RegisterConfirmComponent:activateUser: error=', error);
       this.showSpinner = false;
@@ -129,25 +164,25 @@ export class RegisterConfirmComponent implements OnInit {
 
   // Get the event handle when beforeInstallEvent fired that allows for app installation.
   // When fired, offer user option to install app from menu
-  private onBeforeInstallEventOfferInstallApp() {
-    this.beforeInstallEvent = this.beforeInstallEventSvc.beforeInstallEvent$
-    this.beforeInstallEvent
+  private listenBeforeInstall() {
+    this.event = this.beforeInstallEventSvc.beforeInstallEvent$
+    this.event
     .pipe(untilComponentDestroyed(this))
     .subscribe(data => {
       if (data !== null) {
-        this.presentInstallOption = true;
-        this.beforeInstallEvent = data.valueOf();
+        this.event = data.valueOf();
       }
     });
   }
-
 
   // App Install Option
   private presentAppInstallOption(): void {
     let signinData: Isignin;
 
+    this.installPrompt.prompt();
+
     // Wait for the user to respond to the prompt
-    this.beforeInstallEvent.userChoice.then((choiceResult) => {
+    this.installPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
         console.log('RegisteConfirmComponent:openInstallDialog: User accepted the install prompt');
         this.beforeInstallEventSvc.saveBeforeInstallEvent(null);

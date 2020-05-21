@@ -320,6 +320,12 @@ export class MainComponent implements OnInit {
     }
   }
 
+
+  onRefresh() {
+    this.showSpinner = true;
+    this.likeMeCountsSvc.getLikeMeCountsSecondary();
+  }
+
   // Listen for changes in color theme;
   private listenForColorTheme() {
     this.themeSvc.defaultGlobalColorTheme

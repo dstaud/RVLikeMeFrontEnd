@@ -25,7 +25,7 @@
     <mat-error class="mat-subheading-2">{{httpErrorText}}</mat-error>
   </div>
   <div>
-    <button [disabled]="httpError || showSpinner" mat-flat-button class="button" color="primary" (click)="onSignIn()">Log in</button>
+    <button id="submit" [disabled]="httpError || showSpinner" mat-flat-button class="button" color="primary" (click)="onSignIn()">Log in</button>
   </div>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

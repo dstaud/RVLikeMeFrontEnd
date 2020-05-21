@@ -67,6 +67,7 @@ export class RvRigComponent implements OnInit {
   rigModel = new FormControl('');
   rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
   brandSelected: string = null;
+  newbie: boolean = false;
 
   rigImageUrls: Array<string> = [];
   rigData: Array<IrigData> = [];
@@ -361,7 +362,6 @@ export class RvRigComponent implements OnInit {
     this.rigSvc.getRigData()
     .pipe(untilComponentDestroyed(this))
     .subscribe(rigData => {
-      console.log('RigComponent: getRigData: rigData=', rigData);
       this.rigData = rigData;
       this.rigBrand.patchValue(this.profile.rigBrand);
       this.brandSelected = null;
@@ -426,6 +426,11 @@ export class RvRigComponent implements OnInit {
         for (let i=this.rigImageUrls.length; i < 3; i++) {
           this.rigImageUrls[i] = this.placeholderPhotoUrl;
         }
+
+        if (this.profile.aboutMe === 'dreamer' || this.profile.aboutMe === 'newbie') {
+          this.newbie = true;
+        }
+
         this.getRigData();
       }
     }, (error) => {

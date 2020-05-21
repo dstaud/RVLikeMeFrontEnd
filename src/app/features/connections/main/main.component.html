@@ -13,6 +13,10 @@
             (click)="onQuery()">
         {{ "connections.component.queryButton" | translate }}
     </button>
+    <button mat-button (click)="onRefresh()">
+        <mat-icon matPrefix fontSet="material-icons-outlined">refresh</mat-icon>
+        Refresh
+    </button>
     <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation-->
       <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
         <mat-label>

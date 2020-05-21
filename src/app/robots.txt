@@ -1,0 +1,7 @@
+User-agent: *
+Allow: https://rvlikeme.com
+Allow: https://rvlikeme.com/learn-more
+Allow: https://rvlikeme.com/register
+Allow: https://rvlikeme.com/signin
+
+Sitemap: http://rvlikeme.com/sitemap.xml
