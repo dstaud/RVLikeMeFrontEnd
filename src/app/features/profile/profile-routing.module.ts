@@ -1,7 +1,7 @@
-import { ProfileComponent } from './profile.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ProfileComponent } from './profile.component';
 import { LifestyleComponent } from './lifestyle/lifestyle.component';
 import { PersonalComponent } from './personal/personal.component';
 import { RvRigComponent } from './rv-rig/rv-rig.component';
