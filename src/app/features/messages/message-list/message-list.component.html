@@ -1,4 +1,4 @@
-<div class="mat-app-background mat-body-1 container">
+<div class="mat-app-background mat-body-1 container" [ngClass]="getClass()">
   <p class="mat-title">{{ 'messages.component.header' | translate }}</p>
   <div class="conversations">
     <div *ngIf="noConversations">

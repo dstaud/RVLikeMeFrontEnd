@@ -16,6 +16,7 @@ export interface ItokenPayload {
   active: boolean;
   nbrLogins: number;
   admin: boolean;
+  emailNotVerified: boolean;
   tokenExpire: number;
 }
 
@@ -141,7 +142,8 @@ export class AuthenticationService {
 
   registerUser(user: ItokenPayload, firstName: string): Observable<any> {
     let base;
-    let params = '{"credentials":' + JSON.stringify(user) + ',"firstName":"' + firstName + '"}';
+    let params = '{"credentials":' + JSON.stringify(user) +
+                  '","firstName":"' + firstName + '"}';
     base = this.http.post(`/api/register`, params);
     const request = base.pipe(
       map((data: ItokenResponse) => { // Saving token here, but may be better to save on register confirm.  However, would have to make sure the email confirm is on

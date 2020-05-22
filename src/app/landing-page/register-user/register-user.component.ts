@@ -52,6 +52,7 @@ export class RegisterUserComponent implements OnInit {
     active: false,
     nbrLogins: 0,
     admin: false,
+    emailNotVerified: false,
     tokenExpire: 0
   };
 
@@ -98,7 +99,6 @@ export class RegisterUserComponent implements OnInit {
     this.formComplete.emit(this.formCompleted);
   }
 
-  // TODO: Better validation on format of email
 
   // Register user on form submit
   onSubmit() {
@@ -129,6 +129,9 @@ export class RegisterUserComponent implements OnInit {
     } else {
       this.credentials.active = true;
     }
+
+    // If not using emails to verify users at login because of some AWS SES issue, any users registered, indicate that in the users credentials
+    this.credentials.emailNotVerified = !this.useEmail;
 
     this.showSpinner = true;
     this.form.disable();

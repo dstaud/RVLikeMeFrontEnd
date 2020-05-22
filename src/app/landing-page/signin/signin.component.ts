@@ -64,6 +64,7 @@ export class SigninComponent implements OnInit {
     active: false,
     nbrLogins: 0,
     admin: false,
+    emailNotVerified: false,
     tokenExpire: 0
   };
 
@@ -209,6 +210,7 @@ export class SigninComponent implements OnInit {
       if (responseData.admin) {
         this.authSvc.setUserToAdmin(true);
       }
+
       this.nbrLogins = responseData.nbrLogins;
       this.profileSvc.getProfile();
       this.authSvc.setUserToAuthorized(true);
@@ -300,24 +302,24 @@ export class SigninComponent implements OnInit {
   }
 
 
-  // Set dark/light color theme based on user preference or default of light-theme.
-  private setColorTheme(profile) {
-    if (profile.colorThemePreference) {
-      this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
-    } else {
-      this.themeSvc.setGlobalColorTheme('light-theme');
-    }
-  }
+  // // Set dark/light color theme based on user preference or default of light-theme.
+  // private setColorTheme(profile) {
+  //   if (profile.colorThemePreference) {
+  //     this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
+  //   } else {
+  //     this.themeSvc.setGlobalColorTheme('light-theme');
+  //   }
+  // }
 
 
-  // Set user chosen language or set to default of US English
-  private setLanguage(profile) {
-    if (profile.language) {
-      this.language.setLanguage(profile.language);
-    } else {
-      this.language.setLanguage('en');
-    }
-  }
+  // // Set user chosen language or set to default of US English
+  // private setLanguage(profile) {
+  //   if (profile.language) {
+  //     this.language.setLanguage(profile.language);
+  //   } else {
+  //     this.language.setLanguage('en');
+  //   }
+  // }
 
 
   private setReturnRoute() {

@@ -15,6 +15,7 @@ import { ThemeService } from '@services/theme.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-rvlm-send-message',
@@ -49,6 +50,7 @@ export class SendMessageComponent implements OnInit {
   private shouldScrollDown: boolean;
   private numberOfMessagesChanged: boolean;
   private iterableDiffer;
+  private emailVerified: boolean = false;
 
   constructor(private shareDataSvc: ShareDataService,
               private authSvc: AuthenticationService,
@@ -60,6 +62,7 @@ export class SendMessageComponent implements OnInit {
               private themeSvc: ThemeService,
               private emailSmtpSvc: EmailSmtpService,
               private router: Router,
+              private device: DeviceService,
               private sentry: SentryMonitorService,
               private iterableDiffers: IterableDiffers,
               fb: FormBuilder) {
@@ -104,6 +107,21 @@ export class SendMessageComponent implements OnInit {
   }
 
   ngOnDestroy() { }
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   // Update conversation in database with new message
@@ -281,16 +299,6 @@ export class SendMessageComponent implements OnInit {
       toProfileImageUrl: this.toProfileImageUrl
     }
 
-    // let params: string;
-    // console.log('SendMessageComponent:packageParamsForMessaging displayName=', this.fromDisplayName);
-    // params = '{"fromUserID":"' + this.fromUserID + '",' +
-    //           '"fromDisplayName":"' + this.fromDisplayName + '",' +
-    //           '"fromProfileImageUrl":"' + this.fromProfileImageUrl + '",' +
-    //           '"toUserID":"' + this.toUserID + '",' +
-    //           '"toDisplayName":"' + this.toDisplayName + '",' +
-    //           '"toProfileImageUrl":"' + this.toProfileImageUrl + '"}';
-
-    console.log('SendMessageComponent:packageParamsForMessaging: params=', params);
     return params;
   }
 
@@ -307,16 +315,23 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  // Send notification to recipient about new message
+  // Send notification to recipient about new message if user wants them and if the user's email was verified
   private sendNotificationToRecipient() {
+    console.log('SendMessageComponent:sendNotificationToRecipient: sendMessageEmails=', this.sendMessageEmails);
     if (this.sendMessageEmails) {
       this.authSvc.getOtherUserEmail(this.toUserID)
       .subscribe(userResult => {
-        this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
-        .subscribe(emailResult => {
-        }, error => {
-          this.sentry.logError(error);
-        });
+
+        if (!userResult.emailNotVerified) {
+          console.log('SendMessageComponent:sendNotificationToRecipient: sending email');
+          this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
+          .subscribe(emailResult => {
+          }, error => {
+            this.sentry.logError(error);
+          });
+        } else {
+          console.log('SendMessageComponent:sendNotificationToRecipient: not sending email');
+        }
       }, error => {
         this.sentry.logError(error);
       });
@@ -329,7 +344,6 @@ export class SendMessageComponent implements OnInit {
   // If user sent a new message, add to the count for the person sent to.
   private updateConversation(action: string) {
     let userIdType: string;
-    let messageCount: number;
 
     if (this.conversation.createdBy === this.fromUserID) {
       userIdType = 'createdBy';

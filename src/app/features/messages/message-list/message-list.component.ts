@@ -10,6 +10,7 @@ import { MessagesService, Iconversation, Imessage } from '@services/data-service
 import { ShareDataService, ImessageShareData } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
+import { DeviceService } from '@services/device.service';
 
 @Component({
   selector: 'app-message-list',
@@ -33,6 +34,7 @@ export class MessageListComponent implements OnInit {
               private profileSvc: ProfileService,
               private shareDataSvc: ShareDataService,
               private location: Location,
+              private device: DeviceService,
               private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
@@ -59,6 +61,22 @@ export class MessageListComponent implements OnInit {
 
 
   ngOnDestroy() {}
+
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
+
 
   onClickGoToGroup() {
     this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');

@@ -10,6 +10,7 @@ import { ActivateBackArrowService } from '@core/services/activate-back-arrow.ser
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { DeviceService } from '@services/device.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-register-confirm',
@@ -36,11 +37,6 @@ export class RegisterConfirmComponent implements OnInit {
 
   numberOfClicks = 0;
 
-//   @HostListener('click', ['$event.target'])
-//   onClick(btn) {
-//     console.log('button', btn, 'number of clicks:', this.numberOfClicks++);
-//  }
-
   // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -54,6 +50,7 @@ export class RegisterConfirmComponent implements OnInit {
               private beforeInstallEventSvc: BeforeInstallEventService,
               private emailSmtpSvc: EmailSmtpService,
               private deviceSvc: DeviceService,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private elementRef: ElementRef,
               private router: Router) {
@@ -74,11 +71,6 @@ export class RegisterConfirmComponent implements OnInit {
 
     this.listenForParameters();
   }
-
-  // ngAfterViewInit() {
-  //   this.elementRef.nativeElement.querySelector('submit')
-  //                                 .addEventListener('click', this.onSignIn.bind(this));
-  // }
 
   ngOnDestroy() {}
 
@@ -129,19 +121,14 @@ export class RegisterConfirmComponent implements OnInit {
 
 
   private activateUser(tokenID: string) {
-    let signinData: Isignin;
-
-    console.log('RegisterConfirmComponent:activateUser: confirm code =', this.token);
     this.authSvc.activateUser(this.token, tokenID)
     .subscribe(activateResult => {
-      console.log('RegisterConfirmComponent:activateUser: result=', activateResult);
       this.showSpinner = false;
 
       // Since token was deleted by activate user, using this agreed-upon hard-coded token just for sending welcome email.
       this.sendWelcomeEmail(activateResult.email, '8805-1335-8153-3116');
 
     }, error => {
-      console.log('RegisterConfirmComponent:activateUser: error=', error);
       this.showSpinner = false;
       this.httpError = true;
       this.httpErrorText = 'The activation token is invalid';
@@ -150,13 +137,11 @@ export class RegisterConfirmComponent implements OnInit {
 
 
   private listenForParameters() {
-    console.log('PasswordReset:listenForParameters:');
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
       if (params.e) {
         this.token = params.e;
-        console.log('PasswordReset:listenForParameters: token=', this.token);
         this.validateToken();
       }
     }, error => {
@@ -185,12 +170,11 @@ export class RegisterConfirmComponent implements OnInit {
   private sendWelcomeEmail(email: string, token: string) {
     let sendTo = email;
     let toFirstName = null;
-    console.log('RegisterConfirmComponent:sendWelcomeEmail: sending email to ', sendTo);
     this.emailSmtpSvc.sendWelcomeEmail(sendTo, toFirstName, token)
     .subscribe(emailResult => {
-      console.log('welcome email sent!  result=', emailResult);
     }, error => {
-      console.log('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ', error);
+      console.error('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ', error);
+      this.sentry.logError('Error sending welcome email');
     });
 }
 

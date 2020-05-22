@@ -11,7 +11,6 @@ import { fadeAnimation } from '@shared/animations';
   animations: [fadeAnimation]
 })
 export class MessagesComponent implements OnInit {
-  private backPath = '';
 
   constructor(private router: Router,
               private location: Location) { }
