@@ -24,6 +24,7 @@ import { NewMessageCountService } from '@services/new-msg-count.service';
 import { UserTypeService } from './core/services/user-type.service';
 import { AdminService } from '@services/data-services/admin.service';
 import { UsingEmailService } from './core/services/using-email.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { fadeAnimation } from './shared/animations';
 
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
               private userTypeSvc: UserTypeService,
               private UsingEmailSvc: UsingEmailService,
               private adminSvc: AdminService,
+              private sentry: SentryMonitorService,
               private swUpdate: SwUpdate,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -216,7 +218,7 @@ export class AppComponent implements OnInit {
 
     // Listen for Chrome event that indicates the user installed the app
     window.addEventListener('appinstalled', (event) => {
-      console.log('app installed!'); //TODO: Get this information in Google Analytics somehow
+      this.updateInstallInfoOnCredentials();
     });
 
     // Determine if user has installed the app previously
@@ -322,5 +324,16 @@ export class AppComponent implements OnInit {
       this.authSvc.setUserToAuthorized(true);
       this.profileSvc.getProfile();
     }
+  }
+
+
+  private updateInstallInfoOnCredentials() {
+    this.authSvc.updateInstallFlag(true, this.deviceSvc.device)
+    .subscribe(user => {
+
+    }, error => {
+      console.error('InstallComponent:updateInstallInfoOnCredentials: error updating credentials=', error);
+      this.sentry.logError('error updating install flag on credentials');
+    });
   }
 }

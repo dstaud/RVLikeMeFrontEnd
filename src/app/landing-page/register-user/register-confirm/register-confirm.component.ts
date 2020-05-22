@@ -86,11 +86,6 @@ export class RegisterConfirmComponent implements OnInit {
   // When user selects signin, if mobile, go to signin component.
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
-    let param: Isignin = {
-      fromLandingPage: true,
-      install: this.install,
-      installDevice: this.device
-    }
 
     if(this.event) {
       // Show the install prompt
@@ -99,12 +94,18 @@ export class RegisterConfirmComponent implements OnInit {
       // Wait for the user to respond to the prompt
       this.event.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the install prompt');
+          this.install = true;
           this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
         } else {
-          console.log('User dismissed the install prompt');
+          this.install = false;
         }
       });
+
+      let param: Isignin = {
+        fromLandingPage: true,
+        install: this.install,
+        installDevice: this.device
+      }
 
       this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
       this.headerVisibleSvc.toggleHeaderVisible(true);
@@ -112,6 +113,11 @@ export class RegisterConfirmComponent implements OnInit {
       this.router.navigateByUrl('/?e=signin'); // go directly to login page.  Will pop up as dialog if desktop
       this.activateBackArrowSvc.setBackRoute('', 'forward');
     } else {
+      let param: Isignin = {
+        fromLandingPage: true,
+        install: this.install,
+        installDevice: this.device
+      }
 
       this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
       this.headerVisibleSvc.toggleHeaderVisible(true);
@@ -171,25 +177,6 @@ export class RegisterConfirmComponent implements OnInit {
     .subscribe(data => {
       if (data !== null) {
         this.event = data.valueOf();
-      }
-    });
-  }
-
-  // App Install Option
-  private presentAppInstallOption(): void {
-    let signinData: Isignin;
-
-    this.installPrompt.prompt();
-
-    // Wait for the user to respond to the prompt
-    this.installPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('RegisteConfirmComponent:openInstallDialog: User accepted the install prompt');
-        this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
-        this.install = true;
-      } else {
-        console.log('RegisterConfirmComponent:openInstallDialog: User dismissed the install prompt');
-        this.install = false;
       }
     });
   }

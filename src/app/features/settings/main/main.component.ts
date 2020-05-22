@@ -58,6 +58,7 @@ export class MainComponent implements OnInit {
   theme: string = 'light-theme';
   showSpinner: boolean = false;
   showInstallLink:boolean = false;
+  hideInstall: boolean = false;
   showLanguageSaveIcon: boolean = false;
   profileID: string;
   helpInstallOpen: string = 'out';
@@ -141,6 +142,12 @@ export class MainComponent implements OnInit {
 
 
   // If user chooses to install the app on their home screen
+  // I have to do this crazy two-level boolean because Android is sending back an before install event AFTER the user installs, so can't count on that.
+  // So, intially both showInstallLink and hideInstall are false.  If I get a beforeInstallEvent, set showInstallCLink to true which makes the component show
+  // But if they install, set hideInstall to true which makes the component hide regardless of showInstallLink.
+  // Unforunately, w/o the ability to send a null event to communicate with other components, installing from settings will not remove the Dashboard option
+  // until they restart or refresh.  That sucks but seems only way around is a SECOND service to communicate that which seems like overkill as user is
+  // much more likely to install from Dashboard than from Settings.  Putting that on the back burner.
   onInstallApp() {
     // Show the install prompt
     this.event.prompt();
@@ -150,6 +157,9 @@ export class MainComponent implements OnInit {
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the install prompt');
         this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
+        this.showInstallLink = false;
+        this.hideInstall = true;
+
       } else {
         console.log('User dismissed the install prompt');
       }
@@ -203,6 +213,8 @@ export class MainComponent implements OnInit {
       if (data !== null) {
         this.event = data.valueOf();
         this.showInstallLink = true;
+      } else {
+        this.showInstallLink = false;
       }
     });
   }

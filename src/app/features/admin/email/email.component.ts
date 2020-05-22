@@ -38,7 +38,6 @@ export class EmailComponent implements OnInit {
       console.log('email sent!  result=', emailResult);
       this.showSpinner = false;
     }, error => {
-      alert('EmailComponent:onSendEmail: error sending email');
       console.log('EmailComponent:onSendEmail: error sending email=',error)
       this.showSpinner = false;
     })

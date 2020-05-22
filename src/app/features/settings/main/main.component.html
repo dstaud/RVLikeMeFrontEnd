@@ -32,7 +32,7 @@
   </form>
 
   <div class="install">
-    <button *ngIf="showInstallLink"
+    <button *ngIf="showInstallLink && !hideInstall"
             type="button"
              mat-menu-item
             (click)="onInstallApp()">
@@ -40,7 +40,7 @@
             <span>{{ "menu.install" | translate }}</span>
     </button>
   </div>
-  <div *ngIf="showInstallLink" class="icon">
+  <div *ngIf="showInstallLink && !hideInstall" class="icon">
     <mat-icon fontSet="material-icons-outlined" (click)="onHelpInstall()">help_outline</mat-icon>
   </div>
   <div *ngIf="helpInstallOpen === 'in'" [@helpInstallSlideInOut]="helpInstallOpen" class="helpInstall">

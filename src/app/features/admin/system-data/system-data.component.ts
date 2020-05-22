@@ -62,7 +62,6 @@ export class SystemDataComponent implements OnInit {
         console.log('SystemDataComponent:onSubmit  result=', systemResult);
         this.showSpinner = false;
       }, error => {
-        alert('SystemDataComponent:onSubmit error');
         console.log('SystemDataComponent:onSubmit error: ', error);
         this.showSpinner = false;
       });
@@ -73,7 +72,6 @@ export class SystemDataComponent implements OnInit {
         this.showSpinner = false;
       }, error => {
         console.log('SystemDataComponent:onSubmit error: ', error);
-        alert('SystemDataComponent:onSubmit error');
         this.showSpinner = false;
       });
     }

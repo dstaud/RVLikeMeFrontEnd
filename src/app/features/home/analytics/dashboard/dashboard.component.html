@@ -16,12 +16,12 @@
     </div>
   </div>
 
-  <div *ngIf="showInstallComponent" class="dashboard">
+  <div *ngIf="showInstallComponent && !hideInstall" class="dashboard">
     <app-rvlm-install
       [event]=event
       [hideInstall]=profile.hideInstall
       [profileID]="profile._id"
-      (doNotShowInstall)="turnInstallOff()">
+      (userInstalledEmit)="hideInstallComponent()">
     </app-rvlm-install>
   </div>
 
