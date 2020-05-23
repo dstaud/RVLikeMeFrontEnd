@@ -7,6 +7,7 @@ import { ForumsListComponent } from './forums-list/forums-list.component';
 import { PostsComponent } from './posts/posts.component';
 import { PageNotFoundComponent } from '@pageNotFound/page-not-found.component';
 import { UpdatePostComponent } from './posts/update-post/update-post.component';
+import { PostsMainComponent } from './posts-main/posts-main.component';
 
 const routes: Routes = [
   { path: '', component: ForumsComponent,
@@ -14,7 +15,8 @@ const routes: Routes = [
       { path: 'main', component: MainComponent},
       { path: 'forums-list', component: ForumsListComponent },
       { path: 'posts', component: PostsComponent },
-      { path: 'update-post', component: UpdatePostComponent }
+      { path: 'update-post', component: UpdatePostComponent },
+      { path: 'posts-main', component: PostsMainComponent },
     ]
   },
   { path: '**', component: PageNotFoundComponent }

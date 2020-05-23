@@ -4,7 +4,6 @@
     <div *ngFor="let group of groupListDisplayAttributes; let i=index" (click)="onGroupSelect(i)">
       <span class="hyperlink"><br>{{ 'forums.component.heading' | translate}}:</span>
       <span *ngFor="let attribute of group" class="group-attributes"><br>- {{ attribute | translate }}</span>
-      <mat-divider [hidden]="groupListDisplayAttributes.length > 1"></mat-divider>
     </div>
   </div>
 

@@ -15,6 +15,7 @@ import { UpdatePostComponent } from './posts/update-post/update-post.component';
 import { ForumsListComponent } from './forums-list/forums-list.component';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
+import { PostsMainComponent } from './posts-main/posts-main.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
     MainComponent,
     UpdatePostComponent,
     UpdatePostDialogComponent,
-    ForumsListComponent
+    ForumsListComponent,
+    PostsMainComponent
   ],
   imports: [
     CommonModule,
@@ -39,6 +41,7 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
   exports: [
     AddPostComponent,
     AddCommentComponent
-  ]
+  ],
+  entryComponents: [MainComponent],
 })
 export class ForumsModule { }

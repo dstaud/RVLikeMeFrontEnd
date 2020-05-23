@@ -1,5 +1,5 @@
 <div class="mat-app-background mat-body-1 container" [ngClass]="getClass()">
-  <div class="posts">
+  <div class="header mat-elevation-z2">
     <div class="your-story">
       <img class="image profile-image"
             [src]="toProfileImageUrl"
@@ -12,47 +12,50 @@
       </div>
     </div>
   </div>
-  <div #scrollable class="messages">
-    <div *ngFor="let message of messages"
-          [ngClass]="{'message-right': message.createdBy === fromUserID,
-                    'message-left': message.createdBy !== fromUserID,
-                    'message-left-dark': message.createdBy !== fromUserID && theme === 'dark-theme',
-                    'message-left-light': message.createdBy !== fromUserID && theme === 'light-theme',
-                    'message-right-dark': message.createdBy === fromUserID && theme === 'dark-theme',
-                    'message-right-light': message.createdBy === fromUserID && theme === 'light-theme'}">
-        <div *ngIf="message.createdBy !== fromUserID"
-              class="profile-image">
-          <img class="image"
-                [src]="toProfileImageUrl"
-                style="width:30px;height:30px;">
+  <div class="messages background-light">
+    <div>
+      <div #scrollable  *ngFor="let message of messages"
+            [ngClass]="{'message-right': message.createdBy === fromUserID,
+                      'message-left': message.createdBy !== fromUserID,
+                      'message-left-dark': message.createdBy !== fromUserID && theme === 'dark-theme',
+                      'message-left-light': message.createdBy !== fromUserID && theme === 'light-theme',
+                      'message-right-dark': message.createdBy === fromUserID && theme === 'dark-theme',
+                      'message-right-light': message.createdBy === fromUserID && theme === 'light-theme'}">
+          <div *ngIf="message.createdBy !== fromUserID"
+                class="profile-image">
+            <img class="image"
+                  [src]="toProfileImageUrl"
+                  style="width:30px;height:30px;">
+          </div>
+          <span class="message-text">{{message.message}}</span>
         </div>
-        <span class="message-text">{{message.message}}</span>
-      </div>
-  </div>
-  <div class="new-message">
-    <form [formGroup]="form">
-      <mat-form-field appearance="outline" class="message-input">
-        <mat-label>{{ 'messages.component.message' | translate }} {{toDisplayName}}</mat-label>
+    </div>
+    <div class="new-message">
+      <form [formGroup]="form">
+        <mat-form-field appearance="outline" class="message-input">
+          <mat-label>{{ 'messages.component.message' | translate }} {{toDisplayName}}</mat-label>
 
-          <textarea matInput
-                    class="text"
-                    type="text"
-                    placeholder="{{ 'messages.component.whatsay' | translate }}"
-                    formControlName="message"
-                    autofocus
-                    cdkFocusInitial>
-          </textarea>
+            <textarea matInput
+                      class="text"
+                      type="text"
+                      placeholder="{{ 'messages.component.whatsay' | translate }}"
+                      formControlName="message"
+                      autofocus
+                      cdkFocusInitial>
+            </textarea>
 
-      </mat-form-field>
-      <!-- TODO: Fix css issue where can't get consistent space between last message and input because of the left/right hidden thing -->
-      <div>
-        <button [disabled]="!form.valid"
-                class="mat-raised-button mat-primary"
-                (click)="onSubmit()">
-                {{ 'messages.component.send' | translate }}
-        </button>
-      </div>
-    </form>
+        </mat-form-field>
+        <!-- TODO: Fix css issue where can't get consistent space between last message and input because of the left/right hidden thing -->
+        <div>
+          <button [disabled]="!form.valid"
+                  class="mat-raised-button mat-primary"
+                  (click)="onSubmit()">
+                  {{ 'messages.component.send' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

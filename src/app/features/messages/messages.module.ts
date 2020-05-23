@@ -7,13 +7,15 @@ import { MessagesComponent } from './messages.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageListComponent } from './message-list/message-list.component';
+import { MainComponent } from './main/main.component';
 
 
 @NgModule({
   declarations: [
     MessagesComponent,
     SendMessageComponent,
-    MessageListComponent
+    MessageListComponent,
+    MainComponent
   ],
   imports: [
     CommonModule,

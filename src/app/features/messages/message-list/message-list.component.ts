@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -13,15 +13,18 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { DeviceService } from '@services/device.service';
 
 @Component({
-  selector: 'app-message-list',
+  selector: 'app-rvlm-message-list',
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.scss']
 })
 export class MessageListComponent implements OnInit {
+  @Output() conversationSelected = new EventEmitter<ImessageShareData>();
+
   conversations: Array<Iconversation> = [];
   displayName: string;
   userID: string;
   noConversations: boolean = false;
+  desktopUser: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -29,6 +32,7 @@ export class MessageListComponent implements OnInit {
    private profile: IuserProfile;
    private userProfile: Observable<IuserProfile>;
    private userConversations: Observable<Iconversation[]>;
+   private params: ImessageShareData;
 
   constructor(private messagesSvc: MessagesService,
               private profileSvc: ProfileService,
@@ -51,6 +55,10 @@ export class MessageListComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+      }
+
       this.showSpinner = true;
 
       this.listenForUserProfile();
@@ -80,7 +88,7 @@ export class MessageListComponent implements OnInit {
 
   onClickGoToGroup() {
     this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
-    this.router.navigateByUrl('/forums/forums-list');
+    this.router.navigateByUrl('/forums/main');
   }
 
   // When user clicks on a conversation, extract the information needed on the SendMessageComponent,
@@ -88,7 +96,15 @@ export class MessageListComponent implements OnInit {
   onSelectSendTo(row: number) {
     this.setParameters(row);
     this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
-    this.router.navigateByUrl('/messages/send-message');
+
+
+    if (this.desktopUser) {
+      this.conversationSelected.emit(this.params)
+    } else {
+      this.shareDataSvc.setData('message', this.params);
+      this.router.navigateByUrl('/messages/send-message');
+    }
+
   }
 
 
@@ -134,7 +150,6 @@ export class MessageListComponent implements OnInit {
 
   // Set parameters for selected row
   private setParameters(row) {
-    let params: ImessageShareData;
     let fromUserID: string;
     let fromDisplayName: string;
     let fromProfileImageUrl: string;
@@ -160,7 +175,7 @@ export class MessageListComponent implements OnInit {
     }
     conversationID = this.conversations[row]._id;
 
-    params = {
+    this.params = {
       fromUserID: fromUserID,
       fromDisplayName: fromDisplayName,
       fromProfileImageUrl: fromProfileImageUrl,
@@ -169,7 +184,5 @@ export class MessageListComponent implements OnInit {
       toProfileImageUrl: toProfileImageUrl,
       conversationID: conversationID
     }
-
-    this.shareDataSvc.setData('message', params);
   }
 }

@@ -10,9 +10,9 @@ export interface Imessage {
   createdBy: string;
   createdByDisplayName: string;
   createdByProfileImageUrl: string;
-  withUserID: string;
-  withUserDisplayName: string;
-  withUserProfileImageUrl: string;
+  sentToUserID: string;
+  sentToDisplayName: string;
+  sentToProfileImageUrl: string;
   message: string;
   createdAt: Date;
 }
@@ -79,6 +79,7 @@ export class MessagesService {
 
   getConversation(fromUserID: string, toUserID: string): Observable<any> {
     let param = JSON.parse('{"fromUserID":"' + fromUserID + '","toUserID":"' + toUserID + '"}');
+    console.error('MessagesService:getConversation: param=', param);
 
     return this.http.get(`/api/conversation`, { params: param  });
   }

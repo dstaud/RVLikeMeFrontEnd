@@ -1,6 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { Injector } from '@angular/core'
 
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -14,12 +16,16 @@ import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
 
+import { MainComponent } from './../main/main.component';
+
 @Component({
   selector: 'app-rvlm-forums-list',
   templateUrl: './forums-list.component.html',
   styleUrls: ['./forums-list.component.scss']
 })
 export class ForumsListComponent implements OnInit {
+  @Output() groupSelected = new EventEmitter<string>();
+
   groupListDisplayAttributes = [];
   theme: string;
   gotProfile: boolean = false;
@@ -32,6 +38,7 @@ export class ForumsListComponent implements OnInit {
   private groupsListFromUserProfile = [];
   private groupProfileDisplayAttributesFromGroup = [];
 
+
   constructor(private router: Router,
               private authSvc: AuthenticationService,
               private location: Location,
@@ -41,7 +48,11 @@ export class ForumsListComponent implements OnInit {
               private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
               private device: DeviceService,
-              private shareDataSvc: ShareDataService) { }
+              private shareDataSvc: ShareDataService) {
+          if (window.innerWidth > 600) {
+            this.desktopUser = true;
+          }
+}
 
   ngOnInit(): void {
     let backPath;
@@ -55,10 +66,6 @@ export class ForumsListComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
-      if (window.innerWidth > 600) {
-        this.desktopUser = true;
-      }
-
       this.showSpinner = true;
 
       this.listenForColorTheme();
@@ -74,12 +81,19 @@ export class ForumsListComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let forumList: boolean = false;
+
+    if (this.location.path() === '/forums/forums-list') {
+      forumList = true;
+    }
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
+
+    containerClass = 'container ' + bottomSpacing;
 
     return containerClass;
   }
@@ -103,10 +117,14 @@ export class ForumsListComponent implements OnInit {
       theme: this.theme
     }
 
-
     this.shareDataSvc.setData('forumsMain', params);
     this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
-    this.router.navigateByUrl('/forums/main');
+
+    if (this.desktopUser) {
+      this.groupSelected.emit(group._id);
+    } else {
+      this.router.navigateByUrl('/forums/posts-main');
+    }
   }
 
 

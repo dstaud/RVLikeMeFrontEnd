@@ -13,6 +13,10 @@ export interface Iblog {
   linkImage: string
 }
 
+export interface IforumList {
+  _id: string
+}
+
 export interface IuserProfile {
   _id: string;
   userID: string;
@@ -53,7 +57,7 @@ export interface IuserProfile {
   musicalInstrument: boolean;
   programming: boolean;
   mobileInternet: boolean;
-  forums: Array<string>;
+  forums: Array<IforumList>;
   notifySubscription: string;
   rigImageUrls: Array<string>;
   lifestyleImageUrls: Array<string>;

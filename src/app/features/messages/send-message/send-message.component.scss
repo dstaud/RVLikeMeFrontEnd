@@ -1,8 +1,10 @@
 @import './../../../../styles/_variables';
 
 .container {
-  padding: 10px;
-  margin-top: 50px;
+  // padding: 10px;
+  margin-top: 60px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .bottom-bar-spacing {
@@ -18,9 +20,12 @@
   line-height: 1.4;
 }
 
-.posts {
+.header {
   clear: left;
   margin-top: 10px;
+  border-radius: 25px;
+  background-color: $primary-color;
+  color: white;
 }
 
 .profile-image {
@@ -39,7 +44,12 @@
 
 .messages {
   clear: left;
-  padding-top: 10px;
+  padding: 10px;
+  border-radius: 25px;
+}
+
+.background-light {
+  background-color: white;
 }
 
 .message-left {

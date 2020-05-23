@@ -1,0 +1,89 @@
+@import './../../../../styles/_variables';
+
+.container {
+  margin-top: 60px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.bottom-bar-spacing {
+  margin-bottom: 50px;
+}
+
+.bottom-bar-spacing-xplus {
+  margin-bottom: 80px;
+}
+
+.list-container {
+  float: left;
+  width: 35%;
+}
+
+// THis is used. Do not delete
+.posts-container {
+
+}
+
+.posts-container-desktop {
+  float: right;
+  width: 63%;
+}
+
+.group-heading {
+  padding: 10px;
+  border-radius: 25px;
+}
+
+.group-heading-light {
+  background-color: $primary-color;
+  color: white;
+}
+
+.group-heading-dark {
+  background-color: $dark-mode-group;
+}
+
+.group-list {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.posts {
+  clear: left;
+  margin-top: 10px;
+  border-radius: 25px;
+}
+
+.posts-background-light {
+  background-color: white;
+}
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.options {
+  float: right;
+  padding-right: 20px;
+}
+
+.options-icons {
+  padding-left: 10px;
+}
+
+
+.group-attributes {
+  margin-left: 5px;
+  font-size: 90%;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

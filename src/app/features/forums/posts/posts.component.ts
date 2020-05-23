@@ -431,6 +431,7 @@ export class PostsComponent implements OnInit {
 
     this.posts = [];
 
+    console.log('getting posts for group=', this.groupID);
     this.forumSvc.getPosts(this.groupID, yearOfBirth, rigLength)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {

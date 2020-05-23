@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, AfterViewChecked, DoCheck, ElementRef, IterableDiffer, IterableDiffers } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewChecked, DoCheck, ElementRef, IterableDiffer, IterableDiffers, ɵConsole } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -24,8 +24,8 @@ import { DeviceService } from '@services/device.service';
 })
 export class SendMessageComponent implements OnInit {
 
-  @ViewChild(FormGroupDirective) myForm;
-  @ViewChild('scrollable') private scrollable: ElementRef;
+  // @ViewChild(FormGroupDirective) myForm;
+  // @ViewChild('scrollable') private scrollable: ElementRef;
 
   form: FormGroup;
   fromUserID: string;
@@ -37,6 +37,7 @@ export class SendMessageComponent implements OnInit {
   messages: Array<Imessage> = [];
   conversation: Iconversation;
   theme: string;
+  desktopUser: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -84,9 +85,15 @@ export class SendMessageComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+        console.log('SendMessageComponent:ngOnInit: getting conversations')
+        this.listenForUserConversations();
+      } else {
+        console.log('SendMessageComponent:ngOnInit: getting parameters')
+        this.getParameters();
+      }
       this.listenForChangeInColorTheme();
-
-      this.getParameters();
     }
   }
 
@@ -96,13 +103,13 @@ export class SendMessageComponent implements OnInit {
     }
   }
 
-  ngAfterViewChecked(): void {
-    const isScrolledDown = Math.abs(this.scrollable.nativeElement.scrollHeight - this.scrollable.nativeElement.scrollTop - this.scrollable.nativeElement.clientHeight) <= 3.0;
+  ngAfterViewChecked(): void {``
+    // const isScrolledDown = Math.abs(this.scrollable.nativeElement.scrollHeight - this.scrollable.nativeElement.scrollTop - this.scrollable.nativeElement.clientHeight) <= 3.0;
 
-    if (this.numberOfMessagesChanged && !isScrolledDown) {
-        this.scrollToBottom();
-        this.numberOfMessagesChanged = false;
-    }
+    // if (this.numberOfMessagesChanged && !isScrolledDown) {
+    //     this.scrollToBottom();
+    //     this.numberOfMessagesChanged = false;
+    // }
   }
 
   ngOnDestroy() { }
@@ -123,6 +130,49 @@ export class SendMessageComponent implements OnInit {
   }
 
 
+    // This component expects data passed through a shared data service.
+  // If no data (because user bookmarked this page perhaps), then redirect to message-list component.
+  // Once have parameters, take action
+  getParameters(params?: ImessageShareData) {
+    const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
+    let paramData: any;
+
+    if (!this.shareDataSvc.getData('message').fromUserID && !params) {
+      if (this.desktopUser) {
+        this.listenForUserConversations();
+      } else {
+        this.router.navigateByUrl('/messages/message-list');
+      }
+    } else {
+      if (params) {
+        paramData = params;
+      } else {
+        paramData = this.shareDataSvc.getData('message');
+      }
+      console.log('SendMessageComponent:getParameters: params=', paramData)
+      this.fromUserID = paramData.fromUserID;
+      this.fromDisplayName = paramData.fromDisplayName;
+      if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {
+        this.fromProfileImageUrl = profileImageUrl;
+      } else {
+        this.fromProfileImageUrl = paramData.fromProfileImageUrl;
+      }
+      this.toUserID = paramData.toUserID;
+      this.toDisplayName = paramData.toDisplayName;
+      if (!paramData.toProfileImageUrl || paramData.toProfileImageUrl === 'null') {
+        this.toProfileImageUrl = profileImageUrl;
+      } else {
+        this.toProfileImageUrl = paramData.toProfileImageUrl;
+      }
+      if (paramData.conversationID && paramData.conversationID !== 'null') {
+        this.conversationID = paramData.conversationID;
+      }
+      this.getOtherUserProfile();
+      this.getMessages();
+    }
+  }
+
+
   // Update conversation in database with new message
   onSubmit() {
     const message = this.form.controls.message.value;
@@ -133,7 +183,7 @@ export class SendMessageComponent implements OnInit {
     .subscribe(messageResult => {
       this.messages.push(messageResult.messages[messageResult.messages.length - 1]);
 
-      this.myForm.resetForm(); // Only way to reset the form without having it invalidate because field is required.
+      // this.myForm.resetForm(); // Only way to reset the form without having it invalidate because field is required.
 
       if (this.newConversation) {
         this.messagesSvc.getConversations();
@@ -147,6 +197,21 @@ export class SendMessageComponent implements OnInit {
         console.error('SendMessageComponent:onSubmit: error sending message ', error);
         throw new Error(error);
     });
+  }
+
+
+  // If user clicks to see story of another user, go to MyStory component
+  onYourStory() {
+    let userParams:ImessageShareData = this.packageParamsForMessaging();
+    let params:ImyStory = {
+      userID: this.toUserID,
+      userIdViewer: this.fromUserID,
+      params: userParams
+    }
+
+    this.activateBackArrowSvc.setBackRoute('messages/send-message', 'forward');
+    this.shareDataSvc.setData('myStory', params);
+    this.router.navigateByUrl('/profile/mystory');
   }
 
 
@@ -169,21 +234,6 @@ export class SendMessageComponent implements OnInit {
       }
     }
     return index;
-  }
-
-
-  // If user clicks to see story of another user, go to MyStory component
-  onYourStory() {
-    let userParams:ImessageShareData = this.packageParamsForMessaging();
-    let params:ImyStory = {
-      userID: this.toUserID,
-      userIdViewer: this.fromUserID,
-      params: userParams
-    }
-
-    this.activateBackArrowSvc.setBackRoute('messages/send-message', 'forward');
-    this.shareDataSvc.setData('myStory', params);
-    this.router.navigateByUrl('/profile/mystory');
   }
 
 
@@ -239,46 +289,46 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  // This component expects data passed through a shared data service.
-  // If no data (because user bookmarked this page perhaps), then redirect to message-list component.
-  // Once have parameters, take action
-  private getParameters() {
-    const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
-    let paramData: any;
-
-    if (!this.shareDataSvc.getData('message').fromUserID) {
-      this.router.navigateByUrl('/messages/message-list');
-    } else {
-      paramData = this.shareDataSvc.getData('message');
-      this.fromUserID = paramData.fromUserID;
-      this.fromDisplayName = paramData.fromDisplayName;
-      if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {
-        this.fromProfileImageUrl = profileImageUrl;
-      } else {
-        this.fromProfileImageUrl = paramData.fromProfileImageUrl;
-      }
-      this.toUserID = paramData.toUserID;
-      this.toDisplayName = paramData.toDisplayName;
-      if (!paramData.toProfileImageUrl || paramData.toProfileImageUrl === 'null') {
-        this.toProfileImageUrl = profileImageUrl;
-      } else {
-        this.toProfileImageUrl = paramData.toProfileImageUrl;
-      }
-      if (paramData.conversationID && paramData.conversationID !== 'null') {
-        this.conversationID = paramData.conversationID;
-      }
-      this.getOtherUserProfile();
-      this.getMessages();
-    }
-  }
-
-
   // Listen for changes in color theme;
   private listenForChangeInColorTheme() {
     this.themeSvc.defaultGlobalColorTheme
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
+    });
+  }
+
+
+  // Listen for conversations for this user.
+  private listenForUserConversations() {
+    let params: ImessageShareData;
+    let message: Imessage;
+
+    this.userConversations = this.messagesSvc.conversation$;
+    this.userConversations
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(conversations => {
+      console.log('conversations=', conversations, ' length=', conversations.length)
+
+      if (conversations.length > 0) {
+        if (conversations[0]._id) {
+          message = conversations[0].messages[conversations[0].messages.length - 1];
+          console.log('SendMessageComponent:listenForUserConversations: message=', message);
+          params = {
+            fromUserID: message.createdBy,
+            fromDisplayName: message.createdByDisplayName,
+            fromProfileImageUrl: message.createdByProfileImageUrl,
+            toUserID: message.sentToUserID,
+            toDisplayName: message.sentToDisplayName,
+            toProfileImageUrl: message.sentToProfileImageUrl,
+            conversationID: conversations[0]._id
+          }
+          this.getParameters(params);
+        }
+      }
+    }, error => {
+      console.error('MessageList:listenForUserConversations: unable to get conversations. Error=', error);
+      throw new Error(error);
     });
   }
 
@@ -297,13 +347,13 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  scrollToBottom() {
-    try {
-        this.scrollable.nativeElement.scrollTop = this.scrollable.nativeElement.scrollHeight;
-    } catch (e) {
-        console.error('SendMessageComponent:scrollToBottom:', e);
-    }
-  }
+  // scrollToBottom() {
+  //   try {
+  //       this.scrollable.nativeElement.scrollTop = this.scrollable.nativeElement.scrollHeight;
+  //   } catch (e) {
+  //       console.error('SendMessageComponent:scrollToBottom:', e);
+  //   }
+  // }
 
 
   // Send notification to recipient about new message if user wants them and if the user's email was verified
