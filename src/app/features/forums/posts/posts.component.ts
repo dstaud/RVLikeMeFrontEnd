@@ -152,7 +152,7 @@ export class PostsComponent implements OnInit {
   }
 
   // Get all posts for group passed from forums component.
-  getPosts(groupID: string, forumType: string, profileImageUrl: string, displayName: string, yearOfBirth: number): void {
+  getPosts(groupID: string, forumType: string, profileImageUrl: string, displayName: string, yearOfBirth: number, rigLength: number): void {
     this.showSpinner = true;
     this.groupID = groupID;
     this.forumType = forumType;
@@ -161,7 +161,7 @@ export class PostsComponent implements OnInit {
     }
     this.displayName = displayName;
 
-    this.getPostsFromDatabase(yearOfBirth);
+    this.getPostsFromDatabase(yearOfBirth, rigLength);
   }
 
 
@@ -412,14 +412,14 @@ export class PostsComponent implements OnInit {
 
 
   // Get all posts for the group
-  private getPostsFromDatabase(yearOfBirth) {
+  private getPostsFromDatabase(yearOfBirth, rigLength) {
     let post: Iposts;
     let comment: Icomments;
     let postComments: Array<Icomments> = [];
 
     this.posts = [];
 
-    this.forumSvc.getPosts(this.groupID, yearOfBirth)
+    this.forumSvc.getPosts(this.groupID, yearOfBirth, rigLength)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
       if (postResult.length === 0) {

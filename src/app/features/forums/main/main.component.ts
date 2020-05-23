@@ -99,12 +99,12 @@ export class MainComponent implements OnInit {
 
 
   // Create new group forum based on user's attribute match selections
-  private createGroupForum(names: string, values: string, yearOfBirth): void {
+  private createGroupForum(names: string, values: string, yearOfBirth: number, rigType: number): void {
     this.forumSvc.addGroup(names, values)
     .subscribe(group => {
       this.groupID = group._id;
       this.updateProfileGroups();
-      this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth);
+      this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigType);
     }, error => {
       this.showSpinner = false;
       console.error('ForumsComponentcreateGroupForum: throw error ', error);
@@ -124,6 +124,7 @@ export class MainComponent implements OnInit {
     let values: string;
     let paramData: IforumsMain;
     let yearOfBirth: number;
+    let rigLength: number;
 
     paramData = this.shareDataSvc.getData('forumsMain');
 
@@ -138,7 +139,7 @@ export class MainComponent implements OnInit {
           this.groupID = groupFromServer._id;
           this.topicID = groupFromServer.topic;
           this.topicDesc = groupFromServer.topicDesc;
-          this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, null);
+          this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, null, null);
           this.showSpinner = false;
         }, error => {
           if (error.status === 404) {
@@ -147,7 +148,7 @@ export class MainComponent implements OnInit {
               this.groupID = groupTopic._id;
               this.topicID = groupTopic.topic;
               this.topicDesc = groupTopic.topicDesc;
-              this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, null);
+              this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, null, null);
               this.showSpinner = false;
             })
           }
@@ -159,7 +160,8 @@ export class MainComponent implements OnInit {
           .subscribe(groupFromServer => {
             this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
             this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
-            yearOfBirth = this.groupHasYearOfBirth(groupFromServer);
+            yearOfBirth = this.groupHasRangeAttribute(groupFromServer, 'yearOfBirth');
+            rigLength = this.groupHasRangeAttribute(groupFromServer, 'rigLength');
 
             // If there are more than 3 attributes, show only three with ...more on the template.
             if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -169,7 +171,7 @@ export class MainComponent implements OnInit {
             }
 
             console.log('main get posts yob=', yearOfBirth);
-            this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth);
+            this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigLength);
             this.showSpinner = false;
 
           });
@@ -187,7 +189,7 @@ export class MainComponent implements OnInit {
           keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
           names = keyValue[0];
           values = keyValue[1];
-          console.log('names=', names, ' values=', values)
+
           this.checkIfUserProfileHasGroupAndUpdate(names, values);
         }
       }
@@ -208,26 +210,27 @@ export class MainComponent implements OnInit {
   }
 
 
-  private groupHasYearOfBirth(groups: any): number {
-    let yearOfBirth: number = null;
+  private groupHasRangeAttribute(groups: any, attribute: string): number {
+    let rangeAttribute: number = null;
     let name;
 
-      console.log('group=', groups)
+    console.log('group=', groups)
     for (name in groups) {
-      if (name === 'yearOfBirth') {
-        yearOfBirth = this.profile.yearOfBirth;
-        break;
+      if (name === attribute) {
+        rangeAttribute = this.profile[attribute];
       }
     }
-    console.log('group yearofBirth=', yearOfBirth)
-    return yearOfBirth
+    console.log('group yearofBirth=', rangeAttribute)
+    return rangeAttribute
   }
 
   private checkIfUserProfileHasGroupAndUpdate(names: string, values: string) {
     let matchFound: boolean = false;
     let docNotAMatch = false;
     let yearOfBirthInGroup: boolean = false;
+    let rigLengthInGroup: boolean = false;
     let yearOfBirth: number;
+    let rigLength: number;
     let groupDocKeys: any;
 
     // Check if group already exists
@@ -243,22 +246,28 @@ export class MainComponent implements OnInit {
         console.log('groupsFromServer=', groupsFromServer[i])
         groupDocKeys = Object.keys(groupsFromServer[i]);
         docNotAMatch = false;
-        console.log('groupDocKeys)=', groupDocKeys)
+        console.log('groupDocKeys=', groupDocKeys)
         // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
         // selected by the user, and make sure that it does not have other attributes.
         for (let j = 0; j < groupDocKeys.length; j++) {
 
           // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
           // this group because it is not an exact match.
-          console.log('groupDocKeys[j])=', groupDocKeys[j])
-          if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
-
-            if (!this.reservedField(groupDocKeys[j])) {
-              docNotAMatch = true;
+          console.log('In Loop. groupDocKeys[j]=', groupDocKeys[j], ' j=', j)
+          if (this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
+            if (groupDocKeys[j] === 'yearOfBirth') {
+              console.log('In Loop. groupDocKeys[j] = year of birth', groupDocKeys[j], ' j=', j)
+              yearOfBirthInGroup = true;
             }
 
-            if (groupDocKeys[j] = 'yearOfBirth') {
-              yearOfBirthInGroup = true;
+            if (groupDocKeys[j] === 'rigLength') {
+              console.log('In Loop. groupDocKeys[j] = rigLength', groupDocKeys[j], ' j=', j)
+              rigLengthInGroup = true;
+            }
+
+          } else {
+            if (!this.reservedField(groupDocKeys[j])) {
+              docNotAMatch = true;
             }
           }
         }
@@ -277,19 +286,28 @@ export class MainComponent implements OnInit {
       if (matchFound) {
         if (yearOfBirthInGroup) {
           yearOfBirth = this.profile.yearOfBirth;
+          console.log('match found and year of birth=', yearOfBirth);
         } else {
           yearOfBirth = null
         }
 
-        this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth);
+        if (rigLengthInGroup) {
+          rigLength = this.profile.rigLength;
+          console.log('martch found and rig length=', rigLength);
+        } else {
+          rigLength = null;
+        }
+
+
+        this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigLength);
         this.showSpinner = false;
       } else {
-        this.createGroupForum(names, values, yearOfBirth);
+        this.createGroupForum(names, values, yearOfBirth, rigLength);
       }
     }, error => {
       // if no match at all, create the forum group
       if (error.status === 404) {
-        this.createGroupForum(names, values, yearOfBirth);
+        this.createGroupForum(names, values, yearOfBirth, rigLength);
       } else {
         this.showSpinner = false;
         console.error('ForumsMainComponent:getGroup: throw error ', error);

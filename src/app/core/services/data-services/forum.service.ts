@@ -37,59 +37,16 @@ export class ForumService {
 
   constructor(private http: HttpClient) { }
 
+  addComment(postID: string, displayName: string, profileImageUrl: string, comment: string): Observable<any> {
+    let commentEscaped = this.escapeJsonReservedCharacters(comment);
+    let body = '{"postID":"' + postID + '",' +
+                '"displayName":"' + displayName + '",' +
+                '"profileImageUrl":"' + profileImageUrl + '",' +
+                '"comment":"' + commentEscaped + '"}'
+    let bodyJSON = JSON.parse(body);
 
-  deletePost(postID: string): Observable<any> {
-    let post = '{"postID":"' + postID + '"}';
-
-    return this.http.put(`/api/post-delete`, JSON.parse(post), {});
+    return this.http.post(`/api/forum-post-comment`, bodyJSON, {});
   }
-
-
-  deletePostImage(imageUrl: string): Observable<any> {
-    let image = '{"imageUrl":"' + imageUrl + '"}';
-    let imageUrlJSON = JSON.parse(image);
-
-    return this.http.put(`/api/post-delete-image`, imageUrlJSON, {});
-  }
-
-  getGroup(names: string, values: string): Observable<any> {
-    console.log('forumsvc getGroup names=', names, ' values=', values)
-    let kNames = names.split('|');
-    let kValues = values.split('|');
-    let keyValues = '';
-
-    if (kNames[0] === 'yearOfBirth') {
-      keyValues = '{"' + kNames[0] + '":0';
-    } else {
-      keyValues = '{"' + kNames[0] + '":"' + kValues[0] + '"';
-    }
-
-    for (let i=1; i < kNames.length; i++) {
-      if (kNames[i] === 'yearOfBirth') {
-        keyValues = keyValues + ',"' + kNames[i] + '":0';
-      } else {
-        keyValues = keyValues + ',"' + kNames[i] + '":"' + kValues[i] + '"';
-      }
-    }
-    keyValues = keyValues + '}';
-    console.log('forumssvc getGroup=', keyValues)
-    let param = JSON.parse(keyValues);
-    console.log('forumssvc getGroup=', keyValues)
-    return this.http.get(`/api/forum-group`, { params: param });
-  }
-
-  getGroupByID(groupID: string): Observable<any> {
-    let param = JSON.parse('{"groupID":"' + groupID + '"}');
-
-    return this.http.get(`/api/forum-group-id`, { params: param });
-  }
-
-  getGroupByTopic(topic: string): Observable<any> {
-    let param = JSON.parse('{"topic":"' + topic + '"}');
-
-    return this.http.get(`/api/forum-group-topic`, { params: param });
-  }
-
 
   addGroup(names: string, values: string): Observable<any> {
     let kNames = names.split('|');
@@ -140,13 +97,79 @@ export class ForumService {
     return this.http.post(`/api/forum-post`, bodyJSON, {});
   }
 
-  getPosts(groupID: string, yearOfBirth?: number): Observable<any> {
+  addReaction(postID: string, displayName: string, profileImageUrl: string, reaction: string): Observable<any> {
+    let body = '{"postID":"' + postID + '",' +
+                '"displayName":"' + displayName + '",' +
+                '"profileImageUrl":"' + profileImageUrl + '",' +
+                '"reaction":"' + reaction + '"}'
+    let bodyJSON = JSON.parse(body);
+
+    return this.http.post(`/api/forum-post-reaction`, bodyJSON, {});
+  }
+
+  deletePost(postID: string): Observable<any> {
+    let post = '{"postID":"' + postID + '"}';
+
+    return this.http.put(`/api/post-delete`, JSON.parse(post), {});
+  }
+
+
+  deletePostImage(imageUrl: string): Observable<any> {
+    let image = '{"imageUrl":"' + imageUrl + '"}';
+    let imageUrlJSON = JSON.parse(image);
+
+    return this.http.put(`/api/post-delete-image`, imageUrlJSON, {});
+  }
+
+  getGroup(names: string, values: string): Observable<any> {
+    console.log('forumsvc getGroup names=', names, ' values=', values)
+    let kNames = names.split('|');
+    let kValues = values.split('|');
+    let keyValues = '';
+
+    if (kNames[0] === 'yearOfBirth' || kNames[0] === 'rigLength') {
+      keyValues = '{"' + kNames[0] + '":0';
+    } else {
+      keyValues = '{"' + kNames[0] + '":"' + kValues[0] + '"';
+    }
+
+    for (let i=1; i < kNames.length; i++) {
+      if (kNames[i] === 'yearOfBirth' || kNames[i] === 'rigLength') {
+        keyValues = keyValues + ',"' + kNames[i] + '":0';
+      } else {
+        keyValues = keyValues + ',"' + kNames[i] + '":"' + kValues[i] + '"';
+      }
+    }
+    keyValues = keyValues + '}';
+    console.log('forumssvc getGroup=', keyValues)
+    let param = JSON.parse(keyValues);
+    console.log('forumssvc getGroup=', keyValues)
+    return this.http.get(`/api/forum-group`, { params: param });
+  }
+
+  getGroupByID(groupID: string): Observable<any> {
+    let param = JSON.parse('{"groupID":"' + groupID + '"}');
+
+    return this.http.get(`/api/forum-group-id`, { params: param });
+  }
+
+  getGroupByTopic(topic: string): Observable<any> {
+    let param = JSON.parse('{"topic":"' + topic + '"}');
+
+    return this.http.get(`/api/forum-group-topic`, { params: param });
+  }
+
+  getPosts(groupID: string, yearOfBirth?: number, rigLength?: number): Observable<any> {
     let params = '{"groupID":"' + groupID + '"';
     if (yearOfBirth) {
-      params = params + ',"yearOfBirth":' + yearOfBirth + '}';
-    } else {
-      params = params + '}';
+      params = params + ',"yearOfBirth":' + yearOfBirth;
     }
+
+    if (rigLength) {
+      params = params + ',"rigLength":' + rigLength;
+    }
+
+    params = params + '}';
     console.log('ForumsSvc:getPosts=', params)
     return this.http.get(`/api/forum-posts`, { params: JSON.parse(params) });
   }
@@ -165,27 +188,6 @@ export class ForumService {
     let bodyJSON = JSON.parse(body);
 
     return this.http.put(`/api/forum-post`, bodyJSON, {});
-  }
-
-  addComment(postID: string, displayName: string, profileImageUrl: string, comment: string): Observable<any> {
-    let commentEscaped = this.escapeJsonReservedCharacters(comment);
-    let body = '{"postID":"' + postID + '",' +
-                '"displayName":"' + displayName + '",' +
-                '"profileImageUrl":"' + profileImageUrl + '",' +
-                '"comment":"' + commentEscaped + '"}'
-    let bodyJSON = JSON.parse(body);
-
-    return this.http.post(`/api/forum-post-comment`, bodyJSON, {});
-  }
-
-  addReaction(postID: string, displayName: string, profileImageUrl: string, reaction: string): Observable<any> {
-    let body = '{"postID":"' + postID + '",' +
-                '"displayName":"' + displayName + '",' +
-                '"profileImageUrl":"' + profileImageUrl + '",' +
-                '"reaction":"' + reaction + '"}'
-    let bodyJSON = JSON.parse(body);
-
-    return this.http.post(`/api/forum-post-reaction`, bodyJSON, {});
   }
 
   private escapeJsonReservedCharacters(string: string): string {
