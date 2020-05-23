@@ -355,29 +355,34 @@ export class PostsMainComponent implements OnInit {
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
     console.log('PostsMainComponent:getGroupDisplayAttributes: group=', group);
-    for (name in group) {
-      if (!this.reservedField(name)) {
-        value = group[name];
-        if (value === 'true' || value === true) {
-          forumItem = 'forums.component.' + name;
-        } else {
-          if (name === 'rigManufacturer' || name === 'rigBrand') {
-            forumItem = this.translate.instant('forums.component.' + name) + ' ' + value;
+    if (group.length === 1 && !group._id) {
+      // do nothing
+    } else {
+      for (name in group) {
+        if (!this.reservedField(name)) {
+          value = group[name];
+          if (value === 'true' || value === true) {
+            forumItem = 'forums.component.' + name;
           } else {
-            if (name === 'yearOfBirth' || name === 'rigLength') {
-              forumItem = 'forums.component.' + name;
+            if (name === 'rigManufacturer' || name === 'rigBrand') {
+              forumItem = this.translate.instant('forums.component.' + name) + ' ' + value;
             } else {
-              forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
+              if (name === 'yearOfBirth' || name === 'rigLength') {
+                forumItem = 'forums.component.' + name;
+              } else {
+                forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
+              }
             }
           }
-        }
-        if (name === 'rigManufacturer' || name === 'rigBrand') {
-          groupProfileDisplayAttributesFromGroup.push(forumItem);
-        } else {
-          groupProfileDisplayAttributesFromGroup.push(this.translate.instant(forumItem));
+          if (name === 'rigManufacturer' || name === 'rigBrand') {
+            groupProfileDisplayAttributesFromGroup.push(forumItem);
+          } else {
+            groupProfileDisplayAttributesFromGroup.push(this.translate.instant(forumItem));
+          }
         }
       }
     }
+
     console.log('got display attributes=', groupProfileDisplayAttributesFromGroup)
     return groupProfileDisplayAttributesFromGroup;
   }

@@ -88,8 +88,13 @@ export class SendMessageComponent implements OnInit {
       if (window.innerWidth > 600) {
         this.desktopUser = true;
         console.log('SendMessageComponent:ngOnInit: getting conversations')
-        this.listenForUserConversations();
-      } else {
+      }
+
+      if (this.desktopUser) {
+        this.getParameters();
+        // this.listenForUserConversations();
+      }
+      else {
         console.log('SendMessageComponent:ngOnInit: getting parameters')
         this.getParameters();
       }
@@ -239,16 +244,16 @@ export class SendMessageComponent implements OnInit {
 
   // Get previous messages in this conversation for display
   private getMessages() {
+    console.log('SendMessageComponent:getMessages:')
     this.userConversations = this.messagesSvc.conversation$;
     this.userConversations
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
-
-      if (conversations.length === 1 && conversations[0]._id === null) {
-
-      } else {
+      console.log('SendMessageComponent:getMessages: conversations=', conversations)
+      // if (conversations.length > 0 && conversations[0]._id) {
+        console.log('SendMessageComponent:getMessages: in Messages=', conversations)
         let conversationIndex = this.findConversation(conversations, this.fromUserID, this.toUserID, this.conversationID);
-
+        console.log('SendMessageComponent:getMessages: index=', conversationIndex)
         if (conversationIndex === -1) { // Indicates not found in collection
           this.newConversation = true;
           this.conversation = null;
@@ -271,7 +276,7 @@ export class SendMessageComponent implements OnInit {
             this.originalMsgCount = 0;
           }
         }
-      }
+      // }
       this.showSpinner = false;
     });
   }
@@ -324,7 +329,11 @@ export class SendMessageComponent implements OnInit {
             conversationID: conversations[0]._id
           }
           this.getParameters(params);
+        } else {
+          this.router.navigateByUrl('/messages/message-list');
         }
+      } else {
+        this.router.navigateByUrl('/messages/message-list');
       }
     }, error => {
       console.error('MessageList:listenForUserConversations: unable to get conversations. Error=', error);

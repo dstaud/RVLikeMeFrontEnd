@@ -105,7 +105,7 @@ export class YourStoryComponent implements OnInit {
   onMessageUser() {
     this.activateBackArrowSvc.setBackRoute('profile/mystory', 'forward');
     this.shareDataSvc.setData('message', this.paramsForMessaging);
-    this.router.navigateByUrl('/messages/send-message');
+    this.router.navigateByUrl('/messages/main');
   }
 
 
