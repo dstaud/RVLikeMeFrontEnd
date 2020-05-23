@@ -26,7 +26,6 @@ import { HeaderComponent } from '@navigation/header/header.component';
 import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
 import { FooterComponent } from '@navigation/footer/footer.component';
 import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found.component';
-import { ForumsListComponent } from './features/forums/forums-list/forums-list.component';
 
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
@@ -90,7 +89,6 @@ export function getErrorHandler(): ErrorHandler {
     SigninComponent,
     RegisterUserComponent,
     LearnMoreComponent,
-    ForumsListComponent,
     AdminComponent,
     EmailComponent,
     RegisterConfirmComponent,

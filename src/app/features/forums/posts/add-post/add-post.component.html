@@ -7,6 +7,7 @@
         <mat-form-field appearance="outline">
           <mat-label>{{ 'add-post.component.body' | translate }}</mat-label>
           <textarea matInput
+                    #post
                     rows="4"
                     (ngModelChange)="onTextEntered()"
                     type="text"

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ForumService } from '@services/data-services/forum.service';
@@ -9,18 +9,18 @@ import { ForumService } from '@services/data-services/forum.service';
   styleUrls: ['./add-comment.component.scss']
 })
 export class AddCommentComponent implements OnInit {
-
   @Input('postIndex') postIndex: number;
-
   @Input('postID') postID: string;
-
   @Input('postTitle') title: string;
-
   @Input('displayName') displayName: string;
-
   @Input('profileImageUrl') profileImageUrl: string;
 
   @Output() postCommentComplete = new EventEmitter()
+
+  @ViewChild('comment') commentInput: ElementRef;
+  focusOnCommentInput(): void {
+    this.commentInput.nativeElement.focus();
+  }
 
   form: FormGroup;
   textAreaRows: number = 1;
@@ -42,12 +42,6 @@ export class AddCommentComponent implements OnInit {
     .subscribe(selectedValue => {
       this.postButtonActive = true;
     })
-  }
-
-
-  // Expand and contract comment input height as user clicks and leaves
-  onInput(rows: number) {
-    this.textAreaRows = rows;
   }
 
 

@@ -33,6 +33,7 @@ export class MainComponent implements OnInit {
   forumType: string;
   topicID: string;
   topicDesc: string;
+  desktopUser: boolean = false;
 
   showSpinner = false;
   showLessMatches = true;
@@ -72,6 +73,10 @@ export class MainComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+      }
+
       this.listenForChangeInColorTheme();
 
       this.listenForUserProfile();
@@ -129,7 +134,9 @@ export class MainComponent implements OnInit {
     paramData = this.shareDataSvc.getData('forumsMain');
 
     if (!this.valuesExist(paramData)) {
-      this.router.navigateByUrl('/forums/forums-list');
+      // this.router.navigateByUrl('/forums/forums-list');
+      // Get the first group and default to that.
+      this.getFirstGroup();
     } else {
       this.forumType = paramData.forumType;
       this.showSpinner = true;

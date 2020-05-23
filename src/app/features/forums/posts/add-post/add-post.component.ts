@@ -1,10 +1,10 @@
-import { UploadImageService } from '@services/data-services/upload-image.service';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 
 import { ForumService } from '@services/data-services/forum.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
+import { UploadImageService } from '@services/data-services/upload-image.service';
 
 
 @Component({
@@ -38,6 +38,11 @@ export class AddPostComponent implements OnInit {
   @Input('rigLength') rigLength: number;
 
   @Output() postAddComplete = new EventEmitter<string>();
+
+  @ViewChild('post') postInput: ElementRef;
+  focusOnPostInput(): void {
+    this.postInput.nativeElement.focus();
+  }
 
   form: FormGroup;
   postPhotoUrl: string = '';

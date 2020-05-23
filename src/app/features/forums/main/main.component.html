@@ -1,32 +1,40 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
-  <div>
-    <div class="group-heading" [ngClass]="theme === 'dark-theme' ? 'group-heading-dark' : 'group-heading-light'">
-      <span *ngIf="forumType === 'group'">{{ 'forums.component.heading' | translate}}:</span>
-      <span *ngIf="forumType === 'topic'">{{ 'forums.component.headingTopic' | translate}}:</span>
-      <span *ngIf="forumType === 'group' && showLessMatches">
-        <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup | slice:0:3" class="group-attributes"><br>- {{ profileAttribute }}</span>
-        <div *ngIf="showMoreOption"
-              (click)="showLessMatches = !showLessMatches"
-              class="hyperlink">
-              ...{{ 'forums.component.more' | translate }}
-        </div>
-      </span>
-      <span *ngIf="forumType === 'group' && !showLessMatches">
-        <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup" class="group-attributes"><br>- {{ profileAttribute }}</span>
-        <div (click)="showLessMatches = !showLessMatches"
-              class="hyperlink">
-              ...{{ 'forums.component.less' | translate }}</div>
-      </span>
-      <span *ngIf="forumType === 'topic'">
-        <span class="group-attributes"><br>{{ topicDesc }}</span>
-      </span>
+  <div *ngIf="desktopUser" class="list-container">
+    <app-rvlm-forums-list>
+
+    </app-rvlm-forums-list>
+  </div>
+  <div [ngClass]="desktopUser ? 'posts-container-desktop' : 'posts-container'">
+    <div>
+      <div class="group-heading" [ngClass]="theme === 'dark-theme' ? 'group-heading-dark' : 'group-heading-light'">
+        <span *ngIf="forumType === 'group'">{{ 'forums.component.heading' | translate}}:</span>
+        <span *ngIf="forumType === 'topic'">{{ 'forums.component.headingTopic' | translate}}:</span>
+        <span *ngIf="forumType === 'group' && showLessMatches">
+          <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup | slice:0:3" class="group-attributes"><br>- {{ profileAttribute }}</span>
+          <div *ngIf="showMoreOption"
+                (click)="showLessMatches = !showLessMatches"
+                class="hyperlink">
+                ...{{ 'forums.component.more' | translate }}
+          </div>
+        </span>
+        <span *ngIf="forumType === 'group' && !showLessMatches">
+          <span *ngFor="let profileAttribute of groupProfileDisplayAttributesFromGroup" class="group-attributes"><br>- {{ profileAttribute }}</span>
+          <div (click)="showLessMatches = !showLessMatches"
+                class="hyperlink">
+                ...{{ 'forums.component.less' | translate }}</div>
+        </span>
+        <span *ngIf="forumType === 'topic'">
+          <span class="group-attributes"><br>{{ topicDesc }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="posts">
+      <app-rvlm-posts
+        [colorTheme]="theme">
+      </app-rvlm-posts>
     </div>
   </div>
-  <div class="posts">
-    <app-rvlm-posts
-      [colorTheme]="theme">
-    </app-rvlm-posts>
-  </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 

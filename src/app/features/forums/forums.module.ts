@@ -12,6 +12,7 @@ import { CommentsComponent } from './posts/comments/comments.component';
 import { AddCommentComponent } from './posts/comments/add-comment/add-comment.component';
 import { MainComponent } from './main/main.component';
 import { UpdatePostComponent } from './posts/update-post/update-post.component';
+import { ForumsListComponent } from './forums-list/forums-list.component';
 
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 
@@ -25,7 +26,9 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
     AddCommentComponent,
     MainComponent,
     UpdatePostComponent,
-    UpdatePostDialogComponent],
+    UpdatePostDialogComponent,
+    ForumsListComponent
+  ],
   imports: [
     CommonModule,
     ForumsRoutingModule,

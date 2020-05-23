@@ -15,7 +15,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
 
 @Component({
-  selector: 'app-forums-list',
+  selector: 'app-rvlm-forums-list',
   templateUrl: './forums-list.component.html',
   styleUrls: ['./forums-list.component.scss']
 })
@@ -23,6 +23,7 @@ export class ForumsListComponent implements OnInit {
   groupListDisplayAttributes = [];
   theme: string;
   gotProfile: boolean = false;
+  desktopUser: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -54,6 +55,10 @@ export class ForumsListComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+      }
+
       this.showSpinner = true;
 
       this.listenForColorTheme();
@@ -75,7 +80,6 @@ export class ForumsListComponent implements OnInit {
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
 
     return containerClass;
   }

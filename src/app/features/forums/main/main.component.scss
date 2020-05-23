@@ -1,7 +1,6 @@
 @import './../../../../styles/_variables';
 
 .container {
-  // padding: 10px;
   margin-top: 50px;
 }
 
@@ -11,6 +10,21 @@
 
 .bottom-bar-spacing-xplus {
   margin-bottom: 80px;
+}
+
+.list-container {
+  float: left;
+  width: 35%;
+}
+
+// THis is used. Do not delete
+.posts-container {
+
+}
+
+.posts-container-desktop {
+  float: right;
+  width: 65%;
 }
 
 .hyperlink {

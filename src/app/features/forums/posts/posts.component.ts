@@ -9,6 +9,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { CommentsComponent } from './comments/comments.component';
+import { AddPostComponent } from './add-post/add-post.component';
+import { AddCommentComponent } from './comments/add-comment/add-comment.component';
 
 import { ForumService, Icomments, Iposts } from '@services/data-services/forum.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
@@ -67,6 +69,14 @@ export class PostsComponent implements OnInit {
   // Provide access to methods on comments component and update post component
   @ViewChild(CommentsComponent)
   public commentsComponent: CommentsComponent;
+
+  //  Provide access to methods on the Add Post component
+  @ViewChild(AddPostComponent)
+  public addPost: AddPostComponent;
+
+  //  Provide access to methods on the Add Post component
+  @ViewChild(AddCommentComponent)
+  public addComment: AddCommentComponent;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -168,6 +178,7 @@ export class PostsComponent implements OnInit {
   // When user clicks to add a post, show the form
   onAddPost() {
     this.addPostOpen = this.addPostOpen === 'out' ? 'in' : 'out';
+    this.addPost.focusOnPostInput();
     this.showFirstPost = false;
   }
 
@@ -175,6 +186,7 @@ export class PostsComponent implements OnInit {
   // When user clicks comment, open up the comments for viewing
   onComment(row: number) {
     this.commentsOpen[row] = this.commentsOpen[row] === 'out' ? 'in' : 'out';
+    this.addComment.focusOnCommentInput();
     this.showPostComments[row] = !this.showPostComments[row];
   }
 
