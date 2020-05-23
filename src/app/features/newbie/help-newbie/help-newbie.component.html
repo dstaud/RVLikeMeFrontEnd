@@ -1,4 +1,5 @@
 <div class="mat-app-background container mat-body-1">
   <p class="mat-title">{{ 'help-newbie.component.header' | translate}}</p>
-  <app-rvlm-newbie-topics></app-rvlm-newbie-topics>
+  <app-rvlm-newbie-topics
+    (topicSelected)="onTopicSelected($event)"></app-rvlm-newbie-topics>
 </div>

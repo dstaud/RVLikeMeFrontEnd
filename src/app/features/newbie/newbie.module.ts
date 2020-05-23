@@ -11,6 +11,7 @@ import { TopicComponent } from './newbie-topics/topic/topic.component';
 import { HelpNewbieComponent } from './help-newbie/help-newbie.component';
 import { NeedHelpNewbieComponent } from './need-help-newbie/need-help-newbie.component';
 import { NewbieLinksComponent } from './newbie-topics/newbie-links/newbie-links.component';
+import { MainComponent } from './main/main.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { NewbieLinksComponent } from './newbie-topics/newbie-links/newbie-links.
     TopicComponent,
     HelpNewbieComponent,
     NeedHelpNewbieComponent,
-    NewbieLinksComponent
+    NewbieLinksComponent,
+    MainComponent
   ],
   imports: [
     CommonModule,

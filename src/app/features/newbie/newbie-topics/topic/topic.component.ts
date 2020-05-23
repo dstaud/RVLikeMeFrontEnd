@@ -1,13 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable, throwError } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ShareDataService, IforumsMain } from '@services/share-data.service';
+import { ShareDataService, IforumsMain, InewbieTopic } from '@services/share-data.service';
 import { UserTypeService } from '@services/user-type.service';
+import { Itopics } from './../../help-newbie/help-newbie.component';
+
+import { NewbieLinksComponent } from './../newbie-links/newbie-links.component';
 
 @Component({
   selector: 'app-rvlm-topic',
@@ -15,6 +19,9 @@ import { UserTypeService } from '@services/user-type.service';
   styleUrls: ['./topic.component.scss']
 })
 export class TopicComponent implements OnInit {
+  @ViewChild(NewbieLinksComponent)
+  public newbieLinks: NewbieLinksComponent;
+
   profile: IuserProfile;
   topicID: string;
   topicDesc: string;
@@ -22,12 +29,14 @@ export class TopicComponent implements OnInit {
   header: string;
   userType: string;
 
+  private authorizedTopics: Array<Itopics> = [];
   private userProfile: Observable<IuserProfile>;
 
   constructor(private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
               private route: ActivatedRoute,
               private router: Router,
+              private translate: TranslateService,
               private userTypeSvc: UserTypeService,
               private shareDataSvc: ShareDataService) { }
 
@@ -39,6 +48,21 @@ export class TopicComponent implements OnInit {
 
   ngOnDestroy() {}
 
+
+  newbieInit(params: InewbieTopic) {
+    console.log('TopicComponent:newbieInit: back over here=', params)
+    this.topicID = params.topicID;
+    this.topicDesc = params.topicDesc;
+
+    this.title = 'newbie-topics.component.' + this.topicID;
+    if (this.userType === 'expert') {
+      this.header = 'newbie-topics.component.' + this.topicID + 'HeaderExpert';
+    } else {
+      this.header = 'newbie-topics.component.' + this.topicID + 'HeaderNewbie';
+    }
+
+    this.newbieLinks.initialize(params);
+  }
 
   onGroup() {
     let params:IforumsMain = {
@@ -71,23 +95,32 @@ export class TopicComponent implements OnInit {
   }
 
 
-  private listenForUserType() {
+  listenForUserType() {
+    let paramData: InewbieTopic;
+
     this.userTypeSvc.userType
     .pipe(untilComponentDestroyed(this))
     .subscribe(type => {
       this.userType = type;
 
+      // if (!this.shareDataSvc.getData('newbieTopic').topicID) {
+      //   if (type = 'expert') {
+      //     this.router.navigateByUrl('/newbie/help-newbie');
+      //   } else {
+      //     this.router.navigateByUrl('/newbie/need-help-newbie');
+      //   }
+      // }
+
       if (!this.shareDataSvc.getData('newbieTopic').topicID) {
-        if (type = 'expert') {
-          this.router.navigateByUrl('/newbie/help-newbie');
-        } else {
-          this.router.navigateByUrl('/newbie/need-help-newbie');
-        }
+        this.getAuthorizedTopics();
+        this.initialize();
+      } else {
+        paramData = this.shareDataSvc.getData('newbieTopic');
+        this.topicID = paramData.topicID;
+        this.topicDesc = paramData.topicDesc;
       }
 
-      let params = this.shareDataSvc.getData('newbieTopic');
-      this.topicID = params.topicID;
-      this.topicDesc = params.topicDesc;
+      console.log('TopicComponent:listenForUserType: topicid=', this.topicID, ' topicDesc=', this.topicDesc)
 
       this.title = 'newbie-topics.component.' + this.topicID;
       if (type === 'expert') {
@@ -96,9 +129,35 @@ export class TopicComponent implements OnInit {
         this.header = 'newbie-topics.component.' + this.topicID + 'HeaderNewbie';
       }
 
+      if (!this.shareDataSvc.getData('newbieTopic').topicID) {
+        this.newbieLinks.initialize(paramData);
+      }
+
     }, error => {
       console.error('TopicComponent:listenForUserType: error ', error);
       throw new Error(error);
     });
+  }
+
+  private getAuthorizedTopics() {
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"internet","topicDesc":"' + this.translate.instant('newbie-topics.component.internet') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"insurance","topicDesc":"' + this.translate.instant('newbie-topics.component.insurance') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"costFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.costFullTimeTravel') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"domicile","topicDesc":"' + this.translate.instant('newbie-topics.component.domicile') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"makingMoneyOnTheRoad","topicDesc":"' + this.translate.instant('newbie-topics.component.makingMoneyOnTheRoad') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"savingMoney","topicDesc":"' + this.translate.instant('newbie-topics.component.savingMoney') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"sellingHouse","topicDesc":"' + this.translate.instant('newbie-topics.component.sellingHouse') +'"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeTravel') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeStationary","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeStationary') + '"}'));
+  }
+
+  private initialize() {
+    let index: number;
+    let params: InewbieTopic;
+
+    index = Math.floor(Math.random() * this.authorizedTopics.length - 1) + 1;
+
+    this.topicID = this.authorizedTopics[index].topicID;
+    this.topicDesc = this.authorizedTopics[index].topicDesc;
   }
 }

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
+
+import { InewbieTopic } from '@services/share-data.service';
 
 export interface Itopics {
   _id: string;
@@ -18,6 +20,8 @@ export interface Itopics {
 })
 
 export class HelpNewbieComponent implements OnInit {
+  @Output() topicSelected = new EventEmitter<InewbieTopic>();
+
   displayName: string;
   profileImageUrl: string;
   authorizedTopics: Array<Itopics> = [];
@@ -39,5 +43,10 @@ export class HelpNewbieComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     }
+  }
+
+  onTopicSelected(params: InewbieTopic) {
+    console.log('HelpNewbieComponent:onTopicsSelected: sending up the chain=', params);
+    this.topicSelected.emit(params);
   }
 }

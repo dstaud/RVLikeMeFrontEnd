@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
@@ -16,6 +16,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { AdminService } from '@services/data-services/admin.service';
 
 import { SharedComponent } from '@shared/shared.component';
+import { TopicComponent } from './topic/topic.component';
 
 export interface Itopics {
   _id: string;
@@ -46,11 +47,17 @@ export interface Itopics {
   ]
 })
 export class NewbieTopicsComponent implements OnInit {
+  @Output() topicSelected = new EventEmitter<InewbieTopic>();
+
+  @ViewChild(TopicComponent)
+  public topic: TopicComponent;
+
   form: FormGroup;
   authorizedTopics: Array<Itopics> = [];
   userType: string;
   suggestTopicOpen: string = 'out';
   readyToSuggest: boolean = false;
+  desktopUser: boolean = false;
 
   showSpinner: boolean= false;
 
@@ -74,7 +81,11 @@ export class NewbieTopicsComponent implements OnInit {
                 });
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    if (window.innerWidth > 600) {
+      this.desktopUser = true;
+    }
+
     this.listenForUserProfile();
 
     this.listenForUserType();
@@ -146,7 +157,13 @@ export class NewbieTopicsComponent implements OnInit {
 
     this.shareDataSvc.setData('newbieTopic', params);
     this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie', 'forward');
-    this.router.navigateByUrl('/newbie/topic');
+
+    if (this.desktopUser) {
+      console.log('NewbieTopicsComponent:onTopic: sending up the chain=', params);
+      this.topicSelected.emit(params);
+    } else {
+      this.router.navigateByUrl('/newbie/topic');
+    }
   }
 
   private findTopic(topicID: string): boolean {

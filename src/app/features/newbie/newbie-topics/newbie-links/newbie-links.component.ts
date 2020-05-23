@@ -12,7 +12,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { UserTypeService } from '@services/user-type.service';
 import { ActivateBackArrowService } from '@core/services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
+import { ShareDataService, ImessageShareData, ImyStory, InewbieTopic } from '@services/share-data.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 
 @Component({
@@ -100,6 +100,7 @@ export class NewbieLinksComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      console.log('NewbieLinksComponent:ngOnInit:')
       this.listenForUserProfile();
 
       this.listenForUserType();
@@ -112,6 +113,14 @@ export class NewbieLinksComponent implements OnInit {
 
   ngOnDestroy() { }
 
+  initialize(params: InewbieTopic) {
+    this.topicID = params.topicID;
+    this.topicDesc = params.topicDesc;
+
+    this.getNewbieLinks();
+
+    this.topicDescSentence = 'newbie-topics.component.' + this.topicID + '2';
+  }
 
   onAddLink() {
     this.showAddLink = !this.showAddLink;
