@@ -78,12 +78,10 @@ export class AdminComponent implements OnInit {
     this.showSpinner = true;
     this.adminSvc.loadRvData(this.form.controls.rvFileName.value)
     .subscribe(rvData => {
-      console.log('AdminComponent:onBrandsByManufacturer: rvData=', rvData);
       this.shared.openSnackBar('RV Data in file ' + this.form.controls.rvFileName.value + ' loaded to collection', 'message', 3000);
       this.form.controls.rvFileName = null;
       this.showSpinner = false;
     }, error => {
-      console.log('AdminComponent:onBrandsByManufacturer: error loading RV data file=', error);
       this.showSpinner = false;
       throw new Error(error);
     });
@@ -92,10 +90,8 @@ export class AdminComponent implements OnInit {
   onNewBrands() {
     this.profileSvc.getNewBrands()
     .subscribe(brands => {
-      console.log('NEW BRANDS=',brands);
     }, error => {
       if (error) {
-          console.log('AdminComponent:onNewBrands: GOT ERROR=', error);
         }
     });
   }

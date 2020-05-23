@@ -131,18 +131,16 @@ export class MainComponent implements OnInit {
   // Display user-readable matches with counts
   private displayMatches(counts) {
     this.allUsersCount = counts.allUsersCount;
-    console.log('ConnectionsMainComponenet:displayMatches: counts=', counts);
 
     if (counts.allCounts) {
       this.allCountsReceived = true;
-      console.log('ConnectionsMainComponenet:displayMatches: all counts=', counts.allCounts);
     }
     this.likeMeMatches = [];
 
     // Get the key/value pairs of returned matches/counts into arrays
     this.profileKeys = Object.keys(counts);
     this.profileValues = Object.values(counts);
-
+    console.log('displayMatches counts=', counts)
     // Go through the key array.  For each key, get associated value.
     // If the value is null or false, skip it.  This means there were no matches
     // for that item with other users at this time.
@@ -168,6 +166,7 @@ export class MainComponent implements OnInit {
         } else {
           if (!isNumber(this.profile[this.profileKeys[i]])) {
             if (this.profileKeys[i] !== 'allCounts') {
+              console.log('connections key=',this.profileKeys[i], this.profile[this.profileKeys[i]] )
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
                 if (this.profileValues[i] === 1) {
                   this.likeMeDesc = this.translate.instant(
@@ -214,9 +213,7 @@ export class MainComponent implements OnInit {
 
     // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
     // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
-    console.log('ConnectionsMainComponent:displayMatches: allUsersCount=', this.allUsersCount, ' received=', this.allCountsReceived)
     if (this.allUsersCount > 0 && this.allCountsReceived) {
-      console.log('ConnectionsMainComponent:displayMatches: done')
       this.form.get('likeMe').disable({onlySelf: true});
       this.showSpinner = false;
       if (!this.foundMatch) {
@@ -275,10 +272,8 @@ export class MainComponent implements OnInit {
       name = item.value;
       value = this.profile[item.value];
       queryParams[name] = value;
-      console.log('ConnectionsMain:onForum: name=', name, ' value=', value, 'queryParam=', queryParams[name])
       i++;
     });
-    console.log('ConnectionsMain:onForum: queryParams=', queryParams)
     this.shareDataSvc.setData('forumsMain', queryParams);
     this.router.navigateByUrl('/forums/main');
   }
@@ -304,7 +299,6 @@ export class MainComponent implements OnInit {
       i++;
     });
 
-    console.log('ConnectionsMain:onQuery: params=', matches);
     this.shareDataSvc.setData('userQuery',matches);
     this.activateBackArrowSvc.setBackRoute('connections/main', 'forward');
     this.router.navigateByUrl('/connections/user-query');
@@ -332,7 +326,6 @@ export class MainComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
-      console.log('ForumsListComponent:ngOnInit: Theme=', this.theme);
     }, error => {
       this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
@@ -364,7 +357,6 @@ export class MainComponent implements OnInit {
     this.likeMeCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
-      console.log('ConnectionsComponent:listenForLikeMeCounts: counts=', counts);
       this.displayMatches(counts);
     }, (error) => {
       this.showSpinner = false;

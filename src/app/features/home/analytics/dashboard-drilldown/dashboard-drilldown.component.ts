@@ -83,13 +83,12 @@ export class DashboardDrilldownComponent implements OnInit {
     this.groupByCounts
     .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
-      console.log('DashboardDrilldownComponent:listenForGroupByCounts: data=', counts);
       if (counts[control][0]._id !== '') {
         this.processCounts(control, counts);
         this.showSpinner = false;
       }
     }, error => {
-      console.log('DashboardDrilldownComponent:listenForGroupByCounts: error=', error);
+      console.error('DashboardDrilldownComponent:listenForGroupByCounts: error=', error);
       this.showSpinner = false;
       throw new Error(error);
     });
@@ -98,8 +97,6 @@ export class DashboardDrilldownComponent implements OnInit {
 
   private processCounts(control: string, counts: IgroupByCounts) {
     let group: string = '';
-
-    console.log('DashboardDrilldownComponent:processCounts: data=', counts);
 
     for (let i=0; i < counts[control].length; i++) {
 
@@ -117,7 +114,5 @@ export class DashboardDrilldownComponent implements OnInit {
         this.groupData.push(group);
       }
     }
-
-    console.log('DashboardDrilldownComponent:processCounts: counts label array=', this.groupData);
   }
 }

@@ -143,10 +143,8 @@ export class BlogLinkComponent implements OnInit {
 
 
   onDelete(row: number) {
-    console.log('BlogLinkComponent:onDelete: blogLinks=', this.blogLinks, ' row=', row)
     this.profileSvc.deleteBlogLinkFromProfile(this.profile._id, this.blogLinks[row]._id)
     .subscribe(profileResult => {
-      console.log('BlogLinkComponent:onDelete: updated profile=', profileResult);
       this.profile = profileResult;
       this.profileSvc.getProfile();
     }, error => {
@@ -161,7 +159,6 @@ export class BlogLinkComponent implements OnInit {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .subscribe(preview => {
-          console.log('BlogLinkComponent:onLink: preview=', preview);
           this.preview = preview;
           if (this.preview.url.substring(0,7) == 'http://') {
             this.preview.url = this.preview.url.substring(7,this.preview.url.length);
@@ -176,7 +173,6 @@ export class BlogLinkComponent implements OnInit {
           this.showPreview = true;
           this.showSpinner= false;
         }, error => {
-          console.log('BlogLinkComponent:onLink: no link found');
           this.preview.url = this.form.controls.link.value;
           if (this.preview.url.substring(0,7) == 'http://') {
             this.preview.url = this.preview.url.substring(7,this.preview.url.length);
@@ -223,7 +219,6 @@ export class BlogLinkComponent implements OnInit {
       this.form.reset()
       this.profileSvc.getProfile();
     }, error => {
-      console.log('BlogLinkComponent:onSubmit: error=', error);
       this.showSpinner = false;
       throw Error(error);
     })
@@ -237,7 +232,6 @@ export class BlogLinkComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
       this.blogLinks = profile.blogLinks;
-      console.log('BlogLinkComponent:listenForUserProfile: blogLinks=', this.blogLinks)
       this.showSpinner = false;
     }, (error) => {
       console.error('BlogLinkComponent:listenForUserProfile: error getting profile ', error);
@@ -265,7 +259,6 @@ export class BlogLinkComponent implements OnInit {
       } else {
           this.returnRoute = '';
       }
-      console.log('BlogLinkComponent:ngOnInit: Return Route=', this.returnRoute);
     }, error => {
       console.error('BlogLinkComponent:setReturnRoute: error setting return route ', error);
     });

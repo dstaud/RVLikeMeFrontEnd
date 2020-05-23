@@ -76,10 +76,9 @@ export class SendMessageComponent implements OnInit {
     let backPath: string;
     let self = this;
     window.onpopstate = function(event) {
-      console.log('SendMessageComponent:ngOnInit: going backward?')
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
-    console.log('SendMessageComponent:ngOnInit:')
+
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
@@ -182,10 +181,6 @@ export class SendMessageComponent implements OnInit {
       params: userParams
     }
 
-    // let params = '{"userID":"' + this.toUserID + '",' +
-    //                   '"userIdViewer":"' + this.fromUserID + '",' +
-    //                   '"params":' + userParams + '}';
-    console.log('SendMessageComponent:onYourStory: params=', params);
     this.activateBackArrowSvc.setBackRoute('messages/send-message', 'forward');
     this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
@@ -198,12 +193,12 @@ export class SendMessageComponent implements OnInit {
     this.userConversations
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
-      console.log('SendMessageComponent:getMessages: conversations from DB= ', conversations);
+
       if (conversations.length === 1 && conversations[0]._id === null) {
-        console.log('SendMessageComponent:getMessages: default conversation ', conversations);
+
       } else {
         let conversationIndex = this.findConversation(conversations, this.fromUserID, this.toUserID, this.conversationID);
-        console.log('SendMessageComponent:getMessages: conversation index ', conversationIndex);
+
         if (conversationIndex === -1) { // Indicates not found in collection
           this.newConversation = true;
           this.conversation = null;
@@ -236,9 +231,9 @@ export class SendMessageComponent implements OnInit {
     this.profileSvc.getUserProfile(this.toUserID)
     .subscribe(profileResult => {
       this.sendMessageEmails = profileResult.sendMessageEmails;
-      console.log('SendMessageComponent:getOtherUserProfile: sendMessageEmails=', this.sendMessageEmails);
+
     }, error => {
-      console.log('SendMessageComponent:getOtherUserProfile: Error getting other user profile=', error);
+      console.error('SendMessageComponent:getOtherUserProfile: Error getting other user profile=', error);
       throw new Error(error);
     })
   }
@@ -251,7 +246,6 @@ export class SendMessageComponent implements OnInit {
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
     let paramData: any;
 
-    console.log('SendMessageComponent:getParameters: params=',this.shareDataSvc.getData('message') )
     if (!this.shareDataSvc.getData('message').fromUserID) {
       this.router.navigateByUrl('/messages/message-list');
     } else {
@@ -305,10 +299,7 @@ export class SendMessageComponent implements OnInit {
 
   scrollToBottom() {
     try {
-        console.log('SendMessageComponent:scrollToBottom: top before=', this.scrollable.nativeElement.scrollTop )
-        console.log('SendMessageComponent:scrollToBottom: height=', this.scrollable.nativeElement.scrollHeight)
         this.scrollable.nativeElement.scrollTop = this.scrollable.nativeElement.scrollHeight;
-        console.log('SendMessageComponent:scrollToBottom: top after=', this.scrollable.nativeElement.scrollTop )
     } catch (e) {
         console.error('SendMessageComponent:scrollToBottom:', e);
     }
@@ -317,20 +308,17 @@ export class SendMessageComponent implements OnInit {
 
   // Send notification to recipient about new message if user wants them and if the user's email was verified
   private sendNotificationToRecipient() {
-    console.log('SendMessageComponent:sendNotificationToRecipient: sendMessageEmails=', this.sendMessageEmails);
+
     if (this.sendMessageEmails) {
       this.authSvc.getOtherUserEmail(this.toUserID)
       .subscribe(userResult => {
 
         if (!userResult.emailNotVerified) {
-          console.log('SendMessageComponent:sendNotificationToRecipient: sending email');
           this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
           .subscribe(emailResult => {
           }, error => {
             this.sentry.logError(error);
           });
-        } else {
-          console.log('SendMessageComponent:sendNotificationToRecipient: not sending email');
         }
       }, error => {
         this.sentry.logError(error);

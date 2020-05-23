@@ -51,7 +51,6 @@ export class UserQueryComponent implements OnInit {
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
-    console.log('UserQueryComponent:ngOnInit:')
     let sharedData: any;
     let backPath;
     let self = this;
@@ -66,11 +65,8 @@ export class UserQueryComponent implements OnInit {
     } else {
       this.showSpinner = true;
 
-      console.log('UserQueryComponent:ngOnInit: getData=', this.shareDataSvc.getData('userQuery'));
-
       if (this.shareDataSvc.getData('userQuery').length > 0) {
           this.matches = this.shareDataSvc.getData('userQuery');
-          console.log('UserQueryComponent:ngOnInit: matches=', this.matches);
 
           this.listenForColorTheme();
 
@@ -78,7 +74,6 @@ export class UserQueryComponent implements OnInit {
 
           this.listenForUserProfile();
       } else {
-        console.log('UserQueryComponent:ngOnInit: going to connections/main');
         this.router.navigateByUrl('/connections/main');
       }
     }
@@ -116,7 +111,6 @@ export class UserQueryComponent implements OnInit {
       forumType: 'group'
     }
 
-    console.log('UserQuery:onSelectFormGroup: matches=', this.matches);
     this.matches.forEach((item: IuserQuery) => {
       name = Object.keys(item)[0];
       value = Object.values(item)[0];
@@ -191,7 +185,6 @@ export class UserQueryComponent implements OnInit {
     }
 
     for (let i=0; i < this.matches.length; i++) {
-      console.log('UserQueryComponent:matchQueryParams: keys=', Object.keys(this.matches[0]))
       name = Object.keys(this.matches[i])[0];
       value = Object.values(this.matches[i])[0];
 

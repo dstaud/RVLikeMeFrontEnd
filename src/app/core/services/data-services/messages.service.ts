@@ -65,7 +65,6 @@ export class MessagesService {
       this._conversation.next(Object.assign({}, this.dataStore).conversation);
     }, (error) => {
       if (error.status === 404) {
-        console.log('MessagesService:getConversations: no conversations found');
       } else {
         console.error('MessagesService:getConversations: throw error ', error);
         throw new Error(error);
@@ -80,7 +79,6 @@ export class MessagesService {
 
   getConversation(fromUserID: string, toUserID: string): Observable<any> {
     let param = JSON.parse('{"fromUserID":"' + fromUserID + '","toUserID":"' + toUserID + '"}');
-    console.error('MessagesService:getConversation: param=', param);
 
     return this.http.get(`/api/conversation`, { params: param  });
   }

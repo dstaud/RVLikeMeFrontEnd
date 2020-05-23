@@ -31,12 +31,11 @@ import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service
 })
 
 export class AddPostComponent implements OnInit {
-
   @Input('groupID') groupID: string;
-
   @Input('displayName') displayName: string;
-
   @Input('profileImageUrl') profileImageUrl: string;
+  @Input('yearOfBirth') yearOfBirth: number;
+  @Input('rigLength') rigLength: number;
 
   @Output() postAddComplete = new EventEmitter<string>();
 
@@ -106,10 +105,8 @@ export class AddPostComponent implements OnInit {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .subscribe(preview => {
-          console.log('AddPostComponent:onLink: preview=', preview);
           this.linkPreview = preview;
           this.postLink = this.form.controls.link.value;
-          console.log('AppPostComponent:onLink: url=', this.linkPreview.url);
           if (this.linkPreview.url.substring(0,7) == 'http://') {
             this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
           } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
@@ -127,7 +124,7 @@ export class AddPostComponent implements OnInit {
           this.showSpinner = false;
           this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
         }, error => {
-          console.log('AddPostComponent:onLink: no link found');
+
           this.linkPreview.url = this.form.controls.link.value;
           if (this.linkPreview.url.substring(0,7) == 'http://') {
             this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
@@ -177,7 +174,8 @@ export class AddPostComponent implements OnInit {
     this.showSpinner = true;
     let postText = this.form.controls.post.value;
     this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl,
-                          this.linkPreview.url, this.linkPreview.description, this.linkPreview.title, this.linkPreview.image)
+                          this.linkPreview.url, this.linkPreview.description, this.linkPreview.title, this.linkPreview.image,
+                          this.yearOfBirth, this.rigLength)
     .subscribe(post => {
       this.onDoneWithAdd(post);
       this.showSpinner = false;

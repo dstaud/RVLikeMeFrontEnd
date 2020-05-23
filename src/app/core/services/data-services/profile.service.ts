@@ -160,7 +160,6 @@ export class ProfileService {
     let params = '{"profileID":"' + profileID + '",' +
                 '"blogID":"' + blogID + '"}';
 
-    console.log('ProfileService:deleteLifestyleImage: params=', JSON.parse(params));
     return this.http.put(`/api/profile-blog-link-delete`, JSON.parse(params), {});
   }
 
@@ -262,18 +261,23 @@ export class ProfileService {
 
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
     let attributeEscaped;
-    console.log('ProfileService:updateProfileAttribute: type of attribute=', typeof(value));
-    if (typeof(value) !== 'boolean' && typeof(value !== 'number' && value)) {
-      attributeEscaped = this.escapeJsonReservedCharacters(value);
+
+    console.log('ProfileService:updateProfileAttribute: typeof=', typeof(value), ' value=', value);
+    if (value) {
+      if (typeof(value) !== 'boolean' && typeof(value !== 'number')) {
+        attributeEscaped = this.escapeJsonReservedCharacters(value);
+      } else {
+        attributeEscaped = value;
+      }
     } else {
       attributeEscaped = value;
     }
+
 
     var params = '{"profileID":"' + profileID + '",' +
                   '"attribute":"' + attribute + '",' +
                   '"value":"' +  attributeEscaped + '"}';
 
-    console.log('ProfileService:updateProfileAttribute: params=', params);
     this._profile.next(Object.assign({}, this.dataStore).profile);
     return this.http.put(`/api/profile-attribute-update`, params, {});
   }

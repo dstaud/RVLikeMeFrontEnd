@@ -34,7 +34,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     } else {
         authReq = request;
     }
-    console.log('httpInterceptor: request=', authReq);
+
     // If timeout, retry up to 3 times with delay
     return next.handle(authReq).pipe(
       retryWhen(errors => errors
@@ -53,13 +53,9 @@ export class HttpInterceptorService implements HttpInterceptor {
           // server-side error
           this.httpError.status = error.status;
           this.httpError.message = error.message;
-          console.log('HttpInterceptor: Server Side error for request', authReq);
-          console.log('HttpInterceptor: Server Side error: ', this.httpError);
           return throwError(this.httpError);
         } else {
           // client-side error
-          console.log('HttpInterceptor: Client Side error for request', authReq);
-          console.log('HttpInterceptor: Client Side error: ', error);
           return throwError(error);
         }
       })

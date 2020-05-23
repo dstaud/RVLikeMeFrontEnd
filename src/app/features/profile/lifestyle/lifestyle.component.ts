@@ -408,7 +408,6 @@ export class LifestyleComponent implements OnInit {
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onLifestyleImageSelected(event: any) {
     let fileType: string = 'lifestyle';
-    console.log('LifestyleComponent:onLifestyleImageSelected: file=', event.target.files[0]);
 
     if (event.target.files[0]) {
       this.showSpinner = true;
@@ -464,7 +463,7 @@ export class LifestyleComponent implements OnInit {
     let suggestionType = 'lifestyle';
 
     this.showSpinner = true;
-    console.log('LifestyleComponent:onSuggestLifestyle: adding suggestion=', this.form.controls.suggestLifestyle.value);
+
     if (this.form.controls.suggestLifestyle.value) {
       this.adminSvc.addSuggestion(this.form.controls.suggestLifestyle.value, suggestionType,
                                   this.profile.displayName, this.profile.profileImageUrl)
@@ -496,7 +495,6 @@ export class LifestyleComponent implements OnInit {
 
 
   onViewImage(row: number) {
-    console.log('LifestyleComponent:onViewImage: row=', row, ' nbrPics=', this.nbrLifestyleImagePics)
     if (row < this.nbrLifestyleImagePics) { // Don't do anything if placeholder image
       let imageData: IviewImage = {
         profileID: this.profile._id,
@@ -530,7 +528,7 @@ export class LifestyleComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      console.log('LifestyleComponent:openImageViewDialog: result=', result);
+
     }, error => {
       this.sentry.logError({"message":"error closing dialog","error":error});
     });

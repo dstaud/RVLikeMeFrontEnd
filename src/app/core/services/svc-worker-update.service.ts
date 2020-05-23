@@ -16,26 +16,7 @@ export class SvcWorkerUpdateService {
 
       message = 'service worker update available';
 
-      if (!this.swUpdate.isEnabled) {
-        console.log('SERVICE WORKER NOT ENABLED!');
-      }
-
       this.shared.openSnackBar(message, 'message', 5000);
-
-      // checkForUpdate(): Allows to check for updates periodically.
-      // activateUpdate(): Allows us to force a service worker update.
-
-      // const snack = this.snackbar.open('Update Available', 'Reload');
-
-/*       snack
-        .onAction()
-        .subscribe(() => {
-          window.location.reload();
-        });
-
-      snack.setTimeout(() => {
-        snack.dismiss();
-      }, 6000); */
     });
 
    }

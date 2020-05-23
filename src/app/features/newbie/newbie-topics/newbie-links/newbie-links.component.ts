@@ -145,7 +145,6 @@ export class NewbieLinksComponent implements OnInit {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .subscribe(preview => {
-          console.log('BlogLinkComponent:onLink: preview=', preview);
           this.preview = preview;
           if (this.preview.url.substring(0,7) == 'http://') {
             this.preview.url = this.preview.url.substring(7,this.preview.url.length);
@@ -161,7 +160,6 @@ export class NewbieLinksComponent implements OnInit {
           }
 
         }, error => {
-          console.log('BlogLinkComponent:onLink: no link found');
           this.preview.url = this.form.controls.link.value;
           if (this.preview.url.substring(0,7) == 'http://') {
             this.preview.url = this.preview.url.substring(7,this.preview.url.length);
@@ -187,11 +185,10 @@ export class NewbieLinksComponent implements OnInit {
     this.showSpinner = true;
 
     link = this.preview.url;
-    console.log('NewbieLinksComponent:onSubmit: link before=', link);
+
     if (link.substring(0,7) !== 'http://' && link.substring(0,8) !== 'https://' ) {
       link = 'http://' + link;
     }
-    console.log('NewbieLinksComponent:onSubmit: link after=', link);
 
     this.newbieTopicsSvc.addNewbieLink(this.topicID,
                                         this.preview.title,
@@ -215,7 +212,6 @@ export class NewbieLinksComponent implements OnInit {
       this.form.reset();
       this.getNewbieLinks();
     }, error => {
-      console.log('NewbieLinksComponent:onSubmit: error=', error);
       this.showSpinner = false;
       throw Error(error);
     })
@@ -246,7 +242,6 @@ export class NewbieLinksComponent implements OnInit {
 
     this.newbieTopicsSvc.getNewbieLinks(this.topicID)
     .subscribe(linkResult => {
-      console.log('NewbieLinksComponent:getNewbieLinks:result=', linkResult);
       if (linkResult.length > 0) {
         this.showMenu = true;
       } else {
@@ -255,7 +250,6 @@ export class NewbieLinksComponent implements OnInit {
       this.newbieLinks = linkResult;
       this.showSpinner = false;
     }, error => {
-      console.log('NewbieLinksComponent:getNewbieLinks: error=', error);
       this.showSpinner = false;
       throw new Error(error);
     })

@@ -40,7 +40,7 @@ export class ForumService {
 
   deletePost(postID: string): Observable<any> {
     let post = '{"postID":"' + postID + '"}';
-    console.log('deletePostImage: update=', JSON.parse(post));
+
     return this.http.put(`/api/post-delete`, JSON.parse(post), {});
   }
 
@@ -48,22 +48,33 @@ export class ForumService {
   deletePostImage(imageUrl: string): Observable<any> {
     let image = '{"imageUrl":"' + imageUrl + '"}';
     let imageUrlJSON = JSON.parse(image);
-    console.log('deletePostImage: update=', imageUrlJSON);
+
     return this.http.put(`/api/post-delete-image`, imageUrlJSON, {});
   }
 
   getGroup(names: string, values: string): Observable<any> {
+    console.log('forumsvc getGroup names=', names, ' values=', values)
     let kNames = names.split('|');
     let kValues = values.split('|');
+    let keyValues = '';
 
-    let keyValues = '{"' + kNames[0] + '":"' + kValues[0] + '"';
+    if (kNames[0] === 'yearOfBirth') {
+      keyValues = '{"' + kNames[0] + '":0';
+    } else {
+      keyValues = '{"' + kNames[0] + '":"' + kValues[0] + '"';
+    }
+
     for (let i=1; i < kNames.length; i++) {
-      keyValues = keyValues + ',"' + kNames[i] + '":"' + kValues[i] + '"';
+      if (kNames[i] === 'yearOfBirth') {
+        keyValues = keyValues + ',"' + kNames[i] + '":0';
+      } else {
+        keyValues = keyValues + ',"' + kNames[i] + '":"' + kValues[i] + '"';
+      }
     }
     keyValues = keyValues + '}';
-
+    console.log('forumssvc getGroup=', keyValues)
     let param = JSON.parse(keyValues);
-
+    console.log('forumssvc getGroup=', keyValues)
     return this.http.get(`/api/forum-group`, { params: param });
   }
 
@@ -90,7 +101,7 @@ export class ForumService {
     }
     keyValues = keyValues + '}';
     keyValues = JSON.parse(keyValues);
-    console.log('ForumService:addGroup: keyvalues=', keyValues);
+    console.log('add group keyvalues=', keyValues)
     return this.http.post(`/api/forum-group`, keyValues, {});
   }
 
@@ -101,8 +112,9 @@ export class ForumService {
   }
 
   addPost(groupID: string, post:string, displayName: string, profileImageUrl: string,
-          postPhotoUrl: string, link: string, linkDesc: string, linkTitle: string, linkImage: string): Observable<any> {
-    console.log('ForumService:addPost: post body=', post);
+          postPhotoUrl: string, link: string, linkDesc: string, linkTitle: string, linkImage: string,
+          yearOfBirth: number, rigLength: number): Observable<any> {
+
     let postEscaped: string;
 
     if (post) {
@@ -120,14 +132,23 @@ export class ForumService {
                 '","linkDesc":"' + linkDesc +
                 '","linkTitle":"' + linkTitle +
                 '","linkImage":"' + linkImage +
+                '","yearOfBirth":"' + yearOfBirth +
+                '","rigLength":"' + rigLength +
                 '"}'
-    console.log('ForumService:addPost: body=', body);
+
     let bodyJSON = JSON.parse(body);
     return this.http.post(`/api/forum-post`, bodyJSON, {});
   }
 
-  getPosts(groupID: string): Observable<any> {
-    return this.http.get(`/api/forum-posts`, { params: { "groupID": groupID }});
+  getPosts(groupID: string, yearOfBirth?: number): Observable<any> {
+    let params = '{"groupID":"' + groupID + '"';
+    if (yearOfBirth) {
+      params = params + ',"yearOfBirth":' + yearOfBirth + '}';
+    } else {
+      params = params + '}';
+    }
+    console.log('ForumsSvc:getPosts=', params)
+    return this.http.get(`/api/forum-posts`, { params: JSON.parse(params) });
   }
 
   updatePost(postID: string, post:string, postPhotoUrl: string,
@@ -142,7 +163,7 @@ export class ForumService {
                 '","linkImage":"' + linkImage +
                 '"}'
     let bodyJSON = JSON.parse(body);
-    console.log('updatePost: update=', bodyJSON);
+
     return this.http.put(`/api/forum-post`, bodyJSON, {});
   }
 
@@ -153,6 +174,7 @@ export class ForumService {
                 '"profileImageUrl":"' + profileImageUrl + '",' +
                 '"comment":"' + commentEscaped + '"}'
     let bodyJSON = JSON.parse(body);
+
     return this.http.post(`/api/forum-post-comment`, bodyJSON, {});
   }
 
@@ -162,6 +184,7 @@ export class ForumService {
                 '"profileImageUrl":"' + profileImageUrl + '",' +
                 '"reaction":"' + reaction + '"}'
     let bodyJSON = JSON.parse(body);
+
     return this.http.post(`/api/forum-post-reaction`, bodyJSON, {});
   }
 

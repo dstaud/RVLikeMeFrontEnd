@@ -155,13 +155,9 @@ export class MainComponent implements OnInit {
     // Wait for the user to respond to the prompt
     this.event.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt');
         this.beforeInstallEventSvc.saveBeforeInstallEvent(null);
         this.showInstallLink = false;
         this.hideInstall = true;
-
-      } else {
-        console.log('User dismissed the install prompt');
       }
     });
   }
@@ -179,7 +175,6 @@ export class MainComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
       this.profileSvc.distributeProfileUpdate(responseData);
-      console.log('SettingsComponent:onSelectTheme: update color theme ', responseData);
     }, error => {
       this.sentry.logError({"message":"error listening for color theme","error":error});
     });
@@ -224,7 +219,6 @@ export class MainComponent implements OnInit {
     this.themeSvc.defaultGlobalColorTheme
     .pipe(untilComponentDestroyed(this))
     .subscribe(theme => {
-      console.log('SettingsComponent:listenForTheme: got theme=', theme);
       this.theme = theme;
     }, error => {
       this.sentry.logError({"message":"error listening for color theme","error":error});

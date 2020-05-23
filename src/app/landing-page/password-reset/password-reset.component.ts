@@ -46,7 +46,6 @@ export class PasswordResetComponent implements OnInit {
 }
 
   ngOnInit(): void {
-    console.log('PasswordReset:ngOnInit:');
     this.setImageBasedOnScreenWidth();
 
     this.listenForParameters();
@@ -72,7 +71,6 @@ export class PasswordResetComponent implements OnInit {
     this.form.disable();
     this.authSvc.resetPassword(this.token, this.tokenID, this.form.controls.password.value)
     .subscribe(passwordResult => {
-      console.log('PasswordReset:onSubmit: passwordResult=', passwordResult);
       this.shared.openSnackBar('Your password has been reset, please sign in.', 'message', 5000);
       this.showSpinner = false;
 
@@ -94,13 +92,11 @@ export class PasswordResetComponent implements OnInit {
   }
 
   private listenForParameters() {
-    console.log('PasswordReset:listenForParameters:');
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
       if (params.e) {
         this.token = params.e;
-        console.log('PasswordReset:listenForParameters: token=', this.token);
         this.validateToken();
       }
     }, error => {
@@ -122,9 +118,7 @@ export class PasswordResetComponent implements OnInit {
   private validateToken() {
     this.authSvc.validatePasswordResetToken(this.token)
     .subscribe(tokenResult => {
-      console.log('PasswordReset:validateToken: tokenResult=', tokenResult);
       this.tokenID = tokenResult.tokenID;
-      console.log('PasswordReset:validateToken: tokenID=', tokenResult.tokenID);
     }, error => {
       console.error('PasswordReset:validateToken: error validating token.  error=', error);
       if (error === 403) { // token expired

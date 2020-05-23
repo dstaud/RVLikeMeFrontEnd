@@ -102,7 +102,6 @@ export class SigninComponent implements OnInit {
     this.windowWidth = window.innerWidth;
 
     let params: Isignin = this.ShareDataSvc.getData('signin');
-    console.log('SigninComponent: device params=', params);
     this.install = params.install;
     this.device = params.installDevice;
   }
@@ -229,7 +228,6 @@ export class SigninComponent implements OnInit {
       } else if (error.status === 403) {
         this.notActive = true;
         this.token = JSON.parse(error.message).token
-        console.log('SigninComponent:onSubmit token=', this.token)
         this.httpErrorText = 'This account is not yet active.  Please check for an email from rvlikeme.com to activate.  If you do not see the email, look in your spam or trash folders.';
       } else {
         this.httpErrorText = 'Please connect to Internet and retry';
@@ -342,13 +340,10 @@ export class SigninComponent implements OnInit {
   private updateInstallFlag() {
     this.authSvc.getUser()
     .subscribe(credentials => {
-      console.log('SigninComponent:updateInstallFlag: credentials=', credentials);
       if (!credentials.install && !credentials.installDevice) {
-        console.log('SigninComponent:updateInstallFlag: install=', this.install, ' device=', this.device);
         if (!this.install && this.device) {
           this.authSvc.updateInstallFlag(this.install, this.device)
           .subscribe(credentialsResult => {
-            console.log('SigninComponent:updateInstallFlag: flag updated result=', credentialsResult);
           }, error => {
             console.error('SigninComponent:updateInstallFlag: error updating install flag', error);
           });

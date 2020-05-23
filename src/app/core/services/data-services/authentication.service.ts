@@ -143,8 +143,8 @@ export class AuthenticationService {
   registerUser(user: ItokenPayload, firstName: string): Observable<any> {
     let base;
     let params = '{"credentials":' + JSON.stringify(user) +
-                  '","firstName":"' + firstName + '"}';
-    base = this.http.post(`/api/register`, params);
+                  ',"firstName":"' + firstName + '"}';
+    base = this.http.post(`/api/register`, JSON.parse(params));
     const request = base.pipe(
       map((data: ItokenResponse) => { // Saving token here, but may be better to save on register confirm.  However, would have to make sure the email confirm is on
         if (data.token) {

@@ -93,10 +93,6 @@ export class ForumsListComponent implements OnInit {
     let group = this.groupsListFromUserProfile[groupItem];
     let params: IforumsMain;
 
-    // params = '{"_id":"' + group._id + '",' +
-    //           '"forumType":"group",' +
-    //           '"theme":"' + this.theme + '"}';
-
     params = {
       _id: group._id,
       forumType: 'group',

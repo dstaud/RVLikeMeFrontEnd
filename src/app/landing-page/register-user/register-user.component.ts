@@ -110,11 +110,9 @@ export class RegisterUserComponent implements OnInit {
   private listenForSystemConfiguration() {
     this.UsingEmailSvc.useEmail
     .subscribe(useEmail => {
-      console.log('RegisterUserComponent:listenForSystemConfiguration: useEmailResults', useEmail);
       this.useEmail = useEmail;
-      console.log('RegisterUserComponent:listenForSystemConfiguration: useEmail=', this.useEmail);
     }, error => {
-      console.log('RegisterUserComponent:listenForSystemConfiguration: error=', error);
+      console.error('RegisterUserComponent:listenForSystemConfiguration: error=', error);
     })
   }
 
@@ -136,14 +134,12 @@ export class RegisterUserComponent implements OnInit {
     this.showSpinner = true;
     this.form.disable();
 
-    console.log('RegisterUserComponent:RegisterUser: credential=', this.credentials)
     this.authSvc.registerUser(this.credentials, this.form.controls.firstName.value)
     .pipe(untilComponentDestroyed(this))
     .subscribe((responseData) => {
       if (responseData.status === 201) {
         this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
       } else {
-        console.log('RegisterUserComponent:registerUser: response=', responseData);
 
         if (this.useEmail) {
           this.getActivationToken();
@@ -157,12 +153,12 @@ export class RegisterUserComponent implements OnInit {
       this.showSpinner = false;
       this.form.enable();
       this.httpError = true;
-      console.log('RegisterUser:RegisterUser: error=', error);
+
       if (error.status === 401) {
         this.httpErrorText = 'Invalid email address or password';
       } else {
         if (error.status === 403) {
-          console.log('RegisterUser: 403. active=', error.active)
+
           if (error.active) {
             this.httpErrorText = 'Email address is already registered.  If you have forgotten your password, click on the forgot password link on Login.';
             this.showSpinner = false;
@@ -204,15 +200,12 @@ export class RegisterUserComponent implements OnInit {
 
   private getActivationToken(stay?: boolean) {
     let noExpire: boolean = true;
-    console.log('RegisterUserComponent:onSubmit: getting new token');
 
     this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
     .subscribe(tokenResult => {
-      console.log('RegisterUserComponent:onSubmit: tokenResult=', tokenResult);
         this.authSvc.logout();
         this.sendRegisterEmail(tokenResult.token, stay);
     }, error => {
-      console.log('RegisterUserComponent:onSubmit: error getting token=', error);
       throw new Error(error);
     });
   }
@@ -222,17 +215,14 @@ export class RegisterUserComponent implements OnInit {
     let sendTo = this.credentials.email;
     let toFirstName = this.form.controls.firstName.value;
 
-    console.log('RegisterUser:sendRegisterEmail: token=', token);
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, token)
     .subscribe(emailResult => {
-      console.log('email sent!  result=', emailResult);
       this.showSpinner = false;
       if (!stay) { // Stay means user tried to register again without confirming.  Different messaing and don't want this message
         this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
         this.registrationComplete();
       }
     }, error => {
-      console.log('RegisterUser:sendRegisterEmail: error sending email: ', error);
       this.showSpinner = false;
       this.httpError = true;
       this.httpErrorText = "Unable to send registration email.  Please try again soon.";

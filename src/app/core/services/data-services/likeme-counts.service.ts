@@ -126,7 +126,6 @@ export class LikemeCountsService {
               private shared: SharedComponent) { }
 
   getLikeMeCountsPriority() {
-    console.log('LikeMeCountsService:getLikeMeCountsPriority:')
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-priority`)
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
@@ -136,7 +135,6 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.rigManufacturer = counts.rigManufacturer;
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
-      console.log('LikeMeCountsService:getLikeMeCountsPriority: got priority and sent out, getting secondary')
       this.getLikeMeCountsSecondary();
     }, error => {
       console.error('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
@@ -145,7 +143,6 @@ export class LikemeCountsService {
   }
 
   getLikeMeCountsSecondary() {
-    console.log('LikeMeCountsService:getLikeMeCountsSecondary:')
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-secondary`)
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
@@ -179,7 +176,6 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.allCounts = true;
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
-      console.log('LikeMeCountsService:getLikeMeCountsSecondary: got like me counts secondary and sent out')
     }, (error) => {
       console.error('LikeMeCountsService:getLikeMeCountsSecondary: throw error ', error);
       throw new Error(error);
@@ -193,14 +189,12 @@ export class LikemeCountsService {
     let name: string;
     let value: any;
 
-    console.log('getUserQueryCounts: query=', query);
 
     // Append the user's multiple query profile attributes into name/value delimited strings
     query.forEach((item: IuserQuery) => {
-      console.log('getUserQueryCounts: item=', item);
       attribute = Object.keys(item)[0];
       attributeValue = Object.values(item)[0];
-      console.log('getUserQueryCounts: attribute=', attribute, ' attributeValue=', attributeValue);
+
       if (i === 0) {
         name = attribute;
         value = attributeValue;
@@ -210,8 +204,6 @@ export class LikemeCountsService {
       }
       i++
     });
-
-    console.log('getUserQueryCounts: name=', name, ' value=', value);
 
     return this.http.get(`/api/user-query`, { params: {name, value}});
   }

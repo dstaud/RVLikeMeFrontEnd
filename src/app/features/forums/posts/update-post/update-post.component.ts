@@ -86,7 +86,6 @@ export class UpdatePostComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    console.log('UpdatePostComponent:ngOnInit:')
     let backPath;
     let self = this;
     window.onpopstate = function(event) {
@@ -99,7 +98,6 @@ export class UpdatePostComponent implements OnInit {
       this.router.navigateByUrl('/?e=signin');
     } else {
       this.post = this.sharedDataSvc.getData('post');
-      console.log('UpdatePostComponent:ngOnInit: get data=', this.post);
       if (!this.post.body && !this.post.photoUrl && !this.post.link){
         this.router.navigateByUrl('forums/forums-list');
       } else {
@@ -136,7 +134,7 @@ export class UpdatePostComponent implements OnInit {
       }
       containerClass = 'container ' + bottomSpacing;
     }
-    console.log('class=', containerClass)
+
     return containerClass;
   }
 
@@ -195,7 +193,6 @@ export class UpdatePostComponent implements OnInit {
     }
     this.photoAndLinkActionsDisabled = false;
     this.showLinkPreview = false;
-    console.log('UpdatePostComponent:onDeleteLink: post=', this.post);
   }
 
 
@@ -226,9 +223,7 @@ export class UpdatePostComponent implements OnInit {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .subscribe(preview => {
-          console.log('AddPostComponent:onLink: preview=', preview);
           this.linkPreview = preview;
-          console.log('AppPostComponent:onLink: url=', this.linkPreview.url);
           this.post.link = this.linkPreview.url;
           if (this.linkPreview.url.substring(0,7) == 'http://') {
             this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
@@ -245,7 +240,6 @@ export class UpdatePostComponent implements OnInit {
           this.readyForPost = true;
           this.showSpinner = false;
         }, error => {
-          console.log('AddPostComponent:onLink: no link found');
           this.linkPreview.url = this.form.controls.link.value;
           if (this.linkPreview.url.substring(0,7) == 'http://') {
             this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
@@ -291,7 +285,6 @@ export class UpdatePostComponent implements OnInit {
     this.forumSvc.updatePost(this.post.groupID, this.form.controls.post.value, this.post.photoUrl,
                             this.post.link, this.post.linkDesc, this.post.linkTitle, this.post.linkImage)
     .subscribe(postResult => {
-      console.log('UpdatePostComponent:onPost: result=', postResult);
       this.post.body = postResult.body;
       this.post.photoUrl = postResult.photoUrl;
       this.post.link = postResult.link;
@@ -301,7 +294,6 @@ export class UpdatePostComponent implements OnInit {
       this.sharedDataSvc.setData('post', this.post);
       this.showSpinner = false;
       if (this.containerDialog) {
-        console.log('UpdatePostComponent:onPost: send back=', this.post);
         this.formComplete.emit(this.post);
       } else {
         this.router.navigateByUrl('forums/main');

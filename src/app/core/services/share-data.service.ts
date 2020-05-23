@@ -271,12 +271,10 @@ export class ShareDataService {
   constructor() { }
 
   setData(type: string, data:any) {
-    console.log('ShareDataService:setData: data=', data);
     this.data[type] = data;
   }
 
   getData(type: string):any {
-    console.log('ShareDataService:getData: data=', this.data[type]);
     return this.data[type];
   }
 }

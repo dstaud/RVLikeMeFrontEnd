@@ -151,6 +151,8 @@ export class RvRigComponent implements OnInit {
 
       this.showSpinner = true;
 
+      this.getRigData();
+
       this.listenForUserProfile();
     }
   }
@@ -228,9 +230,8 @@ export class RvRigComponent implements OnInit {
 
     let SaveIcon = 'show' + control + 'SaveIcon';
     this[SaveIcon] = true;
-    console.log('rigComponent:OnUpdateDatapoint: control=', control, ' value=', this[control].value);
     controlValue = this[control].value;
-    controlValue = controlValue.trim();
+    // controlValue = controlValue.trim();
     this[control].patchValue(controlValue);
     if (this[control].value === '') {
       this.profile[control] = null;
@@ -239,7 +240,6 @@ export class RvRigComponent implements OnInit {
       this.profile[control] = this[control].value;
     }
     this.updateRig(control, this.profile[control]);
-    console.log('rigComponent:onUpdateDataPoint: finished here');
   }
 
 
@@ -277,7 +277,6 @@ export class RvRigComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      console.log('RigComponent:openImageViewDialog: result=', result);
     }, error => {
       this.sentry.logError({"message":"error deleting rig image","error":error});
     });
@@ -409,7 +408,6 @@ export class RvRigComponent implements OnInit {
     .subscribe(profileResult => {
       if (profileResult.firstName) {
         this.profile = profileResult;
-        console.log('RigComponent:listenForProfileuser: profile=', this.profile);
 
         // If user selected other on a form field, need to get the data they entered
         this.handleOtherData('rigType')
@@ -431,7 +429,7 @@ export class RvRigComponent implements OnInit {
           this.newbie = true;
         }
 
-        this.getRigData();
+        // this.getRigData();
       }
     }, (error) => {
       this.showSpinner = false;
@@ -459,7 +457,6 @@ export class RvRigComponent implements OnInit {
       } else {
           this.returnRoute = '';
       }
-      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
     }, error => {
       console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });
@@ -494,7 +491,6 @@ export class RvRigComponent implements OnInit {
       console.error('RigComponent:updateRig: throw error ', error);
       throw new Error(error);
     });
-    console.log('RigComponent:updateRig: back from update, before back from subscribe');
   }
 
 

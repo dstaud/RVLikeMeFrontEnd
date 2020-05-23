@@ -49,7 +49,6 @@ export class LearnMoreComponent implements OnInit {
 
   onRegisterUser() {
     if (this.containerDesktop) {
-      console.log('LearnMoreComponent:onRegisterUser: in desktop headed to regiseter');
       this.headerVisibleSvc.toggleHeaderVisible(false);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
       this.router.navigateByUrl('/?e=register');

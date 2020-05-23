@@ -67,7 +67,6 @@ export class ForgotPasswordComponent implements OnInit {
     userEmail = this.form.controls.userEmail.value;
     this.authSvc.getPasswordResetToken(userEmail, noExpire, 'password-reset')
     .subscribe(tokenResult => {
-      console.log('ForgotPasswordComponent:onSubmit: tokenResult=', tokenResult);
       this.sendPasswordResetEmail(userEmail, tokenResult.token);
       this.shared.openSnackBar('An email has been sent to this email address to reset your password', 'message', 8000);
 
@@ -97,9 +96,8 @@ export class ForgotPasswordComponent implements OnInit {
   private sendPasswordResetEmail(userEmail: string, token:string) {
     this.emailSmtpSvc.sendPasswordResetEmail(userEmail, token)
     .subscribe(sendEmailResult => {
-      console.log('ForgotPasswordComponent:onSubmit: sendEmailResult=',sendEmailResult);
     }, error => {
-      console.log('ForgotPasswordComponent:onSubmit: sending email=', error);
+      console.error('ForgotPasswordComponent:onSubmit: sending email=', error);
       throw new Error(error);
     });
   }

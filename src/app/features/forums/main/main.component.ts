@@ -41,6 +41,7 @@ export class MainComponent implements OnInit {
   private groupID: string;
   private groupProfileCodeAttributesFromGroup = [];
   private groupsListFromUserProfile = [];
+  private yearOfBirthInGroup: boolean = false;
 
   // Interface for profile data
   private profile: IuserProfile;
@@ -98,13 +99,12 @@ export class MainComponent implements OnInit {
 
 
   // Create new group forum based on user's attribute match selections
-  private createGroupForum(names: string, values: string): void {
+  private createGroupForum(names: string, values: string, yearOfBirth): void {
     this.forumSvc.addGroup(names, values)
     .subscribe(group => {
       this.groupID = group._id;
       this.updateProfileGroups();
-      this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
-      console.log('ForumsComponent:createGroupForum: back from get posts')
+      this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth);
     }, error => {
       this.showSpinner = false;
       console.error('ForumsComponentcreateGroupForum: throw error ', error);
@@ -123,15 +123,14 @@ export class MainComponent implements OnInit {
     let names: string;
     let values: string;
     let paramData: IforumsMain;
+    let yearOfBirth: number;
 
     paramData = this.shareDataSvc.getData('forumsMain');
-    console.log('ForumsMainComponent:getGroup: data=', paramData);
 
     if (!this.valuesExist(paramData)) {
       this.router.navigateByUrl('/forums/forums-list');
     } else {
       this.forumType = paramData.forumType;
-      console.log('ForumsMain:getGroups: paramData=', paramData);
       this.showSpinner = true;
       if (paramData.forumType === 'topic') {
         this.forumSvc.getGroupByTopic(paramData.topicID)
@@ -139,7 +138,7 @@ export class MainComponent implements OnInit {
           this.groupID = groupFromServer._id;
           this.topicID = groupFromServer.topic;
           this.topicDesc = groupFromServer.topicDesc;
-          this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+          this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, null);
           this.showSpinner = false;
         }, error => {
           if (error.status === 404) {
@@ -148,19 +147,19 @@ export class MainComponent implements OnInit {
               this.groupID = groupTopic._id;
               this.topicID = groupTopic.topic;
               this.topicDesc = groupTopic.topicDesc;
-              this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+              this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, null);
               this.showSpinner = false;
             })
           }
         });
       } else {
         if (paramData._id) {
-          console.log('ForumsMain:getGroups: id=', paramData._id);
           this.groupID = paramData._id;
           this.forumSvc.getGroupByID(paramData._id)
           .subscribe(groupFromServer => {
             this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
             this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
+            yearOfBirth = this.groupHasYearOfBirth(groupFromServer);
 
             // If there are more than 3 attributes, show only three with ...more on the template.
             if (this.groupProfileDisplayAttributesFromGroup.length > 3) {
@@ -169,12 +168,12 @@ export class MainComponent implements OnInit {
               this.showMoreOption = false;
             }
 
-            this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+            console.log('main get posts yob=', yearOfBirth);
+            this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth);
             this.showSpinner = false;
 
           });
         } else {
-          console.log('ForumsMain:getGroups: params=', paramData);
           this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
           this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
 
@@ -188,6 +187,7 @@ export class MainComponent implements OnInit {
           keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
           names = keyValue[0];
           values = keyValue[1];
+          console.log('names=', names, ' values=', values)
           this.checkIfUserProfileHasGroupAndUpdate(names, values);
         }
       }
@@ -199,7 +199,6 @@ export class MainComponent implements OnInit {
   private getGroupCodeAttributes(group: any): Array<string> {
     let name;
     let groupProfileCodeAttributesFromGroup = [];
-    console.log('ForumsMain:getGroupCodeAttributes: group=', group);
     for (name in group) {
       if (!this.reservedField(name)) {
         groupProfileCodeAttributesFromGroup.push(name);
@@ -209,31 +208,57 @@ export class MainComponent implements OnInit {
   }
 
 
+  private groupHasYearOfBirth(groups: any): number {
+    let yearOfBirth: number = null;
+    let name;
+
+      console.log('group=', groups)
+    for (name in groups) {
+      if (name === 'yearOfBirth') {
+        yearOfBirth = this.profile.yearOfBirth;
+        break;
+      }
+    }
+    console.log('group yearofBirth=', yearOfBirth)
+    return yearOfBirth
+  }
+
   private checkIfUserProfileHasGroupAndUpdate(names: string, values: string) {
     let matchFound: boolean = false;
     let docNotAMatch = false;
+    let yearOfBirthInGroup: boolean = false;
+    let yearOfBirth: number;
+    let groupDocKeys: any;
 
     // Check if group already exists
     this.forumSvc.getGroup(names, values)
     .subscribe(groupsFromServer => {
 
+      console.log('this.groupProfileCodeAttributesFromGroup=', this.groupProfileCodeAttributesFromGroup)
       // Query may return multiple group forums that include the specific name/value pairs user is looking for.
       // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
       // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
+      console.log('groupsFromServer.length=', groupsFromServer.length)
       for (let i = 0; i < groupsFromServer.length; i++) {
-        let groupDocKeys = Object.keys(groupsFromServer[i]);
+        console.log('groupsFromServer=', groupsFromServer[i])
+        groupDocKeys = Object.keys(groupsFromServer[i]);
         docNotAMatch = false;
-
+        console.log('groupDocKeys)=', groupDocKeys)
         // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
         // selected by the user, and make sure that it does not have other attributes.
         for (let j = 0; j < groupDocKeys.length; j++) {
 
           // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
           // this group because it is not an exact match.
+          console.log('groupDocKeys[j])=', groupDocKeys[j])
           if (!this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
 
             if (!this.reservedField(groupDocKeys[j])) {
               docNotAMatch = true;
+            }
+
+            if (groupDocKeys[j] = 'yearOfBirth') {
+              yearOfBirthInGroup = true;
             }
           }
         }
@@ -250,15 +275,21 @@ export class MainComponent implements OnInit {
 
       // if match found, display any posts; otherwise, create the group forum.
       if (matchFound) {
-        this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName);
+        if (yearOfBirthInGroup) {
+          yearOfBirth = this.profile.yearOfBirth;
+        } else {
+          yearOfBirth = null
+        }
+
+        this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth);
         this.showSpinner = false;
       } else {
-        this.createGroupForum(names, values);
+        this.createGroupForum(names, values, yearOfBirth);
       }
     }, error => {
       // if no match at all, create the forum group
       if (error.status === 404) {
-        this.createGroupForum(names, values);
+        this.createGroupForum(names, values, yearOfBirth);
       } else {
         this.showSpinner = false;
         console.error('ForumsMainComponent:getGroup: throw error ', error);
@@ -388,9 +419,6 @@ export class MainComponent implements OnInit {
     let foundValue: boolean = false;
     let keys = Object.keys(params);
     let values = Object.values(params);
-
-    console.log('ForumsMainComponent:verifyInputData: keys=', keys);
-    console.log('ForumsMainComponent:verifyInputData: values=', values);
 
     values.forEach((item: any) => {
       if (item) {

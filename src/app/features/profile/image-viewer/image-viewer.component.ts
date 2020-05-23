@@ -38,7 +38,7 @@ export class ImageViewerComponent implements OnInit {
     if (window.innerWidth > 600) {
       this.containerDialog = true;
     }
-    console.log('ImageViewerComponent:ngOnInit: data=',this.shareDataSvc.getData('viewImage') )
+
     if (!this.shareDataSvc.getData('viewImage').imageSource) {
       if (this.containerDialog) {
         this.formComplete.emit('ok');
@@ -119,7 +119,7 @@ export class ImageViewerComponent implements OnInit {
 
   private deleteLifestyleImageUrlFromProfile(lifestyleImageUrl: string, changeOrDelete: string, newImageFileUrl?: string) {
     let url = 'profile/' + this.imageData.imageType;
-    console.log('ImageViewerComponent:deleteLifestyleImage: deleting on server, iD=', this.imageData.profileID, ' image=', lifestyleImageUrl, 'action=', changeOrDelete)
+
     this.profileSvc.deleteLifestyleImageUrlFromProfile(this.imageData.profileID, lifestyleImageUrl)
     .subscribe(imageResult => {
       if (newImageFileUrl) {

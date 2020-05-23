@@ -247,13 +247,11 @@ export class PersonalComponent implements OnInit {
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onProfileImageSelected(event: any) {
     let fileType: string = 'profile';
-    console.log('PersonalComponent:onProfileImageSelected profile image selected');
 
     if (event.target.files[0]) {
       this.showSpinner = true;
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
         this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-          console.log('PersonalComponent:back from upload');
           this.tempProfileImage = uploadedFileUrl;
           this.showSpinner = false;
           // this.openImageCropperDialog(uploadedFileUrl, 'profile');
@@ -264,10 +262,8 @@ export class PersonalComponent implements OnInit {
           this.sharedDataSvc.setData('profileImage', imageData);
 
           if (this.containerDialog) {
-            console.log('PersonalComponent:onProfileImageSelected opening container dialog');
             this.openImageCropperDialog(uploadedFileUrl)
           } else {
-            console.log('PersonalComponent:onProfileImageSelected going to profile-image');
             this.activateBackArrowSvc.setBackRoute('profile/personal', 'forward');
             this.router.navigateByUrl('/profile/profile-image');
           }
@@ -352,7 +348,6 @@ export class PersonalComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      console.log('PersonComponent:openImageCropperDialog: result=', result);
       this.showSpinner = false;
     });
   }
@@ -376,7 +371,6 @@ export class PersonalComponent implements OnInit {
       } else {
           this.returnRoute = '';
       }
-      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
     }, error => {
       console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });

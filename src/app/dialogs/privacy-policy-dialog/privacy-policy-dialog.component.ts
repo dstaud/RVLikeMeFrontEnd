@@ -19,7 +19,6 @@ export class PrivacyPolicyDialogComponent implements OnInit {
   }
 
   formComplete(event: string) {
-    console.log('PrivacyPolicyDialog:formComplete: event=', event);
     this.dialogRef.close(event);
   }
 

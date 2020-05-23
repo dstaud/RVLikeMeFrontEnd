@@ -145,7 +145,7 @@ ngOnInit() {
     let suggestionType = 'interest';
 
     this.showSpinner = true;
-    console.log('InterestsComponent:onSuggestInterest: adding suggestion=', this.form.controls.suggestInterest.value);
+
     if (this.form.controls.suggestInterest.value) {
       this.adminSvc.addSuggestion(this.form.controls.suggestInterest.value, suggestionType,
                                   this.profile.displayName, this.profile.profileImageUrl)
@@ -245,7 +245,6 @@ ngOnInit() {
       } else {
           this.returnRoute = '';
       }
-      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
     }, error => {
       console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });

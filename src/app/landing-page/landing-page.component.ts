@@ -55,7 +55,7 @@ export class LandingPageComponent implements OnInit {
 
   ngOnInit() {
     let params: Isignin;
-    console.log('LandingPageComponent:ngOnInit: desktopUser=', this.desktopUser);
+
     // Randomly pick one of 3 landing page RV images
     this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
     this.cardNbr = Math.floor(Math.random() * 4) + 1;
@@ -113,7 +113,7 @@ export class LandingPageComponent implements OnInit {
     this.shareDataSvc.setData('signin', param) // To indicate to signin page coming from landing page
     if (this.windowWidth > 600) {
       this.openSigninDialog((result: string) => {
-        console.log('LandingPageComponent:onSignIn: back from dialog. result=', result);
+
         if (result === 'complete') {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
@@ -133,11 +133,9 @@ export class LandingPageComponent implements OnInit {
     this.routeSubscription = this.route
     .queryParams
     .subscribe(params => {
-      console.log('PasswordReset:listenForParameters: params=', params);
       if (params.e === 'signin') {
         if (this.windowWidth > 600) {
           this.openSigninDialog((result: string) => {
-            console.log('LandingPageComponent:listenForParameters: back from signin dialog. result=', result);
             if (result === 'complete') {
               this.activateBackArrowSvc.setBackRoute('', 'forward');
               this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
@@ -151,7 +149,6 @@ export class LandingPageComponent implements OnInit {
       } else if (params.e === 'register') {
         if (this.windowWidth > 600) {
           this.openRegisterDialog((result: string) => {
-            console.log('LandingPageComponent:listenForParameters: back from register dialog. result=', result);
             if (result === 'complete') {
               this.onSignIn();
             }

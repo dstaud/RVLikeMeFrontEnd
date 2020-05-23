@@ -55,7 +55,7 @@ export class NewbieTopicsService {
 
   getNewbieLinks(topicID: string): Observable<any> {
     let param = JSON.parse('{"topicID":"' + topicID + '"}');
-    console.log('NewbieTopicsService:getNewbieLinks: param=', param);
+
     return this.http.get(`/api/newbie-links`, { params: param  });
   }
 

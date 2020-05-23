@@ -35,10 +35,8 @@ export class EmailComponent implements OnInit {
 
     this.emailSmtpSvc.sendEmail(sendTo, subject, body, toFirstName)
     .subscribe(emailResult => {
-      console.log('email sent!  result=', emailResult);
       this.showSpinner = false;
     }, error => {
-      console.log('EmailComponent:onSendEmail: error sending email=',error)
       this.showSpinner = false;
     })
   }

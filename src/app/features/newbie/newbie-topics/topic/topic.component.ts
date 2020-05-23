@@ -53,7 +53,7 @@ export class TopicComponent implements OnInit {
   }
 
   onLinkAdded(event: any) {
-    console.log('TopicComponent:onLinkAdded: =', event);
+
   }
 
 

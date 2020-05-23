@@ -27,7 +27,6 @@ export class SystemDataComponent implements OnInit {
 
     this.adminSvc.getSystemData()
     .subscribe(systemResult => {
-      console.log('SystemDataComponent:ngOnInit: result=', systemResult);
 
       if (systemResult.length > 0) {
         this.systemDataFound = true;
@@ -44,7 +43,6 @@ export class SystemDataComponent implements OnInit {
       }
       this.showSpinner = false;
     }, error => {
-      console.log('SystemDataComponent:ngOnInit: error=', error);
     })
   }
 
@@ -54,24 +52,18 @@ export class SystemDataComponent implements OnInit {
     let useEmail = this.form.controls.useEmail.value;
     let textOnlyEmails = this.form.controls.textOnlyEmails.value;
 
-    console.log('SystemDataComponent:onSubmit: useEmail=', useEmail);
-
     if (!this.systemDataFound) {
       this.adminSvc.setSystemData(useEmail, textOnlyEmails)
       .subscribe(systemResult => {
-        console.log('SystemDataComponent:onSubmit  result=', systemResult);
         this.showSpinner = false;
       }, error => {
-        console.log('SystemDataComponent:onSubmit error: ', error);
         this.showSpinner = false;
       });
     } else {
       this.adminSvc.updateSystemData(useEmail, this.systemID, textOnlyEmails)
       .subscribe(systemResult => {
-        console.log('SystemDataComponent:onSubmit  result=', systemResult);
         this.showSpinner = false;
       }, error => {
-        console.log('SystemDataComponent:onSubmit error: ', error);
         this.showSpinner = false;
       });
     }

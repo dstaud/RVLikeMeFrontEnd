@@ -96,7 +96,6 @@ export class AboutComponent implements OnInit {
       this.daveID = dave.id;
       this.daveDisplayName = dave.displayName;
       this.daveProfileImageUrl = dave.profileImageUrl;
-      console.log('AboutComponent:getDaveInfo: dave=', dave);
     }, error => {
       if (error.status === 404) {
         this.sentry.logError({"status":404, "message":"Dave's credentials not found!"});

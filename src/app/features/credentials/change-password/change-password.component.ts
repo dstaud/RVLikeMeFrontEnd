@@ -93,11 +93,9 @@ export class ChangePasswordComponent implements OnInit {
     this.newCredentials.password = this.form.controls.currentPassword.value;
     this.newCredentials.newPassword = this.form.controls.newPassword.value;
 
-    console.log('ChangePasswordComponent:onSubmit: credentials=', this.newCredentials);
     this.authSvc.changePassword(this.newCredentials)
     .pipe(untilComponentDestroyed(this))
     .subscribe(passwordResult => {
-      console.log('ChangePasswordComponent:onSubmit: result=', passwordResult);
       this.httpError = false;
       this.showSpinner = false;
       this.shared.openSnackBar('Your password has been updated successfully', 'message', 5000);
@@ -113,7 +111,6 @@ export class ChangePasswordComponent implements OnInit {
         this.showSpinner = false;
         this.form.enable();
       } else {
-        console.log('ChangePasswordComponent:onSubmit: error changing password=', error);
         this.showSpinner = false;
         throw new Error(error);
       }
@@ -129,7 +126,6 @@ export class ChangePasswordComponent implements OnInit {
     .pipe(take(1))
     .subscribe(credentials => {
       this.credentials = credentials;
-      console.log('ChangePasswordComponent:getCredentials: credentials=', this.credentials);
       this.showSpinner = false;
       this.form.enable();
     }, error => {

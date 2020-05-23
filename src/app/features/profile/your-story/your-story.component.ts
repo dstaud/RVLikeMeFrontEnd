@@ -138,7 +138,7 @@ export class YourStoryComponent implements OnInit {
     dialogRef.afterClosed()
     .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
-      console.log('closed dialog')
+
     });
   }
 
@@ -152,7 +152,6 @@ export class YourStoryComponent implements OnInit {
       this.userID = paramData.userID;
       this.userIdViewer = paramData.userIdViewer;
       this.paramsForMessaging = paramData.params;
-      console.log('YourStoryComponent:getParameters: paramData=', paramData);
       this.listenForUserProfile();
     } else {
       this.router.navigateByUrl('/home/dashboard');
@@ -169,11 +168,10 @@ export class YourStoryComponent implements OnInit {
       } else {
         this.userMyStory = profileResult.displayName + ' has not yet published a story';
       }
-      console.log('YourStoryComponent:listenForUserProfile: my story=', this.userMyStory)
       if (profileResult.profileImageUrl) {
         this.userProfileImage = profileResult.profileImageUrl;
       }
-      console.log('YourStoryComponent:listenForUserProfile: profile image=', this.userProfileImage);
+
       this.userDisplayName = profileResult.displayName
       if (profileResult.aboutMe) {
         if (profileResult.aboutMe.substring(0,1) === '@') {
@@ -240,7 +238,6 @@ export class YourStoryComponent implements OnInit {
       } else {
           this.returnRoute = '';
       }
-      console.log('YourStoryComponent:ngOnInit: Return Route=', this.returnRoute);
     }, error => {
       console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
     });

@@ -12,7 +12,6 @@ export class ImageDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ImageDialogComponent>) { }
 
   ngOnInit() {
-    console.log('ImageDialogComponent:ngOnInit');
   }
 
   formComplete(event: string) {

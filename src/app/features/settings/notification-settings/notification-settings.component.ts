@@ -58,11 +58,8 @@ export class NotificationSettingsComponent implements OnInit {
 
   onNotify() {
     this.showSpinner = true;
-    console.log('SideNavComponent:onNotify: in onNotify');
-    console.log('SideNavComponent:onNotify: notify=', this.profile.notifySubscription);
     this.subscribeNotificationsSvc.sendNotificationTest(this.profile.notifySubscription)
     .subscribe(notifyResult => {
-      console.log('onNotify: message should be on the way', notifyResult);
       this.showSpinner = false;
     }, error => {
       console.error('onNotify: throw error ', error);
@@ -73,18 +70,14 @@ export class NotificationSettingsComponent implements OnInit {
 
   // Subscribe to push notifications
   onSubscribeNotifications() {
-    console.log('onSubscribeNotifications: swUpdate enabled=', this.swUpdate.isEnabled);
     if (this.swUpdate.isEnabled) {
       this.showSpinner = true;
-      console.log('onSubscribeNotifications: swUpdate is enabled. requesting sub with key=', environment.vapidPublicKey);
       this.swPush.requestSubscription({
         serverPublicKey: environment.vapidPublicKey
       })
       .then(subscription => {
-        console.log('onSubscribeNotifications: calling server with subscription ', subscription);
         this.subscribeNotificationsSvc.subscribeToNotifications(this.profileID, subscription)
         .subscribe(subscribeResults => {
-          console.log('onSubscribeNotifications: received server response=', subscribeResults);
           this.showSpinner = false;
         }, error => {
           console.error('onSubscribeNotifications: throw error ', error);
@@ -106,7 +99,6 @@ export class NotificationSettingsComponent implements OnInit {
     this.showSpinner = true;
     this.subscribeNotificationsSvc.unsubscribeFromNotifications(this.profileID)
     .subscribe(unsubscribeResults => {
-      console.log('onSubscribeNotifications: received server response=', unsubscribeResults);
       this.showSpinner = false;
     }, error => {
       console.error('onSubscribeNotifications: throw error ', error);
@@ -140,7 +132,6 @@ export class NotificationSettingsComponent implements OnInit {
     .subscribe(user => {
       this.authSvc.getDaveInfo()
       .subscribe(daveInfo => {
-        console.log('NotificationSettingsComponent:listenForAdmin: useremail=', user.email, ' daveemail=', daveInfo);
         if (user.email === daveInfo.email) {
           this.showPushNotifications = true;
         }

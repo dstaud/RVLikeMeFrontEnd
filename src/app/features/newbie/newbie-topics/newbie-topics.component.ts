@@ -126,12 +126,10 @@ export class NewbieTopicsComponent implements OnInit {
   onTopic(topicID: string, topicDesc: string) {
     let params: InewbieTopic;
 
-    console.log('HelpNewbieTopics:onTopic: checking topic=', topicID);
     if (!this.findTopic(topicID)) {
-      console.log('HelpNewbieTopics:onTopic: topic not found, adding topic=', topicID);
+
       this.newbieTopicsSvc.addNewbieTopic(topicID,  topicDesc, this.profile.displayName, this.profile.profileImageUrl)
       .subscribe(topicResult => {
-        console.log('HelpNewbieTopics:onTopic: topic added=', topicResult);
       }, error => {
         if (error.status === 403) {
           this.sentry.logError({"status":403,"message":"unable to listen for like me counts","error":error});

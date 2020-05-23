@@ -65,7 +65,6 @@ export class RegisterConfirmComponent implements OnInit {
     this.listenBeforeInstall();
 
     this.device = this.deviceSvc.device;
-    console.log('RegisterConfirmComponent:ngOnInit: device=', this.device);
 
     this.setImageBasedOnScreenWidth();
 
@@ -192,7 +191,6 @@ export class RegisterConfirmComponent implements OnInit {
   private validateToken() {
     this.authSvc.validatePasswordResetToken(this.token)
     .subscribe(tokenResult => {
-      console.log('PasswordReset:validateToken: tokenResult=', tokenResult);
       this.activateUser(tokenResult.tokenID);
     }, error => {
       console.error('PasswordReset:validateToken: error validating token.  error=', error);

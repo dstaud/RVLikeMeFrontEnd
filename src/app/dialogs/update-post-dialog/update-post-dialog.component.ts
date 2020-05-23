@@ -21,7 +21,6 @@ export class UpdatePostDialogComponent implements OnInit {
   }
 
   formComplete(event: string) {
-    console.log('UpdatePostDialog:formComplete: event=', event);
     this.dialogRef.close(event);
   }
 }

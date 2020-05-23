@@ -28,7 +28,6 @@ export class EmailSmtpService {
     let param = '{"sendTo":"' + sendTo + '",' +
                 '"token":"' + token + '"}';
 
-    console.log('EmailSMTPService:sendRegisterEmail: token=', token, ' param=', param);
     return this.http.post(`/api/send-register-email`, param, {});
   }
 
@@ -38,21 +37,18 @@ export class EmailSmtpService {
     let param = '{"sendTo":"' + sendTo + '",' +
                 '"token":"' + token + '"}';
 
-    console.log('EmailSMTPService:sendWelcomeEmail: token=', token, ' param=', param);
     return this.http.post(`/api/send-welcome-email`, param, {});
   }
 
   sendMessageAlertEmail(sendTo: string): Observable<any> {
     let param = '{"sendTo":"' + sendTo + '"}';
 
-    console.log('EmailSMTPService:sendMessageAlertEmail:, param=', param);
     return this.http.post(`/api/send-message-alert-email`, param, {});
   }
 
   sendPasswordResetEmail(sendTo: string, token: string): Observable<any> {
     let param = '{"sendTo":"' + sendTo + '","token":"' + token + '"}';
 
-    console.log('EmailSMTPService:sendPasswordResetEmail:, param=', param);
     return this.http.post(`/api/send-password-reset-email`, param, {});
   }
 }

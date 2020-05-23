@@ -50,7 +50,7 @@ export class ImageCropperComponent implements OnInit {
     if (window.innerWidth > 600) {
       this.containerDialog = true;
     }
-    console.log('ImageCropperComponent:ngOnInit: data=', this.shareDataSvc.getData('profileImage'));
+
     if (!this.shareDataSvc.getData('profileImage').imageSource) {
       if (this.containerDialog) {
         this.formComplete.emit('canceled');
@@ -61,7 +61,6 @@ export class ImageCropperComponent implements OnInit {
       let data = this.shareDataSvc.getData('profileImage');
       this.imageSource = data.imageSource;
       this.profileID = data.profileID;
-      console.log('ImageCropperComponent:ngOnInit: imageSource=', this.imageSource);
     }
   }
 

@@ -125,11 +125,6 @@ export class UploadImageService {
     // I originally tried to use the upload that is included with the compressFile that gets the orientation, but had to remove it because would not
     // work on the iPhone.   I had to upload myself, and then, I thought, get the orientation myself and then call compress.
     reader.onload = (event: any) => {
-      // Get image orientation so can adjust it when compressing
-      // exifr.orientation(imageFromSource).catch(err => undefined).then(orient => {
-      //   orientation = orient;
-      // });
-      // console.log('compressing file.  Do I have orientation?  orientation=', orientation);
       this.compressFile(event.target.result, fileName, orientation, (imageFile: File) => {
         cb(imageFile);
       });

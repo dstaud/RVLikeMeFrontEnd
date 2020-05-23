@@ -76,6 +76,8 @@ export class PostsComponent implements OnInit {
   groupID: string;
   userID: string;
   displayName: string;
+  yearOfBirth: number;
+  rigLength: number;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   posts: Array<Iposts> = [];
   comments: Array<Array<Icomments>> = [];
@@ -150,7 +152,7 @@ export class PostsComponent implements OnInit {
   }
 
   // Get all posts for group passed from forums component.
-  getPosts(groupID: string, forumType: string, profileImageUrl: string, displayName: string): void {
+  getPosts(groupID: string, forumType: string, profileImageUrl: string, displayName: string, yearOfBirth: number): void {
     this.showSpinner = true;
     this.groupID = groupID;
     this.forumType = forumType;
@@ -159,8 +161,7 @@ export class PostsComponent implements OnInit {
     }
     this.displayName = displayName;
 
-    this.getPostsFromDatabase();
-    console.log('PostsComponent:getPosts: back from getting posts from db');
+    this.getPostsFromDatabase(yearOfBirth);
   }
 
 
@@ -173,8 +174,6 @@ export class PostsComponent implements OnInit {
 
   // When user clicks comment, open up the comments for viewing
   onComment(row: number) {
-    console.log('PostsComponent:onComment: row=', row, ' post=', this.posts[row].body, ' comments=', this.comments[row]);
-    console.log('PostsComponent:onComment: commentsOpen=', this.commentsOpen[row]);
     this.commentsOpen[row] = this.commentsOpen[row] === 'out' ? 'in' : 'out';
     this.showPostComments[row] = !this.showPostComments[row];
   }
@@ -185,7 +184,6 @@ export class PostsComponent implements OnInit {
 
     this.forumSvc.deletePost(this.posts[row]._id)
     .subscribe(forumResult => {
-      console.log('PostsComponent:onDeletePost: post deleted=', forumResult);
       this.posts.splice(row, 1);
 
     }, error => {
@@ -213,7 +211,6 @@ export class PostsComponent implements OnInit {
 
 
   onLink(row: number) {
-    console.log('PostsComponent:onLink: post url=', this.posts[row].link)
     window.open(this.posts[row].link, '_blank');
   }
 
@@ -242,9 +239,7 @@ export class PostsComponent implements OnInit {
 
     if (this.windowWidth > 600) {
       this.openUpdatePostDialog((result: any) => {
-        console.log('PostsComponent:onUpdatePost: back from dialog. result=', result);
         if (result !== 'canceled') {
-          console.log('PostsComponent:onUpdatePost: result=', result);
           post = result;
           this.posts[row].body = post.body;
           this.posts[row].postPhotoUrl = post.photoUrl;
@@ -363,7 +358,6 @@ export class PostsComponent implements OnInit {
       photoUrl = post.photoUrl;
     }
 
-    console.log('PostsComponent:createPostsArrayEntry: post link=', post.link)
     if (post.link !== 'undefined' && post.link !== undefined) {
       if (post.link.substring(0,7) == 'http://') {
         link = post.link.substring(7,post.link.length);
@@ -418,14 +412,14 @@ export class PostsComponent implements OnInit {
 
 
   // Get all posts for the group
-  private getPostsFromDatabase() {
+  private getPostsFromDatabase(yearOfBirth) {
     let post: Iposts;
     let comment: Icomments;
     let postComments: Array<Icomments> = [];
 
     this.posts = [];
 
-    this.forumSvc.getPosts(this.groupID)
+    this.forumSvc.getPosts(this.groupID, yearOfBirth)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
       if (postResult.length === 0) {
@@ -476,8 +470,13 @@ export class PostsComponent implements OnInit {
       }
     }, error => {
       this.showSpinner = false;
-      console.error('PostsComponent:getPosts: throw error ', error);
-      throw new Error(error);
+      if (error.status === 404) {
+        this.showFirstPost = true;
+        this.showPosts = false;
+      } else {
+        console.error('PostsComponent:getPosts: throw error ', error);
+        throw new Error(error);
+      }
     });
   }
 
@@ -505,6 +504,8 @@ export class PostsComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
       this.userID = profile.userID;
+      this.yearOfBirth = profile.yearOfBirth;
+      this.rigLength = profile.rigLength;
 
       if (this.profile.aboutMe === 'newbie' || this.profile.aboutMe === 'dreamer') {
         this.userNewbie = true;
@@ -530,14 +531,6 @@ export class PostsComponent implements OnInit {
   }
 
   private packageParamsForMessaging(toUserID: string, toDisplayName: string, toProfileImageUrl: string): ImessageShareData {
-    // let params: string;
-    // params = '{"fromUserID":"' + this.userID + '",' +
-    //           '"fromDisplayName":"' + this.displayName + '",' +
-    //           '"fromProfileImageUrl":"' + this.profileImageUrl + '",' +
-    //           '"toUserID":"' + toUserID + '",' +
-    //           '"toDisplayName":"' + toDisplayName + '",' +
-    //           '"toProfileImageUrl":"' + toProfileImageUrl + '"}';
-
     let params: ImessageShareData = {
       fromUserID: this.userID,
       fromDisplayName: this.displayName,

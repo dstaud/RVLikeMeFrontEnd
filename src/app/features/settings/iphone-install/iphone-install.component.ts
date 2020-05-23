@@ -21,7 +21,6 @@ export class IphoneInstallComponent implements OnInit {
               private location: Location) { }
 
   ngOnInit(): void {
-    console.log('iPhoneInstallComponent:ngOnInit:')
     let backPath;
     let self = this;
     window.onpopstate = function(event) {

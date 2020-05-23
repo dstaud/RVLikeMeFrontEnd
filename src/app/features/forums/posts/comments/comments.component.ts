@@ -56,10 +56,6 @@ export class CommentsComponent implements OnInit {
       params: userParams
     }
 
-    // let params = '{"userID":"' + toUserID + '",' +
-    //                   '"userIdViewer":"' + this.userID + '",' +
-    //                   '"params":' + userParams + '}';
-    console.log('CommentsComponent:onYourStory: params=', params);
     // this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
     this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
