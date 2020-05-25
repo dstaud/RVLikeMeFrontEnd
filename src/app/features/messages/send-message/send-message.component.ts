@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, AfterViewChecked, DoCheck, ElementRef, IterableDiffer, IterableDiffers, ɵConsole } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, IterableDiffers } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -24,8 +24,15 @@ import { DeviceService } from '@services/device.service';
 })
 export class SendMessageComponent implements OnInit {
 
-  // @ViewChild(FormGroupDirective) myForm;
-  // @ViewChild('scrollable') private scrollable: ElementRef;
+  @ViewChild(FormGroupDirective) myForm;
+
+  @ViewChild('scrollable') private scrollable: ElementRef;
+
+  // Set focus to input field
+  @ViewChild('message') messageInput: ElementRef;
+  focusOnPostInput(): void {
+    this.messageInput.nativeElement.focus();
+  }
 
   form: FormGroup;
   fromUserID: string;
@@ -79,7 +86,7 @@ export class SendMessageComponent implements OnInit {
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
-
+    console.log('SendMessageComponent:ngOnInit:')
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
@@ -90,14 +97,10 @@ export class SendMessageComponent implements OnInit {
         console.log('SendMessageComponent:ngOnInit: getting conversations')
       }
 
-      if (this.desktopUser) {
-        this.getParameters();
-        // this.listenForUserConversations();
-      }
-      else {
-        console.log('SendMessageComponent:ngOnInit: getting parameters')
-        this.getParameters();
-      }
+      this.listenForUserProfile();
+
+      this.getParameters()
+
       this.listenForChangeInColorTheme();
     }
   }
@@ -108,7 +111,7 @@ export class SendMessageComponent implements OnInit {
     }
   }
 
-  ngAfterViewChecked(): void {``
+  ngAfterViewChecked(): void {
     // const isScrolledDown = Math.abs(this.scrollable.nativeElement.scrollHeight - this.scrollable.nativeElement.scrollTop - this.scrollable.nativeElement.clientHeight) <= 3.0;
 
     // if (this.numberOfMessagesChanged && !isScrolledDown) {
@@ -135,7 +138,7 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-    // This component expects data passed through a shared data service.
+  // This component expects data passed through a shared data service.
   // If no data (because user bookmarked this page perhaps), then redirect to message-list component.
   // Once have parameters, take action
   getParameters(params?: ImessageShareData) {
@@ -144,8 +147,10 @@ export class SendMessageComponent implements OnInit {
 
     if (!this.shareDataSvc.getData('message').fromUserID && !params) {
       if (this.desktopUser) {
+        console.log('SendMessageComponent:getParameters: listening for conversations');
         this.listenForUserConversations();
       } else {
+        console.log('SendMessageComponent:getParameters: no param data and device, route to list');
         this.router.navigateByUrl('/messages/message-list');
       }
     } else {
@@ -188,7 +193,7 @@ export class SendMessageComponent implements OnInit {
     .subscribe(messageResult => {
       this.messages.push(messageResult.messages[messageResult.messages.length - 1]);
 
-      // this.myForm.resetForm(); // Only way to reset the form without having it invalidate because field is required.
+      this.myForm.resetForm(); // Only way to reset the form without having it invalidate because field is required.
 
       if (this.newConversation) {
         this.messagesSvc.getConversations();
@@ -283,6 +288,7 @@ export class SendMessageComponent implements OnInit {
 
 
   private getOtherUserProfile() {
+    console.error('SendMessageComponent:getOtherUserProfile: getting profile for other user =', this.toUserID, this.toDisplayName);
     this.profileSvc.getUserProfile(this.toUserID)
     .subscribe(profileResult => {
       this.sendMessageEmails = profileResult.sendMessageEmails;
@@ -313,33 +319,68 @@ export class SendMessageComponent implements OnInit {
     this.userConversations
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
-      console.log('conversations=', conversations, ' length=', conversations.length)
+      console.log('SendMessageComponent:listenForUserConversations: conversations=', conversations, ' length=', conversations.length)
 
       if (conversations.length > 0) {
         if (conversations[0]._id) {
           message = conversations[0].messages[conversations[0].messages.length - 1];
           console.log('SendMessageComponent:listenForUserConversations: message=', message);
-          params = {
-            fromUserID: message.createdBy,
-            fromDisplayName: message.createdByDisplayName,
-            fromProfileImageUrl: message.createdByProfileImageUrl,
-            toUserID: message.sentToUserID,
-            toDisplayName: message.sentToDisplayName,
-            toProfileImageUrl: message.sentToProfileImageUrl,
-            conversationID: conversations[0]._id
+          if (this.profile.userID === message.createdBy) { // profile not there yet!  Geez.
+            console.log('SendMessageComponent:listenForUserConversations: user is from user');
+            params = {
+              fromUserID: message.createdBy,
+              fromDisplayName: message.createdByDisplayName,
+              fromProfileImageUrl: message.createdByProfileImageUrl,
+              toUserID: message.sentToUserID,
+              toDisplayName: message.sentToDisplayName,
+              toProfileImageUrl: message.sentToProfileImageUrl,
+              conversationID: conversations[0]._id
+            }
+          } else {
+            console.log('SendMessageComponent:listenForUserConversations: user is to user');
+            params = {
+              fromUserID: message.sentToUserID,
+              fromDisplayName: message.sentToDisplayName,
+              fromProfileImageUrl: message.sentToProfileImageUrl,
+              toUserID: message.createdBy,
+              toDisplayName: message.createdByDisplayName,
+              toProfileImageUrl: message.createdByProfileImageUrl,
+              conversationID: conversations[0]._id
+            }
           }
+
+          console.log('SendMessageComponent:listenForUserConversations: params=', params);
           this.getParameters(params);
         } else {
-          this.router.navigateByUrl('/messages/message-list');
+          console.log('SendMessageComponent:listenForUserConversations: no conversation ID conversations=', conversations);
+          // this.router.navigateByUrl('/messages/message-list');
         }
       } else {
-        this.router.navigateByUrl('/messages/message-list');
+        console.log('SendMessageComponent:listenForUserConversations: conversations length zero conversations=', conversations);
+        // this.router.navigateByUrl('/messages/message-list');
       }
     }, error => {
       console.error('MessageList:listenForUserConversations: unable to get conversations. Error=', error);
       throw new Error(error);
     });
   }
+
+
+    // Listen for Profile changes
+    private listenForUserProfile() {
+      this.userProfile = this.profileSvc.profile;
+      this.userProfile
+      .pipe(untilComponentDestroyed(this))
+      .subscribe(data => {
+
+        if (data._id) {
+          this.profile = data;
+        }
+      }, error => {
+        console.error('MessageListComponent:listenForUserProfile: error getting user profile. error=', error);
+        throw new Error(error);
+      });
+    }
 
 
   private packageParamsForMessaging(): ImessageShareData {
@@ -356,13 +397,13 @@ export class SendMessageComponent implements OnInit {
   }
 
 
-  // scrollToBottom() {
-  //   try {
-  //       this.scrollable.nativeElement.scrollTop = this.scrollable.nativeElement.scrollHeight;
-  //   } catch (e) {
-  //       console.error('SendMessageComponent:scrollToBottom:', e);
-  //   }
-  // }
+  scrollToBottom() {
+    try {
+        this.scrollable.nativeElement.scrollTop = this.scrollable.nativeElement.scrollHeight;
+    } catch (e) {
+        console.error('SendMessageComponent:scrollToBottom:', e);
+    }
+  }
 
 
   // Send notification to recipient about new message if user wants them and if the user's email was verified

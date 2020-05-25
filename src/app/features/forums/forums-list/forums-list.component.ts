@@ -121,7 +121,11 @@ export class ForumsListComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute('forums/forums-list', 'forward');
 
     if (this.desktopUser) {
-      this.groupSelected.emit(group._id);
+      if (this.location.path() === '/forums/forums-list') {
+        this.router.navigateByUrl('/forums/main');
+      } else {
+        this.groupSelected.emit(group._id);
+      }
     } else {
       this.router.navigateByUrl('/forums/posts-main');
     }

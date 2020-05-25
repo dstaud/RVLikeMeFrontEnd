@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Location } from '@angular/common';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
@@ -46,6 +47,7 @@ export class LandingPageComponent implements OnInit {
               private headerVisibleSvc: HeaderVisibleService,
               private dialog: MatDialog,
               private route: ActivatedRoute,
+              private location: Location,
               private shareDataSvc: ShareDataService,
               private router: Router) {
         if (window.innerWidth > 600) {
@@ -80,6 +82,7 @@ export class LandingPageComponent implements OnInit {
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.activateBackArrowSvc.setBackRoute('', 'forward');
+    console.log('LandingPageComponent:onLearnMore: navigating to learn-more');
     this.router.navigateByUrl('/learn-more');
   }
 
@@ -96,6 +99,7 @@ export class LandingPageComponent implements OnInit {
     } else {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      console.log('LandingPageComponent:onRegister: navigating to Register');
       this.router.navigateByUrl('/register');
       this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
@@ -117,12 +121,14 @@ export class LandingPageComponent implements OnInit {
         if (result === 'complete') {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
+          console.log('LandingPageComponent:onSignin: navigating to home/dashboard');
           this.router.navigateByUrl('/home/dashboard');
         }
       });
     } else {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+      console.log('LandingPageComponent:onSignin: navigating to signin');
       this.router.navigateByUrl('/signin');
       this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
@@ -137,13 +143,17 @@ export class LandingPageComponent implements OnInit {
         if (this.windowWidth > 600) {
           this.openSigninDialog((result: string) => {
             if (result === 'complete') {
-              this.activateBackArrowSvc.setBackRoute('', 'forward');
+              // this.activateBackArrowSvc.setBackRoute('', 'forward');
               this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-              this.router.navigateByUrl('/home/dashboard');
+              console.log('LandingPageComponent:listenForParameters: navigating to home/dashboard path=', this.location.path());
+              if (!this.location.path()) {
+                this.router.navigateByUrl('/home/dashboard');
+              }
             }
           });
         } else {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
+          console.log('LandingPageComponent:listenForParameters: navigating to signin');
           this.router.navigateByUrl('/signin');
         }
       } else if (params.e === 'register') {
@@ -155,6 +165,7 @@ export class LandingPageComponent implements OnInit {
           });
         } else {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
+          console.log('LandingPageComponent:listenForParameters: navigating to register');
           this.router.navigateByUrl('/register');
         }
       }

@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     if (window.innerWidth <= 600) {
-      this.router.navigateByUrl('forums/posts-main');
+      this.router.navigateByUrl('messages/message-list');
     }
   }
 

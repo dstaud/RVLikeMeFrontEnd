@@ -162,7 +162,7 @@ export class MainComponent implements OnInit {
           this.processMatch(this.profileKeys[i], this.profileValues[i]);
         } else {
           console.log('connections key =', this.profileKeys[i], ' type=',typeof(this.profile[this.profileKeys[i]]));
-          if (typeof(this.profile[this.profileKeys[i]]) !== 'number') {  // numeric variables
+          if (typeof(this.profile[this.profileKeys[i]]) !== 'number' && this.profile[this.profileKeys[i]]) {  // numeric variables
             if (this.profileKeys[i] !== 'allCounts') {
               console.log('connections key=',this.profileKeys[i], this.profile[this.profileKeys[i]], typeof(this.profile[this.profileKeys[i]]) )
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {

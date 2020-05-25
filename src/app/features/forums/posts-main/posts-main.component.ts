@@ -79,6 +79,8 @@ export class PostsMainComponent implements OnInit {
       this.listenForChangeInColorTheme();
 
       this.listenForUserProfile();
+
+      this.getGroupParams();
     }
   }
 
@@ -101,50 +103,13 @@ export class PostsMainComponent implements OnInit {
   }
 
 
-    // If coming from groups list, we know the user already has this group in their profile and we have the group ID
-  // so get group information by key. Otherwise, queryParams sent from connections page will contain one or more profile attributes that will define a group forum.
-  // getGroup extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
-  // If the group does exist, it asks the server for all posts for the group forum for display in the template.
-  // If the group does not exist, it asks the server to create the group forum.
-  getGroup(groupID?: string): void {
+
+  getGroup(paramData: any) {
+    let yearOfBirth: number;
+    let rigLength: number;
     let keyValue: Array<string>;
     let names: string;
     let values: string;
-    let paramData: IforumsMain;
-    let yearOfBirth: number;
-    let rigLength: number;
-    let index: number;
-    let forumsList: Array<IforumList>
-
-    if (groupID) {
-      paramData = {
-        _id: groupID,
-        forumType: 'group'
-      }
-    } else {
-      paramData = this.shareDataSvc.getData('forumsMain');
-    }
-
-    console.log('In Forums Main, paramData=', paramData);
-    if (!this.valuesExist(paramData)) {
-      // If no parameters, default to a random group
-      if (this.desktopUser) {
-
-        if (this.profile.forums.length > 0) {
-          index = Math.floor(Math.random() * this.profile.forums.length - 1) + 1;
-          forumsList = this.profile.forums;
-          console.log('profile forums 0=', forumsList[index]._id)
-          paramData = {
-            _id: forumsList[index]._id,
-            forumType: 'group'
-          }
-        } else {
-          this.router.navigateByUrl('/forums/forums-list');
-        }
-      } else {
-        this.router.navigateByUrl('/forums/forums-list');
-      }
-    }
 
     this.forumType = paramData.forumType;
     this.showSpinner = true;
@@ -213,8 +178,6 @@ export class PostsMainComponent implements OnInit {
       }
     }
   }
-
-
   // Create new group forum based on user's attribute match selections
   private createGroupForum(names: string, values: string, yearOfBirth: number, rigType: number): void {
     this.forumSvc.addGroup(names, values)
@@ -240,6 +203,55 @@ export class PostsMainComponent implements OnInit {
       }
     }
     return groupProfileCodeAttributesFromGroup;
+  }
+
+
+  // If coming from groups list, we know the user already has this group in their profile and we have the group ID
+  // so get group information by key. Otherwise, queryParams sent from connections page will contain one or more profile attributes that will define a group forum.
+  // getGroup extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
+  // If the group does exist, it asks the server for all posts for the group forum for display in the template.
+  // If the group does not exist, it asks the server to create the group forum.
+  getGroupParams(groupID?: string): void {
+    let paramData: IforumsMain;
+    let index: number;
+    let forumsList: Array<IforumList>
+
+    if (groupID) {
+      paramData = {
+        _id: groupID,
+        forumType: 'group'
+      }
+    } else {
+      paramData = this.shareDataSvc.getData('forumsMain');
+    }
+
+    console.log('PostsMainComponent:getGroup:, paramData=', paramData);
+    if (!this.valuesExist(paramData)) {
+      if (this.desktopUser) {
+        // If no parameters, default to a random group (assuming have profile data)
+        if (this.profile.forums.length > 0) {
+          console.log('PostsMainComponent:getGroup: this.profile.forums=', this.profile.forums);
+          index = Math.floor(Math.random() * this.profile.forums.length - 1) + 1;
+          forumsList = this.profile.forums;
+          console.log('profile forums 0=', forumsList[index]._id)
+          paramData = {
+            _id: forumsList[index]._id,
+            forumType: 'group'
+          }
+
+          this.getGroup(paramData);
+
+        } else {
+          console.log('PostsMainComponent:getGroup: no profile forums, going to list');
+          this.router.navigateByUrl('/forums/forums-list');
+        }
+      } else {
+        console.log('PostsMainComponent:getGroup: device user and no data, going to list');
+        this.router.navigateByUrl('/forums/forums-list');
+      }
+    } else {
+      this.getGroup(paramData);
+    }
   }
 
 
@@ -355,13 +367,15 @@ export class PostsMainComponent implements OnInit {
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
     console.log('PostsMainComponent:getGroupDisplayAttributes: group=', group);
-    if (group.length === 1 && !group._id) {
-      // do nothing
+    if (group._id === null || group._id === 'null') {
+      console.log('PostsMainComponent:getGroupDisplayAttributes: null group id');
     } else {
       for (name in group) {
         if (!this.reservedField(name)) {
           value = group[name];
-          if (value === 'true' || value === true) {
+          console.log('PostsMain:getGroupDisplayAttributes: type of=', typeof(value), ' name=', name, ' value=', value)
+          if (value === null || value === 'null') {
+            console.log('PostsMain:getGroupDisplayAttributes: value null= ', name, ', value=', value)
             forumItem = 'forums.component.' + name;
           } else {
             if (name === 'rigManufacturer' || name === 'rigBrand') {
@@ -370,6 +384,7 @@ export class PostsMainComponent implements OnInit {
               if (name === 'yearOfBirth' || name === 'rigLength') {
                 forumItem = 'forums.component.' + name;
               } else {
+                console.log('PostsMain:getGroupDisplayAttributes: about to use toLowerCase on name=', name, ' group=', group)
                 forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
               }
             }
@@ -433,7 +448,6 @@ export class PostsMainComponent implements OnInit {
       this.profile = data;
       if (this.profile._id) {
         this.groupsListFromUserProfile = this.profile.forums;
-        this.getGroup();
       }
     }, error => {
       console.error('ForumsMainComponent:listenForUserProfile: error getting profile ', error);
@@ -443,7 +457,8 @@ export class PostsMainComponent implements OnInit {
 
 
   private reservedField(name: string): boolean {
-    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' || name === '__v' || name === 'theme' || name === 'forumType') {
+    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' ||
+        name === '__v' || name === 'theme' || name === 'forumType' || name === 'topicID' || name === 'topicDesc') {
       return true;
     } else { return false }
   }
@@ -451,6 +466,7 @@ export class PostsMainComponent implements OnInit {
 
   // Update group forum array in user's profile with new group they are associated with.
   private updateProfileGroups() {
+    console.log('PostsMain:updateProfileGroups: groups=', this.groupsListFromUserProfile)
     let groupFound = false;
     for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
       if (this.groupsListFromUserProfile[i]._id === this.groupID) {
@@ -459,9 +475,11 @@ export class PostsMainComponent implements OnInit {
       }
     }
     if (!groupFound) {
+      console.log('PostsMain:updateProfileGroups: adding to profile id=', this.profile._id, ' group=', this.groupID);
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
+        console.log('PostsMain:updateProfileGroups: added group profile=', this.profile)
         this.profileSvc.getProfile();
         this.showSpinner = false;
       }, error => {

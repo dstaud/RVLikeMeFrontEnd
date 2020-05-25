@@ -93,7 +93,7 @@ export class SigninComponent implements OnInit {
               } else {
                 this.headerVisibleSvc.toggleHeaderVisible(true);
                 this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-                this.activateBackArrowSvc.setBackRoute('', 'forward');
+                // this.activateBackArrowSvc.setBackRoute('', 'forward');
               }
               this.setReturnRoute();
   }
@@ -252,17 +252,20 @@ export class SigninComponent implements OnInit {
       // User booked-marked a specific page which can route too after authorization
       this.formCompleted = 'complete';
       this.formComplete.emit(this.formCompleted);
-      this.activateBackArrowSvc.setBackRoute('');
+      this.activateBackArrowSvc.setBackRoute('', 'nostack');
+      console.log('SigninComponent:handleReturnRoute: returning to ', this.returnRoute)
       this.router.navigateByUrl(this.returnRoute);
     } else {
       if (this.containerDialog) {
         this.formCompleted = 'complete';
+        console.log('SigninComponent:handleReturnRoute: emitting back up the chain')
         this.formComplete.emit(this.formCompleted);
       } else {
         // After user authorizied go to home page
         this.ShareDataSvc.setData('dashboard', params);
+        console.log('SigninComponent:handleReturnRoute: routing to ', '/home/dashboard')
         this.router.navigateByUrl('/home/dashboard');
-        this.activateBackArrowSvc.setBackRoute('');
+        this.activateBackArrowSvc.setBackRoute('', 'nostack');
       }
     }
   }
@@ -321,17 +324,35 @@ export class SigninComponent implements OnInit {
 
 
   private setReturnRoute() {
+    console.log('SigninComponent:setReturnRoute:')
     let routeStack: Array<string>;
     let i: number;
 
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(routeResult => {
+      console.log('SigninComponent:setReturnRoute: got return route=', routeResult)
       routeStack = routeResult;
-      i = routeStack.length - 1;
+      if (this.containerDialog) {
+        i = routeStack.length - 1;
+      } else {
+        // If are coming in with a path, then have to signin first.  If desktop, top item will be return route.
+        // But if device, top item will be arrow to offer 'returning' to landing-page and second item will be return route.
+        // But usually not return route, and i would go negative, so reset to zero.
+        i = routeStack.length -2;
+        if (i < 0) {
+          i = 0;
+        }
+      }
+
+
       if (routeStack.length > 0) {
+        console.log('SigninComponent:setReturnRoute: stack length=', routeStack.length, ' index=', i, ' route=', routeStack[i])
+
+
         if (routeStack[i].substring(0, 1) === '*') {
             this.returnRoute = routeStack[i].substring(1, routeStack[i].length);
+            console.log('SigninComponent:setReturnRoute: route=', this.returnRoute)
         }
       }
     });

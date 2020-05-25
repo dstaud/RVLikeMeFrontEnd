@@ -36,6 +36,7 @@
           <mat-label>{{ 'messages.component.message' | translate }} {{toDisplayName}}</mat-label>
 
             <textarea matInput
+                      #message
                       class="text"
                       type="text"
                       placeholder="{{ 'messages.component.whatsay' | translate }}"

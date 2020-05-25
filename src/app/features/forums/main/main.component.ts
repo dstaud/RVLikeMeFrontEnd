@@ -22,6 +22,6 @@ export class MainComponent implements OnInit {
   }
 
   onGroupSelected(groupID: string) {
-    this.postsMain.getGroup(groupID);
+    this.postsMain.getGroupParams(groupID);
   }
 }

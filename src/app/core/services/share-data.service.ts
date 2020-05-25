@@ -159,46 +159,85 @@ export interface IshareData {
   providedIn: 'root'
 })
 export class ShareDataService {
-  private data:IshareData = {
-    forumsMain: {
-      _id: null,
-      forumType: null,
-      theme: null,
-      topicID: null,
-      topicDesc: null,
-      yearOfBirth: null,
-      gender: null,
-      homeCountry: null,
-      homeState: null,
-      aboutMe: null,
-      rvUse: null,
-      worklife: null,
-      campsWithMe: null,
-      boondocking: null,
-      traveling: null,
-      rigType: null,
-      rigLength: null,
-      rigManufacturer: null,
-      rigBrand: null,
-      rigModel: null,
-      atv: null,
-      motorcycle: null,
-      travel: null,
-      quilting: null,
-      cooking: null,
-      painting: null,
-      blogging: null,
-      livingFrugally: null,
-      gaming: null,
-      musicalInstrument: null,
-      programming: null,
-      mobileInternet: null
+  private data:IshareData;
 
-    },
-    myStory: {
-      userID: null,
-      userIdViewer: null,
-      params: {
+  constructor() {
+    this.initializeData();
+  }
+
+  clearAllData() {
+    this.initializeData();
+  }
+
+  setData(type: string, data: any) {
+    this.data[type] = data;
+  }
+
+  getData(type: string):any {
+    return this.data[type];
+  }
+
+  private initializeData() {
+    this.data = {
+      forumsMain: {
+        _id: null,
+        forumType: null,
+        theme: null,
+        topicID: null,
+        topicDesc: null,
+        yearOfBirth: null,
+        gender: null,
+        homeCountry: null,
+        homeState: null,
+        aboutMe: null,
+        rvUse: null,
+        worklife: null,
+        campsWithMe: null,
+        boondocking: null,
+        traveling: null,
+        rigType: null,
+        rigLength: null,
+        rigManufacturer: null,
+        rigBrand: null,
+        rigModel: null,
+        atv: null,
+        motorcycle: null,
+        travel: null,
+        quilting: null,
+        cooking: null,
+        painting: null,
+        blogging: null,
+        livingFrugally: null,
+        gaming: null,
+        musicalInstrument: null,
+        programming: null,
+        mobileInternet: null
+
+      },
+      myStory: {
+        userID: null,
+        userIdViewer: null,
+        params: {
+          fromUserID: null,
+          fromDisplayName: null,
+          fromProfileImageUrl: null,
+          toUserID: null,
+          toDisplayName: null,
+          toProfileImageUrl: null,
+          conversationID: null
+        },
+        topicID: null,
+        topicDesc: null
+      },
+      userQuery: [],
+      dashboardDrilldown: {
+        control: null
+      },
+      newbieHelp: {
+        displayName: null,
+        profileImageUrl: null
+      },
+      message: {
         fromUserID: null,
         fromDisplayName: null,
         fromProfileImageUrl: null,
@@ -207,74 +246,44 @@ export class ShareDataService {
         toProfileImageUrl: null,
         conversationID: null
       },
-      topicID: null,
-      topicDesc: null
-    },
-    userQuery: [],
-    dashboardDrilldown: {
-      control: null
-    },
-    newbieHelp: {
-      displayName: null,
-      profileImageUrl: null
-    },
-    message: {
-      fromUserID: null,
-      fromDisplayName: null,
-      fromProfileImageUrl: null,
-      toUserID: null,
-      toDisplayName: null,
-      toProfileImageUrl: null,
-      conversationID: null
-    },
-    newbieTopic: {
-      topicID: null,
-      topicDesc: null
-    },
-    signin: {
-      fromLandingPage: false,
-      install: false,
-      installDevice: null
-    },
-    dashboard: {
-      nbrLogins: null
-    },
-    post: {
-      groupID: null,
-      userDisplayName: null,
-      userProfileUrl: null,
-      body: null,
-      photoUrl: null,
-      link: null,
-      linkDesc: null,
-      linkTitle: null,
-      linkImage: null,
-      createdBy: null,
-      createdAt: null,
-      fragment: null
-    },
-    profileImage: {
-      profileID: null,
-      imageSource: null,
-      newImageUrl: null
-    },
-    viewImage: {
-      profileID: null,
-      imageType: null,
-      imageSource: null,
-      imageOwner: false,
-      newImageUrl: null
+      newbieTopic: {
+        topicID: null,
+        topicDesc: null
+      },
+      signin: {
+        fromLandingPage: false,
+        install: false,
+        installDevice: null
+      },
+      dashboard: {
+        nbrLogins: null
+      },
+      post: {
+        groupID: null,
+        userDisplayName: null,
+        userProfileUrl: null,
+        body: null,
+        photoUrl: null,
+        link: null,
+        linkDesc: null,
+        linkTitle: null,
+        linkImage: null,
+        createdBy: null,
+        createdAt: null,
+        fragment: null
+      },
+      profileImage: {
+        profileID: null,
+        imageSource: null,
+        newImageUrl: null
+      },
+      viewImage: {
+        profileID: null,
+        imageType: null,
+        imageSource: null,
+        imageOwner: false,
+        newImageUrl: null
+      }
     }
-
-  }
-
-  constructor() { }
-
-  setData(type: string, data:any) {
-    this.data[type] = data;
-  }
-
-  getData(type: string):any {
-    return this.data[type];
   }
 }

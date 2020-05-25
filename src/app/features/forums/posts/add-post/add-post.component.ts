@@ -32,7 +32,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 
 export class AddPostComponent implements OnInit {
   @Input('groupID') groupID: string;
-  @Input('displayName') displayName: string;
+  @Input('displayName') displayName: string;f
   @Input('profileImageUrl') profileImageUrl: string;
   @Input('yearOfBirth') yearOfBirth: number;
   @Input('rigLength') rigLength: number;

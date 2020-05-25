@@ -25,7 +25,7 @@ export class FooterComponent implements OnInit {
 
 
   onRoute() {
-    this.activateBackArrowSvc.setBackRoute('');
+    this.activateBackArrowSvc.setBackRoute('', 'nostack');
   }
 
 

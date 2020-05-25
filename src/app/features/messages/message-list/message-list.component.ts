@@ -49,10 +49,11 @@ export class MessageListComponent implements OnInit {
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
-
+    console.log('MessageListComponent:ngOnInit:')
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+      console.log('MessageListComponent:ngOnInit: backroute=', '*' + backPath)
       this.router.navigateByUrl('/?e=signin');
     } else {
       if (window.innerWidth > 600) {

@@ -7,7 +7,8 @@ import { map } from 'rxjs/operators';
 import { ProfileService } from '@services/data-services/profile.service';
 
 import { SentryMonitorService } from './../sentry-monitor.service';
-import { AdminService } from '@services/data-services/admin.service';
+import { ShareDataService } from '@services/share-data.service';
+import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 export interface ItokenPayload {
   _id: string;
@@ -39,7 +40,8 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient,
               private profileSvc: ProfileService,
-              private adminSvc: AdminService,
+              private activateBackArrowSvc: ActivateBackArrowService,
+              private shareDataSvc: ShareDataService,
               private sentryMonitorSvc: SentryMonitorService) { }
 
 
@@ -69,28 +71,14 @@ export class AuthenticationService {
     return this.http.get(`/api/dave`);
   }
 
-  getUser(): Observable<any> {
-    return this.http.get(`/api/username`);
-  }
-
-  resetPassword(token: string, tokenID: string, password: string): Observable<any> {
-    let params = JSON.parse('{"token":"' + token + '",' +
-                            '"tokenID":"' + tokenID + '",' +
-                            '"password":"' + password + '"}');
-
-    return this.http.post(`/api/password-reset`, params, {});
-  }
-
-  validatePasswordResetToken(token: string): Observable<any> {
-    let params = JSON.parse('{"token":"' + token + '"}');
-
-    return this.http.post(`/api/validate-password-reset-token`, params, {});
-  }
-
   getOtherUserEmail(userID: string): Observable<any> {
     let param = JSON.parse('{"userID":"' + userID + '"}');
 
     return this.http.get(`/api/other-email`, { params: param });
+  }
+
+  getUser(): Observable<any> {
+    return this.http.get(`/api/username`);
   }
 
   handleBackendError(error) {
@@ -138,6 +126,8 @@ export class AuthenticationService {
     this.setUserToAdmin(false);
     window.localStorage.removeItem('rvlikeme-token');
     this.profileSvc.getProfile(true);
+    this.activateBackArrowSvc.setBackRoute('', 'nostack');
+    this.shareDataSvc.clearAllData();
   }
 
   registerUser(user: ItokenPayload, firstName: string): Observable<any> {
@@ -157,6 +147,14 @@ export class AuthenticationService {
     return request;
   }
 
+  resetPassword(token: string, tokenID: string, password: string): Observable<any> {
+    let params = JSON.parse('{"token":"' + token + '",' +
+                            '"tokenID":"' + tokenID + '",' +
+                            '"password":"' + password + '"}');
+
+    return this.http.post(`/api/password-reset`, params, {});
+  }
+
   setUserToAuthorized(auth: boolean): void {
     this.userAuth.next(auth);
   }
@@ -174,6 +172,12 @@ export class AuthenticationService {
 
   updateLoginCount(): Observable<any> {
     return this.http.put(`/api/login-count`, {});
+  }
+
+  validatePasswordResetToken(token: string): Observable<any> {
+    let params = JSON.parse('{"token":"' + token + '"}');
+
+    return this.http.post(`/api/validate-password-reset-token`, params, {});
   }
 
   private getToken(): string {
