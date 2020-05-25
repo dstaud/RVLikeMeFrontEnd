@@ -1,5 +1,5 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
-  <h2 class="mat-title">Settings</h2>
+  <h2 class="mat-title">{{ 'settings.component.title' | translate }}</h2>
   <p *ngIf="theme === 'light-theme'">
     <a mat-menu-item (click)="onSelectTheme('dark-theme')">
       <mat-icon matPrefix fontSet="material-icons-outlined">brightness_medium</mat-icon>
@@ -15,7 +15,7 @@
 
   <form [formGroup]="form">
     <div class="form">
-      <p>Select language for the site</p>
+      <p>{{ 'settings.component.language' | translate}}</p>
       <div>
         <mat-form-field appearance="outline">
           <mat-select formControlName="language"
@@ -44,7 +44,7 @@
     <mat-icon fontSet="material-icons-outlined" (click)="onHelpInstall()">help_outline</mat-icon>
   </div>
   <div *ngIf="helpInstallOpen === 'in'" [@helpInstallSlideInOut]="helpInstallOpen" class="helpInstall">
-    <p>Android devices allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it.</p>
+    <p>{{ 'settings.component.android' | translate}}</p>
   </div>
 
   <div *ngIf="installAppleDevice" class="install">
@@ -59,7 +59,7 @@
     <mat-icon fontSet="material-icons-outlined" (click)="onHelpInstallApple()">help_outline</mat-icon>
   </div>
   <div *ngIf="helpInstallAppleOpen === 'in'" [@helpInstallAppleSlideInOut]="helpInstallAppleOpen" class="helpInstall">
-    <p>Apple devices allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it.</p>
+    <p>{{ 'settings.component.apple' | translate }}</p>
   </div>
 
   <div class="notifications">

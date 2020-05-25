@@ -6,11 +6,11 @@
           (click)="onBack()">
           << Go Back
   </button>
-  <p class="mat-title">Profile - Blog Links</p>
+  <p class="mat-title">{{ 'blog-link.component.title' | translate }}</p>
   <div>
     <button mat-button (click)="onAddLink()" class="hyperlink">
       <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
-      <span>Add a blog link</span>
+      <span>{{ 'blog-link.component.addLink' | translate }}</span>
     </button>
   </div>
   <form [@addLinkSlideInOut]="addLinkOpen" class="add-link">

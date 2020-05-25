@@ -34,7 +34,7 @@
 
     <div *ngIf="blogLinks.length > 0" class="row">
       <div class="attribute-label column">
-        Blog links:
+        {{ 'yourstory.component.blogLinks' | translate }}:
       </div>
       <div class="column" >
         <div *ngFor="let link of blogLinks; let i=index">
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <p><span class="attribute-label">Experience: </span>{{ userAboutMe | translate }}</p>
+    <p><span class="attribute-label">{{ 'yourstory.component.experience' | translate }}: </span>{{ userAboutMe | translate }}</p>
 
     <p><span class="attribute-label">{{ 'yourstory.component.howrv' | translate }}: </span>{{ userRvUse | translate }}</p>
 

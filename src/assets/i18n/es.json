@@ -269,7 +269,7 @@
     "cancel": "Cancelar"
   },
   "profile.component": {
-    "header": "Perfil",
+    "title": "Perfil",
     "explanation": "Ingrese información sobre usted y cómo su RV para ayudarnos a brindarle más información relevante y respuestas a sus preguntas.",
     "preferred-language": "Idioma preferido",
     "english": "Inglés",
@@ -282,6 +282,7 @@
     "yearOfBirth": "alrededor de tu edad (+/- 5años)",
     "rigLength": "con un aparejo de longitud similar (+/- 3ft)",
     "viewpic": "Vea su historia como otros la verán",
+    "howYourStory": "Así es como se presentará su historia a otros usuarios en función de la información de su perfil",
     "list": {
       "aboutme": {
         "dreamer": "soñando con RVing",
@@ -472,9 +473,6 @@
     "programming": "programación de computadoras",
     "mobileInternet": "conectividad a Internet"
   },
-  "landing-page.component": {
-    "header": "RV como yo"
-  },
   "credentials.component": {
     "email": "Email",
     "emailError": "Introduzca su"
@@ -495,9 +493,11 @@
     "firstPostTopic": "RVers experimentados aún no han publicado",
     "comments": "Comentarios",
     "like": "me gusta",
-    "updateText": "Actualizar publicación"
+    "updateText": "Actualizar publicación",
+    "deleteText": "Eliminar mensaje"
   },
   "add-post.component": {
+    "updateTitle": "Actualizar publicación",
     "post": "Enviar",
     "whatToSay": "¿Qué quieres decir?",
     "postTitle": "Título de la entrada",
@@ -505,7 +505,11 @@
     "body": "Enviar",
     "cancel": "Cancelar",
     "photo": "Foto",
-    "addLink": "Agregar enlace al sitio web"
+    "addLink": "Agregar enlace al sitio web",
+    "addPhoto": "Añadir foto",
+    "deletePhoto": "Borrar foto",
+    "deleteLink": "Eliminar enlace",
+    "addWebsiteLink": "Agregar enlace al sitio web"
   },
   "comments.component": {
     "showAll": "mostrar todos los comentarios"
@@ -522,7 +526,8 @@
     "lifestylepics": "Fotos de estilo de vida",
     "story": "historia",
     "message": "Mensaje",
-    "nopics": "no hay fotos subidas yet"
+    "nopics": "no hay fotos subidas yet",
+    "blogLinks": "Enlaces de blog"
   },
   "imageviewdialog.component": {
     "ok": "Okay",
@@ -672,20 +677,14 @@
     "emailNotChange": "No cambiaste tu dirección de correo electrónico",
     "security": "Por razones de seguridad, ingrese su contraseña"
   },
-  "cards.graphic.component": {
-    "title": "Vea cómo otros RV",
-    "description": "Panel de control con gráficos que muestran cómo otros viven el estilo de vida de RV o qué equipos tienen"
+  "settings.component": {
+    "title": "Configuraciones",
+    "language": "Seleccione un idioma para la aplicación RV Like Me",
+    "android": "Los dispositivos Android le permiten instalar aplicaciones web en su pantalla de inicio, brindándole una experiencia similar a la aplicación. ¡Pruébalo! Siempre puedes eliminarlo como una aplicación si no te gusta.",
+    "apple": "Los dispositivos Apple le permiten instalar aplicaciones web en su pantalla de inicio, brindándole una experiencia similar a la aplicación. ¡Pruébalo! Siempre puedes eliminarlo como una aplicación si no te gusta."
   },
-  "cards.likeme.component": {
-    "title": "Encuentra otros como tu",
-    "description": "Según su perfil anónimo, RV Like Me encontrará automáticamente a otros como usted. Puede ver sus historias y conectarse con ellos a través de foros grupales y mensajes."
-  },
-  "cards.newbie.component": {
-    "title": "Rincón del novato",
-    "description": "Nuevo en RVing? Soñando con RVing? Hay un lugar especial para ti en el Newbie Corner."
-  },
-  "cards.story.component": {
-    "title": "Comparte tu historia",
-    "description": "Inspira a otros compartiendo tu historia"
+  "blog-link.component": {
+    "title": "Perfil - Enlaces de blog",
+    "addLink": "Agregar un enlace de blog"
   }
 }

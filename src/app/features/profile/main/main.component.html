@@ -1,5 +1,5 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
-  <div class="mat-title">Profile</div>
+  <div class="mat-title">{{ 'profile.component.title' | translate }}</div>
   <p class="mat-body">{{ "profile.component.explanation" | translate }}</p>
   <mat-list class="list">
     <div class="row" (click)="onPersonal()">
@@ -63,7 +63,7 @@
   <div *ngIf="desktopUser">
     <mat-divider></mat-divider>
     <div>
-      <p>This is how your story will be presented to other users based on your profile information</p>
+      <p>{{ 'profile.component.howYourStory' | translate }}</p>
     </div>
     <app-rvlm-your-story
       [comingFromProfile]=true>

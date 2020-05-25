@@ -274,7 +274,7 @@
     "cancel": "Cancel"
   },
   "profile.component": {
-    "header": "Profile",
+    "title": "Profile",
     "explanation": "Please enter information about you and how you RV to help us give you more relavant information and answers to your questions.",
     "preferred-language": "Preferred language",
     "english": "English",
@@ -287,6 +287,7 @@
     "yearOfBirth": "around your age (+/- 5yrs)",
     "rigLength": "with similar length rig (+/- 3ft)",
     "viewpic": "View your story as others will see it",
+    "howYourStory": "This is how your story will be presented to other users based on your profile information",
     "list": {
       "aboutme": {
         "dreamer": "dreaming of RVing",
@@ -477,9 +478,6 @@
     "programming": "computer programming",
     "mobileInternet": "internet connectivity"
   },
-  "landing-page.component": {
-    "header": "RV Like Me"
-  },
   "account": {
     "changeProfileImage": "Change Profile Pic",
     "updateProfile": "Update profile",
@@ -496,9 +494,11 @@
     "firstPostTopic": "Experienced RVers have not yet posted",
     "comments": "comments",
     "like": "like",
+    "deleteText": "Delete",
     "updateText": "Update post"
   },
   "add-post.component": {
+    "updateTitle": "Update Post",
     "post": "Post",
     "whatToSay": "What do you want to say?",
     "postTitle": "Post Title",
@@ -506,7 +506,11 @@
     "body": "Post",
     "cancel": "Cancel",
     "photo": "Photo",
-    "addLink": "Add website link"
+    "addLink": "Add website link",
+    "addPhoto": "Add Photo",
+    "deletePhoto": "Delete Photo",
+    "deleteLink": "Delete Link",
+    "addWebsiteLink": "Add Website Link"
   },
   "comments.component": {
     "showAll": "show all comments"
@@ -523,7 +527,8 @@
     "lifestylepics": "Lifestyle Pics",
     "story": "story",
     "message": "Message",
-    "nopics": "no pics uploaded yet"
+    "nopics": "no pics uploaded yet",
+    "blogLinks": "Blog links"
   },
   "imageviewdialog.component": {
     "ok": "OK",
@@ -679,20 +684,14 @@
     "emailNotChange": "You did not change  your email address",
     "security": "For security purposes, please enter your password"
   },
-  "cards.graphic.component": {
-    "title": "See how others RV",
-    "description": "Dashboard with charts showing how others live the RV lifestyle or what rigs they have"
+  "settings.component": {
+    "title": "Settings",
+    "language": "Select a language for the RV Like Me App",
+    "android": "Android devices allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it.",
+    "apple": "Apple devices allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it."
   },
-  "cards.likeme.component": {
-    "title": "Find others like you",
-    "description": "Based on your anonymous profile, RV Like Me will automatically find others like you.  You can see their stories and connect with them through group forums and messaging."
-  },
-  "cards.newbie.component": {
-    "title": "Newbie Corner",
-    "description": "New to RVing? Dreaming of RVing?  There's a special place for you in the Newbie Corner."
-  },
-  "cards.story.component": {
-    "title": "Share your story",
-    "description": "Inspire others by sharing your story"
+  "blog-link.component": {
+    "title": "Profile - Blog Links",
+    "addLink": "Add a blog link"
   }
 }

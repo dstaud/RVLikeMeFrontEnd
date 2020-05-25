@@ -1,5 +1,5 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
-  <p class="mat-title">Update Post</p>
+  <p class="mat-title">{{ 'add-post.component.updateTitle' | translate }}</p>
   <div class="author">
     <div>
       <img class="image profile-image-post"
@@ -49,10 +49,10 @@
                   (change)="onChangePhoto($event)"
                   accept = "image/*"
                   style="display:none;"/>
-            <span>Replace Photo</span>
+            <span>{{ 'add-post.component.addPhoto' | translate }}</span>
         </button>
         <button class="delete hyperlink" mat-button (click)="onDeletePhoto()">
-          <span>Delete Photo</span>
+          <span>{{ 'add-post.component.deletePhoto' | translate }}</span>
         </button>
 
       </div>
@@ -63,7 +63,7 @@
 
     <div *ngIf="showLinkPreview">
       <button class="delete hyperlink" mat-button (click)="onDeleteLink()">
-        <span>Delete Link</span>
+        <span>{{ 'add-post.component.deleteLink' | translate }}</span>
       </button>
       <app-rvlm-preview-link
         [linkPreview]="linkPreview">
@@ -80,7 +80,7 @@
     </button>
     <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="onAddLink()">
       <mat-icon fontSet="material-icons-outlined">link</mat-icon>
-        <span class="add-photo-text">Add website link</span>
+        <span class="add-photo-text">{{ 'add-post.component.addWebsiteLink' | translate }}</span>
     </button>
 
     <div class="buttons">
