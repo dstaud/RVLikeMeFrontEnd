@@ -15,9 +15,9 @@
     </button>
     <button mat-button (click)="onRefresh()">
         <mat-icon matPrefix fontSet="material-icons-outlined">refresh</mat-icon>
-        Refresh
+        {{ 'connections.component.refresh' | translate }}
     </button>
-    <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation-->
+    <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation on submit-->
       <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
         <mat-label>
           <mat-checkbox [checked]="likeMeMatch.id === param"

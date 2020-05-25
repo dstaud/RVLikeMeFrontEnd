@@ -68,14 +68,19 @@
     "traveling1": "other travels",
     "rigType": "others with a",
     "rigType1": "other with a",
-    "rigManufacturer": "others with a",
-    "rigManufacturer1": "other with a",
+    "rigManufacturer": "others with a rig by",
+    "rigManufacturer1": "other with a rig by",
     "rigBrand": "others with a",
     "rigBrand1": "other with a",
+    "rigModel": "others with a rig model",
+    "rigModel1": "other with a rig model",
+    "rigYear": "others with a rig year",
+    "rigYear1": "other with a rig year",
     "rigLength": "others",
     "rigLength1": "other",
     "interest": "others interested in",
-    "interest1": "other interested in"
+    "interest1": "other interested in",
+    "refresh": "Refresh"
   },
   "forums.component": {
     "header": "Forums",
@@ -475,10 +480,6 @@
   "landing-page.component": {
     "header": "RV Like Me"
   },
-  "credentials.component": {
-    "email": "Email",
-    "emailError": "Please enter your"
-  },
   "account": {
     "changeProfileImage": "Change Profile Pic",
     "updateProfile": "Update profile",
@@ -504,7 +505,8 @@
     "title": "Title",
     "body": "Post",
     "cancel": "Cancel",
-    "photo": "Photo"
+    "photo": "Photo",
+    "addLink": "Add website link"
   },
   "comments.component": {
     "showAll": "show all comments"
@@ -579,7 +581,11 @@
     "cancel": "Cancel",
     "ok": "OK",
     "suggestTopic": "Please describe the topic you are suggesting",
-    "suggestTopicText": "Suggest a new useful RV-related topic"
+    "suggestTopicText": "Suggest a new useful RV-related topic",
+    "suggestNewTopic": "Suggest a new topic",
+    "suggestion": "suggestion",
+    "submit": "Submit",
+    "suggestionAdmin": "Your suggestion has been forwarded to the administrator.  Thank you!"
   },
   "newbie-links.component": {
     "helpfulResources1": "If you've found some good resources about",
@@ -647,5 +653,46 @@
     "body1": "When I started RVing I was looking for a project to upgrade my software development skills and came up with the idea for RV Like Me; a web app where users can more easily find and connect with fellow RVers that RV the way they do.",
     "body2": "What makes this web app work is your profile information.  I understand that you may be uncomfortable providing this information, but without it, this app isn't very useful.",
     "body3": "That's why I don't require you to identify yourself.  Instead, you pick a display name so the only names I have in my database are your first name and display name, and that's all other users will see."
+  },
+  "footer.desktop": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "changePassword.component": {
+    "title": "Change Password",
+    "current": "Current Password",
+    "password": "Password",
+    "pleaseEnter": "Please enter your",
+    "submit": "Submit",
+    "success": "Your password has been updated successfully",
+    "notValid": "Current password is not valid"
+  },
+  "changeusername.component": {
+    "title": "Change Username",
+    "email": "Email",
+    "pleaseEnter": "Please enter your",
+    "password": "Password",
+    "newPassword": "New Password",
+    "success": "Username updated successfully",
+    "emailExists": "Email already exists",
+    "invalidEmail": "Invalid email address or password",
+    "emailNotChange": "You did not change  your email address",
+    "security": "For security purposes, please enter your password"
+  },
+  "cards.graphic.component": {
+    "title": "See how others RV",
+    "description": "Dashboard with charts showing how others live the RV lifestyle or what rigs they have"
+  },
+  "cards.likeme.component": {
+    "title": "Find others like you",
+    "description": "Based on your anonymous profile, RV Like Me will automatically find others like you.  You can see their stories and connect with them through group forums and messaging."
+  },
+  "cards.newbie.component": {
+    "title": "Newbie Corner",
+    "description": "New to RVing? Dreaming of RVing?  There's a special place for you in the Newbie Corner."
+  },
+  "cards.story.component": {
+    "title": "Share your story",
+    "description": "Inspire others by sharing your story"
   }
 }

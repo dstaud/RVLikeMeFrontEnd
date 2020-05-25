@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -37,6 +38,7 @@ export class ChangeUsernameComponent implements OnInit {
               private shared: SharedComponent,
               private location: Location,
               private router: Router,
+              private translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
               fb: FormBuilder) {
@@ -94,7 +96,7 @@ export class ChangeUsernameComponent implements OnInit {
   onSubmit() {
     if (this.form.controls.username.value === this.originalUsername) {
       this.httpError = true;
-      this.httpErrorText = "You did not change  your email address";
+      this.httpErrorText = this.translate.instant('changeUsername.component.emailNotChange');
     } else {
       this.showSpinner = true;
       this.newCredentials.email = this.originalUsername;
@@ -106,14 +108,14 @@ export class ChangeUsernameComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
         this.showSpinner = false;
-        this.shared.openSnackBar('Username updated successfully', 'message');
+        this.shared.openSnackBar(this.translate.instant('changeUsername.component.success'), 'message');
       }, error => {
         this.showSpinner = false;
         this.httpError = true;
         if (error.status === 401) {
-          this.httpErrorText = 'Invalid email address or password';
+          this.httpErrorText = this.translate.instant('changeUsername.component.invalidEmail');
         } else if (error.status === 403) {
-          this.httpErrorText = 'Email already exists';
+          this.httpErrorText = this.translate.instant('changeUsername.component.emailExists');
         } else {
           console.error('ChangeUsernameComponent:onSubmit: throw error ', error);
           throw new Error(error);

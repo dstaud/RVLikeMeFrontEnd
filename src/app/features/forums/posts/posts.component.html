@@ -141,7 +141,9 @@
                                   (showAllComments)="onShowAllComments(i)">
               </app-rvlm-comments>
             </div>
-            <mat-divider></mat-divider>
+            <div *ngIf="i !== posts.length - 1">
+              <mat-divider></mat-divider>
+            </div>
           </div>
         </div>
     </div>

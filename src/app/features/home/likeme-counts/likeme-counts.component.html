@@ -2,21 +2,33 @@
   <div class="welcome">
     <p class="start-connecting">{{ 'home.component.countsHeader' | translate }}</p>
   </div>
-  <button mat-button (click)="onSelectLikeMeCount('aboutMe')"
-    *ngIf="showAboutMe" class="user-count">
-    {{ aboutMe }}
-  </button>
-  <button mat-button (click)="onSelectLikeMeCount('rvUse')"
-    *ngIf="showRvUse" class="user-count">
-      {{ rvUse }}
-  </button>
-  <button mat-button (click)="onSelectLikeMeCount('rigType')"
-    *ngIf="showRigType" class="user-count">
-      {{ rigType }}
-  </button>
-  <button mat-button (click)="onSelectLikeMeCount('rigManufacturer')"
-    *ngIf="showRigManufacturer" class="user-count">
-      {{ rigManufacturer }}
-  </button>
+  <div>
+    <button mat-button (click)="onSelectLikeMeCount('aboutMe')"
+            *ngIf="showAboutMe" class="user-count">
+            {{ aboutMe }}
+    </button>
+  </div>
+
+  <div>
+    <button mat-button (click)="onSelectLikeMeCount('rvUse')"
+            *ngIf="showRvUse" class="user-count">
+              {{ rvUse }}
+    </button>
+  </div>
+
+  <div>
+    <button mat-button (click)="onSelectLikeMeCount('rigType')"
+            *ngIf="showRigType" class="user-count">
+              {{ rigType }}
+    </button>
+  </div>
+
+  <div>
+    <button mat-button (click)="onSelectLikeMeCount('rigManufacturer')"
+            *ngIf="showRigManufacturer" class="user-count">
+              {{ rigManufacturer }}
+    </button>
+  </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

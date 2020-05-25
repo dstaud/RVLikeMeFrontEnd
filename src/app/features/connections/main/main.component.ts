@@ -144,7 +144,7 @@ export class MainComponent implements OnInit {
     // If have a match, create a new array of nicely worded results that can be displayed
     // with checkboxes on the template.
     for (let i = 1; i < this.profileKeys.length; i++ ) {
-      if (this.profileValues[i] && this.profileValues[i] !== null && this.profileValues[i] !== 'null') {
+      if (this.profileValues[i] && this.profileValues[i] !== null && this.profileValues[i] !== 'null' && this.profileKeys[i] !== 'allCounts') {
         if (this.profile[this.profileKeys[i]] === true) {
           this.foundMatch = true;
           this.likeMeAnswer = this.translate.instant(
@@ -175,7 +175,7 @@ export class MainComponent implements OnInit {
                     'connections.component.' + this.profileKeys[i]
                     );
                 }
-                if (this.profileKeys[i] === 'rigManufacturer' || this.profileKeys[i] === 'rigBrand') {
+                if (this.profileKeys[i] === 'rigManufacturer' || this.profileKeys[i] === 'rigBrand' || this.profileKeys[i] === 'rigModel') {
                   this.likeMeAnswer = this.profile[this.profileKeys[i]];
                   this.processMatch(this.profileKeys[i], this.profileValues[i]);
                 } else {
@@ -191,6 +191,7 @@ export class MainComponent implements OnInit {
               }
             }
           } else {
+            console.log('alternative processing ', this.profile[this.profileKeys[i]])
             if (this.profileValues[i] === 1) {
               this.likeMeDesc = this.translate.instant(
                 'connections.component.' + this.profileKeys[i] + '1'
@@ -200,10 +201,13 @@ export class MainComponent implements OnInit {
                 'connections.component.' + this.profileKeys[i]
                 );
             }
-            this.likeMeAnswer = this.translate.instant(
-              'profile.component.' + this.profileKeys[i]
-              );
-              this.processMatch(this.profileKeys[i], this.profileValues[i]);
+            if (this.profileKeys[i] === 'rigYear') {
+              this.likeMeAnswer = this.profile[this.profileKeys[i]];
+            } else {
+              this.likeMeAnswer = this.translate.instant('profile.component.' + this.profileKeys[i]);
+            }
+
+            this.processMatch(this.profileKeys[i], this.profileValues[i]);
           }
         }
       }

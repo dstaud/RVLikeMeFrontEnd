@@ -8,22 +8,24 @@
 <mat-divider></mat-divider>
 <br>
 
-<button mat-button type="button" (click)="onSuggestTopicOpen()">Suggest a new topic</button>
+<button mat-button type="button" (click)="onSuggestTopicOpen()">{{ 'newbie-topics.component.suggestNewTopic' | translate }}</button>
 <div [@suggestTopicSlideInOut]="suggestTopicOpen" class="other">
   <form [formGroup]="form">
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Suggest topic</mat-label>
+        <mat-label>{{ 'newbie-topics.component.suggestTopic' | translate }}</mat-label>
         <input matInput
               type="text"
-              placeholder="suggestion"
+              placeholder="{{ 'newbie-topics.component.suggestion' | translate }}"
               cdkFocusInitial
               (change)="readyToSuggest = true"
               formControlName="suggestTopic">
       </mat-form-field>
     </div>
     <div>
-      <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestTopic()">Submit</button>
+      <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestTopic()">
+        {{ 'newbie-topics.component.submit' | translate }}
+      </button>
     </div>
   </form>
 

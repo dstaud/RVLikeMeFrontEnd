@@ -360,7 +360,7 @@ export class SendMessageComponent implements OnInit {
         // this.router.navigateByUrl('/messages/message-list');
       }
     }, error => {
-      console.error('MessageList:listenForUserConversations: unable to get conversations. Error=', error);
+      console.error('SendMessageComponent:listenForUserConversations: unable to get conversations. Error=', error);
       throw new Error(error);
     });
   }
@@ -374,10 +374,11 @@ export class SendMessageComponent implements OnInit {
       .subscribe(data => {
 
         if (data._id) {
+          console.error('SendMessageComponent:listenForUserProfile: got new profile=', data);
           this.profile = data;
         }
       }, error => {
-        console.error('MessageListComponent:listenForUserProfile: error getting user profile. error=', error);
+        console.error('SendMessageComponent:listenForUserProfile: error getting user profile. error=', error);
         throw new Error(error);
       });
     }

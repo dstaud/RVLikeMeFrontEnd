@@ -113,14 +113,14 @@ export class NewbieTopicsComponent implements OnInit {
         });
         this.readyToSuggest = false;
         this.suggestTopicOpen = 'out';
-        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+        this.shared.openSnackBar(this.translate.instant('newbie-topics.component.suggestionAdmin'), "message", 3000);
       }, error => {
         this.showSpinner = false;
         this.suggestTopicOpen = 'out';
         this.form.patchValue({
           suggestTopic: ''
         });
-        this.shared.openSnackBar('You suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
+        this.shared.openSnackBar(this.translate.instant('newbie-topics.component.suggestionAdmin'), "message", 3000);
         this.readyToSuggest = false;
         console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);
         this.sentry.logError(error);

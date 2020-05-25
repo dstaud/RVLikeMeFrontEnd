@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -37,6 +38,7 @@ export class ChangePasswordComponent implements OnInit {
               private router: Router,
               private shared: SharedComponent,
               private location: Location,
+              private translate: TranslateService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
               fb: FormBuilder) {
@@ -98,7 +100,7 @@ export class ChangePasswordComponent implements OnInit {
     .subscribe(passwordResult => {
       this.httpError = false;
       this.showSpinner = false;
-      this.shared.openSnackBar('Your password has been updated successfully', 'message', 5000);
+      this.shared.openSnackBar(this.translate.instant('changePassword.component.success'), 'message', 5000);
 
       setTimeout(function () {
         self.router.navigateByUrl('/home/dashboard');
@@ -107,7 +109,7 @@ export class ChangePasswordComponent implements OnInit {
     }, error => {
       if (error.status === 401) {
         this.httpError = true;
-        this.httpErrorText = 'Current password is not valid';
+        this.httpErrorText = this.translate.instant('changePassword.component.notValid');
         this.showSpinner = false;
         this.form.enable();
       } else {

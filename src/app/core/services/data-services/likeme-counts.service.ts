@@ -149,6 +149,7 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
       this.dataStore.likeMeCounts.rvUse = counts.rvUse;
       this.dataStore.likeMeCounts.rigType = counts.rigType;
+      this.dataStore.likeMeCounts.rigManufacturer = counts.rigManufacturer;
       this.dataStore.likeMeCounts.atv = counts.atv;
       this.dataStore.likeMeCounts.blogging = counts.blogging;
       this.dataStore.likeMeCounts.boondocking = counts.boondocking;

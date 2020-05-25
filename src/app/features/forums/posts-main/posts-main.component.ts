@@ -208,9 +208,11 @@ export class PostsMainComponent implements OnInit {
 
   // If coming from groups list, we know the user already has this group in their profile and we have the group ID
   // so get group information by key. Otherwise, queryParams sent from connections page will contain one or more profile attributes that will define a group forum.
-  // getGroup extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
+  // getGroupParams extracts these attributes and checks to server to see if a group exists for the combination of profile attributes.
   // If the group does exist, it asks the server for all posts for the group forum for display in the template.
   // If the group does not exist, it asks the server to create the group forum.
+  // For Desktop, if the user goes directly to /forums/main, there is a race condition getting profile information and will kick it back to message-list.
+  // That is OK.  Do not change.
   getGroupParams(groupID?: string): void {
     let paramData: IforumsMain;
     let index: number;
