@@ -26,6 +26,7 @@ export class RegisterConfirmComponent implements OnInit {
   httpErrorText: string = 'No Error';
   showSpinner: boolean = true;
   presentInstallOption: boolean = false;
+  readyToInstall: boolean = false;
 
   private windowWidth: number;
   private routeSubscription: any;
@@ -78,7 +79,7 @@ export class RegisterConfirmComponent implements OnInit {
   // If desktop, present signin component in dialog and take action when signin complete.
   onSignIn() {
 
-    if(this.event) {
+    if(this.readyToInstall) {
       // Show the install prompt
       this.event.prompt();
 
@@ -161,6 +162,7 @@ export class RegisterConfirmComponent implements OnInit {
     .subscribe(data => {
       if (data !== null) {
         this.event = data.valueOf();
+        this.readyToInstall = true;
       }
     });
   }
