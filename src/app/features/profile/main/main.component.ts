@@ -38,7 +38,7 @@ export class MainComponent implements OnInit {
   interestsIndicator: string;
   interestsIndClass: string;
   desktopUser: boolean = false;
-  profileImageUrl: string;
+  profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   theme: string;
   linkOnOff: string = 'link_off';
 
@@ -270,7 +270,9 @@ export class MainComponent implements OnInit {
         this.shareDataSvc.setData('myStory', params);
       }
 
-      this.profileImageUrl = profileResult.profileImageUrl;
+      if (profileResult.profileImageUrl) {
+        this.profileImageUrl = profileResult.profileImageUrl;
+      }
 
       this.showSpinner = false;
     }, (error) => {

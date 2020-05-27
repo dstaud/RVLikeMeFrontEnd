@@ -14,7 +14,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IprofileImage } from '@services/share-data.service';
 import { DeviceService } from '@services/device.service';
-import { ThemeService } from './../../../core/services/theme.service';
+import { ThemeService } from '@services/theme.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
