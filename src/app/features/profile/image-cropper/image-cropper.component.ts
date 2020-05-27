@@ -30,6 +30,7 @@ export class ImageCropperComponent implements OnInit {
   showSpinner: boolean = false;
   imageSource: string;
   containerDialog: boolean = false;
+  iPhoneModelXPlus: boolean = false;
 
   private cropper: Cropper;
   private profileID: string;
@@ -44,7 +45,9 @@ export class ImageCropperComponent implements OnInit {
               private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
               private device: DeviceService,
-              private profileSvc: ProfileService) {this.showSpinner = true;}
+              private profileSvc: ProfileService) {
+          this.showSpinner = true;
+          this.iPhoneModelXPlus = this.device.iPhoneModelXPlus}
 
   ngOnInit() {
     if (window.innerWidth > 600) {
@@ -90,6 +93,7 @@ export class ImageCropperComponent implements OnInit {
       containerClass = 'container ' + bottomSpacing;
     }
 
+    console.log('ImageCropperComponent:getClass: class=', containerClass)
     return containerClass;
   }
 

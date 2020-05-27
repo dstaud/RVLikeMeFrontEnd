@@ -37,6 +37,7 @@ export class UserQueryComponent implements OnInit {
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
+  private desktopUser: boolean = false;
 
   constructor(private translate: TranslateService,
               private authSvc: AuthenticationService,
@@ -63,6 +64,11 @@ export class UserQueryComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+      }
+
       this.showSpinner = true;
 
       if (this.shareDataSvc.getData('userQuery').length > 0) {
@@ -120,7 +126,12 @@ export class UserQueryComponent implements OnInit {
 
     this.shareDataSvc.setData('forumsMain', queryParams);
     this.activateBackArrowSvc.setBackRoute('connections/user-query', 'forward');
-    this.router.navigateByUrl('/forums/main');
+
+    if (this.desktopUser) {
+      this.router.navigateByUrl('/forums/main');
+    } else {
+      this.router.navigateByUrl('/forums/posts-main');
+    }
   }
 
 

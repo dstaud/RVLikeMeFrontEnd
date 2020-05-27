@@ -13,6 +13,7 @@ import { BeforeInstallEventService } from '@services/before-install-event.servic
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { UsingEmailService } from '@services/using-email.service';
+import { SentryMonitorService } from './../../core/services/sentry-monitor.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -37,7 +38,6 @@ export class RegisterUserComponent implements OnInit {
   hidePassword = true;
   httpError = false;
   httpErrorText = '';
-  token: string;
 
   showSpinner = false;
 
@@ -64,6 +64,7 @@ export class RegisterUserComponent implements OnInit {
               private beforeInstallEventSvc: BeforeInstallEventService,
               private dialog: MatDialog,
               private router: Router,
+              private sentry: SentryMonitorService,
               private UsingEmailSvc: UsingEmailService,
               private emailSmtpSvc: EmailSmtpService,
               private headerVisibleSvc: HeaderVisibleService,
@@ -142,7 +143,7 @@ export class RegisterUserComponent implements OnInit {
       } else {
 
         if (this.useEmail) {
-          this.getActivationToken();
+          this.getActivationTokenWithEmail();
         } else {
           this.showSpinner = false;
           this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
@@ -164,7 +165,7 @@ export class RegisterUserComponent implements OnInit {
             this.showSpinner = false;
             this.form.enable();
           } else {
-            this.getActivationToken(true);
+            this.getActivationTokenWithEmail(true);
             this.httpErrorText = 'It looks like you already tried to register.  Another registration email was sent to ' + this.credentials.email + '. Please activate your account from this email.  Check your trash or spam folder if you cannot find the email.';
             this.showSpinner = false;
             this.form.enable();
@@ -175,7 +176,7 @@ export class RegisterUserComponent implements OnInit {
             this.shared.openSnackBar('Oops! Having trouble connecting to the Internet.  Please check your connectivity settings.','error', 5000);
             this.httpErrorText = 'Please connect to Internet and try again';
           } else {
-            this.httpErrorText = 'An unknown error occurred.  Please refresh and try again.';
+            this.httpErrorText = 'An unknown error occurred. Please refresh and try again.';
           }
           this.form.enable();
         }
@@ -198,7 +199,7 @@ export class RegisterUserComponent implements OnInit {
     }, 2000);
   }
 
-  private getActivationToken(stay?: boolean) {
+  private getActivationTokenWithEmail(stay?: boolean) {
     let noExpire: boolean = true;
 
     this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
@@ -210,24 +211,52 @@ export class RegisterUserComponent implements OnInit {
     });
   }
 
+  private activateUser(urlToken: string) {
+    this.authSvc.activateUser(urlToken)
+    .subscribe(activateResult => {
+      this.showSpinner = false;
 
-  private sendRegisterEmail(token: string, stay?: boolean) {
+      // Since token was deleted by activate user, using this agreed-upon hard-coded token just for sending welcome email.
+      this.sendWelcomeEmail(activateResult.email, '8805-1335-8153-3116');
+
+    }, error => {
+      this.showSpinner = false;
+      this.httpError = true;
+      this.httpErrorText = 'The activation token is invalid';
+    });
+  }
+
+  private sendRegisterEmail(urlToken: string, stay?: boolean) {
     let sendTo = this.credentials.email;
     let toFirstName = this.form.controls.firstName.value;
 
-    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, token)
+    this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, urlToken)
     .subscribe(emailResult => {
       this.showSpinner = false;
-      if (!stay) { // Stay means user tried to register again without confirming.  Different messaing and don't want this message
+      if (!stay) { // Stay means user tried to register again without confirming.  Different messaging and don't want this message
         this.shared.openSnackBar('An email was sent to ' + this.form.controls.email.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
         this.registrationComplete();
       }
     }, error => {
-      this.showSpinner = false;
-      this.httpError = true;
-      this.httpErrorText = "Unable to send registration email.  Please try again soon.";
-      this.authSvc.logout();
-      this.form.enable();
+      // If AWS failure to send email, attempt to activate user anyway.  Email failure will be logged so can tell if have registered user but email not really verified.
+      console.log('RegisterUserComponent:sendRegisterEmail: error sending email, activating user for token=', urlToken)
+      this.activateUser(urlToken);
+
     })
+  }
+
+  private sendWelcomeEmail(email: string, token: string) {
+    let sendTo = email;
+    let toFirstName = null;
+    this.emailSmtpSvc.sendWelcomeEmail(sendTo, toFirstName, token)
+    .subscribe(emailResult => {
+      this.showSpinner = false;
+      this.authSvc.logout();
+      this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
+      this.registrationComplete();
+    }, error => {
+      console.error('RegisterComponent:sendWelcomeEmail: error sending email: ', error);
+      this.sentry.logError('Error sending welcome email');
+    });
   }
 }

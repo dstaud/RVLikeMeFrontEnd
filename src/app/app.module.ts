@@ -57,8 +57,7 @@ import { StoryComponent } from './landing-page/cards/story/story.component';
 
 Sentry.init({
   dsn: 'https://b52e12ec94554f4b8639c0766d53ef9c@sentry.io/2071107',
-  // environment: environment.name
-  environment: 'Production' // TODO: change back to dynamic environment. Using for testing
+  environment: environment.name
 });
 
 @Injectable()
@@ -66,7 +65,7 @@ export class SentryErrorHandler implements ErrorHandler {
   constructor() {}
   handleError(error) {
     const eventId = Sentry.captureException(error.originalError || error);
-    Sentry.showReportDialog({ eventId });
+    // Sentry.showReportDialog({ eventId });
   }
 }
 

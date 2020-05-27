@@ -215,7 +215,8 @@ export class MainComponent implements OnInit {
 
     // If allUsersCount is zero then this is initial BehaviorSubject, not real data from DB
     // If it is real data, but no data found (i.e. !this.foundMatch) then show no-results text
-    if (this.allUsersCount > 0 && this.allCountsReceived) {
+    // if (this.allUsersCount > 0 && this.allCountsReceived) {
+    if (this.allCountsReceived) {
       this.form.get('likeMe').disable({onlySelf: true});
       this.showSpinner = false;
       if (!this.foundMatch) {

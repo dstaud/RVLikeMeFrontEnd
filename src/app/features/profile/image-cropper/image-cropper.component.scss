@@ -10,12 +10,13 @@
   background-color: white;
 }
 
+// Seems to need larger spacing.  I believe something to do with image destination not showing up until done, but not sure
 .bottom-bar-spacing {
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 }
 
 .bottom-bar-spacing-xplus {
-  margin-bottom: 80px;
+  margin-bottom: 130px;
 }
 
 /* Ensure the size of the image fit the container perfectly */

@@ -16,9 +16,6 @@ export class MainComponent implements OnInit {
               }
 
   ngOnInit() {
-    if (window.innerWidth <= 600) {
-      this.router.navigateByUrl('forums/posts-main');
-    }
   }
 
   onGroupSelected(groupID: string) {

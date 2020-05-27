@@ -144,7 +144,7 @@ export class SendMessageComponent implements OnInit {
   getParameters(params?: ImessageShareData) {
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
     let paramData: any;
-
+    console.log('SendMessageComponent:getParameters: params=', params, ' sharedata=', this.shareDataSvc.getData('message'));
     if (!this.shareDataSvc.getData('message').fromUserID && !params) {
       if (this.desktopUser) {
         console.log('SendMessageComponent:getParameters: listening for conversations');

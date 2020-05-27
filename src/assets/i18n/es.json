@@ -686,5 +686,13 @@
   "blog-link.component": {
     "title": "Perfil - Enlaces de blog",
     "addLink": "Agregar un enlace de blog"
+  },
+  "iphoneInstall.component": {
+    "title": "Instalar en dispositivo Apple",
+    "instruction1": "Con RvLikeMe.com abierto en Safari, haga clic en el icono de compartir en la barra inferior",
+    "instruction2": "Luego haga clic en Agregar a la pantalla de inicio",
+    "instruction3": "Luego haga clic en Agregar",
+    "instruction4": "El ícono RvLikeMe.com está en su página de inicio",
+    "instruction5": "Ahora, RV Like Me se verá y se sentirá como una aplicación de Apple. ¡Disfrutar!"
   }
 }

@@ -120,8 +120,9 @@ export class RegisterConfirmComponent implements OnInit {
   }
 
 
-  private activateUser(tokenID: string) {
-    this.authSvc.activateUser(this.token, tokenID)
+  private activateUser() {
+    // Pass both the URL token and the embedded token to activate the user
+    this.authSvc.activateUser(this.token)
     .subscribe(activateResult => {
       this.showSpinner = false;
 
@@ -190,10 +191,12 @@ export class RegisterConfirmComponent implements OnInit {
   }
 
 
+  // Validate token from URL
   private validateToken() {
     this.authSvc.validatePasswordResetToken(this.token)
     .subscribe(tokenResult => {
-      this.activateUser(tokenResult.tokenID);
+      this.activateUser();
+
     }, error => {
       console.error('PasswordReset:validateToken: error validating token.  error=', error);
       this.httpError = true;

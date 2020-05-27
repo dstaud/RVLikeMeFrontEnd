@@ -10,15 +10,7 @@ body {
   font-size: 16px;
 }
 
-// // For route fade animation
-// router-outlet ~ * {
-//   position: absolute;
-//   height: 100%;
-//   width: 100%;
-// }
-
 @import '~@angular/material/theming';
-// @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 // Make sure material icons are available offline
 @import '~material-design-icons/iconfont/material-icons.css';

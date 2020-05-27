@@ -693,5 +693,13 @@
   "blog-link.component": {
     "title": "Profile - Blog Links",
     "addLink": "Add a blog link"
+  },
+  "iphoneInstall.component": {
+    "title": "Install on Apple Device",
+    "instruction1": "With RvLikeMe.com open in Safari, click on the share icon on the bottom bar",
+    "instruction2": "Then click Add to Home Screen",
+    "instruction3": "Then click Add",
+    "instruction4": "The RvLikeMe.com icon is on your home page",
+    "instruction5": "Now, RV Like Me will look and feel like an Apple app.  Enjoy!"
   }
 }

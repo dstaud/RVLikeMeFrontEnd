@@ -2,7 +2,7 @@
 $cyan-primary: mat-palette($mat-cyan, 700, 300, 900);
 $cyan-accent: mat-palette($mat-green, A200);
 $cyan-warn: mat-palette($mat-red, 500);
-$cyan-background-color: map_get($mat-gray, 200);
+$cyan-background-color: map_get($mat-gray, 100);
 // $cyan-foreground-color: map_get($mat-red, 300);
 
 $cyan-theme: mat-light-theme(

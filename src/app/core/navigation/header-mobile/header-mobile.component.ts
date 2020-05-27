@@ -98,6 +98,7 @@ export class HeaderMobileComponent implements OnInit {
     this.profileSvc.dispose();
     this.authSvc.setUserToAuthorized(false);
     this.headerVisibleSvc.toggleHeaderVisible(false);
+    this.activateBackArrowSvc.setBackRoute('', 'nostack');
     this.router.navigateByUrl('/');
   }
 

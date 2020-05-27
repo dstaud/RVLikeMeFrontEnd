@@ -63,7 +63,7 @@ export class MainComponent implements OnInit {
   profileID: string;
   helpInstallOpen: string = 'out';
   helpInstallAppleOpen: string = 'out';
-  installAppleDevice: boolean = false;
+  installAppleDevice: boolean = true;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;

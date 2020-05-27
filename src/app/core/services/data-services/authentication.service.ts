@@ -45,8 +45,8 @@ export class AuthenticationService {
               private sentryMonitorSvc: SentryMonitorService) { }
 
 
-  activateUser(token: string, tokenID: string): Observable<any> {
-    let params = '{"token":"' + token + '","tokenID":"' + tokenID + '"}';
+  activateUser(token: string): Observable<any> {
+    let params = '{"token":"' + token + '"}';
 
     return this.http.put(`/api/activate`, params, {});
   }
