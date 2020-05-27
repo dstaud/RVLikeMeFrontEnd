@@ -19,6 +19,7 @@ import { DeviceService } from '@services/device.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
+import { ThemeService } from '@services/theme.service';
 
 
 /**** Interfaces for data for form selects ****/
@@ -213,6 +214,7 @@ export class LifestyleComponent implements OnInit {
   suggestLifestyleOpen: string = 'out';
   readyToSuggest: boolean = false;
   iPhoneModelxPlus: boolean = false;
+  theme: string;
 
   aboutMeOtherOpen: string = 'out';
   rvUseOtherOpen: string = 'out';
@@ -323,6 +325,7 @@ export class LifestyleComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
               private adminSvc: AdminService,
+              private themeSvc: ThemeService,
               private shared: SharedComponent,
               private activateBackArrowSvc: ActivateBackArrowService,
               private shareDataSvc: ShareDataService,
@@ -369,6 +372,8 @@ export class LifestyleComponent implements OnInit {
       this.form.disable();
 
       this.listenForUserProfile();
+
+      this.listenForColorTheme();
     }
    }
 
@@ -536,6 +541,17 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+    });
+  }
 
 
   private listenForUserProfile() {

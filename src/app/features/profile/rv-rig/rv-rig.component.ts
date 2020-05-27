@@ -19,6 +19,7 @@ import { DesktopMaxWidthService } from '@services/desktop-max-width.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
 import { DeviceService } from '@services/device.service';
+import { ThemeService } from '@services/theme.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 
@@ -66,8 +67,7 @@ export class RvRigComponent implements OnInit {
   rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
   rigModel = new FormControl('');
   rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
-  brandSelected: string = null;
-  newbie: boolean = false;
+
 
   rigImageUrls: Array<string> = [];
   rigData: Array<IrigData> = [];
@@ -76,6 +76,9 @@ export class RvRigComponent implements OnInit {
   desktopUser: boolean = false;
   placeholderPhotoUrl: string = './../../../../assets/images/photo-placeholder.png';
   nbrRigImagePics: number = 0;
+  brandSelected: string = null;
+  newbie: boolean = false;
+  theme: string;
 
   rigTypeOtherOpen: string = 'out';
 
@@ -126,6 +129,7 @@ export class RvRigComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
               private rigSvc: RigService,
+              private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
               private device: DeviceService,
               private activateBackArrowSvc: ActivateBackArrowService) {}
@@ -154,6 +158,8 @@ export class RvRigComponent implements OnInit {
       this.getRigData();
 
       this.listenForUserProfile();
+
+      this.listenForColorTheme();
     }
   }
 
@@ -397,6 +403,18 @@ export class RvRigComponent implements OnInit {
         this[formValue] = this.profile[control];
       }
     }
+  }
+
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+    });
   }
 
 

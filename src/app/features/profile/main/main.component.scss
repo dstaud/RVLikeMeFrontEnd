@@ -6,11 +6,11 @@
 }
 
 .bottom-bar-spacing {
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 }
 
 .bottom-bar-spacing-xplus {
-  margin-bottom: 80px;
+  margin-bottom: 130px;
 }
 
 .hyperlink {
@@ -77,6 +77,43 @@
   color: $primary-color;
 }
 
+mat-form-field {
+  line-height: 1.4;
+}
+
+.newbie {
+  margin-left: 15px;
+  margin-bottom: 20px;
+}
+
+.background {
+  clear: left;
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.box-background-light {
+  background-color: white;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-posts;
+}
+
+.image {
+  border-radius: 50%;
+}
+
+.profile-image {
+  float: left;
+  margin-right: 10px;
+}
+
+.story {
+  margin-top: 10px;
+}
+
 .spinner {
   position: fixed;
   margin: auto;
@@ -86,11 +123,4 @@
   right: 0;
 }
 
-mat-form-field {
-  line-height: 1.4;
-}
 
-.newbie {
-  margin-left: 15px;
-  margin-bottom: 20px;
-}

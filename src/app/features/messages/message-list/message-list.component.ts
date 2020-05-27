@@ -89,7 +89,11 @@ export class MessageListComponent implements OnInit {
 
   onClickGoToGroup() {
     this.activateBackArrowSvc.setBackRoute('messages/message-list', 'forward');
-    this.router.navigateByUrl('/forums/main');
+    if (this.desktopUser) {
+      this.router.navigateByUrl('/forums/main');
+    } else {
+      this.router.navigateByUrl('/forums/forums-list');
+    }
   }
 
   // When user clicks on a conversation, extract the information needed on the SendMessageComponent,

@@ -23,6 +23,20 @@
   line-height: 2;
 }
 
+.background {
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.box-background-light {
+  background-color: white;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-posts;
+}
+
 .button {
   margin-bottom: 10px;
 }

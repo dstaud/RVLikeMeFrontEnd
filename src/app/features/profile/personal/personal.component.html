@@ -24,7 +24,8 @@
       </button>
     </div>
   </div>
-  <div class="form-fields">
+  <div class="form-fields background mat-elevation-z2"
+        [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
     <form [formGroup]="form">
       <div>
         <mat-form-field appearance="outline">

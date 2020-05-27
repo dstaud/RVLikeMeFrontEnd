@@ -13,6 +13,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { ThemeService } from './../../../core/services/theme.service';
 
 export interface AboutMe {
   value: string;
@@ -37,6 +38,8 @@ export class MainComponent implements OnInit {
   interestsIndicator: string;
   interestsIndClass: string;
   desktopUser: boolean = false;
+  profileImageUrl: string;
+  theme: string;
   linkOnOff: string = 'link_off';
 
   showSpinner = false;
@@ -50,6 +53,7 @@ export class MainComponent implements OnInit {
               private language: LanguageService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
               private shareDataSvc: ShareDataService,
               private device: DeviceService,
@@ -75,6 +79,8 @@ export class MainComponent implements OnInit {
       this.showSpinner = true;
 
       this.listenForUserProfile();
+
+      this.listenForColorTheme();
     }
    }
 
@@ -223,6 +229,18 @@ export class MainComponent implements OnInit {
   }
 
 
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+    });
+  }
+
+
   // Listen for profile data and then take actions based on that data
   private listenForUserProfile() {
     let helpNewbies: string
@@ -251,6 +269,8 @@ export class MainComponent implements OnInit {
         }
         this.shareDataSvc.setData('myStory', params);
       }
+
+      this.profileImageUrl = profileResult.profileImageUrl;
 
       this.showSpinner = false;
     }, (error) => {

@@ -14,6 +14,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IprofileImage } from '@services/share-data.service';
 import { DeviceService } from '@services/device.service';
+import { ThemeService } from './../../../core/services/theme.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 
@@ -53,7 +54,7 @@ export class PersonalComponent implements OnInit {
   profileImageLabel = 'personal.component.addProfilePic';
   tempProfileImage: string;
   containerDialog: boolean = false;
-
+  theme: string;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -159,6 +160,7 @@ export class PersonalComponent implements OnInit {
               private location: Location,
               private activateBackArrowSvc: ActivateBackArrowService,
               private dialog: MatDialog,
+              private themeSvc: ThemeService,
               private sharedDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
@@ -211,6 +213,8 @@ export class PersonalComponent implements OnInit {
       this.showSpinner = true;
 
       this.listenForUserProfile();
+
+      this.listenForColorTheme();
     }
   }
 
@@ -298,6 +302,19 @@ export class PersonalComponent implements OnInit {
     }
     this.updatePersonal(control, this.profile[control]);
   }
+
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+    });
+  }
+
 
 
   // Listen for user profile and then take action

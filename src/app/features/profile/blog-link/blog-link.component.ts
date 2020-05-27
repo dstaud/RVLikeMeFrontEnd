@@ -13,6 +13,8 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { DeviceService } from '@services/device.service';
+import { ThemeService } from '@services/theme.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-blog-link',
@@ -39,8 +41,9 @@ import { DeviceService } from '@services/device.service';
 export class BlogLinkComponent implements OnInit {
   form: FormGroup;
   profile: IuserProfile;
+  theme: string;
   blogLinks: Array<Iblog> = [];
-  addLinkOpen: string = 'out';
+  addLinkOpen: string = 'in';
   showSpinner: boolean = false;
   showAddLink: boolean = false;
   showPreview: boolean = false;
@@ -61,6 +64,8 @@ export class BlogLinkComponent implements OnInit {
               private authSvc: AuthenticationService,
               private location: Location,
               private router: Router,
+              private themeSvc: ThemeService,
+              private sentry: SentryMonitorService,
               private linkPreviewSvc: LinkPreviewService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
@@ -93,6 +98,8 @@ export class BlogLinkComponent implements OnInit {
       this.showSpinner = true;
 
       this.listenForUserProfile();
+
+      this.listenForColorTheme();
     }
   }
 
@@ -137,7 +144,7 @@ export class BlogLinkComponent implements OnInit {
       this.preview.url = '';
     };
     this.readyToSave = false;
-    this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
+    // this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     this.form.reset();
   }
 
@@ -208,7 +215,7 @@ export class BlogLinkComponent implements OnInit {
       this.showAddLink = false;
       this.blogLinks = profileResult.blogLinks;
       this.readyToSave = false;
-      this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
+      // this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
       this.preview = {
         url: '',
         title: '',
@@ -223,6 +230,19 @@ export class BlogLinkComponent implements OnInit {
       throw Error(error);
     })
   }
+
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+    });
+  }
+
 
   // Get user profile
   private listenForUserProfile() {

@@ -44,7 +44,7 @@ mat-form-field {
 }
 
 .large-input {
-  width: 90%;
+  width: 85%;
   max-width: 310px;
 }
 
@@ -64,6 +64,20 @@ mat-form-field {
 .form-fields {
   clear: left;
   padding-top: 10px;
+}
+
+.background {
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.box-background-light {
+  background-color: white;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-posts;
 }
 
 .spinner {

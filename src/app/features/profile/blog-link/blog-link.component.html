@@ -7,56 +7,64 @@
           << Go Back
   </button>
   <p class="mat-title">{{ 'blog-link.component.title' | translate }}</p>
-  <div>
-    <button mat-button (click)="onAddLink()" class="hyperlink">
-      <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
-      <span>{{ 'blog-link.component.addLink' | translate }}</span>
-    </button>
+
+  <div class="background mat-elevation-z2"
+        [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
+
+    <!-- <div>
+      <button mat-button (click)="onAddLink()" class="hyperlink">
+        <mat-icon fontSet="material-icons-outlined">add_circle_outline</mat-icon>
+        <span>{{ 'blog-link.component.addLink' | translate }}</span>
+      </button>
+    </div> -->
+
+    <form [@addLinkSlideInOut]="addLinkOpen" class="add-link">
+      <div [formGroup]="form">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Add a blog link</mat-label>
+            <input matInput
+                    type="url"
+                    placeholder="http://www.example.com"
+                    formControlName="link"
+                    (blur)="onLink()">
+          </mat-form-field>
+        </div>
+        <!-- <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Link Description</mat-label>
+            <input matInput
+                    type="text"
+                    maxlength="40"
+                    placeholder="Link description"
+                    formControlName="linkDesc">
+          </mat-form-field>
+        </div> -->
+
+        <div *ngIf="showPreview">
+          <app-rvlm-preview-link
+            [linkPreview]="preview">
+          </app-rvlm-preview-link>
+        </div>
+
+        <div class="buttons">
+          <button type="submit"
+                  class="mat-raised-button mat-primary button"
+                  [disabled]="!readyToSave"
+                  (click)="onSubmit()">
+                  {{ 'newbie-links.component.submit' | translate }}
+          </button>
+          <button *ngIf="readyToSave"
+                  type="button"
+                  class="mat-raised-button"
+                  (click)="onCancel()">
+                  {{ 'newbie-links.component.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-  <form [@addLinkSlideInOut]="addLinkOpen" class="add-link">
-    <div [formGroup]="form">
-      <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Link</mat-label>
-          <input matInput
-                  type="url"
-                  placeholder="http://www.example.com"
-                  formControlName="link"
-                  (blur)="onLink()">
-        </mat-form-field>
-      </div>
-      <!-- <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Link Description</mat-label>
-          <input matInput
-                  type="text"
-                  maxlength="40"
-                  placeholder="Link description"
-                  formControlName="linkDesc">
-        </mat-form-field>
-      </div> -->
 
-      <div *ngIf="showPreview">
-        <app-rvlm-preview-link
-          [linkPreview]="preview">
-        </app-rvlm-preview-link>
-      </div>
-
-      <div class="buttons">
-        <button type="submit"
-                class="mat-raised-button mat-primary button"
-                [disabled]="!readyToSave"
-                (click)="onSubmit()">
-                {{ 'newbie-links.component.submit' | translate }}
-        </button>
-        <button type="button"
-                class="mat-raised-button"
-                (click)="onCancel()">
-                {{ 'newbie-links.component.cancel' | translate }}
-        </button>
-      </div>
-    </div>
-  </form>
   <div class="links">
     <div *ngFor="let link of blogLinks; let i=index">
       <div class="linkRow">

@@ -138,6 +138,7 @@ export class ForumsListComponent implements OnInit {
 
     if (this.profile.forums.length > 0) {
       this.groupsListFromUserProfile = this.profile.forums;
+      console.log('ForumsListComponent:getGroups: forums from profile=', this.profile.forums)
       for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
         this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(this.groupsListFromUserProfile[i]);
         groupsAttributes.push(this.groupProfileDisplayAttributesFromGroup);
@@ -152,7 +153,7 @@ export class ForumsListComponent implements OnInit {
     let value;
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
-
+    console.log('ForumsListComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
       if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v' && name !== 'forumType') {
         value = group[name];
@@ -200,6 +201,7 @@ export class ForumsListComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
       if (this.profile._id) {
+        console.log('ForumsListComponent:listenForUserProfile: profile=', this.profile)
         this.groupListDisplayAttributes = this.getGroups();
         this.showSpinner = false;
       }

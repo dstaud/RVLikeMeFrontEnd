@@ -35,203 +35,207 @@
         </span>
     </button>
   </div>
-  <form [formGroup]="form">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.aboutMeDesc" | translate }}</mat-label>
-        <mat-select formControlName="aboutMe"
-                    aria-label="my rv experience">
-          <mat-option aria-placeholder="About Me"
-                      *ngFor="let AboutMe of AboutMes"
-                      [value]="AboutMe.value"
-                      (click)="onSelectedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc', AboutMe.value)">
-            {{ AboutMe.viewValue | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showaboutMeSaveIcon">save</mat-icon>
-    </div>
-    <div [@aboutMeOtherSlideInOut]="aboutMeOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              formControlName="aboutMeOther"
-              (blur)="onOther('aboutMe')">
-      </mat-form-field>
-    </div>
-    <div *ngIf="newbieOpen === 'in'" [@newbieSlideInOut]="newbieOpen" class="newbie">
-      <p>As someone new to RVing, if unsure, select answers that align with your expectations so we can connect you with like-minded RVers</p>
-    </div>
-    <div *ngIf="helpNewbieOpen === 'in'" [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
-        <p>As an experienced RVer, are you interested in helping newbies?</p>
-        <input type="radio"
-                formControlName="helpNewbies"
-                value="true"
-                name="helpNewbies"
-                (change)="onHelpNewbies()">Yes
-        <input type="radio"
-                formControlName="helpNewbies"
-                value="false"
-                name="helpNewbies"
-                (change)="onHelpNewbies()">No
-      <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'true'">insert_emoticon</mat-icon>
-      <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'false'">save</mat-icon>
-    </div>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>
-        <mat-select matNativeControl
-                    formControlName="rvUse">
-          <mat-option aria-placeholder="RV Lifestyle"
-                      *ngFor="let RvLifestyle of RvLifestyles"
-                      [value]="RvLifestyle.value"
-                      (click)="onSelectedSelectItem('rvUse', 'lifestyle.component.rvUseDesc', RvLifestyle.value)">
-            {{ RvLifestyle.viewValue | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrvUseSaveIcon">save</mat-icon>
-    </div>
-    <div [@rvUseOtherSlideInOut]="rvUseOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              formControlName="rvUseOther"
-              (blur)="onOther('rvUse')">
-      </mat-form-field>
-    </div>
+  <div class="background mat-elevation-z2"
+        [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
+    <form [formGroup]="form">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "lifestyle.component.aboutMeDesc" | translate }}</mat-label>
+          <mat-select formControlName="aboutMe"
+                      aria-label="my rv experience">
+            <mat-option aria-placeholder="About Me"
+                        *ngFor="let AboutMe of AboutMes"
+                        [value]="AboutMe.value"
+                        (click)="onSelectedSelectItem('aboutMe', 'lifestyle.component.aboutMeDesc', AboutMe.value)">
+              {{ AboutMe.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showaboutMeSaveIcon">save</mat-icon>
+      </div>
+      <div [@aboutMeOtherSlideInOut]="aboutMeOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                formControlName="aboutMeOther"
+                (blur)="onOther('aboutMe')">
+        </mat-form-field>
+      </div>
+      <div *ngIf="newbieOpen === 'in'" [@newbieSlideInOut]="newbieOpen" class="newbie">
+        <p>As someone new to RVing, if unsure, select answers that align with your expectations so we can connect you with like-minded RVers</p>
+      </div>
+      <div *ngIf="helpNewbieOpen === 'in'" [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
+          <p>As an experienced RVer, are you interested in helping newbies?</p>
+          <input type="radio"
+                  formControlName="helpNewbies"
+                  value="true"
+                  name="helpNewbies"
+                  (change)="onHelpNewbies()">Yes
+          <input type="radio"
+                  formControlName="helpNewbies"
+                  value="false"
+                  name="helpNewbies"
+                  (change)="onHelpNewbies()">No
+        <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'true'">insert_emoticon</mat-icon>
+        <mat-icon class="icon" *ngIf="showhelpNewbiesSaveIcon && form.controls.helpNewbies.value === 'false'">save</mat-icon>
+      </div>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.worklifeDesc" | translate }}</mat-label>
-        <mat-select matNativeControl
-                    formControlName="worklife">
-          <mat-option aria-placeholder="work life"
-                      *ngFor="let Worklife of Worklives"
-                      [value]="Worklife.value"
-                      (click)="onSelectedSelectItem('worklife', 'lifestyle.component.worklifeDesc', Worklife.value)">
-            {{ Worklife.viewValue | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showworklifeSaveIcon">save</mat-icon>
-    </div>
-    <div [@worklifeOtherSlideInOut]="worklifeOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              formControlName="worklifeOther"
-              (blur)="onOther('worklife')">
-      </mat-form-field>
-    </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "lifestyle.component.rvUseDesc" | translate }}</mat-label>
+          <mat-select matNativeControl
+                      formControlName="rvUse">
+            <mat-option aria-placeholder="RV Lifestyle"
+                        *ngFor="let RvLifestyle of RvLifestyles"
+                        [value]="RvLifestyle.value"
+                        (click)="onSelectedSelectItem('rvUse', 'lifestyle.component.rvUseDesc', RvLifestyle.value)">
+              {{ RvLifestyle.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showrvUseSaveIcon">save</mat-icon>
+      </div>
+      <div [@rvUseOtherSlideInOut]="rvUseOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                formControlName="rvUseOther"
+                (blur)="onOther('rvUse')">
+        </mat-form-field>
+      </div>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.campsWithMeDesc" | translate }}</mat-label>
-        <mat-select matNativeControl
-                    formControlName="campsWithMe">
-          <mat-option aria-placeholder="Camps with me"
-                      *ngFor="let CampsWithMe of CampsWithMes"
-                      [value]="CampsWithMe.value"
-                      (click)="onSelectedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc', CampsWithMe.value)">
-            {{ CampsWithMe.viewValue | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showcampsWithMeSaveIcon">save</mat-icon>
-    </div>
-    <div [@campsWithMeOtherSlideInOut]="campsWithMeOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              formControlName="campsWithMeOther"
-              (blur)="onOther('campsWithMe')">
-      </mat-form-field>
-    </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "lifestyle.component.worklifeDesc" | translate }}</mat-label>
+          <mat-select matNativeControl
+                      formControlName="worklife">
+            <mat-option aria-placeholder="work life"
+                        *ngFor="let Worklife of Worklives"
+                        [value]="Worklife.value"
+                        (click)="onSelectedSelectItem('worklife', 'lifestyle.component.worklifeDesc', Worklife.value)">
+              {{ Worklife.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showworklifeSaveIcon">save</mat-icon>
+      </div>
+      <div [@worklifeOtherSlideInOut]="worklifeOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                formControlName="worklifeOther"
+                (blur)="onOther('worklife')">
+        </mat-form-field>
+      </div>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.boondockingDesc" | translate }}</mat-label>
-        <mat-select matNativeControl
-                    formControlName="boondocking">
-          <mat-option aria-placeholder="Boondocking"
-                      *ngFor="let Boondocking of Boondockings"
-                      [value]="Boondocking.value"
-                      (click)="onSelectedSelectItem('boondocking', 'lifestyle.component.boondockingDesc', Boondocking.value)">
-            {{ Boondocking.viewValue | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showboondockingSaveIcon">save</mat-icon>
-    </div>
-    <div [@boondockingOtherSlideInOut]="boondockingOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              formControlName="boondockingOther"
-              (blur)="onOther('boondocking')">
-      </mat-form-field>
-    </div>
-<!--
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "lifestyle.component.travelingDesc" | translate }}</mat-label>
-        <mat-select matNativeControl
-                    formControlName="traveling">
-          <mat-option aria-placeholder="Traveling"
-                      *ngFor="let Traveling of Travelings"
-                      [value]="Traveling.value"
-                      (click)="onSelectedSelectItem('traveling', 'lifestyle.component.travelingDesc', Traveling.value)">
-            {{ Traveling.viewValue | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showtravelingSaveIcon">save</mat-icon>
-    </div>
-    <div [@travelingOtherSlideInOut]="travelingOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              formControlName="travelingOther"
-              (blur)="onOther('traveling')">
-      </mat-form-field>
-    </div> -->
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "lifestyle.component.campsWithMeDesc" | translate }}</mat-label>
+          <mat-select matNativeControl
+                      formControlName="campsWithMe">
+            <mat-option aria-placeholder="Camps with me"
+                        *ngFor="let CampsWithMe of CampsWithMes"
+                        [value]="CampsWithMe.value"
+                        (click)="onSelectedSelectItem('campsWithMe', 'lifestyle.component.campsWithMeDesc', CampsWithMe.value)">
+              {{ CampsWithMe.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showcampsWithMeSaveIcon">save</mat-icon>
+      </div>
+      <div [@campsWithMeOtherSlideInOut]="campsWithMeOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                formControlName="campsWithMeOther"
+                (blur)="onOther('campsWithMe')">
+        </mat-form-field>
+      </div>
 
-    <mat-divider></mat-divider>
-    <div class="suggest">
-      <br>
-      <button mat-button type="button" (click)="onSuggestLifestyleOpen()">Suggest a new lifestyle item not shown above</button>
-      <div [@suggestLifestyleSlideInOut]="suggestLifestyleOpen" class="other">
-        <div>
-          <mat-form-field appearance="outline">
-            <mat-label>Suggest lifestyle item</mat-label>
-            <input matInput
-                  type="text"
-                  placeholder="suggestion"
-                  cdkFocusInitial
-                  (change)="readyToSuggest = true"
-                  formControlName="suggestLifestyle">
-          </mat-form-field>
-        </div>
-        <div>
-          <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestLifestyle()">Submit</button>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "lifestyle.component.boondockingDesc" | translate }}</mat-label>
+          <mat-select matNativeControl
+                      formControlName="boondocking">
+            <mat-option aria-placeholder="Boondocking"
+                        *ngFor="let Boondocking of Boondockings"
+                        [value]="Boondocking.value"
+                        (click)="onSelectedSelectItem('boondocking', 'lifestyle.component.boondockingDesc', Boondocking.value)">
+              {{ Boondocking.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showboondockingSaveIcon">save</mat-icon>
+      </div>
+      <div [@boondockingOtherSlideInOut]="boondockingOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                formControlName="boondockingOther"
+                (blur)="onOther('boondocking')">
+        </mat-form-field>
+      </div>
+  <!--
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "lifestyle.component.travelingDesc" | translate }}</mat-label>
+          <mat-select matNativeControl
+                      formControlName="traveling">
+            <mat-option aria-placeholder="Traveling"
+                        *ngFor="let Traveling of Travelings"
+                        [value]="Traveling.value"
+                        (click)="onSelectedSelectItem('traveling', 'lifestyle.component.travelingDesc', Traveling.value)">
+              {{ Traveling.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showtravelingSaveIcon">save</mat-icon>
+      </div>
+      <div [@travelingOtherSlideInOut]="travelingOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                formControlName="travelingOther"
+                (blur)="onOther('traveling')">
+        </mat-form-field>
+      </div> -->
+
+      <mat-divider></mat-divider>
+      <div class="suggest">
+        <br>
+        <button mat-button type="button" (click)="onSuggestLifestyleOpen()">Suggest a new lifestyle item not shown above</button>
+        <div [@suggestLifestyleSlideInOut]="suggestLifestyleOpen" class="other">
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Suggest lifestyle item</mat-label>
+              <input matInput
+                    type="text"
+                    placeholder="suggestion"
+                    cdkFocusInitial
+                    (change)="readyToSuggest = true"
+                    formControlName="suggestLifestyle">
+            </mat-form-field>
+          </div>
+          <div>
+            <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestLifestyle()">Submit</button>
+          </div>
         </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
   <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

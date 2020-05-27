@@ -1,4 +1,4 @@
-<div class="mat-app-background mat-body-1 container" [ngClass]="getClass()">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <div class="header mat-elevation-z2">
     <div class="your-story">
       <img class="image profile-image"
@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <div class="messages background-light">
+  <div class="messages" [ngClass]="theme === 'dark-theme'? 'background-dark' : 'background-light'">
     <div>
       <div #scrollable  *ngFor="let message of messages"
             [ngClass]="{'message-right': message.createdBy === fromUserID,

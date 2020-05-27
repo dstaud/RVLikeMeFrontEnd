@@ -24,7 +24,7 @@
       </div>
     </div>
   </div>
-  <div class="posts mat-elevation-z2 posts-background-light">
+  <div class="posts mat-elevation-z2" [ngClass]="theme === 'dark-theme'? 'posts-background-dark' : 'posts-background-light'">
     <app-rvlm-posts
       [colorTheme]="theme">
     </app-rvlm-posts>

@@ -19,7 +19,9 @@
         each separately in Mongo as they are critical for querying individually, so went with individual here
         and in the model. Although, this also causes a sorting issue.  These are sorted manually and by translation desc.
         In other languages, will not be sorted.  Something to consider.-->
-  <form [formGroup]="form">
+  <div class="background mat-elevation-z2"
+        [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
+    <form [formGroup]="form">
       <mat-checkbox formControlName="atv"
                     class="checkbox"
                     (change)="onUpdateInterest('atv', $event)">
@@ -100,6 +102,8 @@
         </div>
       </div>
   </form>
+  </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
 

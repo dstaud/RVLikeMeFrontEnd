@@ -63,7 +63,7 @@ export class MainComponent implements OnInit {
   profileID: string;
   helpInstallOpen: string = 'out';
   helpInstallAppleOpen: string = 'out';
-  installAppleDevice: boolean = true;
+  installAppleDevice: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -168,12 +168,14 @@ export class MainComponent implements OnInit {
     this.router.navigateByUrl('/settings/install');
   }
 
+
   onSelectTheme(theme: string) {
     this.themeSvc.setGlobalColorTheme(theme);
     this.profile.colorThemePreference = theme;
     this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
+      console.log('SettingsMainComponent:onSelectTheme: updated profile data=', responseData);
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this.sentry.logError({"message":"error listening for color theme","error":error});

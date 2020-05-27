@@ -145,12 +145,14 @@ export class PostsComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let theme: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
+
     containerClass = 'container ' + bottomSpacing;
 
     return containerClass;

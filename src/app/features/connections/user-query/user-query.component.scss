@@ -1,3 +1,5 @@
+@import './../../../../styles/_variables';
+
 .container {
   padding: 10px;
   margin-top: 50px;
@@ -38,4 +40,18 @@ mat-icon {
   vertical-align: middle;
   align-items: center;
   padding-left: 5px;
+}
+
+.background {
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.box-background-light {
+  background-color: white;
+}
+
+.box-background-dark {
+  background-color: $dark-mode-posts;
 }

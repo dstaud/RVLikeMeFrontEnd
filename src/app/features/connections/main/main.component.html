@@ -17,22 +17,27 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">refresh</mat-icon>
         {{ 'connections.component.refresh' | translate }}
     </button>
-    <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation on submit-->
-      <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
-        <mat-label>
-          <mat-checkbox [checked]="likeMeMatch.id === param"
-                        color="primary"
-                        class="checkbox"
-                        [value]="likeMeMatch.id"
-                        (change)="onCheckboxChange($event)">
-          </mat-checkbox>
-          {{likeMeMatch.match}}
-        </mat-label>
+
+    <div class="background mat-elevation-z2"
+          [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
+      <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation on submit-->
+        <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
+          <mat-label>
+            <mat-checkbox [checked]="likeMeMatch.id === param"
+                          color="primary"
+                          class="checkbox"
+                          [value]="likeMeMatch.id"
+                          (change)="onCheckboxChange($event)">
+            </mat-checkbox>
+            {{likeMeMatch.match}}
+          </mat-label>
+        </div>
+      </form>
+      <div *ngIf="showNoConnections">
+        <p>{{ "connections.component.noResults1" | translate }} <span class="hyperlink" (click)="onProfile()">{{ "connections.component.noResults2" | translate }}</span> {{ "connections.component.noResults3" | translate }}</p>
       </div>
-    </form>
-    <div *ngIf="showNoConnections">
-      <p>{{ "connections.component.noResults1" | translate }} <span class="hyperlink" (click)="onProfile()">{{ "connections.component.noResults2" | translate }}</span> {{ "connections.component.noResults3" | translate }}</p>
     </div>
+
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
   </div>
 <!--   <div *ngIf="showQueryResults">

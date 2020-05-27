@@ -40,7 +40,8 @@
 }
 
 .group-heading-dark {
-  background-color: $dark-mode-group;
+  background-color: $primary-color;
+  color: white;
 }
 
 .group-list {
@@ -56,6 +57,10 @@
 
 .posts-background-light {
   background-color: white;
+}
+
+.posts-background-dark {
+  background-color: $dark-mode-posts;
 }
 
 .hyperlink {

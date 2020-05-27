@@ -5,11 +5,11 @@
     </app-rvlm-profile-percent>
   </div>
   <div *ngIf="(experiencedHelp && !newbie) || (newbie)" class="dashboard">
-    <div *ngIf="newbie" class="newbie" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+    <div *ngIf="newbie" class="newbie mat-elevation-z2" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
       <p  class="newbie-header">{{ 'home.component.newbieNeedsHelp' | translate }}</p>
       <p (click)="onNewbieTopics()">{{ 'home.component.newbieTopics1' | translate }} <span class="hyperlink">{{ 'home.component.newbieTopics2' | translate }}</span></p>
     </div>
-    <div *ngIf="experiencedHelp" class="newbie" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+    <div *ngIf="experiencedHelp" class="newbie mat-elevation-z2" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
       <p  class="newbie-header">{{ 'home.component.helpNewbies' | translate }}</p>
       <p>{{ 'home.component.expert1' | translate }}
         <span class="hyperlink bold-hyperlink" (click)="onHelpNewbieTopic()">{{ 'home.component.expert2' | translate }}</span> {{ 'home.component.expert3' | translate }}.</p>

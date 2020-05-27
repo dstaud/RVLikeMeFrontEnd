@@ -13,6 +13,7 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { AdminService } from '@services/data-services/admin.service';
 import { DeviceService } from '@services/device.service';
+import { ThemeService } from '@services/theme.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -56,6 +57,7 @@ export class InterestsComponent implements OnInit {
   desktopUser: boolean = false;
   suggestInterestOpen: string = 'out';
   readyToSuggest: boolean = false;
+  theme: string;
 
   // Spinner is for initial load from the database only.
   // The SaveIcon us shown whenever the user clicks on an interest.
@@ -71,6 +73,7 @@ export class InterestsComponent implements OnInit {
               private router: Router,
               private authSvc: AuthenticationService,
               private adminSvc: AdminService,
+              private themeSvc: ThemeService,
               private shared: SharedComponent,
               private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
@@ -113,6 +116,8 @@ ngOnInit() {
     this.form.disable();
 
     this.listenForUserProfile();
+
+    this.listenForColorTheme();
   }
 }
 
@@ -190,6 +195,18 @@ ngOnInit() {
       this.showSaveIcon = false;
       console.error('InterestsComponent:updateLifestyle: throw error ', error);
       throw new Error(error);
+    });
+  }
+
+
+  // Listen for changes in color theme;
+  private listenForColorTheme() {
+    this.themeSvc.defaultGlobalColorTheme
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(themeData => {
+      this.theme = themeData.valueOf();
+    }, error => {
+      this.sentry.logError({"message":"unable to listen for color theme","error":error});
     });
   }
 

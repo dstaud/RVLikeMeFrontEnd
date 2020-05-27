@@ -38,88 +38,93 @@
   <div *ngIf="newbie">
     <p>As someone new to RVing, if unsure, select answers that align with your expectations so we can connect you with like-minded RVers</p>
   </div>
-  <form>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
-        <mat-select matNativeControl
-                    [formControl]="rigType">
-          <mat-option aria-placeholder="Rig Type"
-                      *ngFor="let RigType of RigTypes"
-                      [value]="RigType.value"
-                      (click)="onSelectedSelectItem('rigType', 'rig.component.rigTypeDesc', RigType.value)">
-            {{ RigType.viewValue | translate }}
+
+  <div class="background mat-elevation-z2"
+        [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
+    <form>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
+          <mat-select matNativeControl
+                      [formControl]="rigType">
+            <mat-option aria-placeholder="Rig Type"
+                        *ngFor="let RigType of RigTypes"
+                        [value]="RigType.value"
+                        (click)="onSelectedSelectItem('rigType', 'rig.component.rigTypeDesc', RigType.value)">
+              {{ RigType.viewValue | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showrigTypeSaveIcon">save</mat-icon>
+      </div>
+      <div [@rigTypeOtherSlideInOut]="rigTypeOtherOpen" class="other">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter 'other' value</mat-label>
+          <input matInput
+                type="text"
+                cdkFocusInitial
+                [formControl]="rigTypeOther"
+                (blur)="onOther('rigType')">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'rig.component.rigYearDesc' | translate }} (YYYY)</mat-label>
+          <input matInput
+                  type="text"
+                  placeholder="{{ 'rig.component.rigYearDesc' | translate }}"
+                  [formControl]="rigYear"
+                  (blur)="onUpdateDataPoint('rigYear')">
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showrigYearSaveIcon">save</mat-icon>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'rig.component.rigLength' | translate }} (in feet)</mat-label>
+          <input matInput
+                  type="text"
+                  placeholder="{{ 'rig.component.rigLength' | translate }}"
+                  [formControl]="rigLength"
+                  (blur)="onUpdateDataPoint('rigLength')">
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showrigLengthSaveIcon">save</mat-icon>
+      </div>
+
+      <mat-form-field appearance="outline" class="brand">
+        <mat-label>{{ 'rig.component.rigBrand' | translate }}</mat-label>
+        <input matInput
+                type="text"
+                placeholder="Rig brand by manufacturer"
+                aria-label="RV Brand"
+                [formControl]="rigBrand"
+                spellcheck="false"
+                [matAutocomplete]="auto"
+                (blur)="updateBrand()">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onBrandSelected($event.option.value)">
+          <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brand">
+            {{brand.brand}}
           </mat-option>
-        </mat-select>
+        </mat-autocomplete>
       </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrigTypeSaveIcon">save</mat-icon>
-    </div>
-    <div [@rigTypeOtherSlideInOut]="rigTypeOtherOpen" class="other">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter 'other' value</mat-label>
-        <input matInput
-              type="text"
-              cdkFocusInitial
-              [formControl]="rigTypeOther"
-              (blur)="onOther('rigType')">
-      </mat-form-field>
-    </div>
+      <mat-icon class="icon" *ngIf="showrigBrandSaveIcon">save</mat-icon>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'rig.component.rigYearDesc' | translate }} (YYYY)</mat-label>
-        <input matInput
-                type="text"
-                placeholder="{{ 'rig.component.rigYearDesc' | translate }}"
-                [formControl]="rigYear"
-                (blur)="onUpdateDataPoint('rigYear')">
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrigYearSaveIcon">save</mat-icon>
-    </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'rig.component.rigModel' | translate }}</mat-label>
+          <input matInput
+                  type="text"
+                  placeholder="{{ 'rig.component.rigModel' | translate }}"
+                  [formControl]="rigModel"
+                  (blur)="onUpdateDataPoint('rigModel')">
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showrigModelSaveIcon">save</mat-icon>
+      </div>
 
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'rig.component.rigLength' | translate }} (in feet)</mat-label>
-        <input matInput
-                type="text"
-                placeholder="{{ 'rig.component.rigLength' | translate }}"
-                [formControl]="rigLength"
-                (blur)="onUpdateDataPoint('rigLength')">
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrigLengthSaveIcon">save</mat-icon>
-    </div>
+    </form>
+  </div>
 
-    <mat-form-field appearance="outline" class="brand">
-      <mat-label>{{ 'rig.component.rigBrand' | translate }}</mat-label>
-      <input matInput
-              type="text"
-              placeholder="Rig brand by manufacturer"
-              aria-label="RV Brand"
-              [formControl]="rigBrand"
-              spellcheck="false"
-              [matAutocomplete]="auto"
-              (blur)="updateBrand()">
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onBrandSelected($event.option.value)">
-        <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brand">
-          {{brand.brand}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    <mat-icon class="icon" *ngIf="showrigBrandSaveIcon">save</mat-icon>
-
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'rig.component.rigModel' | translate }}</mat-label>
-        <input matInput
-                type="text"
-                placeholder="{{ 'rig.component.rigModel' | translate }}"
-                [formControl]="rigModel"
-                (blur)="onUpdateDataPoint('rigModel')">
-      </mat-form-field>
-      <mat-icon class="icon" *ngIf="showrigModelSaveIcon">save</mat-icon>
-    </div>
-
-  </form>
   <br>
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>
