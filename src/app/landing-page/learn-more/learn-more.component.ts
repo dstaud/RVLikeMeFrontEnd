@@ -42,7 +42,8 @@ export class LearnMoreComponent implements OnInit {
 
   ngOnInit() {
     // Randomly pick one of 3 landing page RV images
-    this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
+    // this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
+    this.landingImageNbr = 1;
 
     this.setImageBasedOnScreenWidth();
   }

@@ -59,7 +59,8 @@ export class LandingPageComponent implements OnInit {
     let params: Isignin;
 
     // Randomly pick one of 3 landing page RV images
-    this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
+    // this.landingImageNbr = Math.floor(Math.random() * 3) + 1;
+    this.landingImageNbr = 1;
     this.cardNbr = Math.floor(Math.random() * 4) + 1;
 
     params = this.shareDataSvc.getData('signin');
