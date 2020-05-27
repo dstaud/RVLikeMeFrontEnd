@@ -212,6 +212,7 @@ export class LifestyleComponent implements OnInit {
   profile: IuserProfile;
   suggestLifestyleOpen: string = 'out';
   readyToSuggest: boolean = false;
+  iPhoneModelxPlus: boolean = false;
 
   aboutMeOtherOpen: string = 'out';
   rvUseOtherOpen: string = 'out';
@@ -342,7 +343,8 @@ export class LifestyleComponent implements OnInit {
                 traveling: new FormControl(''),
                 travelingOther: new FormControl(''),
                 suggestLifestyle: new FormControl('')
-                })
+                });
+              this.iPhoneModelxPlus = this.device.iPhoneModelXPlus;
 }
 
   ngOnInit() {

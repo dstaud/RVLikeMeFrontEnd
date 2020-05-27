@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit {
   event: any;
   profile: IuserProfile;
   hideInstall: boolean = false;
+  iPhoneModelxPlus: boolean = false;
 
   private userProfile: Observable<IuserProfile>;
   private dashboardInfo: Idashboard
@@ -42,7 +43,9 @@ export class DashboardComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
               private beforeInstallEventSvc: BeforeInstallEventService,
-              private router: Router) { }
+              private router: Router) {
+          this.iPhoneModelxPlus = this.device.iPhoneModelXPlus;
+  }
 
   ngOnInit() {
     let backPath;
@@ -67,21 +70,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnDestroy() {}
-
-
-  getClass() {
-    let containerClass: string;
-    let bottomSpacing: string;
-
-    if (this.device.iPhoneModelXPlus) {
-      bottomSpacing = 'bottom-bar-spacing-xplus';
-    } else {
-      bottomSpacing = 'bottom-bar-spacing';
-    }
-    containerClass = 'container ' + bottomSpacing;
-
-    return containerClass;
-  }
 
 
   onHelpNewbieTopic() {
