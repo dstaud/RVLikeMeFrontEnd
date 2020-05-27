@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AdminService } from '@services/data-services/admin.service';
 
@@ -26,6 +28,7 @@ export class SystemDataComponent implements OnInit {
     this.showSpinner = true;
 
     this.adminSvc.getSystemData()
+    .pipe(untilComponentDestroyed(this))
     .subscribe(systemResult => {
 
       if (systemResult.length > 0) {
@@ -46,6 +49,9 @@ export class SystemDataComponent implements OnInit {
     })
   }
 
+  ngOnDestroy() {}
+
+
   onSubmit() {
     this.showSpinner = true;
 
@@ -54,6 +60,7 @@ export class SystemDataComponent implements OnInit {
 
     if (!this.systemDataFound) {
       this.adminSvc.setSystemData(useEmail, textOnlyEmails)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(systemResult => {
         this.showSpinner = false;
       }, error => {
@@ -61,6 +68,7 @@ export class SystemDataComponent implements OnInit {
       });
     } else {
       this.adminSvc.updateSystemData(useEmail, this.systemID, textOnlyEmails)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(systemResult => {
         this.showSpinner = false;
       }, error => {

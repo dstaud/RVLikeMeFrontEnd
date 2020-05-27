@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit,OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ShareDataService, Ipost } from '@services/share-data.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -119,6 +121,8 @@ export class UpdatePostComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {}
+
 
   getClass() {
     let containerClass: string;
@@ -156,6 +160,7 @@ export class UpdatePostComponent implements OnInit {
 
     this.showSpinner = true;
     this.forumSvc.deletePostImage(this.post.photoUrl)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(deleteResult => {
       this.post.photoUrl = null;
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
@@ -200,6 +205,7 @@ export class UpdatePostComponent implements OnInit {
   onDeletePhoto() {
     this.showSpinner = true;
     this.forumSvc.deletePostImage(this.post.photoUrl)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(deleteResult => {
       this.post.photoUrl = null;
       this.photoAndLinkActionsDisabled = false;
@@ -222,6 +228,7 @@ export class UpdatePostComponent implements OnInit {
       if (this.form.controls.link.value) {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
           this.linkPreview = preview;
           this.post.link = this.linkPreview.url;
@@ -284,6 +291,7 @@ export class UpdatePostComponent implements OnInit {
   onPost() {
     this.forumSvc.updatePost(this.post.groupID, this.form.controls.post.value, this.post.photoUrl,
                             this.post.link, this.post.linkDesc, this.post.linkTitle, this.post.linkImage)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
       this.post.body = postResult.body;
       this.post.photoUrl = postResult.photoUrl;

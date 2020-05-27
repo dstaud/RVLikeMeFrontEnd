@@ -110,6 +110,7 @@ export class RegisterUserComponent implements OnInit {
   // Determine if using email for registration or overriding
   private listenForSystemConfiguration() {
     this.UsingEmailSvc.useEmail
+    .pipe(untilComponentDestroyed(this))
     .subscribe(useEmail => {
       this.useEmail = useEmail;
     }, error => {
@@ -203,6 +204,7 @@ export class RegisterUserComponent implements OnInit {
     let noExpire: boolean = true;
 
     this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
+    .pipe(untilComponentDestroyed(this))
     .subscribe(tokenResult => {
         this.authSvc.logout();
         this.sendRegisterEmail(tokenResult.token, stay);
@@ -213,6 +215,7 @@ export class RegisterUserComponent implements OnInit {
 
   private activateUser(urlToken: string) {
     this.authSvc.activateUser(urlToken)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(activateResult => {
       this.showSpinner = false;
 
@@ -231,6 +234,7 @@ export class RegisterUserComponent implements OnInit {
     let toFirstName = this.form.controls.firstName.value;
 
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, urlToken)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
       this.showSpinner = false;
       if (!stay) { // Stay means user tried to register again without confirming.  Different messaging and don't want this message
@@ -249,6 +253,7 @@ export class RegisterUserComponent implements OnInit {
     let sendTo = email;
     let toFirstName = null;
     this.emailSmtpSvc.sendWelcomeEmail(sendTo, toFirstName, token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
       this.showSpinner = false;
       this.authSvc.logout();

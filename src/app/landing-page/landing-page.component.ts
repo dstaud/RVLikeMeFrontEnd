@@ -138,6 +138,7 @@ export class LandingPageComponent implements OnInit {
   private listenForParameters() {
     this.routeSubscription = this.route
     .queryParams
+    .pipe(untilComponentDestroyed(this))
     .subscribe(params => {
       if (params.e === 'signin') {
         if (this.windowWidth > 600) {

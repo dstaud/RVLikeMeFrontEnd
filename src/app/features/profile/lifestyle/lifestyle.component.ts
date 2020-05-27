@@ -474,6 +474,7 @@ export class LifestyleComponent implements OnInit {
     if (this.form.controls.suggestLifestyle.value) {
       this.adminSvc.addSuggestion(this.form.controls.suggestLifestyle.value, suggestionType,
                                   this.profile.displayName, this.profile.profileImageUrl)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(suggestResult => {
         this.showSpinner = false;
         this.form.patchValue({

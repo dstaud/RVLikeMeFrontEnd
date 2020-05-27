@@ -339,6 +339,7 @@ export class MainComponent implements OnInit {
   private listenForParameters() {
     this.routeSubscription = this.route
     .queryParams
+    .pipe(untilComponentDestroyed(this))
     .subscribe(params => {
       if (params.item) {
         this.param = params.item;

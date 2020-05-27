@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
 
 import { NgxImageCompressService } from 'ngx-image-compress';
-import * as exifr from 'exifr/dist/mini.legacy.umd';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ImageService } from '@services/data-services/images.service';
 
@@ -22,7 +22,10 @@ export declare enum DOC_ORIENTATION {
 @Injectable({
   providedIn: 'root'
 })
+
 export class UploadImageService {
+
+  ngOnDestroy() {}
 
   constructor(private imageCompress: NgxImageCompressService,
               private imageSvc: ImageService) { }
@@ -46,6 +49,7 @@ export class UploadImageService {
     fd.append('image', imageFile, imageFile.name);
 
     this.imageSvc.uploadProfileImage(fd)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(event => {
       if (event.type === HttpEventType.Response) {
           imageFileUrl = event.body['imageUrl'];
@@ -62,6 +66,7 @@ export class UploadImageService {
     let profileImageUrl: string;
 
     this.imageSvc.uploadProfileImageBase64(croppedImage)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(event => {
     if (event.type === HttpEventType.Response) {
         profileImageUrl = event.body['imageUrl'];

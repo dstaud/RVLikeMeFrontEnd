@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { IuserQuery } from '@services/share-data.service';
@@ -93,6 +94,8 @@ export class LikemeCountsService {
     allCounts: false
   };
 
+  ngOnDestroy() {}
+
   private groupByItemCounts: IgroupByCounts = {
     aboutMe: [{
       _id: '',
@@ -127,6 +130,7 @@ export class LikemeCountsService {
 
   getLikeMeCountsPriority() {
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-priority`)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
@@ -144,6 +148,7 @@ export class LikemeCountsService {
 
   getLikeMeCountsSecondary() {
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-secondary`)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
       this.dataStore.likeMeCounts.allUsersCount = counts.allUsersCount;
       this.dataStore.likeMeCounts.aboutMe = counts.aboutMe;
@@ -211,6 +216,7 @@ export class LikemeCountsService {
 
   getGroupByCounts() {
     return this.http.get<IgroupByCounts>(`/api/analytics`)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(counts => {
       this.dataStoreGroupBy.groupByCounts = counts;
 

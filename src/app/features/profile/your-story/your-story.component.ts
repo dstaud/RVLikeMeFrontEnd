@@ -167,6 +167,7 @@ export class YourStoryComponent implements OnInit {
   // Listen for user profile and then take action
   private listenForUserProfile() {
     this.profileSvc.getUserProfile(this.userID)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       if (profileResult.myStory) {
         this.userMyStory = profileResult.myStory;

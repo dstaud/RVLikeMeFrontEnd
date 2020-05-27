@@ -151,6 +151,7 @@ export class BlogLinkComponent implements OnInit {
 
   onDelete(row: number) {
     this.profileSvc.deleteBlogLinkFromProfile(this.profile._id, this.blogLinks[row]._id)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.profile = profileResult;
       this.profileSvc.getProfile();
@@ -165,6 +166,7 @@ export class BlogLinkComponent implements OnInit {
       if (this.form.controls.link.value) {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
           this.preview = preview;
           if (this.preview.url.substring(0,7) == 'http://') {
@@ -210,6 +212,7 @@ export class BlogLinkComponent implements OnInit {
     }
 
     this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.preview.description, this.preview.title, this.preview.image)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.showSpinner = false;
       this.showAddLink = false;

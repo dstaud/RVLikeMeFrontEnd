@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -52,6 +54,7 @@ export class AdminComponent implements OnInit {
       this.router.navigateByUrl('/?e=signin');
     } else {
       this.authSvc.userAdmin
+      .pipe(untilComponentDestroyed(this))
       .subscribe(admin => {
         if (!admin) {
           this.router.navigateByUrl('/signin');
@@ -59,6 +62,9 @@ export class AdminComponent implements OnInit {
       });
     }
   }
+
+  ngOnDestroy() {}
+
 
   getClass() {
     let containerClass: string;
@@ -77,6 +83,7 @@ export class AdminComponent implements OnInit {
   onBrandsByManufacturer() {
     this.showSpinner = true;
     this.adminSvc.loadRvData(this.form.controls.rvFileName.value)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(rvData => {
       this.shared.openSnackBar('RV Data in file ' + this.form.controls.rvFileName.value + ' loaded to collection', 'message', 3000);
       this.form.controls.rvFileName = null;
@@ -89,6 +96,7 @@ export class AdminComponent implements OnInit {
 
   onNewBrands() {
     this.profileSvc.getNewBrands()
+    .pipe(untilComponentDestroyed(this))
     .subscribe(brands => {
     }, error => {
       if (error) {

@@ -57,6 +57,7 @@ export class RegisterConfirmComponent implements OnInit {
               private router: Router) {
 
       this.route.queryParams
+      .pipe(untilComponentDestroyed(this))
       .subscribe(params => {
         this.token = params['e'];
       });
@@ -123,6 +124,7 @@ export class RegisterConfirmComponent implements OnInit {
   private activateUser() {
     // Pass both the URL token and the embedded token to activate the user
     this.authSvc.activateUser(this.token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(activateResult => {
       this.showSpinner = false;
 
@@ -140,6 +142,7 @@ export class RegisterConfirmComponent implements OnInit {
   private listenForParameters() {
     this.routeSubscription = this.route
     .queryParams
+    .pipe(untilComponentDestroyed(this))
     .subscribe(params => {
       if (params.e) {
         this.token = params.e;
@@ -173,6 +176,7 @@ export class RegisterConfirmComponent implements OnInit {
     let sendTo = email;
     let toFirstName = null;
     this.emailSmtpSvc.sendWelcomeEmail(sendTo, toFirstName, token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
     }, error => {
       console.error('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ', error);
@@ -194,6 +198,7 @@ export class RegisterConfirmComponent implements OnInit {
   // Validate token from URL
   private validateToken() {
     this.authSvc.validatePasswordResetToken(this.token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(tokenResult => {
       this.activateUser();
 

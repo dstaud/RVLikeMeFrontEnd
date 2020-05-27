@@ -153,6 +153,7 @@ export class NewbieLinksComponent implements OnInit {
       if (this.form.controls.link.value) {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
           this.preview = preview;
           if (this.preview.url.substring(0,7) == 'http://') {
@@ -206,6 +207,7 @@ export class NewbieLinksComponent implements OnInit {
                                         this.preview.image,
                                         this.profile.displayName,
                                         this.profile.profileImageUrl)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(linkResult => {
       this.showSpinner = false;
       this.showPreview = false;
@@ -250,6 +252,7 @@ export class NewbieLinksComponent implements OnInit {
     this.showSpinner = true;
 
     this.newbieTopicsSvc.getNewbieLinks(this.topicID)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(linkResult => {
       if (linkResult.length > 0) {
         this.showMenu = true;

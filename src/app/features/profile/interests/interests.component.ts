@@ -154,6 +154,7 @@ ngOnInit() {
     if (this.form.controls.suggestInterest.value) {
       this.adminSvc.addSuggestion(this.form.controls.suggestInterest.value, suggestionType,
                                   this.profile.displayName, this.profile.profileImageUrl)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(suggestResult => {
         this.showSpinner = false;
         this.form.patchValue({

@@ -59,6 +59,7 @@ export class NotificationSettingsComponent implements OnInit {
   onNotify() {
     this.showSpinner = true;
     this.subscribeNotificationsSvc.sendNotificationTest(this.profile.notifySubscription)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(notifyResult => {
       this.showSpinner = false;
     }, error => {
@@ -77,6 +78,7 @@ export class NotificationSettingsComponent implements OnInit {
       })
       .then(subscription => {
         this.subscribeNotificationsSvc.subscribeToNotifications(this.profileID, subscription)
+        .pipe(untilComponentDestroyed(this))
         .subscribe(subscribeResults => {
           this.showSpinner = false;
         }, error => {
@@ -98,6 +100,7 @@ export class NotificationSettingsComponent implements OnInit {
   onUnsubscribeNotifications() {
     this.showSpinner = true;
     this.subscribeNotificationsSvc.unsubscribeFromNotifications(this.profileID)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(unsubscribeResults => {
       this.showSpinner = false;
     }, error => {
@@ -131,6 +134,7 @@ export class NotificationSettingsComponent implements OnInit {
     this.authSvc.getUser()
     .subscribe(user => {
       this.authSvc.getDaveInfo()
+      .pipe(untilComponentDestroyed(this))
       .subscribe(daveInfo => {
         if (user.email === daveInfo.email) {
           this.showPushNotifications = true;

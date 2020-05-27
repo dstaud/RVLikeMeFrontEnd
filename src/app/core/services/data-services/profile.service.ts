@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 
 import { BehaviorSubject, Observable } from 'rxjs';
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -119,6 +120,10 @@ export class ProfileService {
     blogLinks: [],
     hideInstall: false
   };
+
+  ngOnDestroy() {}
+
+
   private profileSubscription: any;
 
   private _profile = new BehaviorSubject<IuserProfile>(this.userProfile);
@@ -244,6 +249,7 @@ export class ProfileService {
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(data => {
         this.dataStore.profile = data;
         this._profile.next(Object.assign({}, this.dataStore).profile);

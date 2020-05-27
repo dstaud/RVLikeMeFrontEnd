@@ -1,6 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
@@ -70,6 +72,7 @@ export class PasswordResetComponent implements OnInit {
 
     this.form.disable();
     this.authSvc.resetPassword(this.token, this.tokenID, this.form.controls.password.value)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(passwordResult => {
       this.shared.openSnackBar('Your password has been reset, please sign in.', 'message', 5000);
       this.showSpinner = false;
@@ -94,6 +97,7 @@ export class PasswordResetComponent implements OnInit {
   private listenForParameters() {
     this.routeSubscription = this.route
     .queryParams
+    .pipe(untilComponentDestroyed(this))
     .subscribe(params => {
       if (params.e) {
         this.token = params.e;
@@ -117,6 +121,7 @@ export class PasswordResetComponent implements OnInit {
 
   private validateToken() {
     this.authSvc.validatePasswordResetToken(this.token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(tokenResult => {
       this.tokenID = tokenResult.tokenID;
     }, error => {

@@ -149,6 +149,7 @@ export class AppComponent implements OnInit {
   // Get system configuration variables
   private getSystemConfiguration() {
     this.adminSvc.getSystemData()
+    .pipe(untilComponentDestroyed(this))
     .subscribe(systemResult => {
       if (systemResult.length > 0) {
         this.UsingEmailSvc.setUseEmail(systemResult[0].useEmail);
@@ -254,7 +255,7 @@ export class AppComponent implements OnInit {
   private listenForUserConversationsForMessageCount() {
     this.userConversations = this.messagesSvc.conversation$;
     this.userConversations
-    // .pipe(untilComponentDestroyed(this))
+    .pipe(untilComponentDestroyed(this)) // had this commented out for some reason
     .subscribe(conversations => {
       if (conversations.length === 0) {
         this.newMessageCount = null;
@@ -278,13 +279,11 @@ export class AppComponent implements OnInit {
   private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
     this.userProfile
-    // .pipe(untilComponentDestroyed(this))
+    .pipe(untilComponentDestroyed(this)) // had this commented out for some reason
     .subscribe(profile => {
       if (profile._id) {
         this.language.setLanguage(profile.language);
-        // this.translate.get('init').subscribe((text:string) => {
-        //   this.language.setLanguage(profile.language);
-        //   });
+
       }
       if (profile.colorThemePreference) {
         this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);

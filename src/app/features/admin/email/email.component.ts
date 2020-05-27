@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 
@@ -25,6 +27,9 @@ export class EmailComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy() {}
+
+
   onSendEmail() {
     this.showSpinner = true;
 
@@ -34,6 +39,7 @@ export class EmailComponent implements OnInit {
     let body = this.form.controls.body.value;
 
     this.emailSmtpSvc.sendEmail(sendTo, subject, body, toFirstName)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
       this.showSpinner = false;
     }, error => {

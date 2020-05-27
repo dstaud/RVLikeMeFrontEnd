@@ -290,6 +290,7 @@ export class SendMessageComponent implements OnInit {
   private getOtherUserProfile() {
     console.error('SendMessageComponent:getOtherUserProfile: getting profile for other user =', this.toUserID, this.toDisplayName);
     this.profileSvc.getUserProfile(this.toUserID)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.sendMessageEmails = profileResult.sendMessageEmails;
 
@@ -412,6 +413,7 @@ export class SendMessageComponent implements OnInit {
 
     if (this.sendMessageEmails) {
       this.authSvc.getOtherUserEmail(this.toUserID)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(userResult => {
 
         if (!userResult.emailNotVerified) {

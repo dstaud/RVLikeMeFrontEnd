@@ -106,6 +106,7 @@ export class NewbieTopicsComponent implements OnInit {
     if (this.form.controls.suggestTopic.value) {
       this.adminSvc.addSuggestion(this.form.controls.suggestTopic.value, suggestionType,
                                   this.profile.displayName, this.profile.profileImageUrl)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(suggestResult => {
         this.showSpinner = false;
         this.form.patchValue({
@@ -140,6 +141,7 @@ export class NewbieTopicsComponent implements OnInit {
     if (!this.findTopic(topicID)) {
 
       this.newbieTopicsSvc.addNewbieTopic(topicID,  topicDesc, this.profile.displayName, this.profile.profileImageUrl)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(topicResult => {
       }, error => {
         if (error.status === 403) {
@@ -197,6 +199,7 @@ export class NewbieTopicsComponent implements OnInit {
     this.showSpinner = true;
 
     this.newbieTopicsSvc.getNewbieTopics()
+    .pipe(untilComponentDestroyed(this))
     .subscribe(topicsResult => {
       for (let i=0; i < topicsResult.length; i++) {
         this.updateAuthorizedTopics(topicsResult[i].topicID, topicsResult[i]._id);

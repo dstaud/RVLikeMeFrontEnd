@@ -21,7 +21,7 @@
     <div class="background mat-elevation-z2"
           [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
       <form [hidden]="!showAllMatches" [formGroup]="form" novalidate> <!-- novalidate tells form not to use native form validation on submit-->
-        <div *ngFor="let likeMeMatch of likeMeMatches; let i=index">
+        <div *ngFor="let likeMeMatch of likeMeMatches">
           <mat-label>
             <mat-checkbox [checked]="likeMeMatch.id === param"
                           color="primary"

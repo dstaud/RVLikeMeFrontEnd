@@ -197,6 +197,7 @@ export class PostsComponent implements OnInit {
     let index: number;
 
     this.forumSvc.deletePost(this.posts[row]._id)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(forumResult => {
       this.posts.splice(row, 1);
 
@@ -212,6 +213,7 @@ export class PostsComponent implements OnInit {
     let reaction = 'like';
 
     this.forumSvc.addReaction(this.posts[row]._id, this.displayName, this.profileImageUrl, reaction)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(reactionResult => {
       this.posts[row].reactionCount++;
       this.liked[row] = true;

@@ -121,6 +121,7 @@ export class SigninComponent implements OnInit {
 
     this.showSpinner = true;
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, this.token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
       this.showSpinner = false;
       this.shared.openSnackBar('An email was sent to ' + this.form.controls.username.value + '.  Please see the email to complete activation of your account.', 'message', 8000);
@@ -360,6 +361,7 @@ export class SigninComponent implements OnInit {
 
   private updateInstallFlag() {
     this.authSvc.getUser()
+    .pipe(untilComponentDestroyed(this))
     .subscribe(credentials => {
       if (!credentials.install && !credentials.installDevice) {
         if (!this.install && this.device) {

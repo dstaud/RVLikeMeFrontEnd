@@ -138,6 +138,7 @@ export class UserQueryComponent implements OnInit {
   // Look for matches with user-selected query parameters
   private getQueryResults() {
     this.likeMeCountsSvc.getUserQueryCounts(this.matches)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(matchResults => {
       this.matchQueryParams(matchResults);
     }, error => {

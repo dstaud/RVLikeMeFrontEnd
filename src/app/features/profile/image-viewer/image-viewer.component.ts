@@ -121,6 +121,7 @@ export class ImageViewerComponent implements OnInit {
     let url = 'profile/' + this.imageData.imageType;
 
     this.profileSvc.deleteLifestyleImageUrlFromProfile(this.imageData.profileID, lifestyleImageUrl)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(imageResult => {
       if (newImageFileUrl) {
         this.updateProfileLifestyleImageUrls(newImageFileUrl);
@@ -151,6 +152,7 @@ export class ImageViewerComponent implements OnInit {
     let url = 'profile/' + this.imageData.imageType;
 
     this.profileSvc.deleteRigImageUrlFromProfile(this.imageData.profileID, imageUrl)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(imageResult => {
       if (newImageFileUrl) {
         this.updateProfileRigImageUrls(newImageFileUrl);

@@ -1,7 +1,8 @@
-import { finalize } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
@@ -66,6 +67,7 @@ export class ForgotPasswordComponent implements OnInit {
 
     userEmail = this.form.controls.userEmail.value;
     this.authSvc.getPasswordResetToken(userEmail, noExpire, 'password-reset')
+    .pipe(untilComponentDestroyed(this))
     .subscribe(tokenResult => {
       this.sendPasswordResetEmail(userEmail, tokenResult.token);
       this.shared.openSnackBar('An email has been sent to this email address to reset your password', 'message', 8000);
@@ -95,6 +97,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   private sendPasswordResetEmail(userEmail: string, token:string) {
     this.emailSmtpSvc.sendPasswordResetEmail(userEmail, token)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(sendEmailResult => {
     }, error => {
       console.error('ForgotPasswordComponent:onSubmit: sending email=', error);

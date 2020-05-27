@@ -1,5 +1,7 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { BeforeInstallEventService } from '@services/before-install-event.service';
 import { ProfileService } from '@services/data-services/profile.service';
@@ -55,6 +57,8 @@ export class InstallComponent implements OnInit {
   ngOnInit(): void {
     this.device = this.deviceSvc.device;
   }
+
+  ngOnDestroy() {}
 
 
   onHideInstall() {
@@ -114,6 +118,7 @@ export class InstallComponent implements OnInit {
 
   private updateDoNotShowOnUserProfile() {
     this.profileSvc.updateProfileAttribute(this.profileID, 'hideInstall', true)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.profileSvc.distributeProfileUpdate(profileResult);
 
@@ -126,6 +131,7 @@ export class InstallComponent implements OnInit {
 
   private updateInstallInfoOnCredentials() {
     this.authSvc.updateInstallFlag(this.userInstalled, this.device)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(user => {
 
       this.notifyUser();

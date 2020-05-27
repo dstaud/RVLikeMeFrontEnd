@@ -117,6 +117,7 @@ export class PostsMainComponent implements OnInit {
     if (paramData.forumType === 'topic') {
 
       this.forumSvc.getGroupByTopic(paramData.topicID)
+      .pipe(untilComponentDestroyed(this))
       .subscribe(groupFromServer => {
         this.groupID = groupFromServer._id;
         this.topicID = groupFromServer.topic;
@@ -126,6 +127,7 @@ export class PostsMainComponent implements OnInit {
       }, error => {
         if (error.status === 404) {
           this.forumSvc.addGroupTopic(paramData.topicID, paramData.topicDesc)
+          .pipe(untilComponentDestroyed(this))
           .subscribe(groupTopic => {
             this.groupID = groupTopic._id;
             this.topicID = groupTopic.topic;
@@ -140,6 +142,7 @@ export class PostsMainComponent implements OnInit {
         console.log('getting group by ID=', paramData._id);
         this.groupID = paramData._id;
         this.forumSvc.getGroupByID(paramData._id)
+        .pipe(untilComponentDestroyed(this))
         .subscribe(groupFromServer => {
           this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(groupFromServer);
           this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(groupFromServer);
@@ -182,6 +185,7 @@ export class PostsMainComponent implements OnInit {
   // Create new group forum based on user's attribute match selections
   private createGroupForum(names: string, values: string, yearOfBirth: number, rigType: number): void {
     this.forumSvc.addGroup(names, values)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(group => {
       this.groupID = group._id;
       this.updateProfileGroups();
@@ -286,6 +290,7 @@ export class PostsMainComponent implements OnInit {
 
     // Check if group already exists
     this.forumSvc.getGroup(names, values)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(groupsFromServer => {
 
       console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: this.groupProfileCodeAttributesFromGroup=', this.groupProfileCodeAttributesFromGroup)

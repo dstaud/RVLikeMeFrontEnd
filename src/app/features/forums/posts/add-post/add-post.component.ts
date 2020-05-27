@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ForumService } from '@services/data-services/forum.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
@@ -76,6 +78,8 @@ export class AddPostComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {}
+
 
   onAddLink() {
     this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
@@ -109,6 +113,7 @@ export class AddPostComponent implements OnInit {
       if (this.form.controls.link.value) {
         this.showSpinner = true;
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
+        .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
           this.linkPreview = preview;
           this.postLink = this.form.controls.link.value;
@@ -181,6 +186,7 @@ export class AddPostComponent implements OnInit {
     this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl,
                           this.linkPreview.url, this.linkPreview.description, this.linkPreview.title, this.linkPreview.image,
                           this.yearOfBirth, this.rigLength)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(post => {
       this.onDoneWithAdd(post);
       this.showSpinner = false;

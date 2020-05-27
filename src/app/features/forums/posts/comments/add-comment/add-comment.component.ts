@@ -1,5 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ForumService } from '@services/data-services/forum.service';
 
@@ -39,10 +41,13 @@ export class AddCommentComponent implements OnInit {
   ngOnInit(): void {
     // Subscribe to changes in the form.  Since only one field, as soon as user clicks on the add comment inpu, activate button.
     this.form.get('comment').valueChanges
+    .pipe(untilComponentDestroyed(this))
     .subscribe(selectedValue => {
       this.postButtonActive = true;
     })
   }
+
+  ngOnDestroy() {}
 
 
   // When user submits, send to the server.
@@ -51,6 +56,7 @@ export class AddCommentComponent implements OnInit {
     this.showSpinner = true;
     let comment = this.form.controls.comment.value;
     this.forumSvc.addComment(this.postID, this.displayName, this.profileImageUrl, comment)
+    .pipe(untilComponentDestroyed(this))
     .subscribe(result => {
       this.doneWithAdd(result);
       this.showSpinner = false;
