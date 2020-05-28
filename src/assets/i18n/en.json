@@ -41,8 +41,7 @@
     "noResults2": "profile",
     "noResults3": "as completely as possible because this is what is used to locate others like you.  Also, check back and try again because as other users join, you will find others like you.",
     "forumButton": "Connect in a group",
-    "queryButton": "Search combined matches",
-    "cancelButton": "Cancel",
+    "queryButton": "Combined Search",
     "resultPrefix0": "No others found for combo of",
     "resultPrefix1": "other found for combo of",
     "resultPrefix2": "others found for combo of",
@@ -458,7 +457,8 @@
     "campsWithMeDesc": "RVs with me",
     "boondockingDesc": "Boondocking",
     "travelingDesc": "How I travel in my RV",
-    "uploadpics": "Upload 3 pics about your RV Lifestyle"
+    "uploadpics": "Upload 3 pics about your RV Lifestyle",
+    "suggest": "Suggest a new lifestyle item"
  },
   "rig.component": {
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
@@ -516,6 +516,7 @@
     "photo": "Photo",
     "addLink": "Add website link",
     "addPhoto": "Add Photo",
+    "changePhoto": "Change Photo",
     "deletePhoto": "Delete Photo",
     "deleteLink": "Delete Link",
     "addWebsiteLink": "Add Website Link"
@@ -677,7 +678,7 @@
     "success": "Your password has been updated successfully",
     "notValid": "Current password is not valid"
   },
-  "changeusername.component": {
+  "changeUsername.component": {
     "title": "Change Username",
     "email": "Email",
     "pleaseEnter": "Please enter your",

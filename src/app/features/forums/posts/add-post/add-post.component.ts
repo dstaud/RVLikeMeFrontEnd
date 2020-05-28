@@ -41,6 +41,7 @@ export class AddPostComponent implements OnInit {
 
   @Output() postAddComplete = new EventEmitter<string>();
 
+  // Focus on input element
   @ViewChild('post') postInput: ElementRef;
   focusOnPostInput(): void {
     this.postInput.nativeElement.focus();
@@ -63,6 +64,7 @@ export class AddPostComponent implements OnInit {
   }
   noPreview: string = '';
 
+  private desktopUser: boolean = false;
   private regHyperlink = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
   constructor(private forumSvc: ForumService,
@@ -73,6 +75,10 @@ export class AddPostComponent implements OnInit {
                 post: new FormControl(''),
                 link: new FormControl('', Validators.pattern(this.regHyperlink))
               });
+
+              if (window.innerWidth > 600) {
+                this.desktopUser = true;
+              }
   }
 
   ngOnInit() {

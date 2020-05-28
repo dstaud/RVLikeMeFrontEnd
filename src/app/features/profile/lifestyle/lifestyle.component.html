@@ -216,7 +216,7 @@
       <mat-divider></mat-divider>
       <div class="suggest">
         <br>
-        <button mat-button type="button" (click)="onSuggestLifestyleOpen()">Suggest a new lifestyle item not shown above</button>
+        <button mat-button type="button" (click)="onSuggestLifestyleOpen()">{{ 'lifestyle.component.suggest' | translate}}</button>
         <div [@suggestLifestyleSlideInOut]="suggestLifestyleOpen" class="other">
           <div>
             <mat-form-field appearance="outline">

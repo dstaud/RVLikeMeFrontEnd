@@ -72,6 +72,22 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy() {}
 
 
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
+
+
   onHelpNewbieTopic() {
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
     this.router.navigateByUrl('/newbie/newbie-corner');

@@ -14,6 +14,7 @@ import { ActivateBackArrowService } from '@core/services/activate-back-arrow.ser
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ShareDataService, ImessageShareData, ImyStory, InewbieTopic } from '@services/share-data.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-newbie-links',
@@ -76,6 +77,7 @@ export class NewbieLinksComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService,
               private location: Location,
+              private sentry: SentryMonitorService,
               private linkPreviewSvc: LinkPreviewService,
               private shareDataSvc: ShareDataService,
               private router: Router,
@@ -155,12 +157,16 @@ export class NewbieLinksComponent implements OnInit {
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
+          console.log('NewbieLinksComponent:onLink: preview=', preview);
           this.preview = preview;
-          if (this.preview.url.substring(0,7) == 'http://') {
-            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+
+          // An https site cannot launch an http site.  So appending https.  Most sites are https, but if not, it will fail to launch it.
+          if (this.preview.url.substring(0,7) !== 'http://' && this.preview.url.substring(0,8) !== 'https://' ) {
+            this.preview.url = 'https://' + this.preview.url;
+          } else if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = 'https://' + this.preview.url.substring(7,this.preview.url.length);
           }
+
           this.readyToSave = true;
           this.showPreview = true;
           this.showSpinner = false;
@@ -170,12 +176,18 @@ export class NewbieLinksComponent implements OnInit {
           }
 
         }, error => {
+          console.log('NewbieLinksComponent:onLink: Error on preview=' + error);
+          this.sentry.logError('Error getting link preview=' + error)
           this.preview.url = this.form.controls.link.value;
-          if (this.preview.url.substring(0,7) == 'http://') {
-            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+
+          // An https site cannot launch an http site.  So appending https.  Most sites are https, but if not, it will fail to launch it.
+          if (this.preview.url.substring(0,7) !== 'http://' && this.preview.url.substring(0,8) !== 'https://' ) {
+            this.preview.url = 'https://' + this.preview.url;
+          } else if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = 'https://' + this.preview.url.substring(7,this.preview.url.length);
           }
+
+          console.log('NewbieLinksComponent:onLink: defaulting to link=' + this.preview.url);
           this.preview.title = this.preview.url;
           this.readyToSave = true;
           this.showPreview = true;

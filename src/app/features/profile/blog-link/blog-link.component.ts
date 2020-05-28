@@ -207,8 +207,11 @@ export class BlogLinkComponent implements OnInit {
 
     link = this.preview.url;
 
+    // An https site cannot launch an http site.  So appending https.  Most sites are https, but if not, it will fail to launch it.
     if (link.substring(0,7) !== 'http://' && link.substring(0,8) !== 'https://' ) {
-      link = 'http://' + link;
+      link = 'https://' + link;
+    } else if (link.substring(0,7) !== 'http://') {
+      link = 'https://' + link.substring(7,link.length);
     }
 
     this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.preview.description, this.preview.title, this.preview.image)

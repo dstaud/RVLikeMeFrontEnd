@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     if (window.innerWidth <= 600) {
-      this.router.navigateByUrl('help-newbie');
+      this.router.navigateByUrl('newbie/newbie-corner');
     }
   }
 

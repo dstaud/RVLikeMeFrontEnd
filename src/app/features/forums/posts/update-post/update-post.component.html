@@ -42,14 +42,14 @@
       </div>
 
     </form>
-    <div *ngIf="post.photoUrl">
+    <div [hidden]="!post.photoUrl">
       <div>
         <button class="replace hyperlink" mat-button (click)="fileInput.click()">
           <input #fileInput type="file"
                   (change)="onChangePhoto($event)"
                   accept = "image/*"
                   style="display:none;"/>
-            <span>{{ 'add-post.component.addPhoto' | translate }}</span>
+            <span>{{ 'add-post.component.changePhoto' | translate }}</span>
         </button>
         <button class="delete hyperlink" mat-button (click)="onDeletePhoto()">
           <span>{{ 'add-post.component.deletePhoto' | translate }}</span>
@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <div *ngIf="showLinkPreview">
+    <div [hidden]="!showLinkPreview">
       <button class="delete hyperlink" mat-button (click)="onDeleteLink()">
         <span>{{ 'add-post.component.deleteLink' | translate }}</span>
       </button>

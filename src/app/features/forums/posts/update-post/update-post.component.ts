@@ -304,7 +304,12 @@ export class UpdatePostComponent implements OnInit {
       if (this.containerDialog) {
         this.formComplete.emit(this.post);
       } else {
-        this.router.navigateByUrl('forums/main');
+        if (this.containerDialog) {
+          this.router.navigateByUrl('forums/main');
+        } else {
+          this.router.navigateByUrl('forums/posts-main');
+        }
+
       }
       this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     }, error => {

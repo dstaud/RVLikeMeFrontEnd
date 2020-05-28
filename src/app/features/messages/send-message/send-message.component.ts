@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, IterableDiffers } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, IterableDiffers } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -28,7 +28,7 @@ export class SendMessageComponent implements OnInit {
 
   @ViewChild('scrollable') private scrollable: ElementRef;
 
-  // Set focus to input field
+  // Focus on input element
   @ViewChild('message') messageInput: ElementRef;
   focusOnPostInput(): void {
     this.messageInput.nativeElement.focus();
@@ -102,6 +102,12 @@ export class SendMessageComponent implements OnInit {
       this.getParameters()
 
       this.listenForChangeInColorTheme();
+    }
+  }
+
+  ngAfterViewInit() {
+    if (this.desktopUser) {
+      this.focusOnPostInput();
     }
   }
 

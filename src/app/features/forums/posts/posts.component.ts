@@ -185,7 +185,9 @@ export class PostsComponent implements OnInit {
   // When user clicks to add a post, show the form
   onAddPost() {
     this.addPostOpen = this.addPostOpen === 'out' ? 'in' : 'out';
-    this.addPost.focusOnPostInput();
+    if (this.desktopUser) {
+      this.addPost.focusOnPostInput();
+    }
     this.showFirstPost = false;
   }
 
