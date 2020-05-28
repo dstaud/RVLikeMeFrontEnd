@@ -218,8 +218,12 @@ export class SendMessageComponent implements OnInit {
       userIdViewer: this.fromUserID,
       params: userParams
     }
+    if (this.desktopUser) {
+      this.activateBackArrowSvc.setBackRoute('messages/main', 'forward');
+    } else {
+      this.activateBackArrowSvc.setBackRoute('messages/send-message', 'forward');
+    }
 
-    this.activateBackArrowSvc.setBackRoute('messages/send-message', 'forward');
     this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
   }

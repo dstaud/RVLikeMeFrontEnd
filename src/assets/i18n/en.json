@@ -41,7 +41,7 @@
     "noResults2": "profile",
     "noResults3": "as completely as possible because this is what is used to locate others like you.  Also, check back and try again because as other users join, you will find others like you.",
     "forumButton": "Connect in a group",
-    "queryButton": "Search for combined matches",
+    "queryButton": "Search combined matches",
     "cancelButton": "Cancel",
     "resultPrefix0": "No others found for combo of",
     "resultPrefix1": "other found for combo of",
@@ -287,6 +287,13 @@
     "yearOfBirth": "around your age (+/- 5yrs)",
     "rigLength": "with similar length rig (+/- 3ft)",
     "viewpic": "View your story as others will see it",
+    "homeState": "From",
+    "homeCountry": "From",
+    "rigBrand": "With a",
+    "rigManufacturer": "With a",
+    "rigModel": "With a",
+    "rigYear": "With a rig year of",
+    "boondocking": "Boondocks",
     "howYourStory": "This is how your story will be presented to other users based on your profile information",
     "list": {
       "aboutme": {
@@ -476,7 +483,8 @@
     "gaming": "gaming",
     "musicalInstrument": "playing a musical instrument",
     "programming": "computer programming",
-    "mobileInternet": "internet connectivity"
+    "mobileInternet": "internet connectivity",
+    "interested": "Interested in"
   },
   "account": {
     "changeProfileImage": "Change Profile Pic",

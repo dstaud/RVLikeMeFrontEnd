@@ -94,6 +94,7 @@ export class PostsComponent implements OnInit {
   liked: Array<boolean> = [];
   userNewbie: boolean = false;
   forumType: string;
+  desktopUser: boolean = false;
 
   addPostOpen: string = 'out';
   commentsOpen: Array<string> = [];
@@ -135,6 +136,10 @@ export class PostsComponent implements OnInit {
               private dialog: MatDialog) { }
 
   ngOnInit() {
+    if (window.innerWidth > 600) {
+      this.desktopUser = true;
+    }
+
     this.listenForUserProfile();
 
     this.listenForDesktopMaxWidth();
@@ -266,7 +271,12 @@ export class PostsComponent implements OnInit {
         }
       });
     } else {
-      this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
+      if (this.desktopUser) {
+        this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
+      } else {
+        this.activateBackArrowSvc.setBackRoute('forums/posts-main', 'forward');
+      }
+
       this.router.navigateByUrl('/forums/update-post');
     }
   }
@@ -284,7 +294,12 @@ export class PostsComponent implements OnInit {
     //                   '"userIdViewer":"' + this.userID + '",' +
     //                   '"params":' + userParams + '}';
 
-    this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
+    if (this.desktopUser) {
+      this.activateBackArrowSvc.setBackRoute('forums/main', 'forward');
+    } else {
+      this.activateBackArrowSvc.setBackRoute('forums/posts-main', 'forward');
+    }
+
     this.shareDataSvc.setData('myStory', params);
     this.router.navigateByUrl('/profile/mystory');
   }

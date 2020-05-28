@@ -373,45 +373,38 @@ export class PostsMainComponent implements OnInit {
       }
     });
   }
+
+
   // Translate group codes to text that a user will understand for display in the template
   private getGroupDisplayAttributes(group: any): Array<string> {
     let name;
     let value;
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
-    console.log('PostsMainComponent:getGroupDisplayAttributes: group=', group);
-    if (group._id === null || group._id === 'null') {
-      console.log('PostsMainComponent:getGroupDisplayAttributes: null group id');
-    } else {
-      for (name in group) {
-        if (!this.reservedField(name)) {
-          value = group[name];
-          console.log('PostsMain:getGroupDisplayAttributes: type of=', typeof(value), ' name=', name, ' value=', value)
-          if (value === null || value === 'null') {
-            console.log('PostsMain:getGroupDisplayAttributes: value null= ', name, ', value=', value)
-            forumItem = 'forums.component.' + name;
+    console.log('ForumsListComponent:getGroupDisplayAttributes: group=', group);
+    for (name in group) {
+      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v' && name !== 'forumType') {
+        value = group[name];
+        if (value === 'true' || value === true) {
+          forumItem = 'forums.component.' + name;
+        } else {
+          if (name === 'rigManufacturer' || name === 'rigBrand') {
+            forumItem = this.translate.instant('forums.component.' + name) + ' ' + value;
           } else {
-            if (name === 'rigManufacturer' || name === 'rigBrand') {
-              forumItem = this.translate.instant('forums.component.' + name) + ' ' + value;
+            if (name === 'yearOfBirth' || name === 'rigLength') {
+              forumItem = 'forums.component.' + name;
             } else {
-              if (name === 'yearOfBirth' || name === 'rigLength') {
-                forumItem = 'forums.component.' + name;
-              } else {
-                console.log('PostsMain:getGroupDisplayAttributes: about to use toLowerCase on name=', name, ' group=', group)
-                forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
-              }
+              forumItem = 'forums.component.list.' + name.toLowerCase() + '.' + value.toLowerCase();
             }
           }
-          if (name === 'rigManufacturer' || name === 'rigBrand') {
-            groupProfileDisplayAttributesFromGroup.push(forumItem);
-          } else {
-            groupProfileDisplayAttributesFromGroup.push(this.translate.instant(forumItem));
-          }
+        }
+        if (name === 'rigManufacturer' || name === 'rigBrand') {
+          groupProfileDisplayAttributesFromGroup.push(forumItem);
+        } else {
+          groupProfileDisplayAttributesFromGroup.push(this.translate.instant(forumItem));
         }
       }
     }
-
-    console.log('got display attributes=', groupProfileDisplayAttributesFromGroup)
     return groupProfileDisplayAttributesFromGroup;
   }
 

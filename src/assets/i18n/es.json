@@ -281,6 +281,13 @@
     "aboutMe": "Describete",
     "yearOfBirth": "alrededor de tu edad (+/- 5años)",
     "rigLength": "con un aparejo de longitud similar (+/- 3ft)",
+    "rigBrand": "Con una marca de aparejos de",
+    "rigManufacturer": "Con un fabricante de plataformas de",
+    "rigModel": "Con un modelo de plataforma de",
+    "rigYear": "Con un rig año de",
+    "homeState": "Desde",
+    "homeCountry": "Desde",
+    "boondocking": "Boondocks",
     "viewpic": "Vea su historia como otros la verán",
     "howYourStory": "Así es como se presentará su historia a otros usuarios en función de la información de su perfil",
     "list": {

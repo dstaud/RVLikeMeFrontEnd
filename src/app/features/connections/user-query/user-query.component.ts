@@ -201,21 +201,24 @@ export class UserQueryComponent implements OnInit {
       value = Object.values(this.matches[i])[0];
 
       // get original answers for those checked
-      if (typeof(value) === 'boolean') {
-        likeMeAnswer = this.translate.instant(
-                            'interests.component.' + name
-        );
+      console.log('UserQueryComponent:matchQueryParams: name=', name, ' value=', value)
+      if (value === true || value === 'true') {
+        likeMeAnswer = this.translate.instant('interests.component.interested') + ' ' +
+                        this.translate.instant('interests.component.' + name);
       } else {
-          if (typeof(value) === 'number') {
-            likeMeAnswer = this.translate.instant(
-                                'profile.component.' + name
-              );
+        if (name === 'rigBrand' || name === 'rigManufacturer' || name === 'rigModel' || name === 'rigYear') {
+          likeMeAnswer = this.translate.instant('profile.component.' + name) + ' ' + value;
+        } else {
+          if (name === 'yearOfBirth' || name === 'rigLength') {
+            likeMeAnswer = this.translate.instant('profile.component.' + name);
           } else {
-            likeMeAnswer = this.translate.instant(
-                                'profile.component.list.' + name.toLowerCase() +
-                                '.' + value.toLowerCase()
-              );
+            if (name === 'boondocking' || name === 'homeState' || name === 'homeCountry') {
+              likeMeAnswer = this.translate.instant('profile.component.' + name) + ' ' + this.translate.instant('profile.component.list.' + name.toLowerCase() + '.' + value.toLowerCase());
+            } else {
+              likeMeAnswer = this.translate.instant('profile.component.list.' + name.toLowerCase() + '.' + value.toLowerCase());
+            }
           }
+        }
       }
       this.matchResults.push(likeMeAnswer);
     }
