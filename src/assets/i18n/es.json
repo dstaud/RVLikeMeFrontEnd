@@ -534,10 +534,7 @@
     "delete": "Eliminar",
     "change": "Cambio"
   },
-  "help-newbie.component": {
-    "header": "Ayuda a los novatos"
-  },
-  "need-help-newbie.component": {
+  "newbie-corner.component": {
     "header": "Rincón del novato"
   },
   "newbie-topics.component": {

@@ -8,10 +8,9 @@ import { NewbieComponent } from './newbie.component';
 import { SharedModule } from '@shared/shared.module';
 import { NewbieTopicsComponent } from './newbie-topics/newbie-topics.component';
 import { TopicComponent } from './newbie-topics/topic/topic.component';
-import { HelpNewbieComponent } from './help-newbie/help-newbie.component';
-import { NeedHelpNewbieComponent } from './need-help-newbie/need-help-newbie.component';
 import { NewbieLinksComponent } from './newbie-topics/newbie-links/newbie-links.component';
 import { MainComponent } from './main/main.component';
+import { NewbieCornerComponent } from './newbie-corner/newbie-corner.component';
 
 
 @NgModule({
@@ -19,10 +18,9 @@ import { MainComponent } from './main/main.component';
     NewbieComponent,
     NewbieTopicsComponent,
     TopicComponent,
-    HelpNewbieComponent,
-    NeedHelpNewbieComponent,
     NewbieLinksComponent,
-    MainComponent
+    MainComponent,
+    NewbieCornerComponent
   ],
   imports: [
     CommonModule,

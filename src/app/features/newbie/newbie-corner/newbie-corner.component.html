@@ -1,0 +1,6 @@
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
+  <p class="mat-title">{{ 'newbie-corner.component.header' | translate}}</p>
+  <app-rvlm-newbie-topics
+    (topicSelected)="onTopicSelected($event)"></app-rvlm-newbie-topics>
+</div>
+

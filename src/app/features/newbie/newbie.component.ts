@@ -17,7 +17,7 @@ export class NewbieComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.location.path() === '/newbie') {
-      this.router.navigateByUrl('/newbie/need-help-newbie');
+      this.router.navigateByUrl('/newbie/newbie-corner');
     }
   }
 }

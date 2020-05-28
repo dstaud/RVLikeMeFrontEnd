@@ -535,10 +535,7 @@
     "delete": "Delete",
     "change": "Change"
   },
-  "help-newbie.component": {
-    "header": "Help Newbies"
-  },
-  "need-help-newbie.component": {
+  "newbie-corner.component": {
     "header": "Newbie Corner"
   },
   "newbie-topics.component": {

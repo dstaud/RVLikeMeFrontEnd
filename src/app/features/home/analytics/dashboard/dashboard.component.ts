@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
 
   onHelpNewbieTopic() {
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-    this.router.navigateByUrl('/newbie/help-newbie');
+    this.router.navigateByUrl('/newbie/newbie-corner');
   }
 
 
@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit {
 
     // this.shareDataSvc.setData('newbieHelp', params);
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-    this.router.navigateByUrl('/newbie/need-help-newbie');
+    this.router.navigateByUrl('/newbie/newbie-corner');
   }
 
 

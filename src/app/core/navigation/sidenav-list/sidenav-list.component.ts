@@ -66,7 +66,7 @@ export class SidenavListComponent implements OnInit {
 
   onNewbieCorner() {
     this.activateBackArrowSvc.setBackRoute('', 'nostack');
-    this.router.navigateByUrl('/newbie/need-help-newbie');
+    this.router.navigateByUrl('/newbie/newbie-corner');
     this.closeSideNav();
   }
 

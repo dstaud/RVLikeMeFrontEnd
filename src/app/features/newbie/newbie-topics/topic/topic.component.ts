@@ -1,16 +1,17 @@
 import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ShareDataService, IforumsMain, InewbieTopic } from '@services/share-data.service';
+import { DeviceService } from '@services/device.service';
 import { UserTypeService } from '@services/user-type.service';
-import { Itopics } from './../../help-newbie/help-newbie.component';
 
+import { Itopics } from './../../newbie-corner/newbie-corner.component';
 import { NewbieLinksComponent } from './../newbie-links/newbie-links.component';
 
 @Component({
@@ -29,6 +30,7 @@ export class TopicComponent implements OnInit {
   header: string;
   userType: string;
 
+  private desktopUser: boolean = false;
   private authorizedTopics: Array<Itopics> = [];
   private userProfile: Observable<IuserProfile>;
 
@@ -36,17 +38,37 @@ export class TopicComponent implements OnInit {
               private profileSvc: ProfileService,
               private route: ActivatedRoute,
               private router: Router,
+              private device: DeviceService,
               private translate: TranslateService,
               private userTypeSvc: UserTypeService,
               private shareDataSvc: ShareDataService) { }
 
   ngOnInit(): void {
+    if (window.innerWidth > 600) {
+      this.desktopUser = true;
+    }
+
     this.listenForUserProfile();
 
     this.listenForUserType();
   }
 
   ngOnDestroy() {}
+
+  getClass() {
+    let containerClass: string;
+    let bottomSpacing: string;
+
+    if (this.device.iPhoneModelXPlus) {
+      bottomSpacing = 'bottom-bar-spacing-xplus';
+    } else {
+      bottomSpacing = 'bottom-bar-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing;
+
+    return containerClass;
+  }
 
 
   newbieInit(params: InewbieTopic) {
@@ -73,7 +95,12 @@ export class TopicComponent implements OnInit {
 
     this.activateBackArrowSvc.setBackRoute('newbie/topic', 'forward');
     this.shareDataSvc.setData('forumsMain', params);
-    this.router.navigateByUrl('/forums/main');
+    if (this.desktopUser) {
+      this.router.navigateByUrl('/forums/main');
+    } else {
+      this.router.navigateByUrl('/forums/posts-main');
+    }
+
   }
 
   onLinkAdded(event: any) {
@@ -102,14 +129,6 @@ export class TopicComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(type => {
       this.userType = type;
-
-      // if (!this.shareDataSvc.getData('newbieTopic').topicID) {
-      //   if (type = 'expert') {
-      //     this.router.navigateByUrl('/newbie/help-newbie');
-      //   } else {
-      //     this.router.navigateByUrl('/newbie/need-help-newbie');
-      //   }
-      // }
 
       if (!this.shareDataSvc.getData('newbieTopic').topicID) {
         this.getAuthorizedTopics();

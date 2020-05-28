@@ -158,7 +158,7 @@ export class NewbieTopicsComponent implements OnInit {
     }
 
     this.shareDataSvc.setData('newbieTopic', params);
-    this.activateBackArrowSvc.setBackRoute('newbie/need-help-newbie', 'forward');
+    this.activateBackArrowSvc.setBackRoute('newbie/newbie-corner', 'forward');
 
     if (this.desktopUser) {
       console.log('NewbieTopicsComponent:onTopic: sending up the chain=', params);

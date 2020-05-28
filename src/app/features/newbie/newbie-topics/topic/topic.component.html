@@ -1,4 +1,4 @@
-<div class="mat-app-background container mat-body-1">
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <p class=mat-title>{{ title | translate }}</p>
   <p>{{ header | translate }}
     <span class="hyperlink" (click)="onGroup()">{{ 'newbie-topics.component.groupForum' | translate }}</span>.
