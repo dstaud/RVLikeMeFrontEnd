@@ -454,7 +454,9 @@
     "boondockingDesc": "Boondocking",
     "travelingDesc": "Cómo viajo en mi RV",
     "uploadpics": "Sube 3 fotos sobre tu estilo de vida RV",
-    "suggest": "Sugerir un nuevo elemento de estilo de vida"
+    "suggest": "Sugerir un nuevo elemento de estilo de vida",
+    "newbie": "Como alguien nuevo en RVing, si no está seguro, seleccione respuestas que se alineen con sus expectativas para que podamos conectarlo con RVers de ideas afines",
+    "experienced": "Como RVer experimentado, ¿estás interesado en ayudar a los novatos?"
   },
   "rig.component": {
     "explanation": "Esta información se usará para otras personas con RV similares para obtener respuestas más relevantes. ¡Cuanto más completo, mejores serán sus resultados!",

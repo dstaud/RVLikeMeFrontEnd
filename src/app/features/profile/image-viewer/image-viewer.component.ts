@@ -123,10 +123,13 @@ export class ImageViewerComponent implements OnInit {
     this.profileSvc.deleteLifestyleImageUrlFromProfile(this.imageData.profileID, lifestyleImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe(imageResult => {
+      console.log('ImageViewerComponent:deleteLifestyleImageUrlFromProfile: deleted, new profile=', imageResult);
       if (newImageFileUrl) {
+        console.log('ImageViewerComponent:deleteLifestyleImageUrlFromProfile: deleted, and now getting ready to add=', newImageFileUrl);
         this.updateProfileLifestyleImageUrls(newImageFileUrl);
       } else {
-        this.profileSvc.getProfile();
+        console.log('ImageViewerComponent:deleteLifestyleImageUrlFromProfile: distributing profile=', imageResult.lifestyleImageUrls.length);
+        this.profileSvc.distributeProfileUpdate(imageResult);
         this.showSpinner = false;
         this.shareDataSvc.setData('viewImage', this.imageData);
         if (changeOrDelete === 'delete') {
@@ -154,10 +157,11 @@ export class ImageViewerComponent implements OnInit {
     this.profileSvc.deleteRigImageUrlFromProfile(this.imageData.profileID, imageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe(imageResult => {
+
       if (newImageFileUrl) {
         this.updateProfileRigImageUrls(newImageFileUrl);
       } else {
-        this.profileSvc.getProfile();
+        this.profileSvc.distributeProfileUpdate(imageResult);
         this.showSpinner = false;
         this.shareDataSvc.setData('viewImage', this.imageData);
         if (changeOrDelete === 'delete') {
@@ -185,7 +189,7 @@ export class ImageViewerComponent implements OnInit {
     this.profileSvc.addLifestyleImageUrlToProfile(this.imageData.profileID, lifestyleImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      this.profileSvc.getProfile();
+      this.profileSvc.distributeProfileUpdate(responseData);
       this.showSpinner = false;
       this.deactivateButtons = false;
       this.imageSource = lifestyleImageUrl;
@@ -204,7 +208,7 @@ export class ImageViewerComponent implements OnInit {
     this.profileSvc.addRigImageUrlToProfile(this.imageData.profileID, rigImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      this.profileSvc.getProfile();
+      this.profileSvc.distributeProfileUpdate(responseData);
       this.showSpinner = false;
       this.deactivateButtons = false;
       this.imageSource = rigImageUrl;

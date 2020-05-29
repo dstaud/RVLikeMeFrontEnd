@@ -458,7 +458,9 @@
     "boondockingDesc": "Boondocking",
     "travelingDesc": "How I travel in my RV",
     "uploadpics": "Upload 3 pics about your RV Lifestyle",
-    "suggest": "Suggest a new lifestyle item"
+    "suggest": "Suggest a new lifestyle item",
+    "newbie": "As someone new to RVing, if unsure, select answers that align with your expectations so we can connect you with like-minded RVers",
+    "experienced": "As an experienced RVer, are you interested in helping newbies?"
  },
   "rig.component": {
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",

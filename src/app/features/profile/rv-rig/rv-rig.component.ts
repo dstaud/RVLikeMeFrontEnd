@@ -437,7 +437,15 @@ export class RvRigComponent implements OnInit {
 
         this.rigImageUrls = this.profile.rigImageUrls;
 
+
+        // Put this hack in.  Getting strange behavior where it is coming back into this subscription without any place
+        // nexting a new one and it has the placeholder in the profile...somehow.  This makes sure we ignore that.
         this.nbrRigImagePics = this.rigImageUrls.length;
+        for (let i=0; i < this.rigImageUrls.length; i++) {
+          if (this.rigImageUrls[i] === this.placeholderPhotoUrl) {
+            this.nbrRigImagePics = i;
+          }
+        }
 
         for (let i=this.rigImageUrls.length; i < 3; i++) {
           this.rigImageUrls[i] = this.placeholderPhotoUrl;
@@ -486,7 +494,7 @@ export class RvRigComponent implements OnInit {
     this.profileSvc.addRigImageUrlToProfile(this.profile._id, rigImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      this.profileSvc.getProfile();
+      this.profileSvc.distributeProfileUpdate(responseData);
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;

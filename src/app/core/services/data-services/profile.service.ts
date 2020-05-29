@@ -288,7 +288,7 @@ export class ProfileService {
                   '"attribute":"' + attribute + '",' +
                   '"value":"' +  attributeEscaped + '"}';
 
-    this._profile.next(Object.assign({}, this.dataStore).profile);
+    // this._profile.next(Object.assign({}, this.dataStore).profile);
     return this.http.put(`/api/profile-attribute-update`, params, {});
   }
 

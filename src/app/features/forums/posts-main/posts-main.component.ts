@@ -486,7 +486,7 @@ export class PostsMainComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
         console.log('PostsMain:updateProfileGroups: added group profile=', this.profile)
-        this.profileSvc.getProfile();
+        this.profileSvc.distributeProfileUpdate(responseData);
         this.showSpinner = false;
       }, error => {
         this.showSpinner = false;

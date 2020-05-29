@@ -154,7 +154,7 @@ export class BlogLinkComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.profile = profileResult;
-      this.profileSvc.getProfile();
+      this.profileSvc.distributeProfileUpdate(profileResult);
     }, error => {
       console.error('BlogLinkComponent:onDelete: error deleting blog link from profile=', error);
       throw new Error(error);
@@ -217,6 +217,7 @@ export class BlogLinkComponent implements OnInit {
     this.profileSvc.addBlogLinkToProfile(this.profile._id, link, this.preview.description, this.preview.title, this.preview.image)
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
+      this.profileSvc.distributeProfileUpdate(profileResult);
       this.showSpinner = false;
       this.showAddLink = false;
       this.blogLinks = profileResult.blogLinks;
@@ -230,7 +231,7 @@ export class BlogLinkComponent implements OnInit {
       }
       this.showPreview = false;
       this.form.reset()
-      this.profileSvc.getProfile();
+      this.profileSvc.distributeProfileUpdate(profileResult);
     }, error => {
       this.showSpinner = false;
       throw Error(error);

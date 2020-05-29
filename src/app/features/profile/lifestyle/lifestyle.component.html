@@ -64,11 +64,11 @@
                 (blur)="onOther('aboutMe')">
         </mat-form-field>
       </div>
-      <div *ngIf="newbieOpen === 'in'" [@newbieSlideInOut]="newbieOpen" class="newbie">
-        <p>As someone new to RVing, if unsure, select answers that align with your expectations so we can connect you with like-minded RVers</p>
+      <div [hidden]="newbieOpen === 'out'" [@newbieSlideInOut]="newbieOpen" class="newbie">
+        <p>{{ 'lifestyle.component.newbie' | translate}}</p>
       </div>
-      <div *ngIf="helpNewbieOpen === 'in'" [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
-          <p>As an experienced RVer, are you interested in helping newbies?</p>
+      <div [hidden]="helpNewbieOpen === 'out'" [@helpNewbieSlideInOut]="helpNewbieOpen" class="newbie">
+          <p>{{ 'lifestyle.component.experienced' | translate}}</p>
           <input type="radio"
                   formControlName="helpNewbies"
                   value="true"
