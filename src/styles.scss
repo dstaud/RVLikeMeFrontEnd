@@ -43,12 +43,22 @@ body {
   @include angular-material-typography($custom-android-typography);
 }
 
-.snackBarPanelError {
+.snackBarPanelErrorLightTheme {
   background-color: white !important;
   color: red !important;
 }
 
-.snackBarPanelMessage {
+.snackBarPanelErrorDarkTheme {
+  color: red !important;
+}
+
+.snackBarPanelMessageLightTheme {
+  background-color: white !important;
+  color: black !important;
+}
+
+.snackBarPanelMessageDarkTheme {
+
 }
 
 .illustration {

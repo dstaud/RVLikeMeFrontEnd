@@ -1,6 +1,46 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <p class="mat-title">{{ 'newbie-corner.component.header' | translate}}</p>
-  <app-rvlm-newbie-topics
-    (topicSelected)="onTopicSelected($event)"></app-rvlm-newbie-topics>
+
+  <div>
+    <p *ngIf="userType === 'newbie'">{{ 'newbie-topics.component.headingNewbie' | translate }}</p>
+    <p *ngIf="userType === 'expert'">{{ 'newbie-topics.component.headingExpert' | translate }}</p>
+  </div>
+  <div *ngFor="let topic of authorizedTopics; let i=index">
+    <div>
+      <li class="hyperlink topic" (click)="onTopic(topic.topicID, topic.topicDesc)">{{ topic.topicDesc }}</li>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <br>
+  <div>
+    <div>
+      <span class="mat-h2">{{ 'newbie-topics.component.suggestNewTopic' | translate }}</span>
+    </div>
+    <div>
+      <form [formGroup]="form">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'newbie-topics.component.suggestTopic' | translate }}</mat-label>
+            <input matInput
+                  type="text"
+                  placeholder="{{ 'newbie-topics.component.suggestion' | translate }}"
+                  cdkFocusInitial
+                  (change)="readyToSuggest = true"
+                  formControlName="suggestTopic">
+          </mat-form-field>
+        </div>
+        <div>
+          <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestTopic()">
+            {{ 'newbie-topics.component.submit' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
+
 </div>
 

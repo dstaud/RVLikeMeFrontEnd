@@ -44,6 +44,7 @@ export class RegisterUserComponent implements OnInit {
   private presentInstallOption = false;
   private event: any;
   private useEmail: boolean;
+  private overrideRegisterEmail: boolean = false;
 
   private credentials: ItokenPayload = {
     _id: '',
@@ -217,10 +218,11 @@ export class RegisterUserComponent implements OnInit {
     this.authSvc.activateUser(urlToken)
     .pipe(untilComponentDestroyed(this))
     .subscribe(activateResult => {
+      console.log('RegisterUserComponent:activateUser: return from activate=', activateResult)
       this.showSpinner = false;
-
-      // Since token was deleted by activate user, using this agreed-upon hard-coded token just for sending welcome email.
-      this.sendWelcomeEmail(activateResult.email, '8805-1335-8153-3116');
+      this.authSvc.logout();
+      this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
+      this.registrationComplete();
 
     }, error => {
       this.showSpinner = false;
@@ -230,8 +232,24 @@ export class RegisterUserComponent implements OnInit {
   }
 
   private sendRegisterEmail(urlToken: string, stay?: boolean) {
+    let self = this;
     let sendTo = this.credentials.email;
     let toFirstName = this.form.controls.firstName.value;
+
+    // Been having periodic issus with AWS SES timing out and not sending any emails.  If after 20 seconds, no response, override and activate
+    setTimeout(function () {
+      if (self.showSpinner) {
+        self.shared.openSnackBar('Sorry for the delay. We are experiencing an issue.  Please stand by for 12 more seconds.', "error", 8000);
+        setTimeout(function () {
+          if (self.showSpinner) {
+            if (!self.overrideRegisterEmail) {
+              self.overrideRegisterEmail = true;
+              self.activateUser(urlToken);
+            }
+          }
+        }, 10000);
+      }
+    }, 10000);
 
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, urlToken)
     .pipe(untilComponentDestroyed(this))
@@ -244,8 +262,10 @@ export class RegisterUserComponent implements OnInit {
     }, error => {
       // If AWS failure to send email, attempt to activate user anyway.  Email failure will be logged so can tell if have registered user but email not really verified.
       console.log('RegisterUserComponent:sendRegisterEmail: error sending email, activating user for token=', urlToken)
-      this.activateUser(urlToken);
-
+      if (!this.overrideRegisterEmail) {
+        this.overrideRegisterEmail = true;
+        this.activateUser(urlToken);
+      }
     })
   }
 
@@ -262,6 +282,8 @@ export class RegisterUserComponent implements OnInit {
     }, error => {
       console.error('RegisterComponent:sendWelcomeEmail: error sending email: ', error);
       this.sentry.logError('Error sending welcome email');
+      this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
+      this.registrationComplete();
     });
   }
 }

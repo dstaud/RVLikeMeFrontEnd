@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { isNumber } from 'util';
 import { Observable } from 'rxjs';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';

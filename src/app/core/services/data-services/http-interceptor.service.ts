@@ -40,7 +40,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       retryWhen(errors => errors
         .pipe(
           concatMap((error, count) => {
-            if (count < 3 && (error.status == 504)) {
+            if (count < 3 && error.status == 504 && !this.getHostLocation().includes('send-register-email')) {
               return of(error);
             }
             return throwError(error.error);

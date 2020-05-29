@@ -1,12 +1,42 @@
+@import './../../../../styles/_variables';
+
 .container {
   padding: 10px;
   margin-top: 50px;
 }
 
 .bottom-bar-spacing {
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 
 .bottom-bar-spacing-xplus {
-  margin-bottom: 130px;
+  margin-bottom: 80px;
 }
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.topic {
+  padding: 5px;
+}
+
+.suggest {
+  margin-top: 10px;
+}
+
+mat-divider {
+  border-top-width: 2px;
+}
+
+.spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
