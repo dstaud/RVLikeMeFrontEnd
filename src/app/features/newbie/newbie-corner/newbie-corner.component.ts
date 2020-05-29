@@ -124,18 +124,14 @@ export class NewbieCornerComponent implements OnInit {
       .pipe(untilComponentDestroyed(this))
       .subscribe(suggestResult => {
         this.showSpinner = false;
-        this.form.patchValue({
-          suggestTopic: ''
-        });
+        this.form.reset();
         this.readyToSuggest = false;
         this.suggestTopicOpen = 'out';
         this.shared.openSnackBar(this.translate.instant('newbie-topics.component.suggestionAdmin'), "message", 3000);
       }, error => {
         this.showSpinner = false;
         this.suggestTopicOpen = 'out';
-        this.form.patchValue({
-          suggestTopic: ''
-        });
+        this.form.reset();
         this.shared.openSnackBar(this.translate.instant('newbie-topics.component.suggestionAdmin'), "message", 3000);
         this.readyToSuggest = false;
         console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);

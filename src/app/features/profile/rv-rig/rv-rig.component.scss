@@ -13,6 +13,11 @@
   margin-bottom: 80px;
 }
 
+mat-form-field{
+  width: 85% !important;
+  max-width: 310px !important;
+}
+
 .hyperlink {
   color: $primary-color;
   text-decoration: none;

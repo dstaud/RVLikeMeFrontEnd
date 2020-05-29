@@ -59,6 +59,11 @@ mat-form-field {
   width: 90px;
 }
 
+mat-form-field{
+  width: 85% !important;
+  max-width: 310px !important;
+}
+
 .desktop-img-container {
   width: 200px;
 }

@@ -239,17 +239,15 @@ export class RegisterUserComponent implements OnInit {
     // Been having periodic issus with AWS SES timing out and not sending any emails.  If after 20 seconds, no response, override and activate
     setTimeout(function () {
       if (self.showSpinner) {
-        self.shared.openSnackBar('Sorry for the delay. We are experiencing an issue.  Please stand by for 12 more seconds.', "error", 8000);
+        self.shared.openSnackBar('Sorry for the delay. We are experiencing an issue.  Please stand by for 5 more seconds.', "error", 4000);
         setTimeout(function () {
-          if (self.showSpinner) {
             if (!self.overrideRegisterEmail) {
               self.overrideRegisterEmail = true;
               self.activateUser(urlToken);
             }
-          }
-        }, 10000);
+        }, 5000);
       }
-    }, 10000);
+    }, 5000);
 
     this.emailSmtpSvc.sendRegisterEmail(sendTo, toFirstName, urlToken)
     .pipe(untilComponentDestroyed(this))

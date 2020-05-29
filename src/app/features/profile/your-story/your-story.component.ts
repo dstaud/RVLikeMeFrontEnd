@@ -210,7 +210,7 @@ export class YourStoryComponent implements OnInit {
       }
       this.userRigBrand = profileResult.rigBrand;
       this.userRigYear = profileResult.rigYear;
-      this.userRigModel = profileResult.rigModel;
+      this.userRigModel = ' - ' + profileResult.rigModel;
       this.rigImageUrls = profileResult.rigImageUrls;
       this.lifestyleImageUrls = profileResult.lifestyleImageUrls;
 

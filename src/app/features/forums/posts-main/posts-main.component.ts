@@ -165,6 +165,7 @@ export class PostsMainComponent implements OnInit {
         });
       } else {
         this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
+        console.log('PostsMainComponent:getGroup: Getting display Attributes for paramData=', paramData)
         this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
 
         // If there are more than 3 attributes, show only three with ...more on the template.

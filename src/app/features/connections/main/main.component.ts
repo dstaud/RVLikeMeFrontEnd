@@ -49,6 +49,7 @@ export class MainComponent implements OnInit {
   private routeSubscription: any;
   private allUsersCount: number;
   private allCountsReceived: boolean = false;
+  private desktopUser: boolean = false;
 
   constructor(private translate: TranslateService,
               private authSvc: AuthenticationService,
@@ -85,6 +86,10 @@ export class MainComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+      }
+
       this.showSpinner = true;
 
       this.listenForColorTheme();
@@ -277,7 +282,12 @@ export class MainComponent implements OnInit {
       i++;
     });
     this.shareDataSvc.setData('forumsMain', queryParams);
-    this.router.navigateByUrl('/forums/main');
+    if (this.desktopUser) {
+      this.router.navigateByUrl('/forums/main');
+    } else {
+      this.router.navigateByUrl('/forums/posts-main');
+    }
+
   }
 
 
