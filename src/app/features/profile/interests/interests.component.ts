@@ -146,6 +146,12 @@ ngOnInit() {
   }
 
 
+  onBottomBack() {
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl('/profile/main');
+  }
+
+
   onSuggestInterest() {
     let suggestionType = 'interest';
 

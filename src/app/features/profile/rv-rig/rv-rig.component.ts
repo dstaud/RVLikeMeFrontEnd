@@ -188,6 +188,12 @@ export class RvRigComponent implements OnInit {
   }
 
 
+  onBottomBack() {
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl('/profile/main');
+  }
+
+
   onBrandSelected(brand: string) {
     this.brandSelected = brand;
   }

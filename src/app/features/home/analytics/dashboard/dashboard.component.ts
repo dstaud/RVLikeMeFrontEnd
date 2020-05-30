@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit {
 
   private userProfile: Observable<IuserProfile>;
   private dashboardInfo: Idashboard
+  private desktopUser: boolean = false;
 
   constructor(public translate: TranslateService,
               private authSvc: AuthenticationService,
@@ -59,6 +60,10 @@ export class DashboardComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
+      if (window.innerWidth > 600) {
+        this.desktopUser = true;
+      }
+
       this.listenBeforeInstall();
 
       this.dashboardInfo = this.shareDataSvc.getData('dashboard'); // not yet using this.  Problem is, if they are using as app, won't log in a lot.  But may be useful
@@ -90,7 +95,11 @@ export class DashboardComponent implements OnInit {
 
   onHelpNewbieTopic() {
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-    this.router.navigateByUrl('/newbie/newbie-corner');
+    if (this.desktopUser) {
+      this.router.navigateByUrl('/newbie/main');
+    } else {
+      this.router.navigateByUrl('/newbie/newbie-corner');
+    }
   }
 
 
@@ -102,7 +111,12 @@ export class DashboardComponent implements OnInit {
 
     // this.shareDataSvc.setData('newbieHelp', params);
     this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-    this.router.navigateByUrl('/newbie/newbie-corner');
+    if (this.desktopUser) {
+      this.router.navigateByUrl('/newbie/main');
+    } else {
+      this.router.navigateByUrl('/newbie/newbie-corner');
+    }
+
   }
 
 

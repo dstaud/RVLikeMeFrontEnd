@@ -199,8 +199,9 @@ export class PersonalComponent implements OnInit {
 
     if (window.innerWidth > 600) {
       this.containerDialog = true;
-      this.setReturnRoute();
     }
+
+    this.setReturnRoute();
 
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
@@ -245,6 +246,12 @@ export class PersonalComponent implements OnInit {
     let route = '/' + this.returnRoute
     this.activateBackArrowSvc.setBackRoute('', 'backward');
     this.router.navigateByUrl(route);
+  }
+
+
+  onBottomBack() {
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl('/profile/main');
   }
 
 

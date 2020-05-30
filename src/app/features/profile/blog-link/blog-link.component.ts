@@ -169,10 +169,16 @@ export class BlogLinkComponent implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
           this.preview = preview;
-          if (this.preview.url.substring(0,7) == 'http://') {
-            this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-            this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+          // if (this.preview.url.substring(0,7) == 'http://') {
+          //   this.preview.url = this.preview.url.substring(7,this.preview.url.length);
+          // } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+          //   this.preview.url = this.preview.url.substring(8,this.preview.url.length);
+          // }
+
+          if (this.preview.url.substring(0,7) !== 'http://' && this.preview.url.substring(0,8) !== 'https://' ) {
+            this.preview.url = 'https://' + this.preview.url;
+          } else if (this.preview.url.substring(0,7) == 'http://') {
+            this.preview.url = 'https://' + this.preview.url.substring(7,this.preview.url.length);
           }
 
           if (!this.preview.title) {

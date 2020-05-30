@@ -116,7 +116,9 @@ export class ImageCropperComponent implements OnInit {
   onSubmit() {
     this.showSpinner = true;
     let croppedImageBase64 = this.imageDestination;
+    console.log('ImageCropperComponent:onSubmit: Uploading image base64=', croppedImageBase64)
     this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
+      console.log('ImageCropperComponent:onSubmit: Back from uploading image file=', uploadedFileUrl)
       this.newImageUrl = uploadedFileUrl
       this.updateImageUrlInProfile(uploadedFileUrl);
     });

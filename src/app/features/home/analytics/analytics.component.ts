@@ -42,7 +42,7 @@ export class AnalyticsComponent implements OnInit {
   pieChartType: ChartType = 'pie';
   pieChartLegend = false;
   pieChartPlugins = [];
-  chartColor: Array<string> = ['green','red','blue','black','yellow','orange','brown']
+  chartColor: Array<string> = ['green','red','blue','black','purple','orange','brown']
   chartColors: Array<any> = [
     { backgroundColor: this.chartColor}
   ]

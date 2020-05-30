@@ -403,6 +403,12 @@ export class LifestyleComponent implements OnInit {
   }
 
 
+  onBottomBack() {
+    this.activateBackArrowSvc.setBackRoute('', 'backward');
+    this.router.navigateByUrl('/profile/main');
+  }
+
+
   // Offer chance for experienced RVer to help out newbies
   onHelpNewbies() {
     let callHelpNewbiesUpdateWhenDone: boolean = false;

@@ -123,10 +123,15 @@ export class AddPostComponent implements OnInit {
         .subscribe(preview => {
           this.linkPreview = preview;
           this.postLink = this.form.controls.link.value;
-          if (this.linkPreview.url.substring(0,7) == 'http://') {
-            this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
-          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-            this.linkPreview.url = this.linkPreview.url.substring(8,this.linkPreview.url.length);
+          // if (this.linkPreview.url.substring(0,7) == 'http://') {
+          //   this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
+          // } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+          //   this.linkPreview.url = this.linkPreview.url.substring(8,this.linkPreview.url.length);
+          // }
+          if (this.linkPreview.url.substring(0,7) !== 'http://' && this.linkPreview.url.substring(0,8) !== 'https://' ) {
+            this.linkPreview.url = 'https://' + this.linkPreview.url;
+          } else if (this.linkPreview.url.substring(0,7) == 'http://') {
+            this.linkPreview.url = 'https://' + this.linkPreview.url.substring(7,this.linkPreview.url.length);
           }
 
           if (!this.linkPreview.title) {
@@ -189,6 +194,7 @@ export class AddPostComponent implements OnInit {
   onPost() {
     this.showSpinner = true;
     let postText = this.form.controls.post.value;
+
     this.forumSvc.addPost(this.groupID, postText, this.displayName, this.profileImageUrl, this.postPhotoUrl,
                           this.linkPreview.url, this.linkPreview.description, this.linkPreview.title, this.linkPreview.image,
                           this.yearOfBirth, this.rigLength)

@@ -391,14 +391,20 @@ export class PostsComponent implements OnInit {
       photoUrl = post.photoUrl;
     }
 
-    if (post.link !== 'undefined' && post.link !== undefined) {
-      if (post.link.substring(0,7) == 'http://') {
-        link = post.link.substring(7,post.link.length);
-      } else if (post.link.substring(0,8) === 'https://') {
-        link = post.link.substring(8,post.link.length);
+    link = post.link;
+    if (post.link !== 'undefined' && post.link !== undefined && post.link !== null && post.link !== 'null' && post.link !== '') {
+      // if (post.link.substring(0,7) == 'http://') {
+      //   link = post.link.substring(7,post.link.length);
+      // } else if (post.link.substring(0,8) === 'https://') {
+      //   link = post.link.substring(8,post.link.length);
+      // }
+      if (post.link.substring(0,7) !== 'http://' && post.link.substring(0,8) !== 'https://' ) {
+        link = 'https://' + this.preview.url;
+      } else if (post.link.substring(0,7) == 'http://') {
+        link = 'https://' + this.preview.url.substring(7,this.preview.url.length);
       }
     }
-
+    console.log('PostsComponent:createPostsArrayEntry: post.link before=', post.link, ' link=', link)
     if (post.linkDesc !== 'undefined' && post.linkDesc !== undefined) {
       linkDesc = post.linkDesc;
     }
@@ -430,7 +436,7 @@ export class PostsComponent implements OnInit {
       createdAt: post.createdAt,
       fragment: fragmentLink
     }
-
+    console.log('PostsComponent:createPostsArrayEntry: newPost=', newPost)
     return newPost;
   }
 

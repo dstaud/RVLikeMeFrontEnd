@@ -232,16 +232,27 @@ export class UpdatePostComponent implements OnInit {
         .subscribe(preview => {
           this.linkPreview = preview;
           this.post.link = this.linkPreview.url;
-          if (this.linkPreview.url.substring(0,7) == 'http://') {
-            this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
-          } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-            this.linkPreview.url = this.linkPreview.url.substring(8,this.linkPreview.url.length);
+          this.post.linkTitle = this.linkPreview.title;
+          this.post.linkDesc = this.linkPreview.description;
+          this.post.linkImage = this.linkPreview.image;
+
+          // if (this.linkPreview.url.substring(0,7) == 'http://') {
+          //   this.linkPreview.url = this.linkPreview.url.substring(7,this.linkPreview.url.length);
+          // } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
+          //   this.linkPreview.url = this.linkPreview.url.substring(8,this.linkPreview.url.length);
+          // }
+
+          if (this.linkPreview.url.substring(0,7) !== 'http://' && this.linkPreview.url.substring(0,8) !== 'https://' ) {
+            this.post.link = 'https://' + this.linkPreview.url;
+          } else if (this.linkPreview.url.substring(0,7) == 'http://') {
+            this.post.link = 'https://' + this.linkPreview.url.substring(7,this.linkPreview.url.length);
           }
 
           if (!this.linkPreview.title) {
             this.linkPreview.title = this.linkPreview.url;
+            this.post.linkTitle = this.linkPreview.url;
           }
-
+          console.log('UpdatePostComponent:onLink: preview=', this.linkPreview)
           this.showLinkPreview = true;
           this.addLinkInputEnabled = false;
           this.readyForPost = true;
@@ -289,6 +300,7 @@ export class UpdatePostComponent implements OnInit {
   }
 
   onPost() {
+    console.log('UpdatePostComponent:onPost: link=', this.post.link, ' desc=', this.post.linkDesc, ' title=', this.post.linkTitle)
     this.forumSvc.updatePost(this.post.groupID, this.form.controls.post.value, this.post.photoUrl,
                             this.post.link, this.post.linkDesc, this.post.linkTitle, this.post.linkImage)
     .pipe(untilComponentDestroyed(this))

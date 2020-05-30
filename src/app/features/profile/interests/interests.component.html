@@ -84,7 +84,7 @@
       </mat-checkbox>
       <mat-divider></mat-divider>
       <br>
-      <button mat-button type="button" (click)="onSuggestInterestOpen()">Suggest a new interest</button>
+      <button mat-button type="button" class="hyperlink" (click)="onSuggestInterestOpen()">Suggest a new interest</button>
       <div [@suggestInterestSlideInOut]="suggestInterestOpen" class="other">
         <div>
           <mat-form-field appearance="outline">
@@ -101,7 +101,10 @@
           <button [disabled]="!readyToSuggest" type="submit" mat-raised-button class="mat-primary" (click)="onSuggestInterest()">Submit</button>
         </div>
       </div>
-  </form>
+    </form>
+
+    <button mat-button (click)='onBottomBack()'><span class="hyperlink">Back to main Profile Page</span></button>
+
   </div>
 
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>

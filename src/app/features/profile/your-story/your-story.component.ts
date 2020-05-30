@@ -114,6 +114,13 @@ export class YourStoryComponent implements OnInit {
   }
 
 
+  onProfileImageSelect() {
+    if (this.userProfileImage === './../../../../assets/images/no-profile-pic.jpg') {
+      this.router.navigateByUrl('/profile/personal');
+    }
+  }
+
+
   onViewImage(imageUrl: string) {
     let imageData: IviewImage = {
       imageType: 'mystory',
