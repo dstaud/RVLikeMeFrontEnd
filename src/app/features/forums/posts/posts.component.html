@@ -77,8 +77,8 @@
               </div>
             </div>
             <div class="body">
-              <div class="bodyText">
-                {{ posts[i].body }}
+              <div>
+                <span class="body-text">{{ posts[i].body }}</span>
               </div>
               <div *ngIf="posts[i].postPhotoUrl">
                 <img class="postImage" [src]="posts[i].postPhotoUrl">

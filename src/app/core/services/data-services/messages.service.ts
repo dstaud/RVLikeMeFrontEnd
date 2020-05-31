@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 import { retry } from 'rxjs/operators';
@@ -76,36 +76,43 @@ export class MessagesService {
   }
 
   getConversationsNotRead(userIdType: string): Observable<any> {
-    let param = JSON.parse('{"userIdType":"' + userIdType + '"}');
-    return this.http.get<number>(`/api/conversations-not-read`, { params: param  });
+    let params = new HttpParams().set('userIdType', userIdType);
+
+    return this.http.get<number>(`/api/conversations-not-read`, { params: params  });
   }
 
   getConversation(fromUserID: string, toUserID: string): Observable<any> {
-    let param = JSON.parse('{"fromUserID":"' + fromUserID + '","toUserID":"' + toUserID + '"}');
+    let params = new HttpParams().set('fromUserID', fromUserID)
+                                  .set('toUserID', toUserID)
 
-    return this.http.get(`/api/conversation`, { params: param  });
+    return this.http.get(`/api/conversation`, { params: params  });
   }
 
   updateConversation(conversationID: string, userIdType: string, action: string) {
-    let update = '{"conversationID":"' + conversationID + '",' +
-                  '"userIdType":"' + userIdType + '",' +
-                  '"action":"' + action + '"}';
-    return this.http.put(`/api/conversation-update`, JSON.parse(update),{});
+    let params = {
+      conversationID: conversationID,
+      userIdType: userIdType,
+      action: action
+    }
+
+    return this.http.put(`/api/conversation-update`, params,{});
   }
 
   sendMessage(conversationID: string, fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,
-              toUserID: string, toDisplayName: string, toProfileImageUrl: string, message): Observable<any> {
-    let messageEscaped = this.escapeJsonReservedCharacters(message);
-    let body = '{"conversationID":"' + conversationID + '",' +
-                '"fromUserID":"' + fromUserID + '",' +
-                '"fromDisplayName":"' + fromDisplayName + '",' +
-                '"fromProfileImageUrl":"' + fromProfileImageUrl + '",' +
-                '"toUserID":"' + toUserID + '",' +
-                '"toDisplayName":"' + toDisplayName + '",' +
-                '"toProfileImageUrl":"' + toProfileImageUrl + '",' +
-                '"message":"' + messageEscaped + '"}'
-    let bodyJSON = JSON.parse(body);
-    return this.http.post(`/api/message-send`, bodyJSON, {});
+              toUserID: string, toDisplayName: string, toProfileImageUrl: string, message: string): Observable<any> {
+
+    let params = {
+      conversationID: conversationID,
+      fromUserID: fromUserID,
+      fromDisplayName: fromDisplayName,
+      fromProfileImageUrl: fromProfileImageUrl,
+      toUserID: toUserID,
+      toDisplayName: toDisplayName,
+      toProfileImageUrl: toProfileImageUrl,
+      message: message
+    }
+
+    return this.http.post(`/api/message-send`, params, {});
   }
 
   private escapeJsonReservedCharacters(string: string): string {

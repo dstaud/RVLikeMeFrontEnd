@@ -12,18 +12,22 @@ export class SubscribeNotificationsService {
 
   // Subscribe to push notifications for user
   subscribeToNotifications(profileID: string, subscription: PushSubscription): Observable<any> {
-    let update = '{"profileID":"' + profileID + '",' +
-                '"subscription":' + JSON.stringify(subscription) + '}';
+    let params  = {
+      profileID: profileID,
+      subscription: subscription
+    }
 
-    return this.http.post('/api/subscribe', JSON.parse(update));
+    return this.http.post('/api/subscribe', params);
   }
 
 
   // Subscribe to push notifications for user
   unsubscribeFromNotifications(profileID: string): Observable<any> {
-    let update = '{"profileID":"' + profileID + '"}'
+    let params = {
+      profileID: profileID
+    }
 
-    return this.http.post('/api/unsubscribe', JSON.parse(update));
+    return this.http.post('/api/unsubscribe', params);
   }
 
 

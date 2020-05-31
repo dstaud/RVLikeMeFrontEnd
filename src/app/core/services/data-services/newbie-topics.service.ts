@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -33,42 +33,36 @@ export class NewbieTopicsService {
   constructor(private http: HttpClient) { }
 
   addNewbieTopic(topicID: string, topicDesc: string, displayName: string, profileImageUrl: string): Observable<any> {
-    let keyValues = '{"topicID":"' + topicID + '",' +
-                    '"topicDesc":"' + topicDesc + '",' +
-                    '"displayName":"' + displayName + '",' +
-                    '"profileImageUrl":"' + profileImageUrl + '"}'
+    let params = {
+      topicID: topicID,
+      topicDesc: topicDesc,
+      displayName: displayName,
+      profileImageUrl: profileImageUrl
+    }
 
-    return this.http.post(`/api/newbie-topic`, JSON.parse(keyValues), {});
+    return this.http.post(`/api/newbie-topic`, params, {});
   }
 
-  addNewbieTopicPost(topicID: string, displayName: string, profileImageUrl: string, post: string, photoUrl: string): Observable<any> {
-    let postEscaped = this.escapeJsonReservedCharacters(post);
+  addNewbieLink(topicID: string, linkTitle: string, link: string, linkDesc: string,
+                linkImage: string, displayName: string, profileImageUrl: string): Observable<any> {
 
-    let keyValues = '{"topicID":"' + topicID + '",' +
-                    '"displayName":"' + displayName + '",' +
-                    '"profileImageUrl":"' + profileImageUrl + '",' +
-                    '"photoUrl":"' + photoUrl + '",' +
-                    '"body":"' + postEscaped + '"}'
+    let params = {
+      topicID: topicID,
+      linkTitle: linkTitle,
+      link: link,
+      linkDesc: linkDesc,
+      linkImage: linkImage,
+      displayName: displayName,
+      profileImageUrl: profileImageUrl
+    }
 
-    return this.http.post(`/api/newbie-topic-post`, JSON.parse(keyValues), {});
+    return this.http.post(`/api/newbie-link`, params, {});
   }
 
   getNewbieLinks(topicID: string): Observable<any> {
-    let param = JSON.parse('{"topicID":"' + topicID + '"}');
+    let params = new HttpParams().set('topicID', topicID);
 
-    return this.http.get(`/api/newbie-links`, { params: param  });
-  }
-
-  addNewbieLink(topicID: string, linkTitle: string, link: string, linkDesc: string, linkImage: string, displayName: string, profileImageUrl: string): Observable<any> {
-    let keyValues = '{"topicID":"' + topicID + '",' +
-                    '"linkTitle":"' + linkTitle + '",' +
-                    '"link":"' + link + '",' +
-                    '"linkDesc":"' + linkDesc + '",' +
-                    '"linkImage":"' + linkImage + '",' +
-                    '"displayName":"' + displayName + '",' +
-                    '"profileImageUrl":"' + profileImageUrl + '"}'
-
-    return this.http.post(`/api/newbie-link`, JSON.parse(keyValues), {});
+    return this.http.get(`/api/newbie-links`, { params: params  });
   }
 
   private escapeJsonReservedCharacters(string: string): string {

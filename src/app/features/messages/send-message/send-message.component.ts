@@ -270,6 +270,7 @@ export class SendMessageComponent implements OnInit {
           this.conversationID = null;
           this.messages = [];
         } else {
+          console.log('messages=', conversations[conversationIndex].messages)
           this.conversation = conversations[conversationIndex];
           this.conversationID = this.conversation._id;
           this.newConversation = false;

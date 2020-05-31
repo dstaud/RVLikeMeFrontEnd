@@ -44,8 +44,8 @@
     </form>
     <div [hidden]="!post.photoUrl">
       <div>
-        <button class="replace hyperlink" mat-button (click)="fileInput.click()">
-          <input #fileInput type="file"
+        <button class="replace hyperlink" mat-button (click)="fileInputChange.click()">
+          <input #fileInputChange type="file"
                   (change)="onChangePhoto($event)"
                   accept = "image/*"
                   style="display:none;"/>
@@ -70,9 +70,9 @@
       </app-rvlm-preview-link>
     </div>
 
-    <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="fileInput.click()">
+    <button [disabled]="photoAndLinkActionsDisabled" class="action" mat-button (click)="fileInputAdd.click()">
       <mat-icon fontSet="material-icons-outlined">add_a_photo</mat-icon>
-      <input #fileInput type="file"
+      <input #fileInputAdd type="file"
               (change)="onPhoto($event)"
               accept = "image/*"
               style="display:none;"/>

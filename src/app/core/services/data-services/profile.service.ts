@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -135,62 +135,77 @@ export class ProfileService {
 
 
   addBlogLinkToProfile(profileID: string, blogLink: string, blogDesc: string, blogTitle: string, blogImage: string): Observable<any> {
-    let params = '{"profileID":"' + profileID + '",' +
-                  '"blogDesc":"' + blogDesc + '",' +
-                  '"blogTitle":"' + blogTitle + '",' +
-                  '"blogImage":"' + blogImage + '",' +
-                  '"blogLink":"' + blogLink + '"}';
+    let params = {
+      profileID: profileID,
+      blogDesc: blogDesc,
+      blogTitle: blogTitle,
+      blogImage: blogImage,
+      blogLink: blogLink
+    }
 
-    return this.http.put(`/api/profile-blog-link`, JSON.parse(params), {});
+    return this.http.put(`/api/profile-blog-link`, params, {});
   }
 
   addGroupToProfile(profileID: string, groupID: string): Observable<any> {
-    let group = '{"profileID":"' + profileID + '","groupID":"' + groupID + '"}';
-    let groupJSON = JSON.parse(group);
+    let params = {
+      profileID: profileID,
+      groupID: groupID
+    }
 
-    return this.http.put(`/api/profile-forums`, groupJSON, {});
+    return this.http.put(`/api/profile-forums`, params, {});
   }
 
   addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
+    let params = {
+      profileID: profileID,
+      lifestyleImageUrl: lifestyleImageUrl
+    }
 
-    return this.http.put(`/api/profile-lifestyle-image`, imageUrlJSON, {});
+    return this.http.put(`/api/profile-lifestyle-image`, params, {});
   }
 
   addRigImageUrlToProfile(profileID: string, rigImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
+    let params = {
+      profileID: profileID,
+      rigImageUrl: rigImageUrl
+    }
 
-    return this.http.put(`/api/profile-rig-image`, imageUrlJSON, {});
+    return this.http.put(`/api/profile-rig-image`, params, {});
   }
 
   deleteBlogLinkFromProfile(profileID: string, blogID: string): Observable<any> {
-    let params = '{"profileID":"' + profileID + '",' +
-                '"blogID":"' + blogID + '"}';
+    let params = {
+      profileID: profileID,
+      blogID: blogID
+    }
 
-    return this.http.put(`/api/profile-blog-link-delete`, JSON.parse(params), {});
+    return this.http.put(`/api/profile-blog-link-delete`, params, {});
   }
 
   deleteLifestyleImageUrlFromProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","lifestyleImageUrl":"' + lifestyleImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
+    let params = {
+      profileID: profileID,
+      lifestyleImageUrl: lifestyleImageUrl
+    }
 
-    return this.http.put(`/api/profile-lifestyle-image-delete`, imageUrlJSON, {});
+    return this.http.put(`/api/profile-lifestyle-image-delete`, params, {});
   }
 
   deleteRigImageUrlFromProfile(profileID: string, rigImageUrl: string): Observable<any> {
-    let imageUrl = '{"profileID":"' + profileID + '","rigImageUrl":"' + rigImageUrl + '"}';
-    let imageUrlJSON = JSON.parse(imageUrl);
+    let params = {
+      profileID: profileID,
+      rigImageUrl: rigImageUrl
+    }
 
-    return this.http.put(`/api/profile-rig-image-delete`, imageUrlJSON, {});
+    return this.http.put(`/api/profile-rig-image-delete`, params, {});
   }
 
   deleteTempProfileImage(imageUrl: string): Observable<any> {
-    let image = '{"imageUrl":"' + imageUrl + '"}';
-    let imageUrlJSON = JSON.parse(image);
+    let params = {
+      imageUrl: imageUrl
+    }
 
-    return this.http.put(`/api/profile-delete-temp-image`, imageUrlJSON, {});
+    return this.http.put(`/api/profile-delete-temp-image`, params, {});
   }
 
   distributeProfileUpdate(userProfile: IuserProfile) {
@@ -265,29 +280,18 @@ export class ProfileService {
   }
 
   getUserProfile(userID: string): Observable<any> {
-    let param = JSON.parse('{"userID":"' + userID + '"}');
-    return this.http.get(`/api/profile-user`, { params: param });
+    let params = new HttpParams().set('userID', userID);
+
+    return this.http.get(`/api/profile-user`, { params: params });
   }
 
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
-    let attributeEscaped;
-
-    if (value) {
-      if (typeof(value) !== 'boolean' && typeof(value !== 'number')) {
-        attributeEscaped = this.escapeJsonReservedCharacters(value);
-      } else {
-        attributeEscaped = value;
-      }
-    } else {
-      attributeEscaped = value;
+    let params = {
+      profileID: profileID,
+      attribute: attribute,
+      value: value
     }
 
-
-    var params = '{"profileID":"' + profileID + '",' +
-                  '"attribute":"' + attribute + '",' +
-                  '"value":"' +  attributeEscaped + '"}';
-
-    // this._profile.next(Object.assign({}, this.dataStore).profile);
     return this.http.put(`/api/profile-attribute-update`, params, {});
   }
 

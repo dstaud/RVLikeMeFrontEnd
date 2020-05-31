@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -46,7 +46,9 @@ export class AuthenticationService {
 
 
   activateUser(token: string): Observable<any> {
-    let params = '{"token":"' + token + '"}';
+    let params = {
+      token: token
+    }
 
     return this.http.put(`/api/activate`, params, {});
   }
@@ -60,10 +62,14 @@ export class AuthenticationService {
   }
 
   getPasswordResetToken(email: string, noExpire: boolean, type: string): Observable<any> {
-    let params = JSON.parse('{"email":"' + email + '",' +
-                            '"noExpire":"' + noExpire + '",' +
-                            '"type":"' + type + '"}');
+    let noExpireText: string = 'false';
+    if (noExpire) {
+      noExpireText = 'true';
+    }
 
+    let params = new HttpParams().set('email', email)
+                                  .set('noExpire', noExpireText)
+                                  .set('type', type)
     return this.http.post(`/api/get-password-reset-token`, params, {});
   }
 
@@ -72,9 +78,9 @@ export class AuthenticationService {
   }
 
   getOtherUserEmail(userID: string): Observable<any> {
-    let param = JSON.parse('{"userID":"' + userID + '"}');
+    let params = new HttpParams().set('userID', userID)
 
-    return this.http.get(`/api/other-email`, { params: param });
+    return this.http.get(`/api/other-email`, { params: params });
   }
 
   getUser(): Observable<any> {
@@ -132,9 +138,12 @@ export class AuthenticationService {
 
   registerUser(user: ItokenPayload, firstName: string): Observable<any> {
     let base;
-    let params = '{"credentials":' + JSON.stringify(user) +
-                  ',"firstName":"' + firstName + '"}';
-    base = this.http.post(`/api/register`, JSON.parse(params));
+    let params = {
+      credentials: JSON.stringify(user),
+      firstName: firstName
+    }
+
+    base = this.http.post(`/api/register`, params);
     const request = base.pipe(
       map((data: ItokenResponse) => { // Saving token here, but may be better to save on register confirm.  However, would have to make sure the email confirm is on
         if (data.token) {
@@ -148,9 +157,11 @@ export class AuthenticationService {
   }
 
   resetPassword(token: string, tokenID: string, password: string): Observable<any> {
-    let params = JSON.parse('{"token":"' + token + '",' +
-                            '"tokenID":"' + tokenID + '",' +
-                            '"password":"' + password + '"}');
+    let params = {
+      token: token,
+      tokenID: tokenID,
+      password: password
+    }
 
     return this.http.post(`/api/password-reset`, params, {});
   }
@@ -164,10 +175,12 @@ export class AuthenticationService {
   }
 
   updateInstallFlag(install: boolean, device: string): Observable<any> {
-    let body = '{"install":"' + install + '",' +
-                '"device":"' + device + '"}';
+    let params = {
+      install: install,
+      device: device
+    }
 
-    return this.http.put(`/api/install-flag`, JSON.parse(body), {});
+    return this.http.put(`/api/install-flag`, params, {});
   }
 
   updateLoginCount(): Observable<any> {
@@ -175,7 +188,9 @@ export class AuthenticationService {
   }
 
   validatePasswordResetToken(token: string): Observable<any> {
-    let params = JSON.parse('{"token":"' + token + '"}');
+    let params = {
+      token: token
+    }
 
     return this.http.post(`/api/validate-password-reset-token`, params, {});
   }

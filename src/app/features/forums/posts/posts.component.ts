@@ -382,7 +382,7 @@ export class PostsComponent implements OnInit {
 
 
   private createPostsArrayEntry(post): Iposts {
-    let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
+    // let bodyEscaped = this.escapeJsonReservedCharacters(post.body);
     let photoUrl: string = '';
     let fragmentLink: string;
     let link: string = '';
@@ -396,11 +396,6 @@ export class PostsComponent implements OnInit {
 
     link = post.link;
     if (post.link !== 'undefined' && post.link !== undefined && post.link !== null && post.link !== 'null' && post.link !== '') {
-      // if (post.link.substring(0,7) == 'http://') {
-      //   link = post.link.substring(7,post.link.length);
-      // } else if (post.link.substring(0,8) === 'https://') {
-      //   link = post.link.substring(8,post.link.length);
-      // }
       if (post.link.substring(0,7) !== 'http://' && post.link.substring(0,8) !== 'https://' ) {
         link = 'https://' + this.preview.url;
       } else if (post.link.substring(0,7) == 'http://') {
@@ -426,7 +421,7 @@ export class PostsComponent implements OnInit {
     let newPost: Iposts = {
       _id: post._id,
       createdBy: post.createdBy,
-      body: bodyEscaped,
+      body: post.body,
       displayName: post.userDisplayName,
       profileImageUrl: post.userProfileUrl,
       postPhotoUrl: photoUrl,
@@ -464,6 +459,7 @@ export class PostsComponent implements OnInit {
     this.forumSvc.getPosts(this.groupID, yearOfBirth, rigLength)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
+      console.log('post=', postResult)
       if (postResult.length === 0) {
         this.showPosts = false;
         this.showFirstPost = true;

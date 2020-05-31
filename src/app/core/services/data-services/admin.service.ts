@@ -17,16 +17,20 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   addSuggestion(suggestion: string, suggestionType: string, displayName: string, profileImageUrl: string): Observable<any> {
-    let keyValues = '{"suggestion":"' + suggestion + '",' +
-                    '"suggestionType":"' + suggestionType + '",' +
-                    '"displayName":"' + displayName + '",' +
-                    '"profileImageUrl":"' + profileImageUrl + '"}'
+    let params = {
+      suggestion: suggestion,
+      suggestionType: suggestionType,
+      displayName: displayName,
+      profileImageUrl: profileImageUrl
+    }
 
-    return this.http.post(`/api/suggestion`, JSON.parse(keyValues), {});
+    return this.http.post(`/api/suggestion`, params, {});
   }
 
   loadRvData(jsonFileName: string): Observable<any> {
-    let params = '{"jsonFileName":"' + jsonFileName + '"}';
+    let params = {
+      jsonFileName: jsonFileName
+    }
 
     return this.http.post(`/api/admin-load-rv-data`, params, {});
   }
@@ -36,13 +40,20 @@ export class AdminService {
   }
 
   setSystemData(useEmail: boolean, textOnlyEmails: boolean): Observable<any> {
-    let params = '{"useEmail":"' + useEmail + '","textOnlyEmails":"' + textOnlyEmails + '"}';
+    let params = {
+      useEmail: useEmail,
+      textOnlyEmails: textOnlyEmails
+    }
 
     return this.http.post(`/api/admin-system-data`, params, {});
   }
 
   updateSystemData(useEmail: boolean, systemID: string, textOnlyEmails: boolean): Observable<any> {
-    let params = '{"systemID":"' + systemID + '","useEmail":"' + useEmail + '","textOnlyEmails":"' + textOnlyEmails + '"}';
+    let params = {
+      systemID: systemID,
+      useEmail: useEmail,
+      textOnlyEmails: textOnlyEmails
+    }
 
     return this.http.put(`/api/admin-system-data`, params, {});
   }

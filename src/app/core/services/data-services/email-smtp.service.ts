@@ -16,39 +16,49 @@ export class EmailSmtpService {
     if (toFirstName) {
       firstName = toFirstName
     }
-    let param = '{"sendTo":"' + sendTo + '",' +
-                '"subject":"' + subject + '",' +
-                '"body":"' + body + '",' +
-                '"toFirstName":"' + firstName + '"}';
 
-    return this.http.post(`/api/send-email`, param, {});
+    let params = {
+      sendTo: sendTo,
+      subject: subject,
+      body: body,
+      toFirstName: firstName
+    }
+
+    return this.http.post(`/api/send-email`, params, {});
   }
 
   sendRegisterEmail(sendTo: string, toFirstName: string, token: string): Observable<any> {
-    let param = '{"sendTo":"' + sendTo + '",' +
-                '"token":"' + token + '"}';
+    let params = {
+      sendTo: sendTo,
+      token: token
+    }
 
-    return this.http.post(`/api/send-register-email`, param, {});
+    return this.http.post(`/api/send-register-email`, params, {});
   }
 
   sendWelcomeEmail(sendTo: string, toFirstName: string, token: string): Observable<any> {
-    let firstName: string = '';
+    let params = {
+      sendTo: sendTo,
+      token: token
+    }
 
-    let param = '{"sendTo":"' + sendTo + '",' +
-                '"token":"' + token + '"}';
-
-    return this.http.post(`/api/send-welcome-email`, param, {});
+    return this.http.post(`/api/send-welcome-email`, params, {});
   }
 
   sendMessageAlertEmail(sendTo: string): Observable<any> {
-    let param = '{"sendTo":"' + sendTo + '"}';
+    let params = {
+      sendTo: sendTo
+    }
 
-    return this.http.post(`/api/send-message-alert-email`, param, {});
+    return this.http.post(`/api/send-message-alert-email`, params, {});
   }
 
   sendPasswordResetEmail(sendTo: string, token: string): Observable<any> {
-    let param = '{"sendTo":"' + sendTo + '","token":"' + token + '"}';
+    let params = {
+      sendTo: sendTo,
+      token: token
+    }
 
-    return this.http.post(`/api/send-password-reset-email`, param, {});
+    return this.http.post(`/api/send-password-reset-email`, params, {});
   }
 }
