@@ -93,7 +93,6 @@ export class ImageCropperComponent implements OnInit {
       containerClass = 'container ' + bottomSpacing;
     }
 
-    console.log('ImageCropperComponent:getClass: class=', containerClass)
     return containerClass;
   }
 
@@ -118,9 +117,13 @@ export class ImageCropperComponent implements OnInit {
     let croppedImageBase64 = this.imageDestination;
     console.log('ImageCropperComponent:onSubmit: Uploading image base64=', croppedImageBase64)
     this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
-      console.log('ImageCropperComponent:onSubmit: Back from uploading image file=', uploadedFileUrl)
-      this.newImageUrl = uploadedFileUrl
-      this.updateImageUrlInProfile(uploadedFileUrl);
+      if (uploadedFileUrl === 'error') {
+        this.Shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+      } else {
+        console.log('ImageCropperComponent:onSubmit: Back from uploading image file=', uploadedFileUrl)
+        this.newImageUrl = uploadedFileUrl
+        this.updateImageUrlInProfile(uploadedFileUrl);
+      }
     });
   }
 

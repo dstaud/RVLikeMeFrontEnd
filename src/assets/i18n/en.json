@@ -178,8 +178,8 @@
         "wy": "from Wyoming"
       },
       "rvuse": {
-        "fth": "that full-time tvl with home base",
-        "ftn": "that full-time tvl - no home base",
+        "fth": "that fulltime trvl with home base",
+        "ftn": "that fulltime trvl no home base",
         "fs": "that full-time stationary",
         "fp": "that mostly stay in one place",
         "tfw": "that travel for work",
@@ -364,8 +364,8 @@
         "wy": "Wyoming"
       },
       "rvuse": {
-        "fth": "full-time tvl with home base",
-        "ftn": "full-time tvl - no home base",
+        "fth": "fulltime trvl with home base",
+        "ftn": "fulltime trvl no home base",
         "fs": "full-time stationary",
         "fp": "mostly stay in one place",
         "tfw": "travel for work",
@@ -628,8 +628,8 @@
         "notdefined": "Did not enter in profile"
       },
       "rvuse": {
-        "fth": "full-time tvl with home base",
-        "ftn": "full-time tvl - no home base",
+        "fth": "fulltime trvl with home base",
+        "ftn": "fulltime trvl no home base",
         "fs": "full-time stationary",
         "fp": "mostly stay in one place",
         "tfw": "travel for work",

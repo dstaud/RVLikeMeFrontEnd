@@ -384,7 +384,7 @@ export class PostsMainComponent implements OnInit {
     let groupProfileDisplayAttributesFromGroup = [];
     console.log('ForumsListComponent:getGroupDisplayAttributes: group=', group);
     for (name in group) {
-      if (name !== 'createdBy' && name !== 'createdAt' && name !== 'updatedAt' && name !== '_id' && name !== '__v' && name !== 'forumType') {
+      if (!this.reservedField(name)) {
         value = group[name];
         if (value === 'true' || value === true) {
           forumItem = 'forums.component.' + name;
@@ -464,8 +464,10 @@ export class PostsMainComponent implements OnInit {
 
 
   private reservedField(name: string): boolean {
+    console.log('PostsMainComponent:reservedField: name=', name);
     if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' ||
         name === '__v' || name === 'theme' || name === 'forumType' || name === 'topicID' || name === 'topicDesc') {
+          console.log('PostsMainComponent:reservedField: and is reserved');
       return true;
     } else { return false }
   }

@@ -8,6 +8,7 @@ import { ForumService } from '@services/data-services/forum.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { UploadImageService } from '@services/data-services/upload-image.service';
 
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-add-post',
@@ -70,6 +71,7 @@ export class AddPostComponent implements OnInit {
   constructor(private forumSvc: ForumService,
               private uploadImageSvc: UploadImageService,
               private linkPreviewSvc: LinkPreviewService,
+              private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
                 post: new FormControl(''),
@@ -182,9 +184,15 @@ export class AddPostComponent implements OnInit {
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.postPhotoUrl = uploadedFileUrl;
-        this.readyForPost = true;
-        this.showSpinner = false;
+        if (uploadedFileUrl === 'error') {
+          this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+          this.showSpinner = false;
+          this.postPhotoUrl = '';
+        } else {
+          this.postPhotoUrl = uploadedFileUrl;
+          this.readyForPost = true;
+          this.showSpinner = false;
+        }
       });
     });
   }

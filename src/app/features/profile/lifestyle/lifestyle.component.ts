@@ -427,8 +427,13 @@ export class LifestyleComponent implements OnInit {
       this.showSpinner = true;
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
         this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-          this.updateProfileLifestyleImageUrls(uploadedFileUrl);
-          this.showSpinner = false;
+          if (uploadedFileUrl === 'error') {
+            this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+            this.showSpinner = false;
+          } else {
+            this.updateProfileLifestyleImageUrls(uploadedFileUrl);
+            this.showSpinner = false;
+          }
         });
       });
     }

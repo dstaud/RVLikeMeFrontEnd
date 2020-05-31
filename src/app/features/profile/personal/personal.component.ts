@@ -17,7 +17,7 @@ import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
-
+import { SharedComponent } from '@shared/shared.component';
 
 /**** Interfaces for data for form selects ****/
 export interface Gender {
@@ -163,6 +163,7 @@ export class PersonalComponent implements OnInit {
               private themeSvc: ThemeService,
               private sharedDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
+              private shared: SharedComponent,
               private uploadImageSvc: UploadImageService,
               private device: DeviceService,
               fb: FormBuilder) {
@@ -263,20 +264,26 @@ export class PersonalComponent implements OnInit {
       this.showSpinner = true;
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
         this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-          this.tempProfileImage = uploadedFileUrl;
-          this.showSpinner = false;
-          // this.openImageCropperDialog(uploadedFileUrl, 'profile');
-          let imageData: IprofileImage = {
-            profileID: this.profile._id,
-            imageSource: uploadedFileUrl
-          }
-          this.sharedDataSvc.setData('profileImage', imageData);
-
-          if (this.containerDialog) {
-            this.openImageCropperDialog(uploadedFileUrl)
+          if (uploadedFileUrl === 'error') {
+            this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+            this.showSpinner = false;
+            this.tempProfileImage = '';
           } else {
-            this.activateBackArrowSvc.setBackRoute('profile/personal', 'forward');
-            this.router.navigateByUrl('/profile/profile-image');
+            this.tempProfileImage = uploadedFileUrl;
+            this.showSpinner = false;
+            // this.openImageCropperDialog(uploadedFileUrl, 'profile');
+            let imageData: IprofileImage = {
+              profileID: this.profile._id,
+              imageSource: uploadedFileUrl
+            }
+            this.sharedDataSvc.setData('profileImage', imageData);
+
+            if (this.containerDialog) {
+              this.openImageCropperDialog(uploadedFileUrl)
+            } else {
+              this.activateBackArrowSvc.setBackRoute('profile/personal', 'forward');
+              this.router.navigateByUrl('/profile/profile-image');
+            }
           }
         });
       });

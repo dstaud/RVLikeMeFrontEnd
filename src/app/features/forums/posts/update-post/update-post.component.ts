@@ -16,6 +16,8 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { DeviceService } from '@services/device.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-update-post',
   templateUrl: './update-post.component.html',
@@ -71,6 +73,7 @@ export class UpdatePostComponent implements OnInit {
               private linkPreviewSvc: LinkPreviewService,
               private headerVisibleSvc: HeaderVisibleService,
               private uploadImageSvc: UploadImageService,
+              private shared: SharedComponent,
               private forumSvc: ForumService,
               private device: DeviceService,
               fb: FormBuilder) {
@@ -166,10 +169,16 @@ export class UpdatePostComponent implements OnInit {
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
         this.showSpinner = true;
         this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-          this.post.photoUrl = uploadedFileUrl;
-          this.showSpinner = false;
-          this.photoAndLinkActionsDisabled = true;
-          this.readyForPost = true;
+          if (uploadedFileUrl === 'error') {
+            this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+            this.showSpinner = false;
+            this.post.photoUrl = '';
+          } else {
+            this.post.photoUrl = uploadedFileUrl;
+            this.showSpinner = false;
+            this.photoAndLinkActionsDisabled = true;
+            this.readyForPost = true;
+          }
         });
       });
     }, error => {
@@ -291,10 +300,16 @@ export class UpdatePostComponent implements OnInit {
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;
       this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-        this.post.photoUrl = uploadedFileUrl;
-        this.showSpinner = false;
-        this.photoAndLinkActionsDisabled = true;
-        this.readyForPost = true;
+        if (uploadedFileUrl === 'error') {
+          this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+          this.showSpinner = false;
+          this.post.photoUrl = '';
+        } else {
+          this.post.photoUrl = uploadedFileUrl;
+          this.showSpinner = false;
+          this.photoAndLinkActionsDisabled = true;
+          this.readyForPost = true;
+        }
       });
     });
   }

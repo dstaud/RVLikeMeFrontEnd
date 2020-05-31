@@ -9,6 +9,8 @@ import { ProfileService } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-image-viewer',
   templateUrl: './image-viewer.component.html',
@@ -30,6 +32,7 @@ export class ImageViewerComponent implements OnInit {
   constructor(private shareDataSvc: ShareDataService,
               private router: Router,
               private uploadImageSvc: UploadImageService,
+              private shared: SharedComponent,
               private sentry: SentryMonitorService,
               private device: DeviceService,
               private profileSvc: ProfileService) { }
@@ -80,13 +83,19 @@ export class ImageViewerComponent implements OnInit {
     this.deactivateButtons = true;
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.uploadImageSvc.uploadImage(compressedFile, this.imageData.imageType, (uploadedFileUrl: string) => {
-        this.imageData.imageSource = uploadedFileUrl;
-        if (this.imageData.imageType === 'lifestyle') {
-          this.deleteLifestyleImageUrlFromProfile(this.originalImageSource, 'change', uploadedFileUrl);
-        } else if (this.imageData.imageType === 'rig') {
-          this.deleteRigImageUrlFromProfile(this.originalImageSource, 'change', uploadedFileUrl);
+        if (uploadedFileUrl === 'error') {
+          this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+          this.showSpinner = false;
+          this.imageData.imageSource = '';
         } else {
-          console.error('ImageViewerComponent:OnChange: invalid imageType = ', this.imageData.imageType);
+          this.imageData.imageSource = uploadedFileUrl;
+          if (this.imageData.imageType === 'lifestyle') {
+            this.deleteLifestyleImageUrlFromProfile(this.originalImageSource, 'change', uploadedFileUrl);
+          } else if (this.imageData.imageType === 'rig') {
+            this.deleteRigImageUrlFromProfile(this.originalImageSource, 'change', uploadedFileUrl);
+          } else {
+            console.error('ImageViewerComponent:OnChange: invalid imageType = ', this.imageData.imageType);
+          }
         }
       });
     });

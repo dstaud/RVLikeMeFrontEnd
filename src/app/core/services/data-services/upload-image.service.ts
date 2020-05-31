@@ -48,6 +48,7 @@ export class UploadImageService {
     // Convert to FormData type for upload
     fd.append('image', imageFile, imageFile.name);
 
+    console.log('UploadImageService:uploadImage: Filesize=', imageFile.size);
     this.imageSvc.uploadProfileImage(fd)
     .pipe(untilComponentDestroyed(this))
     .subscribe(event => {
@@ -57,7 +58,7 @@ export class UploadImageService {
       }
     }, error => {
       console.error('UploadImageService:uploadImage: throw error ', error);
-      throw new Error(error);
+      cb('error');
     });
   }
 
@@ -74,7 +75,7 @@ export class UploadImageService {
       }
     }, error => {
       console.error('UploadImageService:uploadImagebase64: throw error ', error);
-      throw new Error(error);
+      cb('error');
     });
   }
 

@@ -22,6 +22,7 @@ import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
+import { SharedComponent } from '@shared/shared.component';
 
 export interface RigType {
   value: string;
@@ -129,6 +130,7 @@ export class RvRigComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private sentry: SentryMonitorService,
               private rigSvc: RigService,
+              private shared: SharedComponent,
               private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
               private device: DeviceService,
@@ -214,8 +216,13 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = true;
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
         this.uploadImageSvc.uploadImage(compressedFile, fileType, (uploadedFileUrl: string) => {
-          this.updateProfileRigImageUrls(uploadedFileUrl);
-          this.showSpinner = false;
+          if (uploadedFileUrl === 'error') {
+            this.shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
+            this.showSpinner = false;
+          } else {
+            this.updateProfileRigImageUrls(uploadedFileUrl);
+            this.showSpinner = false;
+          }
         });
       });
     }
