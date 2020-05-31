@@ -15,6 +15,8 @@ import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-user-query',
   templateUrl: './user-query.component.html',
@@ -48,6 +50,7 @@ export class UserQueryComponent implements OnInit {
               private router: Router,
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
+              private shared: SharedComponent,
               private device: DeviceService,
               private themeSvc: ThemeService) { }
 
@@ -142,7 +145,7 @@ export class UserQueryComponent implements OnInit {
     .subscribe(matchResults => {
       this.matchQueryParams(matchResults);
     }, error => {
-      console.error('UserQueryComponent:getQueryResults: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -168,8 +171,7 @@ export class UserQueryComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
     }, error => {
-      console.error('UserQueryComponent:listenForUserProfile: throw error ', error);
-      throw new Error(error);
+      this.sentry.logError('UserQueryComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -201,7 +203,6 @@ export class UserQueryComponent implements OnInit {
       value = Object.values(this.matches[i])[0];
 
       // get original answers for those checked
-      console.log('UserQueryComponent:matchQueryParams: name=', name, ' value=', value)
       if (value === true || value === 'true') {
         likeMeAnswer = this.translate.instant('interests.component.interested') + ' ' +
                         this.translate.instant('interests.component.' + name);

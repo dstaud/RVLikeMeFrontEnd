@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -33,6 +34,7 @@ export class ProfilePercentComponent implements OnInit {
   constructor(private profileSvc: ProfileService,
               private translate: TranslateService,
               private router: Router,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService) {
   }
 
@@ -84,8 +86,7 @@ export class ProfilePercentComponent implements OnInit {
 
       this.determineProfileMessages();
     }, error => {
-      console.error('ProfilePercentComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 

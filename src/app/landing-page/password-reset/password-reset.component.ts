@@ -7,6 +7,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-password-reset',
@@ -41,6 +42,7 @@ export class PasswordResetComponent implements OnInit {
               private shared: SharedComponent,
               private ActivateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
+              private sentry: SentryMonitorService,
               fb: FormBuilder) {
               this.form = fb.group({
                 password: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)])
@@ -88,7 +90,7 @@ export class PasswordResetComponent implements OnInit {
         this.httpError = true;
         this.httpErrorText = 'Token is not valid';
       } else {
-        console.error('PasswordReset:onSubmit: error resetting password=', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       }
     })
@@ -104,8 +106,7 @@ export class PasswordResetComponent implements OnInit {
         this.validateToken();
       }
     }, error => {
-      console.error('PasswordReset:listenForParameters: could not read parameters.  error=', error);
-      throw new Error(error);
+      this.sentry.logError('PasswordReset:listenForParameters: could not read parameters.  error=' + error);
     });
   }
 
@@ -125,7 +126,6 @@ export class PasswordResetComponent implements OnInit {
     .subscribe(tokenResult => {
       this.tokenID = tokenResult.tokenID;
     }, error => {
-      console.error('PasswordReset:validateToken: error validating token.  error=', error);
       if (error === 403) { // token expired
         this.httpError = true;
         this.httpErrorText = 'The reset token has expired. Please request to reset password again.';

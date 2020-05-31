@@ -58,7 +58,6 @@ export class ForumService {
     }
     keyValues = keyValues + '}';
     keyValues = JSON.parse(keyValues);
-    console.log('add group keyvalues=', keyValues)
     return this.http.post(`/api/forum-group`, keyValues, {});
   }
 
@@ -122,7 +121,6 @@ export class ForumService {
   }
 
   getGroup(names: string, values: string): Observable<any> {
-    console.log('forumsvc getGroup names=', names, ' values=', values)
     let kNames = names.split('|');
     let kValues = values.split('|');
     let keyValues = '';
@@ -141,9 +139,8 @@ export class ForumService {
       }
     }
     keyValues = keyValues + '}';
-    console.log('forumssvc getGroup=', keyValues)
     let param = JSON.parse(keyValues);
-    console.log('forumssvc getGroup=', keyValues)
+
     return this.http.get(`/api/forum-group`, { params: param });
   }
 
@@ -170,7 +167,7 @@ export class ForumService {
     }
 
     params = params + '}';
-    console.log('ForumsSvc:getPosts=', params)
+
     return this.http.get(`/api/forum-posts`, { params: JSON.parse(params) });
   }
 

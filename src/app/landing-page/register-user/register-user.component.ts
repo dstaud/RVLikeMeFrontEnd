@@ -115,7 +115,7 @@ export class RegisterUserComponent implements OnInit {
     .subscribe(useEmail => {
       this.useEmail = useEmail;
     }, error => {
-      console.error('RegisterUserComponent:listenForSystemConfiguration: error=', error);
+      this.sentry.logError('RegisterUserComponent:listenForSystemConfiguration: error=' + error);
     })
   }
 
@@ -210,6 +210,7 @@ export class RegisterUserComponent implements OnInit {
         this.authSvc.logout();
         this.sendRegisterEmail(tokenResult.token, stay);
     }, error => {
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -218,7 +219,6 @@ export class RegisterUserComponent implements OnInit {
     this.authSvc.activateUser(urlToken)
     .pipe(untilComponentDestroyed(this))
     .subscribe(activateResult => {
-      console.log('RegisterUserComponent:activateUser: return from activate=', activateResult)
       this.showSpinner = false;
       this.authSvc.logout();
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
@@ -259,7 +259,7 @@ export class RegisterUserComponent implements OnInit {
       }
     }, error => {
       // If AWS failure to send email, attempt to activate user anyway.  Email failure will be logged so can tell if have registered user but email not really verified.
-      console.log('RegisterUserComponent:sendRegisterEmail: error sending email, activating user for token=', urlToken)
+
       if (!this.overrideRegisterEmail) {
         this.overrideRegisterEmail = true;
         this.activateUser(urlToken);
@@ -278,8 +278,7 @@ export class RegisterUserComponent implements OnInit {
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
     }, error => {
-      console.error('RegisterComponent:sendWelcomeEmail: error sending email: ', error);
-      this.sentry.logError('Error sending welcome email');
+      this.sentry.logError('RegisterComponent:sendWelcomeEmail: error sending email: ' + error);
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
     });

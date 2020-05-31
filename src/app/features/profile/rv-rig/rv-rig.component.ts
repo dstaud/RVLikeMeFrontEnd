@@ -395,7 +395,7 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.error('RvRigComponent:getRigData: error getting rig data=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     })
   }
@@ -472,8 +472,7 @@ export class RvRigComponent implements OnInit {
       }
     }, (error) => {
       this.showSpinner = false;
-      console.error('RigComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('RigComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -497,7 +496,7 @@ export class RvRigComponent implements OnInit {
           this.returnRoute = '';
       }
     }, error => {
-      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('YourStoryComponent:setReturnRoute: error setting return route=' + error);
     });
   }
 
@@ -511,7 +510,7 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.error('RvRigComponent:updateProfileRigImageUrls: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -527,7 +526,7 @@ export class RvRigComponent implements OnInit {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this[SaveIcon] = false;
-      console.error('RigComponent:updateRig: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

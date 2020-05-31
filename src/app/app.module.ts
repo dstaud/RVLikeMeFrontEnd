@@ -1,20 +1,19 @@
+import { NgModule, ErrorHandler, Injectable, Injector, APP_INITIALIZER } from '@angular/core';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler, Injectable } from '@angular/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { Injector, APP_INITIALIZER } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { LOCATION_INITIALIZED } from '@angular/common';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import * as Sentry from '@sentry/browser';
 import { NgxImageCompressService } from 'ngx-image-compress';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -61,10 +60,13 @@ Sentry.init({
 });
 
 @Injectable()
+
 export class SentryErrorHandler implements ErrorHandler {
   constructor() {}
+
   handleError(error) {
     const eventId = Sentry.captureException(error.originalError || error);
+
     // Sentry.showReportDialog({ eventId });
   }
 }
@@ -163,7 +165,7 @@ export function appInitializerFactory(translate: TranslateService, injector: Inj
       translate.use(langToSet).subscribe(() => {
         console.info(`Successfully initialized '${langToSet}' language.'`);
       }, err => {
-        console.error(`Problem with '${langToSet}' language initialization.'`);
+        this.sentry.logError(`Problem with '${langToSet}' language initialization.'`);
       }, () => {
         resolve(null);
       });

@@ -41,7 +41,7 @@
     <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
   </div>
   <br>
-  <div [hidden]="showSpinner">
+  <div [hidden]="showSpinner || desktopUser">
     <button *ngIf="showSingleMatchForumOffer"
             [disabled]="disableSingleMatchForumOffer"
             class="mat-raised-button button mat-primary"

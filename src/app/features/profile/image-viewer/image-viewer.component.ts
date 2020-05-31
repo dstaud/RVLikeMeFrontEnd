@@ -93,8 +93,6 @@ export class ImageViewerComponent implements OnInit {
             this.deleteLifestyleImageUrlFromProfile(this.originalImageSource, 'change', uploadedFileUrl);
           } else if (this.imageData.imageType === 'rig') {
             this.deleteRigImageUrlFromProfile(this.originalImageSource, 'change', uploadedFileUrl);
-          } else {
-            console.error('ImageViewerComponent:OnChange: invalid imageType = ', this.imageData.imageType);
           }
         }
       });
@@ -109,8 +107,6 @@ export class ImageViewerComponent implements OnInit {
       this.deleteLifestyleImageUrlFromProfile(this.originalImageSource, 'delete');
     } else if (this.imageData.imageType === 'rig') {
       this.deleteRigImageUrlFromProfile(this.originalImageSource, 'delete');
-    } else {
-      console.error('ImageViewerComponent:OnChange: invalid imageType = ', this.imageData.imageType);
     }
   }
 
@@ -132,12 +128,9 @@ export class ImageViewerComponent implements OnInit {
     this.profileSvc.deleteLifestyleImageUrlFromProfile(this.imageData.profileID, lifestyleImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe(imageResult => {
-      console.log('ImageViewerComponent:deleteLifestyleImageUrlFromProfile: deleted, new profile=', imageResult);
       if (newImageFileUrl) {
-        console.log('ImageViewerComponent:deleteLifestyleImageUrlFromProfile: deleted, and now getting ready to add=', newImageFileUrl);
         this.updateProfileLifestyleImageUrls(newImageFileUrl);
       } else {
-        console.log('ImageViewerComponent:deleteLifestyleImageUrlFromProfile: distributing profile=', imageResult.lifestyleImageUrls.length);
         this.profileSvc.distributeProfileUpdate(imageResult);
         this.showSpinner = false;
         this.shareDataSvc.setData('viewImage', this.imageData);
@@ -152,7 +145,6 @@ export class ImageViewerComponent implements OnInit {
         }
       }
     }, error => {
-      console.error('error deleting lifestyle image url from profile=', error);
       this.sentry.logError({"message":"error deleting lifestyle image url from profile","error":error});
       this.showSpinner = false;
     })
@@ -184,7 +176,6 @@ export class ImageViewerComponent implements OnInit {
         }
       }
     }, error => {
-      console.error('error deleting lifestyle image url from profile=', error);
       this.sentry.logError({"message":"error uploading rig image","error":error});
       this.showSpinner = false;
     })
@@ -204,7 +195,7 @@ export class ImageViewerComponent implements OnInit {
       this.imageSource = lifestyleImageUrl;
     }, error => {
       this.showSpinner = false;
-      console.error('LifestyleComponent:updateProfileLifestyleImageUrls: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -223,7 +214,7 @@ export class ImageViewerComponent implements OnInit {
       this.imageSource = rigImageUrl;
     }, error => {
       this.showSpinner = false;
-      console.error('RvRigComponent:updateProfileRigImageUrls: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

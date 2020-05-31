@@ -5,6 +5,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ForumService } from '@services/data-services/forum.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-add-comment',
   templateUrl: './add-comment.component.html',
@@ -32,6 +34,7 @@ export class AddCommentComponent implements OnInit {
 
 
   constructor(private forumSvc: ForumService,
+              private shared: SharedComponent,
               fb: FormBuilder) {
               this.form = fb.group({
                 comment: new FormControl('')
@@ -62,7 +65,7 @@ export class AddCommentComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.error('AddCommentComponent:onSubmit: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

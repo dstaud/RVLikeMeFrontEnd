@@ -44,6 +44,7 @@ export class ImageCropperComponent implements OnInit {
               private Shared: SharedComponent,
               private sentry: SentryMonitorService,
               private uploadImageSvc: UploadImageService,
+              private shared: SharedComponent,
               private device: DeviceService,
               private profileSvc: ProfileService) {
           this.showSpinner = true;
@@ -115,12 +116,11 @@ export class ImageCropperComponent implements OnInit {
   onSubmit() {
     this.showSpinner = true;
     let croppedImageBase64 = this.imageDestination;
-    console.log('ImageCropperComponent:onSubmit: Uploading image base64=', croppedImageBase64)
+
     this.uploadImageSvc.uploadImageBase64(croppedImageBase64, (uploadedFileUrl: string) => {
       if (uploadedFileUrl === 'error') {
         this.Shared.openSnackBar('There was a problem uploading your photo.  It is likely too large.','error',5000);
       } else {
-        console.log('ImageCropperComponent:onSubmit: Back from uploading image file=', uploadedFileUrl)
         this.newImageUrl = uploadedFileUrl
         this.updateImageUrlInProfile(uploadedFileUrl);
       }
@@ -169,7 +169,7 @@ export class ImageCropperComponent implements OnInit {
       });
     }, error => {
       this.showSpinner = false;
-      console.error('ImageCropperComponent:updateImageUrlInProfile: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

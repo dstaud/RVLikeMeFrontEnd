@@ -1,19 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
-import { Router } from '@angular/router';
 import { SwUpdate, SwPush } from '@angular/service-worker';
 
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { environment } from '@environments/environment';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
-import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SubscribeNotificationsService } from '@services/data-services/subscribe-notifications.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
-import { environment } from '@environments/environment';
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-notification-settings',
@@ -33,12 +31,10 @@ export class NotificationSettingsComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
 
   constructor(private profileSvc: ProfileService,
-              private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService,
-              private router: Router,
-              private location: Location,
               private swUpdate: SwUpdate,
               private swPush: SwPush,
+              private shared: SharedComponent,
               private sentry: SentryMonitorService,
               private subscribeNotificationsSvc: SubscribeNotificationsService,
               fb: FormBuilder) {
@@ -63,7 +59,7 @@ export class NotificationSettingsComponent implements OnInit {
     .subscribe(notifyResult => {
       this.showSpinner = false;
     }, error => {
-      console.error('onNotify: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     })
   }
@@ -82,11 +78,11 @@ export class NotificationSettingsComponent implements OnInit {
         .subscribe(subscribeResults => {
           this.showSpinner = false;
         }, error => {
-          console.error('onSubscribeNotifications: throw error ', error);
+          this.shared.notifyUserMajorError();
           throw new Error(error);
         })
       })
-      .catch(err => console.error("Could not subscribe to notifications", err));
+      .catch(err => this.sentry.logError("Could not subscribe to notifications" + err));
     }
   }
 
@@ -104,7 +100,7 @@ export class NotificationSettingsComponent implements OnInit {
     .subscribe(unsubscribeResults => {
       this.showSpinner = false;
     }, error => {
-      console.error('onSubscribeNotifications: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -123,7 +119,7 @@ export class NotificationSettingsComponent implements OnInit {
       this.showsendMessageNotificationEmailsSaveIcon = false;
     }, error => {
       this.showsendMessageNotificationEmailsSaveIcon = false;
-      console.error('NotificationSettingsComponent:updateSendMessageEmails: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -161,8 +157,7 @@ export class NotificationSettingsComponent implements OnInit {
         sendMessageNotificationEmails: this.sendMessageEmails
       })
     }, error => {
-      console.error('SettingsComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('SettingsComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 }

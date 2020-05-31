@@ -40,33 +40,26 @@ export class DeviceService {
     let aspect = window.screen.width / window.screen.height
     if (iPhone && aspect.toFixed(3) === "0.462") {
         this.iPhoneModelXPlus = true;
-        console.log('setting plusx to true');
     }
-    console.log('Device=', this.device);
   }
 
   // Determine appropriate font theme for user device
   determineGlobalFontTheme() {
     // Based on type of device, determine the appropriate custom typography class to use (see styles.scss)
     if (this.deviceInfo.isDesktop || this.deviceInfo.isTablet) {
-      console.log('Desktop or Tablet device.  Using default fonts');
       this.themeService.setGlobalFontTheme('global-font');
     } else {
       if (this.deviceInfo.isMobile) {
         if (this.device === 'iPhone') {
-          console.log('iPhone device.  Resetting fonts');
           this.themeService.setGlobalFontTheme('iPhone-font');
         } else {
           if (this.device === 'Android') {
-            console.log('Android device.  Resetting fonts');
             this.themeService.setGlobalFontTheme('android-font');
           } else {
-            console.log('Other mobile device.  Using default fonts');
             this.themeService.setGlobalFontTheme('global-font');
           }
         }
       } else {
-        console.log('Unknown device.  Using default fonts');
         this.themeService.setGlobalFontTheme('global-font');
       }
     }

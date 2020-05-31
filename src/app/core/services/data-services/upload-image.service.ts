@@ -6,6 +6,8 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { ImageService } from '@services/data-services/images.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 export declare enum DOC_ORIENTATION {
   Up = 1,
   Down = 3,
@@ -28,7 +30,8 @@ export class UploadImageService {
   ngOnDestroy() {}
 
   constructor(private imageCompress: NgxImageCompressService,
-              private imageSvc: ImageService) { }
+              private imageSvc: ImageService,
+              private shared: SharedComponent) { }
 
 
   // Pre-process and then compress file
@@ -48,7 +51,6 @@ export class UploadImageService {
     // Convert to FormData type for upload
     fd.append('image', imageFile, imageFile.name);
 
-    console.log('UploadImageService:uploadImage: Filesize=', imageFile.size);
     this.imageSvc.uploadProfileImage(fd)
     .pipe(untilComponentDestroyed(this))
     .subscribe(event => {
@@ -57,7 +59,6 @@ export class UploadImageService {
           cb(imageFileUrl);
       }
     }, error => {
-      console.error('UploadImageService:uploadImage: throw error ', error);
       cb('error');
     });
   }
@@ -74,7 +75,6 @@ export class UploadImageService {
         cb(profileImageUrl);
       }
     }, error => {
-      console.error('UploadImageService:uploadImagebase64: throw error ', error);
       cb('error');
     });
   }
@@ -90,7 +90,8 @@ export class UploadImageService {
         cb(compressedImageFile);
     })
     .catch(error => {
-      console.error('UploadImageService:compressFile: error compressing file:', error);
+      this.shared.notifyUserMajorError();
+      throw new Error(error);
     });
   }
 

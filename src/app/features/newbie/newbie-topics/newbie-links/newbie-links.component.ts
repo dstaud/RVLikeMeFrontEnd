@@ -16,6 +16,8 @@ import { ShareDataService, ImessageShareData, ImyStory, InewbieTopic } from '@se
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-newbie-links',
   templateUrl: './newbie-links.component.html',
@@ -79,6 +81,7 @@ export class NewbieLinksComponent implements OnInit {
               private location: Location,
               private sentry: SentryMonitorService,
               private linkPreviewSvc: LinkPreviewService,
+              private shared: SharedComponent,
               private shareDataSvc: ShareDataService,
               private router: Router,
               fb: FormBuilder) {
@@ -102,7 +105,7 @@ export class NewbieLinksComponent implements OnInit {
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
       this.router.navigateByUrl('/?e=signin');
     } else {
-      console.log('NewbieLinksComponent:ngOnInit:')
+
       this.listenForUserProfile();
 
       this.listenForUserType();
@@ -157,7 +160,6 @@ export class NewbieLinksComponent implements OnInit {
         this.linkPreviewSvc.getLinkPreview(this.form.controls.link.value)
         .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
-          console.log('NewbieLinksComponent:onLink: preview=', preview);
           this.preview = preview;
 
           // An https site cannot launch an http site.  So appending https.  Most sites are https, but if not, it will fail to launch it.
@@ -176,7 +178,7 @@ export class NewbieLinksComponent implements OnInit {
           }
 
         }, error => {
-          console.log('NewbieLinksComponent:onLink: Error on preview=' + error);
+
           this.sentry.logError('Error getting link preview=' + error)
           this.preview.url = this.form.controls.link.value;
 
@@ -187,7 +189,6 @@ export class NewbieLinksComponent implements OnInit {
             this.preview.url = 'https://' + this.preview.url.substring(7,this.preview.url.length);
           }
 
-          console.log('NewbieLinksComponent:onLink: defaulting to link=' + this.preview.url);
           this.preview.title = this.preview.url;
           this.readyToSave = true;
           this.showPreview = true;
@@ -275,6 +276,7 @@ export class NewbieLinksComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     })
   }
@@ -293,8 +295,7 @@ export class NewbieLinksComponent implements OnInit {
       }
 
     }, (error) => {
-      console.error('NewbieLinksComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('NewbieLinksComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -305,8 +306,7 @@ export class NewbieLinksComponent implements OnInit {
     .subscribe(type => {
       this.userType = type;
     }, (error) => {
-      console.error('NewbieLinksComponent:listenForUserType: error ', error);
-      throw new Error(error);
+      this.sentry.logError('NewbieLinksComponent:listenForUserType: error=' + error);
     });
   }
 

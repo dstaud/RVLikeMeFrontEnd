@@ -123,7 +123,6 @@ export class InstallComponent implements OnInit {
       this.profileSvc.distributeProfileUpdate(profileResult);
 
     }, error => {
-      console.error('InstallComponent:onHideInstall: error updating profile=', error);
       this.sentry.logError('Error hiding install option for ' + this.profileID);
     });
   }
@@ -137,7 +136,6 @@ export class InstallComponent implements OnInit {
       this.notifyUser();
 
     }, error => {
-      console.error('InstallComponent:updateInstallInfoOnCredentials: error updating credentials=', error);
       this.sentry.logError('error updating install flag on credentials');
 
       this.notifyUser();

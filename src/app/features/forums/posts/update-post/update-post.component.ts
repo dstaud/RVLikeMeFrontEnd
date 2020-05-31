@@ -182,9 +182,9 @@ export class UpdatePostComponent implements OnInit {
         });
       });
     }, error => {
-      console.error('UpdatePostComponent:onChangePhoto: error deleting image from AWS=', error);
       this.showSpinner = false;
-      this.sentry.logError(error);
+      this.shared.notifyUserMajorError();
+      throw new Error(error);
     });
  }
 
@@ -225,9 +225,9 @@ export class UpdatePostComponent implements OnInit {
         this.readyForPost = false;
       }
     }, error => {
-      console.error('UpdatePostComponent:onDeletePhoto: error deleting image from AWS=', error);
       this.showSpinner = false;
-      this.sentry.logError(error);
+      this.shared.notifyUserMajorError();
+      throw new Error(error);
     });
   }
 
@@ -261,7 +261,7 @@ export class UpdatePostComponent implements OnInit {
             this.linkPreview.title = this.linkPreview.url;
             this.post.linkTitle = this.linkPreview.url;
           }
-          console.log('UpdatePostComponent:onLink: preview=', this.linkPreview)
+
           this.showLinkPreview = true;
           this.addLinkInputEnabled = false;
           this.readyForPost = true;
@@ -315,7 +315,6 @@ export class UpdatePostComponent implements OnInit {
   }
 
   onPost() {
-    console.log('UpdatePostComponent:onPost: link=', this.post.link, ' desc=', this.post.linkDesc, ' title=', this.post.linkTitle)
     this.forumSvc.updatePost(this.post.groupID, this.form.controls.post.value, this.post.photoUrl,
                             this.post.link, this.post.linkDesc, this.post.linkTitle, this.post.linkImage)
     .pipe(untilComponentDestroyed(this))
@@ -340,7 +339,7 @@ export class UpdatePostComponent implements OnInit {
       }
       this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     }, error => {
-      console.error('PostsComponent:onUpdatePost: error updating post=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

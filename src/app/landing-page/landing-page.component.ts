@@ -8,6 +8,7 @@ import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ShareDataService, Isignin } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
@@ -47,6 +48,7 @@ export class LandingPageComponent implements OnInit {
               private headerVisibleSvc: HeaderVisibleService,
               private dialog: MatDialog,
               private route: ActivatedRoute,
+              private sentry: SentryMonitorService,
               private location: Location,
               private shareDataSvc: ShareDataService,
               private router: Router) {
@@ -83,7 +85,6 @@ export class LandingPageComponent implements OnInit {
     this.headerVisibleSvc.toggleHeaderVisible(true);
     this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
     this.activateBackArrowSvc.setBackRoute('', 'forward');
-    console.log('LandingPageComponent:onLearnMore: navigating to learn-more');
     this.router.navigateByUrl('/learn-more');
   }
 
@@ -100,7 +101,6 @@ export class LandingPageComponent implements OnInit {
     } else {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-      console.log('LandingPageComponent:onRegister: navigating to Register');
       this.router.navigateByUrl('/register');
       this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
@@ -122,14 +122,12 @@ export class LandingPageComponent implements OnInit {
         if (result === 'complete') {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-          console.log('LandingPageComponent:onSignin: navigating to home/dashboard');
           this.router.navigateByUrl('/home/dashboard');
         }
       });
     } else {
       this.headerVisibleSvc.toggleHeaderVisible(true);
       this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-      console.log('LandingPageComponent:onSignin: navigating to signin');
       this.router.navigateByUrl('/signin');
       this.activateBackArrowSvc.setBackRoute('', 'forward');
     }
@@ -147,7 +145,7 @@ export class LandingPageComponent implements OnInit {
             if (result === 'complete') {
               // this.activateBackArrowSvc.setBackRoute('', 'forward');
               this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-              console.log('LandingPageComponent:listenForParameters: navigating to home/dashboard path=', this.location.path());
+
               if (!this.location.path()) {
                 this.router.navigateByUrl('/home/dashboard');
               }
@@ -155,7 +153,6 @@ export class LandingPageComponent implements OnInit {
           });
         } else {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
-          console.log('LandingPageComponent:listenForParameters: navigating to signin');
           this.router.navigateByUrl('/signin');
         }
       } else if (params.e === 'register') {
@@ -167,13 +164,11 @@ export class LandingPageComponent implements OnInit {
           });
         } else {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
-          console.log('LandingPageComponent:listenForParameters: navigating to register');
           this.router.navigateByUrl('/register');
         }
       }
     }, error => {
-      console.error('PasswordReset:listenForParameters: could not read parameters.  error=', error);
-      throw new Error(error);
+      this.sentry.logError('Landing-page:listenForParameters: could not read parameters.  error=' + error);
     });
   }
 

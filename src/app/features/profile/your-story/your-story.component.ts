@@ -11,8 +11,10 @@ import { ShareDataService, ImessageShareData, IviewImage } from '@services/share
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { DeviceService } from '@services/device.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-your-story',
@@ -47,7 +49,9 @@ export class YourStoryComponent implements OnInit {
               private translate: TranslateService,
               private authSvc: AuthenticationService,
               private location: Location,
+              private shared: SharedComponent,
               private shareDataSvc: ShareDataService,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
               private router: Router) { }
@@ -232,7 +236,7 @@ export class YourStoryComponent implements OnInit {
         this.showRigBrand = true;
       }
     }, error => {
-      console.error('YourStoryComponent:listenForUserProfile: error getting profile ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -257,7 +261,7 @@ export class YourStoryComponent implements OnInit {
           this.returnRoute = '';
       }
     }, error => {
-      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('YourStoryComponent:setReturnRoute: error setting return route=' + error);
     });
   }
 }

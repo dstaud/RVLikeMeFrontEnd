@@ -114,6 +114,7 @@ export class ChangePasswordComponent implements OnInit {
         this.form.enable();
       } else {
         this.showSpinner = false;
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       }
     })
@@ -132,7 +133,7 @@ export class ChangePasswordComponent implements OnInit {
       this.form.enable();
     }, error => {
       this.showSpinner = false;
-      console.error('ChangePasswordComponent:getCredentials: error getting user credentials ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

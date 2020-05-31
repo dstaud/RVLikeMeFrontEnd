@@ -422,7 +422,7 @@ export class LifestyleComponent implements OnInit {
   // When user opts to upload an image compress and upload to server and update the profile with new URL
   onLifestyleImageSelected(event: any) {
     let fileType: string = 'lifestyle';
-    console.log('LifestyleComponent:onLifestyleImageSelected:')
+
     if (event.target.files[0]) {
       this.showSpinner = true;
       this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
@@ -496,14 +496,13 @@ export class LifestyleComponent implements OnInit {
         this.suggestLifestyleOpen = 'out';
         this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       }, error => {
-        console.error('LifestyleComponent:onSuggestLifestyle: error saving suggestion=', error);
         this.showSpinner = false;
         this.suggestLifestyleOpen = 'out';
         this.form.patchValue({
           suggestLifestyle: ''
         });
         this.readyToSuggest = false;
-        this.sentry.logError(error);
+        this.sentry.logError('LifestyleComponent:onSuggestLifestyle: error saving suggestion=' + error);
         this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       });
     }
@@ -575,7 +574,7 @@ export class LifestyleComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       if (profileResult._id) {
-        console.log('LifestyleComponent:listenForUserProfile: images from database=', profileResult.lifestyleImageUrls.length);
+
         this.profile = profileResult;
 
         // For controls where user can select 'other', do some special processing
@@ -603,7 +602,6 @@ export class LifestyleComponent implements OnInit {
         });
 
         this.lifestyleImageUrls = this.profile.lifestyleImageUrls;
-        console.log('LifestyleComponent:listenForUserProfile: this images=', this.profile.lifestyleImageUrls.length);
 
         // Put this hack in.  Getting strange behavior where it is coming back into this subscription without any place
         // nexting a new one and it has the placeholder in the profile...somehow.  This makes sure we ignore that.
@@ -613,14 +611,13 @@ export class LifestyleComponent implements OnInit {
             this.nbrLifestyleImagePics = i;
           }
         }
-        console.log('LifestyleComponent:listenForUserProfile: nbr image urls=', this.nbrLifestyleImagePics);
+
         this.placeholderPhotos = false;
         for (let i=this.lifestyleImageUrls.length; i < 3; i++) {
           this.placeholderPhotos = true;
-          console.log('LifestyleComponent:listenForUserProfile: added a placeholder photo, boolean=', this.placeholderPhotos);
+
           this.lifestyleImageUrls.push(this.placeholderPhotoUrl);
         }
-        console.log('LifestyleComponent:listenForUserProfile: profile=', this.profile);
 
         if (this.profile.aboutMe === 'experienced') {
           this.aboutMeExperienced = true;
@@ -638,8 +635,7 @@ export class LifestyleComponent implements OnInit {
 
     }, (error) => {
       this.showSpinner = false;
-      console.error('LifestyleComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('LifestyleComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -683,7 +679,7 @@ export class LifestyleComponent implements OnInit {
           this.returnRoute = '';
       }
     }, error => {
-      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('LifestyleComponent:setReturnRoute: error setting return route ' + error);
     });
   }
 
@@ -703,7 +699,6 @@ export class LifestyleComponent implements OnInit {
 
 
   private updateLifestyle(control: string, value: any, callHelpNewbiesUpdateWhenDone: boolean) {
-    console.log('LifestyleComponent:updateLifestyle:')
     let SaveIcon = 'show' + control + 'SaveIcon';
     this.profileSvc.updateProfileAttribute(this.profile._id, control, value)
     .pipe(untilComponentDestroyed(this))
@@ -716,7 +711,7 @@ export class LifestyleComponent implements OnInit {
       }
      }, error => {
       this[SaveIcon] = false;
-      console.error('LifestyleComponent:updateLifestyle: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -724,7 +719,6 @@ export class LifestyleComponent implements OnInit {
 
   // Update lifestyle image url array in user's profile with new uploaded lifestyle image.
   private updateProfileLifestyleImageUrls(lifestyleImageUrl: string) {
-    console.log('LifestyleComponent:updateProfileLifestyleImageUrls:')
     this.profileSvc.addLifestyleImageUrlToProfile(this.profile._id, lifestyleImageUrl)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
@@ -733,7 +727,7 @@ export class LifestyleComponent implements OnInit {
 
     }, error => {
       this.showSpinner = false;
-      console.error('LifestyleComponent:updateProfileLifestyleImageUrls: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

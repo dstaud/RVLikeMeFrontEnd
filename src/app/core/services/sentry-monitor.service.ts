@@ -9,15 +9,15 @@ export class SentryMonitorService {
 
   constructor() { }
 
+  logError(error: any) {
+    Sentry.captureException(error);
+  }
+
   monitorUser(user: ItokenPayload): void {
     Sentry.configureScope(scope => {
       scope.setUser({
         email: user.email
       });
     });
-  }
-
-  logError(error: any) {
-    Sentry.captureException(error);
   }
 }

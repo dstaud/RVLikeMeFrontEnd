@@ -93,9 +93,8 @@ export class AnalyticsComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      console.error('AnalyticsComponent:listenForGroupByCounts: error=', error);
+      this.sentry.logError('AnalyticsComponent:listenForGroupByCounts: error listening for Group By Counts=' + error);
       this.showSpinner = false;
-      throw new Error(error);
     });
   }
 

@@ -10,7 +10,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { DeviceService } from '@services/device.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
-
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 
 @Component({
@@ -47,6 +47,7 @@ export class HeaderMobileComponent implements OnInit {
               private profileSvc: ProfileService,
               private headerVisibleSvc: HeaderVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
+              private sentry: SentryMonitorService,
               private authSvc: AuthenticationService) { }
 
   ngOnInit() {
@@ -146,8 +147,7 @@ export class HeaderMobileComponent implements OnInit {
         this.profileImage = true;
       }
     }, (error) => {
-      console.error('HeaderMobileComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('HeaderMobileComponet:listenForUserProfile: error getting profile=' + error)
     });
   }
 
@@ -202,7 +202,7 @@ export class HeaderMobileComponent implements OnInit {
           this.autoRoute = false;
       }
     }, error => {
-      console.error('HeaderMobileComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('HeaderMobileComponent:setReturnRoute: error setting return route ' + error);
     });
   }
 

@@ -149,7 +149,6 @@ export class RegisterConfirmComponent implements OnInit {
         this.validateToken();
       }
     }, error => {
-      console.error('PasswordReset:listenForParameters: could not read parameters.  error=', error);
       this.showSpinner = false;
       this.httpError = true;
       this.httpErrorText = 'The activation token is invalid';
@@ -179,8 +178,7 @@ export class RegisterConfirmComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
     }, error => {
-      console.error('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ', error);
-      this.sentry.logError('Error sending welcome email');
+      this.sentry.logError('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ' + error);
     });
 }
 
@@ -203,7 +201,6 @@ export class RegisterConfirmComponent implements OnInit {
       this.activateUser();
 
     }, error => {
-      console.error('PasswordReset:validateToken: error validating token.  error=', error);
       this.httpError = true;
       this.httpErrorText = 'The activation token is invalid';
       this.showSpinner = false;

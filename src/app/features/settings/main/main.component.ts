@@ -175,7 +175,6 @@ export class MainComponent implements OnInit {
     this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
     .pipe(untilComponentDestroyed(this))
     .subscribe ((responseData) => {
-      console.log('SettingsMainComponent:onSelectTheme: updated profile data=', responseData);
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this.sentry.logError({"message":"error listening for color theme","error":error});
@@ -194,8 +193,7 @@ export class MainComponent implements OnInit {
       this.language.setLanguage(language);
     }, error => {
       this.showLanguageSaveIcon = false;
-      console.error('ProfileComponent:setLanguage: throw error ', error);
-      throw new Error(error);
+      this.sentry.logError('ProfileMainComponent:setLanguage: throw error=' + error);
     });
   }
 
@@ -239,9 +237,8 @@ export class MainComponent implements OnInit {
       this.form.patchValue({language:profile.language});
       this.showSpinner = false;
     }, error => {
-      console.error('SettingsComponent:listenForUserProfile: error getting profile ', error);
+      this.sentry.logError('SettingsComponent:listenForUserProfile: error getting profile=' + error);
       this.showSpinner = false;
-      throw new Error(error);
     });
   }
 }

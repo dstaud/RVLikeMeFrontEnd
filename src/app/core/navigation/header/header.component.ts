@@ -9,8 +9,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ThemeService } from '@services/theme.service';
-
-import { SharedComponent } from '@shared/shared.component';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-header',
@@ -36,6 +35,7 @@ export class HeaderComponent implements OnInit {
               private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private headerVisibleSvc: HeaderVisibleService,
+              private sentry: SentryMonitorService,
               private themeSvc: ThemeService) { }
 
   ngOnInit() {
@@ -65,7 +65,7 @@ export class HeaderComponent implements OnInit {
         this.profileImage = true;
       }
     }, (error) => {
-      console.error(error);
+      this.sentry.logError('HeaderMobileComponent:listenForUserProfile: error listening for profile=' + error)
     });
 
     // Listen for changes in user authorization state
@@ -132,8 +132,7 @@ export class HeaderComponent implements OnInit {
     .subscribe ((responseData) => {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
-      console.error('HeaderComponent:selectTheme: throw error ', error);
-      throw new Error(error);
+      this.sentry.logError('HeaderComponent:selectTheme: cannot get theme '+ error);
     });
   }
 

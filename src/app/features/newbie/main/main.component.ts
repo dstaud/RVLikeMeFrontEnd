@@ -22,7 +22,6 @@ export class MainComponent implements OnInit {
   }
 
   onTopicSelected(topicParams: InewbieTopic) {
-    console.log('MainComponent:onTopicSelected: top of the chain=', topicParams)
     this.topic.newbieInit(topicParams);
   }
 

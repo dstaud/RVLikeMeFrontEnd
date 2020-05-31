@@ -167,8 +167,7 @@ export class DashboardComponent implements OnInit {
       }
 
     }, (error) => {
-      console.error('HomeDashboardComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('HomeDashboardComponent:listenForUserProfile: error getting profile ' + error);
     });
   }
 

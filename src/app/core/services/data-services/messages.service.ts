@@ -5,6 +5,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
+import { SharedComponent } from '@shared/shared.component';
+
 export interface Imessage {
   _id: string;
   createdBy: string;
@@ -53,7 +55,8 @@ export class MessagesService {
   private dataStore: { conversation: Iconversation[] } = { conversation: this.userConversation }
   conversation$ = this._conversation.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private shared: SharedComponent) { }
 
   ngOnDestroy() {}
 
@@ -66,7 +69,7 @@ export class MessagesService {
     }, (error) => {
       if (error.status === 404) {
       } else {
-        console.error('MessagesService:getConversations: throw error ', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       }
     });
@@ -79,7 +82,6 @@ export class MessagesService {
 
   getConversation(fromUserID: string, toUserID: string): Observable<any> {
     let param = JSON.parse('{"fromUserID":"' + fromUserID + '","toUserID":"' + toUserID + '"}');
-    console.error('MessagesService:getConversation: param=', param);
 
     return this.http.get(`/api/conversation`, { params: param  });
   }

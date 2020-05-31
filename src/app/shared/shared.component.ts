@@ -55,6 +55,10 @@ export class SharedComponent implements OnInit {
     this.snackBar.open(message, '', config);
   }
 
+  public notifyUserMajorError(): void {
+    this.openSnackBar('Oops.  Sorry, but we seem to be having an issue.  The administrator has been notified, but please check your internet connection and try again.','error', 5000);
+  }
+
   // Listen for changes in color theme;
   private listenForColorTheme() {
     this.themeSvc.defaultGlobalColorTheme

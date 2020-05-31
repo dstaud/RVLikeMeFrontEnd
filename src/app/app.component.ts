@@ -155,7 +155,7 @@ export class AppComponent implements OnInit {
         this.UsingEmailSvc.setUseEmail(systemResult[0].useEmail);
       }
     }, error => {
-      console.error('AppComponent:getSystemConfiguration: error=', error);
+      this.sentry.logError('AppComponent:getSystemConfiguration: error='+ error);
     })
   }
 
@@ -235,7 +235,6 @@ export class AppComponent implements OnInit {
       }
     });
     this.iphoneModelxPlus = this.deviceSvc.iPhoneModelXPlus;
-    console.log('AppComponent:listenForInstallPrompts: iphoneModelXPlus=', this.iphoneModelxPlus, ' userAuthorized=', this.userAuthorized);
   }
 
 
@@ -310,7 +309,7 @@ export class AppComponent implements OnInit {
         this.messagesSvc.getConversations();
       }
     }, (error) => {
-      console.error('AppComponent:listenForUserProfile: error listening for profile=', error);
+      this.sentry.logError('AppComponent:listenForUserProfile: error listening for profile=' + error);
       this.language.setLanguage('en');
       this.themeSvc.setGlobalColorTheme('light-theme');
     });
@@ -331,8 +330,7 @@ export class AppComponent implements OnInit {
     .subscribe(user => {
 
     }, error => {
-      console.error('InstallComponent:updateInstallInfoOnCredentials: error updating credentials=', error);
-      this.sentry.logError('error updating install flag on credentials');
+      this.sentry.logError('InstallComponent:updateInstallInfoOnCredentials: error updating credentials=' + error);
     });
   }
 }

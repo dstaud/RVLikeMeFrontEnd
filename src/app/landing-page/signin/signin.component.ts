@@ -6,17 +6,14 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { environment } from '@environments/environment';
 
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { LanguageService } from '@services/language.service';
-import { ThemeService } from '@services/theme.service';
 import { ShareDataService, Idashboard } from '@services/share-data.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
-import { DeviceService } from '@services/device.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SharedComponent } from '@shared/shared.component';
 import { PrivacyPolicyDialogComponent } from '@dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
@@ -76,9 +73,7 @@ export class SigninComponent implements OnInit {
               private ShareDataSvc: ShareDataService,
               private router: Router,
               private emailSmtpSvc: EmailSmtpService,
-              private themeSvc: ThemeService,
-              private deviceSvc: DeviceService,
-              private language: LanguageService,
+              private sentry: SentryMonitorService,
               private dialog: MatDialog,
               fb: FormBuilder) {
               this.form = fb.group({
@@ -134,7 +129,7 @@ export class SigninComponent implements OnInit {
         this.router.navigateByUrl('');
       }
     }, error => {
-      console.error('SigninComponent:onActivateEmail: error sending email: ', error);
+      this.sentry.logError('SigninComponent:onActivateEmail: error sending email: ' + error);
     })
   }
 
@@ -254,17 +249,14 @@ export class SigninComponent implements OnInit {
       this.formCompleted = 'complete';
       this.formComplete.emit(this.formCompleted);
       this.activateBackArrowSvc.setBackRoute('', 'nostack');
-      console.log('SigninComponent:handleReturnRoute: returning to ', this.returnRoute)
       this.router.navigateByUrl(this.returnRoute);
     } else {
       if (this.containerDialog) {
         this.formCompleted = 'complete';
-        console.log('SigninComponent:handleReturnRoute: emitting back up the chain')
         this.formComplete.emit(this.formCompleted);
       } else {
         // After user authorizied go to home page
         this.ShareDataSvc.setData('dashboard', params);
-        console.log('SigninComponent:handleReturnRoute: routing to ', '/home/dashboard')
         this.router.navigateByUrl('/home/dashboard');
         this.activateBackArrowSvc.setBackRoute('', 'nostack');
       }
@@ -325,14 +317,12 @@ export class SigninComponent implements OnInit {
 
 
   private setReturnRoute() {
-    console.log('SigninComponent:setReturnRoute:')
     let routeStack: Array<string>;
     let i: number;
 
     this.activateBackArrowSvc.route$
     .pipe(untilComponentDestroyed(this))
     .subscribe(routeResult => {
-      console.log('SigninComponent:setReturnRoute: got return route=', routeResult)
       routeStack = routeResult;
       if (this.containerDialog) {
         i = routeStack.length - 1;
@@ -348,12 +338,8 @@ export class SigninComponent implements OnInit {
 
 
       if (routeStack.length > 0) {
-        console.log('SigninComponent:setReturnRoute: stack length=', routeStack.length, ' index=', i, ' route=', routeStack[i])
-
-
         if (routeStack[i].substring(0, 1) === '*') {
             this.returnRoute = routeStack[i].substring(1, routeStack[i].length);
-            console.log('SigninComponent:setReturnRoute: route=', this.returnRoute)
         }
       }
     });
@@ -368,12 +354,12 @@ export class SigninComponent implements OnInit {
           this.authSvc.updateInstallFlag(this.install, this.device)
           .subscribe(credentialsResult => {
           }, error => {
-            console.error('SigninComponent:updateInstallFlag: error updating install flag', error);
+            this.sentry.logError('SigninComponent:updateInstallFlag: error updating install flag' + error);
           });
         }
       }
     }, error => {
-      console.error('SigninComponent:updateInstallFlag: error=', error);
+      this.sentry.logError('SigninComponent:updateInstallFlag: error=' + error);
     })
 
   }

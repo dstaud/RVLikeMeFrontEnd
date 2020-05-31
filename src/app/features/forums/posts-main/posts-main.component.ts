@@ -17,6 +17,8 @@ import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-posts-main',
   templateUrl: './posts-main.component.html',
@@ -57,6 +59,7 @@ export class PostsMainComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private forumSvc: ForumService,
               private sentry: SentryMonitorService,
+              private shared: SharedComponent,
               private device: DeviceService,
               private themeSvc: ThemeService) { }
 
@@ -79,7 +82,7 @@ export class PostsMainComponent implements OnInit {
       this.listenForChangeInColorTheme();
 
       this.listenForUserProfile();
-      console.log('PostsMainComponent:ngOnInit calling getGroupParams')
+
       this.getGroupParams();
     }
   }
@@ -139,7 +142,6 @@ export class PostsMainComponent implements OnInit {
       });
     } else {
       if (paramData._id) {
-        console.log('getting group by ID=', paramData._id);
         this.groupID = paramData._id;
         this.forumSvc.getGroupByID(paramData._id)
         .pipe(untilComponentDestroyed(this))
@@ -156,7 +158,6 @@ export class PostsMainComponent implements OnInit {
             this.showMoreOption = false;
           }
 
-          console.log('main get posts yob=', yearOfBirth);
           this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigLength);
           this.showSpinner = false;
 
@@ -165,7 +166,6 @@ export class PostsMainComponent implements OnInit {
         });
       } else {
         this.groupProfileCodeAttributesFromGroup = this.getGroupCodeAttributes(paramData);
-        console.log('PostsMainComponent:getGroup: Getting display Attributes for paramData=', paramData)
         this.groupProfileDisplayAttributesFromGroup = this.getGroupDisplayAttributes(paramData);
 
         // If there are more than 3 attributes, show only three with ...more on the template.
@@ -178,7 +178,6 @@ export class PostsMainComponent implements OnInit {
         keyValue = this.getGroupKeyValueAttributes(paramData).split('~');
         names = keyValue[0];
         values = keyValue[1];
-        console.log('PostsMainComponent:getGroup: calling check on name=', names, ' value=', values)
         this.checkIfUserProfileHasGroupAndUpdate(names, values);
       }
     }
@@ -193,7 +192,7 @@ export class PostsMainComponent implements OnInit {
       this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigType);
     }, error => {
       this.showSpinner = false;
-      console.error('ForumsComponentcreateGroupForum: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -233,32 +232,28 @@ export class PostsMainComponent implements OnInit {
       paramData = this.shareDataSvc.getData('forumsMain');
     }
 
-    console.log('PostsMainComponent:getGroupParams: paramData=', paramData);
     if (!this.valuesExist(paramData)) {
       if (this.desktopUser) {
         // If no parameters, default to a random group (assuming have profile data)
         if (this.profile.forums.length > 0) {
-          console.log('PostsMainComponent:getGroupParams: this.profile.forums=', this.profile.forums);
           index = Math.floor(Math.random() * this.profile.forums.length - 1) + 1;
           forumsList = this.profile.forums;
-          console.log('profile forums 0=', forumsList[index]._id)
+
           paramData = {
             _id: forumsList[index]._id,
             forumType: 'group'
           }
-          console.log('PostsMainComponent:getGroupParams: desktop user, going to getGroup')
+
           this.getGroup(paramData);
 
         } else {
-          console.log('PostsMainComponent:getGroupParams: desktop user, no profile forums, going to list');
           this.router.navigateByUrl('/forums/forums-list');
         }
       } else {
-        console.log('PostsMainComponent:getGroupParams: device user and no data, going to list');
         this.router.navigateByUrl('/forums/forums-list');
       }
     } else {
-      console.log('PostsMainComponent:getGroupParams: device user going to getGroup params=', paramData);
+
       this.getGroup(paramData);
     }
   }
@@ -268,13 +263,12 @@ export class PostsMainComponent implements OnInit {
     let rangeAttribute: number = null;
     let name;
 
-    console.log('group=', groups)
     for (name in groups) {
       if (name === attribute) {
         rangeAttribute = this.profile[attribute];
       }
     }
-    console.log('group yearofBirth=', rangeAttribute)
+
     return rangeAttribute
   }
 
@@ -287,38 +281,30 @@ export class PostsMainComponent implements OnInit {
     let rigLength: number;
     let groupDocKeys: any;
 
-    console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate:');
-
     // Check if group already exists
     this.forumSvc.getGroup(names, values)
     .pipe(untilComponentDestroyed(this))
     .subscribe(groupsFromServer => {
 
-      console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: this.groupProfileCodeAttributesFromGroup=', this.groupProfileCodeAttributesFromGroup)
       // Query may return multiple group forums that include the specific name/value pairs user is looking for.
       // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
       // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
-      console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: groupsFromServer.length=', groupsFromServer.length)
       for (let i = 0; i < groupsFromServer.length; i++) {
-        console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: groupsFromServer=', groupsFromServer[i])
         groupDocKeys = Object.keys(groupsFromServer[i]);
         docNotAMatch = false;
-        console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: groupDocKeys=', groupDocKeys)
+
         // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
         // selected by the user, and make sure that it does not have other attributes.
         for (let j = 0; j < groupDocKeys.length; j++) {
 
           // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
           // this group because it is not an exact match.
-          console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: In Loop. groupDocKeys[j]=', groupDocKeys[j], ' j=', j)
           if (this.groupProfileCodeAttributesFromGroup.includes(groupDocKeys[j])) {
             if (groupDocKeys[j] === 'yearOfBirth') {
-              console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: In Loop. groupDocKeys[j] = year of birth', groupDocKeys[j], ' j=', j)
               yearOfBirthInGroup = true;
             }
 
             if (groupDocKeys[j] === 'rigLength') {
-              console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: In Loop. groupDocKeys[j] = rigLength', groupDocKeys[j], ' j=', j)
               rigLengthInGroup = true;
             }
 
@@ -343,14 +329,12 @@ export class PostsMainComponent implements OnInit {
       if (matchFound) {
         if (yearOfBirthInGroup) {
           yearOfBirth = this.profile.yearOfBirth;
-          console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: match found and year of birth=', yearOfBirth);
         } else {
           yearOfBirth = null
         }
 
         if (rigLengthInGroup) {
           rigLength = this.profile.rigLength;
-          console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: martch found and rig length=', rigLength);
         } else {
           rigLength = null;
         }
@@ -359,17 +343,15 @@ export class PostsMainComponent implements OnInit {
         this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigLength);
         this.showSpinner = false;
       } else {
-        console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: Adding group for names=', names, ' values=', values)
         this.createGroupForum(names, values, yearOfBirth, rigLength);
       }
     }, error => {
       // if no match at all, create the forum group
       if (error.status === 404) {
-        console.log('PostsMainComponent:checkIfUserProfileHasGroupAndUpdate: No match at all. Adding group for names=', names, ' values=', values)
         this.createGroupForum(names, values, yearOfBirth, rigLength);
       } else {
         this.showSpinner = false;
-        console.error('ForumsMainComponent:getGroup: throw error ', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       }
     });
@@ -382,7 +364,7 @@ export class PostsMainComponent implements OnInit {
     let value;
     let forumItem;
     let groupProfileDisplayAttributesFromGroup = [];
-    console.log('ForumsListComponent:getGroupDisplayAttributes: group=', group);
+
     for (name in group) {
       if (!this.reservedField(name)) {
         value = group[name];
@@ -457,17 +439,15 @@ export class PostsMainComponent implements OnInit {
         this.groupsListFromUserProfile = this.profile.forums;
       }
     }, error => {
-      console.error('ForumsMainComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('ForumsMainComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
 
   private reservedField(name: string): boolean {
-    console.log('PostsMainComponent:reservedField: name=', name);
     if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' ||
         name === '__v' || name === 'theme' || name === 'forumType' || name === 'topicID' || name === 'topicDesc') {
-          console.log('PostsMainComponent:reservedField: and is reserved');
+
       return true;
     } else { return false }
   }
@@ -475,7 +455,6 @@ export class PostsMainComponent implements OnInit {
 
   // Update group forum array in user's profile with new group they are associated with.
   private updateProfileGroups() {
-    console.log('PostsMain:updateProfileGroups: groups=', this.groupsListFromUserProfile)
     let groupFound = false;
     for (let i=0; i < this.groupsListFromUserProfile.length; i++) {
       if (this.groupsListFromUserProfile[i]._id === this.groupID) {
@@ -484,16 +463,14 @@ export class PostsMainComponent implements OnInit {
       }
     }
     if (!groupFound) {
-      console.log('PostsMain:updateProfileGroups: adding to profile id=', this.profile._id, ' group=', this.groupID);
       this.profileSvc.addGroupToProfile(this.profile._id, this.groupID)
       .pipe(untilComponentDestroyed(this))
       .subscribe ((responseData) => {
-        console.log('PostsMain:updateProfileGroups: added group profile=', this.profile)
         this.profileSvc.distributeProfileUpdate(responseData);
         this.showSpinner = false;
       }, error => {
         this.showSpinner = false;
-        console.error('ForumsMainComponent:updateProfileGroups: throw error ', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       });
     }

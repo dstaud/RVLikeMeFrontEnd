@@ -16,6 +16,8 @@ import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-blog-link',
   templateUrl: './blog-link.component.html',
@@ -66,6 +68,7 @@ export class BlogLinkComponent implements OnInit {
               private router: Router,
               private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
+              private shared: SharedComponent,
               private linkPreviewSvc: LinkPreviewService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
@@ -156,7 +159,7 @@ export class BlogLinkComponent implements OnInit {
       this.profile = profileResult;
       this.profileSvc.distributeProfileUpdate(profileResult);
     }, error => {
-      console.error('BlogLinkComponent:onDelete: error deleting blog link from profile=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     })
   }
@@ -169,11 +172,6 @@ export class BlogLinkComponent implements OnInit {
         .pipe(untilComponentDestroyed(this))
         .subscribe(preview => {
           this.preview = preview;
-          // if (this.preview.url.substring(0,7) == 'http://') {
-          //   this.preview.url = this.preview.url.substring(7,this.preview.url.length);
-          // } else if (this.form.controls.link.value.substring(0,8) === 'https://') {
-          //   this.preview.url = this.preview.url.substring(8,this.preview.url.length);
-          // }
 
           if (this.preview.url.substring(0,7) !== 'http://' && this.preview.url.substring(0,8) !== 'https://' ) {
             this.preview.url = 'https://' + this.preview.url;
@@ -267,9 +265,8 @@ export class BlogLinkComponent implements OnInit {
       this.blogLinks = profile.blogLinks;
       this.showSpinner = false;
     }, (error) => {
-      console.error('BlogLinkComponent:listenForUserProfile: error getting profile ', error);
+      this.sentry.logError('BlogLinkComponent:listenForUserProfile: error getting profile=' + error);
       this.showSpinner = false;
-      throw new Error(error);
     });
   }
 
@@ -293,7 +290,7 @@ export class BlogLinkComponent implements OnInit {
           this.returnRoute = '';
       }
     }, error => {
-      console.error('BlogLinkComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('BlogLinkComponent:setReturnRoute: error setting return route=' + error);
     });
   }
 }

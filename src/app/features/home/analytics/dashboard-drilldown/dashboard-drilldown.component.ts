@@ -11,6 +11,7 @@ import { LikemeCountsService, IgroupByCounts } from '@services/data-services/lik
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { DeviceService } from '@services/device.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 @Component({
   selector: 'app-rvlm-dashboard-drilldown',
@@ -30,6 +31,7 @@ export class DashboardDrilldownComponent implements OnInit {
               private authSvc: AuthenticationService,
               private location: Location,
               private router: Router,
+              private sentry: SentryMonitorService,
               private device: DeviceService,
               private translate: TranslateService) { }
 
@@ -88,9 +90,8 @@ export class DashboardDrilldownComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      console.error('DashboardDrilldownComponent:listenForGroupByCounts: error=', error);
+      this.sentry.logError('DashboardDrilldownComponent:listenForGroupByCounts: error=' + error);
       this.showSpinner = false;
-      throw new Error(error);
     });
   }
 

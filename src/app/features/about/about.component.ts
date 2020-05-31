@@ -113,8 +113,7 @@ export class AboutComponent implements OnInit {
       this.profile = profileResult;
       this.getDaveInfo();
     }, error => {
-      console.error('AboutComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('AboutMainComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 

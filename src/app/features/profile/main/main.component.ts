@@ -277,8 +277,7 @@ export class MainComponent implements OnInit {
       this.showSpinner = false;
     }, (error) => {
       this.showSpinner = false;
-      console.error('ProfileComponent:listenForUserProfile: error saving new profile ', error);
-      throw new Error(error);
+      this.sentry.logError('ProfileComponent:listenForUserProfile: error saving new profile=' + error);
     });
   }
 

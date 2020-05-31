@@ -359,8 +359,7 @@ export class PersonalComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       this.showSpinner = false;
-      console.error('PersonalComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('PersonalComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -403,7 +402,7 @@ export class PersonalComponent implements OnInit {
           this.returnRoute = '';
       }
     }, error => {
-      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('YourStoryComponent:setReturnRoute: error setting return route=' + error);
     });
   }
 
@@ -418,7 +417,7 @@ export class PersonalComponent implements OnInit {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this[SaveIcon] = false;
-      console.error('PersonalComponent:updatePersonal: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

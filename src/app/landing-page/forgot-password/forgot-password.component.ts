@@ -77,13 +77,12 @@ export class ForgotPasswordComponent implements OnInit {
       }, 2000);
 
     }, error => {
-      console.error('ForgotPasswordComponent:onSubmit: error getting token=', error, ' status=', error.status);
       if (error.status === 406) {
         this.httpError = true;
         this.httpErrorText = 'Email does not exist in database';
         this.form.enable();
       } else {
-        console.error('ForgotPasswordComponent:onSubmit: error =', error.message);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       }
     });
@@ -100,7 +99,7 @@ export class ForgotPasswordComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(sendEmailResult => {
     }, error => {
-      console.error('ForgotPasswordComponent:onSubmit: sending email=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

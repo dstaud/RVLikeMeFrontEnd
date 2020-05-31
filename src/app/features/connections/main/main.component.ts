@@ -36,6 +36,7 @@ export class MainComponent implements OnInit {
   likeMeMatches = [];
   matches = [];
   theme: string;
+  desktopUser: boolean = false;
 
   private likeMeItem: string;
   private likeMeDesc: string;
@@ -49,7 +50,7 @@ export class MainComponent implements OnInit {
   private routeSubscription: any;
   private allUsersCount: number;
   private allCountsReceived: boolean = false;
-  private desktopUser: boolean = false;
+
 
   constructor(private translate: TranslateService,
               private authSvc: AuthenticationService,
@@ -141,7 +142,7 @@ export class MainComponent implements OnInit {
     // Get the key/value pairs of returned matches/counts into arrays
     this.profileKeys = Object.keys(counts);
     this.profileValues = Object.values(counts);
-    console.log('displayMatches counts=', counts)
+
     // Go through the key array.  For each key, get associated value.
     // If the value is null or false, skip it.  This means there were no matches
     // for that item with other users at this time.
@@ -165,10 +166,8 @@ export class MainComponent implements OnInit {
           }
           this.processMatch(this.profileKeys[i], this.profileValues[i]);
         } else {
-          console.log('connections key =', this.profileKeys[i], ' type=',typeof(this.profile[this.profileKeys[i]]));
           if (typeof(this.profile[this.profileKeys[i]]) !== 'number' && this.profile[this.profileKeys[i]]) {  // numeric variables
             if (this.profileKeys[i] !== 'allCounts') {
-              console.log('connections key=',this.profileKeys[i], this.profile[this.profileKeys[i]], typeof(this.profile[this.profileKeys[i]]) )
               if (this.profile[this.profileKeys[i]].substring(0, 1) !== '@') {
                 if (this.profileValues[i] === 1) {
                   this.likeMeDesc = this.translate.instant(
@@ -195,7 +194,7 @@ export class MainComponent implements OnInit {
               }
             }
           } else {
-            console.log('alternative processing ', this.profile[this.profileKeys[i]])
+
             if (this.profileValues[i] === 1) {
               this.likeMeDesc = this.translate.instant(
                 'connections.component.' + this.profileKeys[i] + '1'
@@ -386,8 +385,7 @@ export class MainComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
     }, error => {
-      console.error('ConnectionsComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('ConnectionsComponent:listenForUserProfile: error getting profile ' + error);
     });
   }
 

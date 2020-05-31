@@ -212,7 +212,7 @@ export class AddPostComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.error('AddPostComponent:onPost: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

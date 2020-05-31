@@ -17,6 +17,8 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 @Component({
   selector: 'app-rvlm-send-message',
   templateUrl: './send-message.component.html',
@@ -70,6 +72,7 @@ export class SendMessageComponent implements OnInit {
               private themeSvc: ThemeService,
               private emailSmtpSvc: EmailSmtpService,
               private router: Router,
+              private shared: SharedComponent,
               private device: DeviceService,
               private sentry: SentryMonitorService,
               private iterableDiffers: IterableDiffers,
@@ -86,7 +89,6 @@ export class SendMessageComponent implements OnInit {
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
-    console.log('SendMessageComponent:ngOnInit:')
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
@@ -94,7 +96,6 @@ export class SendMessageComponent implements OnInit {
     } else {
       if (window.innerWidth > 600) {
         this.desktopUser = true;
-        console.log('SendMessageComponent:ngOnInit: getting conversations')
       }
 
       this.listenForUserProfile();
@@ -150,13 +151,11 @@ export class SendMessageComponent implements OnInit {
   getParameters(params?: ImessageShareData) {
     const profileImageUrl: string = './../../../../assets/images/no-profile-pic.jpg'; // Default empty profile image
     let paramData: any;
-    console.log('SendMessageComponent:getParameters: params=', params, ' sharedata=', this.shareDataSvc.getData('message'));
+
     if (!this.shareDataSvc.getData('message').fromUserID && !params) {
       if (this.desktopUser) {
-        console.log('SendMessageComponent:getParameters: listening for conversations');
         this.listenForUserConversations();
       } else {
-        console.log('SendMessageComponent:getParameters: no param data and device, route to list');
         this.router.navigateByUrl('/messages/message-list');
       }
     } else {
@@ -165,7 +164,7 @@ export class SendMessageComponent implements OnInit {
       } else {
         paramData = this.shareDataSvc.getData('message');
       }
-      console.log('SendMessageComponent:getParameters: params=', paramData)
+
       this.fromUserID = paramData.fromUserID;
       this.fromDisplayName = paramData.fromDisplayName;
       if (!paramData.fromProfileImageUrl || paramData.fromProfileImageUrl === 'null') {
@@ -210,7 +209,7 @@ export class SendMessageComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
         this.showSpinner = false;
-        console.error('SendMessageComponent:onSubmit: error sending message ', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
     });
   }
@@ -259,16 +258,12 @@ export class SendMessageComponent implements OnInit {
 
   // Get previous messages in this conversation for display
   private getMessages() {
-    console.log('SendMessageComponent:getMessages:')
     this.userConversations = this.messagesSvc.conversation$;
     this.userConversations
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
-      console.log('SendMessageComponent:getMessages: conversations=', conversations)
-      // if (conversations.length > 0 && conversations[0]._id) {
-        console.log('SendMessageComponent:getMessages: in Messages=', conversations)
         let conversationIndex = this.findConversation(conversations, this.fromUserID, this.toUserID, this.conversationID);
-        console.log('SendMessageComponent:getMessages: index=', conversationIndex)
+
         if (conversationIndex === -1) { // Indicates not found in collection
           this.newConversation = true;
           this.conversation = null;
@@ -291,21 +286,20 @@ export class SendMessageComponent implements OnInit {
             this.originalMsgCount = 0;
           }
         }
-      // }
+
       this.showSpinner = false;
     });
   }
 
 
   private getOtherUserProfile() {
-    console.error('SendMessageComponent:getOtherUserProfile: getting profile for other user =', this.toUserID, this.toDisplayName);
     this.profileSvc.getUserProfile(this.toUserID)
     .pipe(untilComponentDestroyed(this))
     .subscribe(profileResult => {
       this.sendMessageEmails = profileResult.sendMessageEmails;
 
     }, error => {
-      console.error('SendMessageComponent:getOtherUserProfile: Error getting other user profile=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     })
   }
@@ -330,14 +324,13 @@ export class SendMessageComponent implements OnInit {
     this.userConversations
     .pipe(untilComponentDestroyed(this))
     .subscribe(conversations => {
-      console.log('SendMessageComponent:listenForUserConversations: conversations=', conversations, ' length=', conversations.length)
 
       if (conversations.length > 0) {
         if (conversations[0]._id) {
           message = conversations[0].messages[conversations[0].messages.length - 1];
-          console.log('SendMessageComponent:listenForUserConversations: message=', message);
+
           if (this.profile.userID === message.createdBy) { // profile not there yet!  Geez.
-            console.log('SendMessageComponent:listenForUserConversations: user is from user');
+
             params = {
               fromUserID: message.createdBy,
               fromDisplayName: message.createdByDisplayName,
@@ -348,7 +341,7 @@ export class SendMessageComponent implements OnInit {
               conversationID: conversations[0]._id
             }
           } else {
-            console.log('SendMessageComponent:listenForUserConversations: user is to user');
+
             params = {
               fromUserID: message.sentToUserID,
               fromDisplayName: message.sentToDisplayName,
@@ -360,18 +353,15 @@ export class SendMessageComponent implements OnInit {
             }
           }
 
-          console.log('SendMessageComponent:listenForUserConversations: params=', params);
           this.getParameters(params);
         } else {
-          console.log('SendMessageComponent:listenForUserConversations: no conversation ID conversations=', conversations);
-          // this.router.navigateByUrl('/messages/message-list');
+
         }
       } else {
-        console.log('SendMessageComponent:listenForUserConversations: conversations length zero conversations=', conversations);
-        // this.router.navigateByUrl('/messages/message-list');
+
       }
     }, error => {
-      console.error('SendMessageComponent:listenForUserConversations: unable to get conversations. Error=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -385,12 +375,10 @@ export class SendMessageComponent implements OnInit {
       .subscribe(data => {
 
         if (data._id) {
-          console.error('SendMessageComponent:listenForUserProfile: got new profile=', data);
           this.profile = data;
         }
       }, error => {
-        console.error('SendMessageComponent:listenForUserProfile: error getting user profile. error=', error);
-        throw new Error(error);
+        this.sentry.logError('SendMessageComponent:listenForUserProfile: error getting user profile. error=' + error);
       });
     }
 
@@ -458,7 +446,7 @@ export class SendMessageComponent implements OnInit {
       this.messagesSvc.getConversations(); // Get updated conversation into behaviorSubject
       this.sendNotificationToRecipient();
     }, error => {
-      console.error('SendMessageComponent:updateConversation: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     })
   }

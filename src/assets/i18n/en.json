@@ -5,18 +5,18 @@
     "complete": "complete"
   },
   "menu": {
-    "connections": "like me",
-    "forums": "groups",
-    "messages": "messages",
-    "home": "home",
-    "about": "about RV Like Me",
-    "more": "more",
-    "newbie": "newbie corner",
-    "profile": "profile",
-    "settings": "settings",
-    "install": "install app",
-    "subscribe": "subscribe notifications",
-    "unsubscribe": "unsubscribe notifications",
+    "connections": "Like me",
+    "forums": "Groups",
+    "messages": "Messages",
+    "home": "Home",
+    "about": "About RV Like Me",
+    "more": "More",
+    "newbie": "Newbie corner",
+    "profile": "Profile",
+    "settings": "Settings",
+    "install": "Install app",
+    "subscribe": "Subscribe notifications",
+    "unsubscribe": "Unsubscribe notifications",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
   },
@@ -180,7 +180,7 @@
       "rvuse": {
         "fth": "that fulltime trvl with home base",
         "ftn": "that fulltime trvl no home base",
-        "fs": "that full-time stationary",
+        "fs": "that fulltime stationary",
         "fp": "that mostly stay in one place",
         "tfw": "that travel for work",
         "ps": "that part-time travel w home-base",
@@ -297,17 +297,17 @@
     "howYourStory": "This is how your story will be presented to other users based on your profile information",
     "list": {
       "aboutme": {
-        "dreamer": "dreaming of RVing",
-        "newbie": "new to RVing",
-        "experienced": "an experienced RVer",
+        "dreamer": "Dreaming of RVing",
+        "newbie": "New to RVing",
+        "experienced": "An experienced RVer",
         "other": "Other"
       },
       "gender": {
-        "m": "male",
-        "f": "female"
+        "m": "Male",
+        "f": "Female"
       },
       "homecountry": {
-        "usa": "the United States",
+        "usa": "The United States",
         "can": "Canada",
         "mex": "Mexico"
       },
@@ -364,47 +364,47 @@
         "wy": "Wyoming"
       },
       "rvuse": {
-        "fth": "fulltime trvl with home base",
-        "ftn": "fulltime trvl no home base",
-        "fs": "full-time stationary",
-        "fp": "mostly stay in one place",
-        "tfw": "travel for work",
-        "ps": "part-time travel w home-base",
-        "ny": "an RVer wanna-be!",
+        "fth": "Fulltime trvl with home base",
+        "ftn": "Fulltime trvl no home base",
+        "fs": "Fulltime stationary",
+        "fp": "Mostly stay in one place",
+        "tfw": "Travel for work",
+        "ps": "Part-time travel w home-base",
+        "ny": "An RVer wanna-be!",
         "other": "Other"
       },
       "worklife": {
-        "work-full-time": "working full-time",
-        "work-part-time": "working part-time",
-        "workamping": "workamping",
-        "retired": "retired",
-        "military": "in the military",
-        "onleave": "currently not working",
+        "work-full-time": "Working full-time",
+        "work-part-time": "Working part-time",
+        "workamping": "Workamping",
+        "retired": "Retired",
+        "military": "In the military",
+        "onleave": "Currently not working",
         "other": "Other"
       },
       "campswithme": {
-        "single": "by myself",
-        "partner": "spouse/partner",
-        "children": "small children",
-        "children2": "older children",
-        "family": "the whole family",
-        "friend": "a friend(s)",
+        "single": "By myself",
+        "partner": "Spouse/partner",
+        "children": "Small children",
+        "children2": "Older children",
+        "family": "The whole family",
+        "friend": "A friend(s)",
         "other": "Other"
       },
       "boondocking": {
-        "most": "most of the time",
-        "alot": "a lot of the time",
-        "some": "some of the time",
-        "while": "once in a while",
-        "haveto": "when I have to",
-        "rarely": "rarely or never",
-        "want": "never, but want to"
+        "most": "Most of the time",
+        "alot": "A lot of the time",
+        "some": "Some of the time",
+        "while": "Once in a while",
+        "haveto": "When I have to",
+        "rarely": "Rarely or never",
+        "want": "Never, but want to"
       },
       "traveling": {
-        "countries": "across the US/Canada/Mexico",
-        "country": "across the U.S.A.",
-        "regional": "regionally within country",
-        "none": "not at all",
+        "countries": "Across the US/Canada/Mexico",
+        "country": "Across the U.S.A.",
+        "regional": "Regionally within country",
+        "none": "Not at all",
         "other": "Other"
       },
       "rigtype": {
@@ -628,13 +628,13 @@
         "notdefined": "Did not enter in profile"
       },
       "rvuse": {
-        "fth": "fulltime trvl with home base",
-        "ftn": "fulltime trvl no home base",
-        "fs": "full-time stationary",
-        "fp": "mostly stay in one place",
-        "tfw": "travel for work",
-        "ps": "part-time travel w home-base",
-        "ny": "an RVer wanna-be!",
+        "fth": "Fulltime trvl with home base",
+        "ftn": "Fulltime trvl no home base",
+        "fs": "Fulltime stationary",
+        "fp": "Mostly stay in one place",
+        "tfw": "Travel for work",
+        "ps": "Part-time travel w home-base",
+        "ny": "An RVer wanna-be!",
         "other": "Other",
         "notdefined": "Did not enter in profile"
       },

@@ -10,6 +10,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ShareDataService, IforumsMain, InewbieTopic } from '@services/share-data.service';
 import { DeviceService } from '@services/device.service';
 import { UserTypeService } from '@services/user-type.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { Itopics } from './../../newbie-corner/newbie-corner.component';
 import { NewbieLinksComponent } from './../newbie-links/newbie-links.component';
@@ -40,6 +41,7 @@ export class TopicComponent implements OnInit {
               private router: Router,
               private device: DeviceService,
               private translate: TranslateService,
+              private sentry: SentryMonitorService,
               private userTypeSvc: UserTypeService,
               private shareDataSvc: ShareDataService) { }
 
@@ -72,7 +74,6 @@ export class TopicComponent implements OnInit {
 
 
   newbieInit(params: InewbieTopic) {
-    console.log('TopicComponent:newbieInit: back over here=', params)
     this.topicID = params.topicID;
     this.topicDesc = params.topicDesc;
 
@@ -116,8 +117,7 @@ export class TopicComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
     }, error => {
-      console.error('TopicComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('TopicComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -139,8 +139,6 @@ export class TopicComponent implements OnInit {
         this.topicDesc = paramData.topicDesc;
       }
 
-      console.log('TopicComponent:listenForUserType: topicid=', this.topicID, ' topicDesc=', this.topicDesc)
-
       this.title = 'newbie-topics.component.' + this.topicID;
       if (type === 'expert') {
         this.header = 'newbie-topics.component.' + this.topicID + 'HeaderExpert';
@@ -153,8 +151,7 @@ export class TopicComponent implements OnInit {
       }
 
     }, error => {
-      console.error('TopicComponent:listenForUserType: error ', error);
-      throw new Error(error);
+      this.sentry.logError('TopicComponent:listenForUserType: error listening for user types=' + error);
     });
   }
 

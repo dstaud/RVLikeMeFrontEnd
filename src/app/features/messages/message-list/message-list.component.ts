@@ -11,6 +11,9 @@ import { ShareDataService, ImessageShareData } from '@services/share-data.servic
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { DeviceService } from '@services/device.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
+
+import { SharedComponent } from '@shared/shared.component';
 
 @Component({
   selector: 'app-rvlm-message-list',
@@ -39,6 +42,8 @@ export class MessageListComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private location: Location,
               private device: DeviceService,
+              private sentry: SentryMonitorService,
+              private shared: SharedComponent,
               private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router) { }
@@ -49,11 +54,10 @@ export class MessageListComponent implements OnInit {
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
-    console.log('MessageListComponent:ngOnInit:')
+
     if (!this.authSvc.isLoggedIn()) {
       backPath = this.location.path().substring(1, this.location.path().length);
       this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      console.log('MessageListComponent:ngOnInit: backroute=', '*' + backPath)
       this.router.navigateByUrl('/?e=signin');
     } else {
       if (window.innerWidth > 600) {
@@ -129,7 +133,7 @@ export class MessageListComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      console.error('MessageList:listenForUserConversations: unable to get conversations. Error=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -147,8 +151,7 @@ export class MessageListComponent implements OnInit {
         this.displayName = this.profile.displayName;
       }
     }, error => {
-      console.error('MessageListComponent:listenForUserProfile: error getting user profile. error=', error);
-      throw new Error(error);
+      this.sentry.logError('MessageListComponent:listenForUserProfile: error getting user profile. error=' + error);
     });
   }
 

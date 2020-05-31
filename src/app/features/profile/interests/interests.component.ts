@@ -170,14 +170,13 @@ ngOnInit() {
         this.suggestInterestOpen = 'out';
         this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       }, error => {
-        console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);
         this.showSpinner = false;
         this.suggestInterestOpen = 'out';
         this.form.patchValue({
           suggestInterest: ''
         });
         this.readyToSuggest = false;
-        this.sentry.logError(error);
+        this.sentry.logError('InterestsComponent:onSuggestInterest: error saving suggestion=' + error);
         this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       });
     }
@@ -200,7 +199,7 @@ ngOnInit() {
       this.showSaveIcon = false;
     }, error => {
       this.showSaveIcon = false;
-      console.error('InterestsComponent:updateLifestyle: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -245,8 +244,7 @@ ngOnInit() {
       this.form.enable();
     }, error => {
       this.showSpinner = false;
-      console.error('InterestsComponent:listenForUserProfile: error getting profile=', error);
-      throw new error(error);
+      this.sentry.logError('InterestsComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -270,7 +268,7 @@ ngOnInit() {
           this.returnRoute = '';
       }
     }, error => {
-      console.error('YourStoryComponent:setReturnRoute: error setting return route ', error);
+      this.sentry.logError('YourStoryComponent:setReturnRoute: error setting return route=' + error);
     });
   }
 }

@@ -141,7 +141,7 @@ export class LikemeCountsService {
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
       this.getLikeMeCountsSecondary();
     }, error => {
-      console.error('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -183,7 +183,7 @@ export class LikemeCountsService {
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
     }, (error) => {
-      console.error('LikeMeCountsService:getLikeMeCountsSecondary: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -223,7 +223,7 @@ export class LikemeCountsService {
       this._groupByCounts.next(Object.assign({}, this.dataStoreGroupBy).groupByCounts);
 
     }, error => {
-      console.error('LikeMeCountsService:getLikeMeCountsPriority: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

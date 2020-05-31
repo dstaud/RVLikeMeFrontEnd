@@ -117,7 +117,7 @@ export class ChangeUsernameComponent implements OnInit {
         } else if (error.status === 403) {
           this.httpErrorText = this.translate.instant('changeUsername.component.emailExists');
         } else {
-          console.error('ChangeUsernameComponent:onSubmit: throw error ', error);
+          this.shared.notifyUserMajorError();
           throw new Error(error);
         }
       });
@@ -138,7 +138,7 @@ export class ChangeUsernameComponent implements OnInit {
       this.form.enable();
     }, error => {
       this.showSpinner = false;
-      console.error('ChangeUsernameComponent:getCredentials: error getting user credentials ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }

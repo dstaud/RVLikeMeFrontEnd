@@ -254,7 +254,7 @@ export class ProfileService {
         this.dataStore.profile = data;
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, (error) => {
-        console.error('ProfileService:getProfile: throw error ', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       });
     }
@@ -272,7 +272,6 @@ export class ProfileService {
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {
     let attributeEscaped;
 
-    console.log('ProfileService:updateProfileAttribute: typeof=', typeof(value), ' value=', value);
     if (value) {
       if (typeof(value) !== 'boolean' && typeof(value !== 'number')) {
         attributeEscaped = this.escapeJsonReservedCharacters(value);

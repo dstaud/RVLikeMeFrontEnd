@@ -134,7 +134,7 @@ export class NewbieCornerComponent implements OnInit {
         this.form.reset();
         this.shared.openSnackBar(this.translate.instant('newbie-topics.component.suggestionAdmin'), "message", 3000);
         this.readyToSuggest = false;
-        console.error('InterestsComponent:onSuggestInterest: error saving suggestion=', error);
+
         this.sentry.logError(error);
       });
     }
@@ -158,6 +158,7 @@ export class NewbieCornerComponent implements OnInit {
         if (error.status === 403) {
           this.sentry.logError({"status":403,"message":"unable to listen for like me counts","error":error});
         } else {
+          this.shared.notifyUserMajorError();
           throw new Error(error);
         }
       });
@@ -172,7 +173,6 @@ export class NewbieCornerComponent implements OnInit {
     this.activateBackArrowSvc.setBackRoute('newbie/newbie-corner', 'forward');
 
     if (this.desktopUser) {
-      console.log('NewbieTopicsComponent:onTopic: sending up the chain=', params);
       this.topicSelected.emit(params);
     } else {
       this.router.navigateByUrl('/newbie/topic');
@@ -228,8 +228,7 @@ export class NewbieCornerComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
     }, (error) => {
-      console.error('NewbieTopicsComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('NewbieTopicsComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 
@@ -240,8 +239,7 @@ export class NewbieCornerComponent implements OnInit {
     .subscribe(type => {
       this.userType = type;
     }, (error) => {
-      console.error('NewbieTopicsComponent:listenForUserType: error ', error);
-      throw new Error(error);
+      this.sentry.logError('NewbieTopicsComponent:listenForUserType: error ' + error);
     });
   }
 

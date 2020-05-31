@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LikemeCountsService, IlikeMeCounts } from '@services/data-services/likeme-counts.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -52,6 +53,7 @@ export class LikemeCountsComponent implements OnInit {
               private profileSvc: ProfileService,
               private likeMeCountsSvc: LikemeCountsService,
               private router: Router,
+              private sentry: SentryMonitorService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private shared: SharedComponent) {
   }
@@ -144,7 +146,8 @@ export class LikemeCountsComponent implements OnInit {
 
     }, (error) => {
       this.showSpinner = false;
-      console.error(error);
+      this.shared.notifyUserMajorError();
+      throw new Error(error);
     });
   }
 
@@ -158,8 +161,7 @@ export class LikemeCountsComponent implements OnInit {
       this.profile = profileResult;
 
     }, error => {
-      console.error('ProfilePercentComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + error);
     });
   }
 }

@@ -13,7 +13,6 @@ export class ActivateBackArrowService {
   constructor() { }
 
   public setBackRoute(route: string, direction?: string): void {
-    console.log('activateBackArrowSvc: direction=', direction, ' route=', route)
     if (direction === 'forward') {
       this.routeStack.push(route);
       this.route.next(this.routeStack);

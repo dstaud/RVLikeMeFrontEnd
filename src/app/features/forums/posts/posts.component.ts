@@ -23,6 +23,8 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { DeviceService } from '@services/device.service';
 
+import { SharedComponent } from '@shared/shared.component';
+
 export type FadeState = 'visible' | 'hidden';
 
 @Component({
@@ -131,6 +133,7 @@ export class PostsComponent implements OnInit {
               private router: Router,
               private linkPreviewSvc: LinkPreviewService,
               private sentry: SentryMonitorService,
+              private shared: SharedComponent,
               private viewportScroller: ViewportScroller,
               private device: DeviceService,
               private dialog: MatDialog) { }
@@ -209,7 +212,7 @@ export class PostsComponent implements OnInit {
       this.posts.splice(row, 1);
 
     }, error => {
-      console.error('PostsComponent:onDeletePost: error deleting post=', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -227,7 +230,7 @@ export class PostsComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      console.error('PostsComponent:onLike: throw error ', error);
+      this.shared.notifyUserMajorError();
       throw new Error(error);
     });
   }
@@ -404,7 +407,7 @@ export class PostsComponent implements OnInit {
         link = 'https://' + this.preview.url.substring(7,this.preview.url.length);
       }
     }
-    console.log('PostsComponent:createPostsArrayEntry: post.link before=', post.link, ' link=', link)
+
     if (post.linkDesc !== 'undefined' && post.linkDesc !== undefined) {
       linkDesc = post.linkDesc;
     }
@@ -436,7 +439,7 @@ export class PostsComponent implements OnInit {
       createdAt: post.createdAt,
       fragment: fragmentLink
     }
-    console.log('PostsComponent:createPostsArrayEntry: newPost=', newPost)
+
     return newPost;
   }
 
@@ -458,7 +461,6 @@ export class PostsComponent implements OnInit {
 
     this.posts = [];
 
-    console.log('getting posts for group=', this.groupID);
     this.forumSvc.getPosts(this.groupID, yearOfBirth, rigLength)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
@@ -514,7 +516,7 @@ export class PostsComponent implements OnInit {
         this.showFirstPost = true;
         this.showPosts = false;
       } else {
-        console.error('PostsComponent:getPosts: throw error ', error);
+        this.shared.notifyUserMajorError();
         throw new Error(error);
       }
     });
@@ -551,8 +553,7 @@ export class PostsComponent implements OnInit {
         this.userNewbie = true;
       }
     }, (error) => {
-      console.error('PostsComponent:listenForUserProfile: error getting profile ', error);
-      throw new Error(error);
+      this.sentry.logError('PostsComponent:listenForUserProfile: error getting profile ' + error);
     });
   }
 
