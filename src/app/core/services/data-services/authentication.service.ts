@@ -67,9 +67,12 @@ export class AuthenticationService {
       noExpireText = 'true';
     }
 
-    let params = new HttpParams().set('email', email)
-                                  .set('noExpire', noExpireText)
-                                  .set('type', type)
+    let params = {
+      email: email,
+      noExpire: noExpire,
+      type: type
+    }
+
     return this.http.post(`/api/get-password-reset-token`, params, {});
   }
 
@@ -131,7 +134,7 @@ export class AuthenticationService {
     this.token = '';
     this.setUserToAdmin(false);
     window.localStorage.removeItem('rvlikeme-token');
-    this.profileSvc.getProfile(true);
+    this.profileSvc.getProfile(true); // reset profile behavior subject
     this.activateBackArrowSvc.setBackRoute('', 'nostack');
     this.shareDataSvc.clearAllData();
   }
@@ -139,10 +142,10 @@ export class AuthenticationService {
   registerUser(user: ItokenPayload, firstName: string): Observable<any> {
     let base;
     let params = {
-      credentials: JSON.stringify(user),
+      credentials: user,
       firstName: firstName
     }
-
+    console.log('register user = ', params)
     base = this.http.post(`/api/register`, params);
     const request = base.pipe(
       map((data: ItokenResponse) => { // Saving token here, but may be better to save on register confirm.  However, would have to make sure the email confirm is on

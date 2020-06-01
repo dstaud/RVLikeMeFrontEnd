@@ -64,7 +64,10 @@ export interface IuserProfile {
   lifestyleImageUrls: Array<string>;
   sendMessageEmails: boolean;
   blogLinks: Array<Iblog>,
-  hideInstall: boolean
+  hideInstall: boolean,
+  boondock: boolean;
+  offGridLiving: boolean;
+  solarPower: boolean;
 }
 
 @Injectable({
@@ -118,7 +121,10 @@ export class ProfileService {
     lifestyleImageUrls: [],
     sendMessageEmails: true,
     blogLinks: [],
-    hideInstall: false
+    hideInstall: false,
+    boondock: false,
+    offGridLiving: false,
+    solarPower: false
   };
 
   ngOnDestroy() {}
@@ -261,6 +267,9 @@ export class ProfileService {
       this.dataStore.profile.sendMessageEmails = true;
       this.dataStore.profile.blogLinks = [];
       this.dataStore.profile.hideInstall = false;
+      this.dataStore.profile.boondock = null;
+      this.dataStore.profile.offGridLiving = null;
+      this.dataStore.profile.solarPower = null;
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)

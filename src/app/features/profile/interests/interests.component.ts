@@ -92,6 +92,9 @@ export class InterestsComponent implements OnInit {
                 musicalInstrument: new FormControl(''),
                 programming: new FormControl(''),
                 mobileInternet: new FormControl(''),
+                boondock: new FormControl(''),
+                offGridLiving: new FormControl(''),
+                solarPower: new FormControl(''),
                 suggestInterest: new FormControl('', Validators.required)
               });
 }
@@ -237,7 +240,10 @@ ngOnInit() {
         gaming: this.profile.gaming,
         musicalInstrument: this.profile.musicalInstrument,
         programming: this.profile.programming,
-        mobileInternet: this.profile.mobileInternet
+        mobileInternet: this.profile.mobileInternet,
+        boondock: this.profile.boondock,
+        offGridLiving: this.profile.offGridLiving,
+        solarPower: this.profile.solarPower
       });
 
       this.showSpinner = false;

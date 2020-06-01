@@ -283,26 +283,24 @@ export class AppComponent implements OnInit {
       if (profile._id) {
         this.language.setLanguage(profile.language);
 
-      }
-      if (profile.colorThemePreference) {
-        this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
-      } else {
-        this.themeSvc.setGlobalColorTheme('light-theme');
-      }
+        if (profile.colorThemePreference) {
+          this.themeSvc.setGlobalColorTheme(profile.colorThemePreference);
+        } else {
+          this.themeSvc.setGlobalColorTheme('light-theme');
+        }
 
-      // If user has indicated they are an expert or newbie, this information is used throughout the app
-      if (profile.aboutMe) {
-        if (profile.aboutMe === 'experienced') {
-          this.userTypeSvc.setUserType('expert');
+        // If user has indicated they are an expert or newbie, this information is used throughout the app
+        if (profile.aboutMe) {
+          if (profile.aboutMe === 'experienced') {
+            this.userTypeSvc.setUserType('expert');
+          } else {
+            this.userTypeSvc.setUserType('newbie');
+          }
         } else {
           this.userTypeSvc.setUserType('newbie');
         }
-      } else {
-        this.userTypeSvc.setUserType('newbie');
-      }
 
-      // When we have actual profile data from the database, then go get the counts that will be used on the home page
-      if (profile._id) {
+        // When we have actual profile data from the database, then go get the counts that will be used on the home page
         this.likeMeCountsSvc.getLikeMeCountsPriority();
         this.likeMeCountsSvc.getGroupByCounts();
         this.userID = profile.userID;

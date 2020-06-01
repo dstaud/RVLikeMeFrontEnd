@@ -54,6 +54,9 @@ export interface IlikeMeCounts {
   homeState: number;
   gender: number;
   rigYear: number;
+  boondock: number;
+  offGridLiving: number;
+  solarPower: number;
   allCounts: boolean;
 }
 
@@ -91,6 +94,9 @@ export class LikemeCountsService {
     homeState: 0,
     gender: 0,
     rigYear: 0,
+    boondock: 0,
+    offGridLiving: 0,
+    solarPower: 0,
     allCounts: false
   };
 
@@ -179,6 +185,9 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.traveling = counts.traveling;
       this.dataStore.likeMeCounts.worklife = counts.worklife;
       this.dataStore.likeMeCounts.yearOfBirth = counts.yearOfBirth;
+      this.dataStore.likeMeCounts.boondock = counts.boondock;
+      this.dataStore.likeMeCounts.offGridLiving = counts.offGridLiving;
+      this.dataStore.likeMeCounts.solarPower = counts.solarPower;
       this.dataStore.likeMeCounts.allCounts = true;
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);

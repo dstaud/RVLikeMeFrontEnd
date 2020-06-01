@@ -193,16 +193,20 @@ export class NewbieCornerComponent implements OnInit {
     return foundTopic;
   }
 
+  // When adding new topics, add an entry here and in Newbie-topics and add the 4 corresponding language translations
   private getAuthorizedTopics() {
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"internet","topicDesc":"' + this.translate.instant('newbie-topics.component.internet') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"insurance","topicDesc":"' + this.translate.instant('newbie-topics.component.insurance') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"fulltimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.fulltimeTravel') +'"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeTravel') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"costFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.costFullTimeTravel') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"domicile","topicDesc":"' + this.translate.instant('newbie-topics.component.domicile') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"boondocking","topicDesc":"' + this.translate.instant('newbie-topics.component.boondocking') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"makingMoneyOnTheRoad","topicDesc":"' + this.translate.instant('newbie-topics.component.makingMoneyOnTheRoad') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"savingMoney","topicDesc":"' + this.translate.instant('newbie-topics.component.savingMoney') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"sellingHouse","topicDesc":"' + this.translate.instant('newbie-topics.component.sellingHouse') +'"}'));
-    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeTravel","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeTravel') + '"}'));
     this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"thingsYouNeedFullTimeStationary","topicDesc":"' + this.translate.instant('newbie-topics.component.thingsYouNeedFullTimeStationary') + '"}'));
+    this.authorizedTopics.push(JSON.parse('{"_id":"","topicID":"towingCapacity","topicDesc":"' + this.translate.instant('newbie-topics.component.towingCapacity') + '"}'));
   }
 
 

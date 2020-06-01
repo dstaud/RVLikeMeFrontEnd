@@ -88,31 +88,31 @@ export class MessagesService {
     return this.http.get(`/api/conversation`, { params: params  });
   }
 
+  sendMessage(conversationID: string, fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,
+    toUserID: string, toDisplayName: string, toProfileImageUrl: string, message: string): Observable<any> {
+
+    let params = {
+    conversationID: conversationID,
+    fromUserID: fromUserID,
+    fromDisplayName: fromDisplayName,
+    fromProfileImageUrl: fromProfileImageUrl,
+    toUserID: toUserID,
+    toDisplayName: toDisplayName,
+    toProfileImageUrl: toProfileImageUrl,
+    message: message
+    }
+
+    return this.http.post(`/api/message-send`, params, {});
+  }
+
   updateConversation(conversationID: string, userIdType: string, action: string) {
     let params = {
       conversationID: conversationID,
       userIdType: userIdType,
       action: action
     }
-
+    console.log('update conversation=', params);
     return this.http.put(`/api/conversation-update`, params,{});
-  }
-
-  sendMessage(conversationID: string, fromUserID: string, fromDisplayName: string, fromProfileImageUrl: string,
-              toUserID: string, toDisplayName: string, toProfileImageUrl: string, message: string): Observable<any> {
-
-    let params = {
-      conversationID: conversationID,
-      fromUserID: fromUserID,
-      fromDisplayName: fromDisplayName,
-      fromProfileImageUrl: fromProfileImageUrl,
-      toUserID: toUserID,
-      toDisplayName: toDisplayName,
-      toProfileImageUrl: toProfileImageUrl,
-      message: message
-    }
-
-    return this.http.post(`/api/message-send`, params, {});
   }
 
   private escapeJsonReservedCharacters(string: string): string {

@@ -82,6 +82,21 @@
                     (change)="onUpdateInterest('travel', $event)">
                     {{ "interests.component.travel" | translate }}
       </mat-checkbox>
+      <mat-checkbox formControlName="boondock"
+                    class="checkbox"
+                    (change)="onUpdateInterest('boondock', $event)">
+                    {{ "interests.component.boondock" | translate }}
+      </mat-checkbox>
+      <mat-checkbox formControlName="offGridLiving"
+                    class="checkbox"
+                    (change)="onUpdateInterest('offGridLiving', $event)">
+                    {{ "interests.component.offGridLiving" | translate }}
+      </mat-checkbox>
+      <mat-checkbox formControlName="solarPower"
+                    class="checkbox"
+                    (change)="onUpdateInterest('solarPower', $event)">
+                    {{ "interests.component.solarPower" | translate }}
+      </mat-checkbox>
       <mat-divider></mat-divider>
       <br>
       <button mat-button type="button" class="hyperlink" (click)="onSuggestInterestOpen()">Suggest a new interest</button>

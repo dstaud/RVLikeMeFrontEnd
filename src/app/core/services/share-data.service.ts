@@ -34,6 +34,9 @@ export interface IforumsMain {
   musicalInstrument?: boolean;
   programming?: boolean;
   mobileInternet?: boolean;
+  boondock?: boolean;
+  offGridLiving?: boolean;
+  solarPower?: boolean;
 }
 
 export interface IuserQuery {
@@ -211,7 +214,10 @@ export class ShareDataService {
         gaming: null,
         musicalInstrument: null,
         programming: null,
-        mobileInternet: null
+        mobileInternet: null,
+        boondock: null,
+        offGridLiving: null,
+        solarPower: null
 
       },
       myStory: {
