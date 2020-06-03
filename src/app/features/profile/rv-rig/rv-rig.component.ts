@@ -68,6 +68,7 @@ export class RvRigComponent implements OnInit {
   rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
   rigModel = new FormControl('');
   rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
+  rigTow = new FormControl('');
 
 
   rigImageUrls: Array<string> = [];
@@ -89,6 +90,7 @@ export class RvRigComponent implements OnInit {
   showrigTypeSaveIcon = false;
   showrigBrandSaveIcon = false;
   showrigModelSaveIcon = false;
+  showrigTowSaveIcon = false;
   showrigYearSaveIcon = false;
   showrigLengthSaveIcon = false;
 
@@ -344,6 +346,7 @@ export class RvRigComponent implements OnInit {
       this.rigTypeOther.disable();
       this.rigLength.disable();
       this.rigModel.disable();
+      this.rigTow.disable();
       this.rigYear.disable();
     }
 
@@ -353,6 +356,7 @@ export class RvRigComponent implements OnInit {
       this.rigTypeOther.enable();
       this.rigLength.enable();
       this.rigModel.enable();
+      this.rigTow.enable();
       this.rigYear.enable();
     }
   }
@@ -447,6 +451,7 @@ export class RvRigComponent implements OnInit {
         this.rigYear.patchValue(this.profile.rigYear);
         this.rigLength.patchValue(this.profile.rigLength);
         this.rigModel.patchValue(this.profile.rigModel);
+        this.rigTow.patchValue(this.profile.rigTow);
 
         this.rigImageUrls = this.profile.rigImageUrls;
 

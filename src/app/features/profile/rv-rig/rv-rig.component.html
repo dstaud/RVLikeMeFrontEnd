@@ -122,6 +122,18 @@
         <mat-icon class="icon" *ngIf="showrigModelSaveIcon">save</mat-icon>
       </div>
 
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'rig.component.rigTow' | translate }}</mat-label>
+          <input matInput
+                  type="text"
+                  placeholder="{{ 'rig.component.rigTow' | translate }}"
+                  [formControl]="rigTow"
+                  (blur)="onUpdateDataPoint('rigTow')">
+        </mat-form-field>
+        <mat-icon class="icon" *ngIf="showrigTowSaveIcon">save</mat-icon>
+      </div>
+
     </form>
     <button mat-button (click)='onBottomBack()'><span class="hyperlink">Back to main Profile Page</span></button>
   </div>

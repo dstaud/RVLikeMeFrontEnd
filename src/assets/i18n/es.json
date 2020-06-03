@@ -465,6 +465,7 @@
     "rigLength": "Longitud de la plataforma (en pies)",
     "rigBrand": "Marca RV",
     "rigModel": "Modelo de RV",
+    "rigTow": "Vehículo de remolque o Toad",
     "uploadpics": "Sube hasta 3 fotos de tu plataforma"
   },
   "interests.component": {

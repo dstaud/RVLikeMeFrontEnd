@@ -33,9 +33,12 @@ export class YourStoryComponent implements OnInit {
   userRigYear: number;
   userRigModel: string;
   userRvUse: string;
+  userRigTow: string;
+  towing: string;
   userDisplayName: string;
   userIdViewer: string;
   showRigBrand: boolean = false;
+  showRigTow: boolean = false;
   rigImageUrls: Array<string> = [];
   lifestyleImageUrls: Array<string> = [];
   desktopUser: boolean = false;
@@ -221,6 +224,24 @@ export class YourStoryComponent implements OnInit {
       }
       this.userRigBrand = profileResult.rigBrand;
       this.userRigYear = profileResult.rigYear;
+      this.userRigTow = profileResult.rigTow;
+
+      if (profileResult.rigTow !== null && profileResult.rigTow !== 'null' && profileResult.rigTow !== '') {
+        this.userRigTow = profileResult.rigTow;
+        this.showRigTow = true;
+        if (profileResult.rigType === 'A' || profileResult.rigType === 'B' ||
+            profileResult.rigType === 'C' || profileResult.rigType === 'SC' ||
+            profileResult.rigType === 'V' || profileResult.rigType === 'CB') {
+              this.towing = 'Towing a ';
+            } else {
+              this.towing = 'Towed with '
+            }
+      } else {
+        this.showRigTow = false;
+        this.towing = '';
+        this.userRigTow = '';
+      }
+
       if (profileResult.rigModel !== null && profileResult.rigModel !== 'null' && profileResult.rigModel !== '') {
         this.userRigModel = ' - ' + profileResult.rigModel;
       } else {

@@ -53,7 +53,8 @@
         {{ 'yourstory.component.rigtype' | translate }}:
       </div>
       <div class="column">{{ userRigType | translate }}<br>
-          <span *ngIf="showRigBrand"> {{ userRigYear }} {{ userRigBrand }}{{ userRigModel }}</span>
+          <span *ngIf="showRigBrand">{{ userRigYear }} {{ userRigBrand }}{{ userRigModel }}</span><br>
+          <span *ngIf="showRigTow">{{ towing }} {{ userRigTow }}</span>
       </div>
     </div>
 

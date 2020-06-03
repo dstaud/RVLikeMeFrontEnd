@@ -473,6 +473,7 @@
     "rigLength": "Rig length",
     "rigBrand": "Rig brand",
     "rigModel": "Rig model",
+    "rigTow": "Towing vehicle or Toad",
     "uploadpics": "Upload up to 3 pics of your rig"
   },
   "interests.component": {
@@ -540,7 +541,7 @@
   "yourstory.component": {
     "experience": "RV experience",
     "howrv": "How RVs",
-    "rigtype": "Rig type",
+    "rigtype": "Rig Info",
     "rigpics": "Rig pics",
     "lifestylepics": "Lifestyle Pics",
     "story": "story",

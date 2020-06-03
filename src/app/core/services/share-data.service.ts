@@ -22,6 +22,7 @@ export interface IforumsMain {
   rigManufacturer?: string;
   rigBrand?: string;
   rigModel?: string;
+  rigTow?: string;
   atv?: boolean;
   motorcycle?: boolean;
   travel?: boolean;
@@ -203,6 +204,7 @@ export class ShareDataService {
         rigManufacturer: null,
         rigBrand: null,
         rigModel: null,
+        rigTow: null,
         atv: null,
         motorcycle: null,
         travel: null,

@@ -45,6 +45,7 @@ export interface IuserProfile {
   rigBrand: string;
   rigModel: string;
   rigYear: number;
+  rigTow: string,
   profileImageUrl: string;
   atv: boolean;
   motorcycle: boolean;
@@ -102,6 +103,7 @@ export class ProfileService {
     rigBrand: null,
     rigModel: null,
     rigYear: null,
+    rigTow: null,
     profileImageUrl: null,
     atv: null,
     motorcycle: null,
