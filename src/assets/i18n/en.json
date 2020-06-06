@@ -186,7 +186,7 @@
         "fs": "that fulltime stationary",
         "fp": "that mostly stay in one place",
         "tfw": "that travel for work",
-        "ps": "that part-time travel w home-base",
+        "ps": "that part-time trvl w home-base",
         "ny": "an RVer wanna-be!",
         "other": "Other"
       },
@@ -372,7 +372,7 @@
         "fs": "Fulltime stationary",
         "fp": "Mostly stay in one place",
         "tfw": "Travel for work",
-        "ps": "Part-time travel w home-base",
+        "ps": "Part-time trvl w home-base",
         "ny": "An RVer wanna-be!",
         "other": "Other"
       },
@@ -652,7 +652,7 @@
         "fs": "Fulltime stationary",
         "fp": "Mostly stay in one place",
         "tfw": "Travel for work",
-        "ps": "Part-time travel w home-base",
+        "ps": "Part-time trvl w home-base",
         "ny": "An RVer wanna-be!",
         "other": "Other",
         "notdefined": "Did not enter in profile"
