@@ -229,12 +229,13 @@ export class YourStoryComponent implements OnInit {
       if (profileResult.rigTow !== null && profileResult.rigTow !== 'null' && profileResult.rigTow !== '') {
         this.userRigTow = profileResult.rigTow;
         this.showRigTow = true;
+
         if (profileResult.rigType === 'A' || profileResult.rigType === 'B' ||
             profileResult.rigType === 'C' || profileResult.rigType === 'SC' ||
             profileResult.rigType === 'V' || profileResult.rigType === 'CB') {
               this.towing = 'Towing a ';
             } else {
-              this.towing = 'Towed with '
+              this.towing = 'Towed with ';
             }
       } else {
         this.showRigTow = false;

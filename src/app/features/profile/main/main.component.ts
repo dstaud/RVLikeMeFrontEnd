@@ -144,12 +144,12 @@ export class MainComponent implements OnInit {
 
 
   // Determine the percent complete for each type of data in the form and display appropriate data
-  private determinePercentComplete(profile) {
+  private determinePercentComplete(profile: IuserProfile) {
     let totalPersonalFieldsWithData = 0;
     let totalPersonalNbrOfFields = 7;
 
     let totalRigFieldsWithData = 0;
-    let totalRigNbrOfFields = 5;
+    let totalRigNbrOfFields = 6;
 
     let totalLifestyleFieldsWithData = 0;
     let totalLifestyleNbrOfFields = 5;
@@ -195,6 +195,7 @@ export class MainComponent implements OnInit {
     if (profile.rigYear) { totalRigFieldsWithData++; };
     if (profile.rigBrand) { totalRigFieldsWithData++; };
     if (profile.rigModel) { totalRigFieldsWithData++; };
+    if (profile.rigTow) { totalRigFieldsWithData++; };
     this.percentRig = (totalRigFieldsWithData / totalRigNbrOfFields) * 100;
     if (this.percentRig < 13) {
       this.rigProgressBarColor = 'warn'
@@ -208,14 +209,13 @@ export class MainComponent implements OnInit {
     // Interests Data
     if (profile.atv || profile.motorcycle || profile.travel || profile.quilting || profile.cooking || profile.painting ||
         profile.blogging || profile.livingFrugally || profile.gaming || profile.musicalInstrument || profile.programming ||
-        profile.mobileInternet) {
+        profile.mobileInternet || profile.offGridLiving || profile.boondock || profile.solarPower) {
       this.interestsIndicator = 'sentiment_very_satisfied';
       this.interestsIndClass = 'has-interests';
     } else {
       this.interestsIndicator = 'sentiment_dissatisfied';
       this.interestsIndClass = 'no-interests';
     }
-
     // Blog link Data
     if (profile.blogLinks) {
       if (profile.blogLinks.length === 0) {
