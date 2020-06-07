@@ -683,9 +683,9 @@
     "daveIntro": "My name is Dave Staudenmaier and I'm a fellow RVer and creator of RV Like Me.",
     "clickPhoto": "Click on my pic to view my story (hint: you can do this for anyone on RVLikeMe.com)",
     "questions": "If you have any questions or suggestions for improvement of this web app, feel free to contact me at",
-    "body1": "When I started RVing I was looking for a project to upgrade my software development skills and came up with the idea for RV Like Me; a web app where users can more easily find and connect with fellow RVers that RV the way they do.",
+    "body1": "When I started RVing I was looking for a project to upgrade my software development skills and came up with the idea for RV Like Me; a web app that assists RVers in finding and connecting with fellow RVers that RV the way they do.",
     "body2": "What makes this web app work is your profile information.  I understand that you may be uncomfortable providing this information, but without it, this app isn't very useful.",
-    "body3": "That's why I don't require you to identify yourself.  Instead, you pick a display name so the only names I have in my database are your first name and display name, and that's all other users will see."
+    "body3": "That's why I don't ask you to identify yourself.  Instead, you pick a display name, which is what other people will see."
   },
   "footer.desktop": {
     "privacy": "Privacy Policy",

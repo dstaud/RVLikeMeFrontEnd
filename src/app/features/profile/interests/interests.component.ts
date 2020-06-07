@@ -161,6 +161,7 @@ ngOnInit() {
     this.showSpinner = true;
 
     if (this.form.controls.suggestInterest.value) {
+
       this.adminSvc.addSuggestion(this.form.controls.suggestInterest.value, suggestionType,
                                   this.profile.displayName, this.profile.profileImageUrl)
       .pipe(untilComponentDestroyed(this))
@@ -179,7 +180,7 @@ ngOnInit() {
           suggestInterest: ''
         });
         this.readyToSuggest = false;
-        this.sentry.logError('InterestsComponent:onSuggestInterest: error saving suggestion=' + error);
+        this.sentry.logError('InterestsComponent:onSuggestInterest: error saving suggestion=' + JSON.stringify(error));
         this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       });
     }
