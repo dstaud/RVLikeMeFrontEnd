@@ -359,7 +359,8 @@ export class SendMessageComponent implements OnInit {
 
         }
       } else {
-
+        this.toProfileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
+        this.form.disable();
       }
     }, error => {
       this.shared.notifyUserMajorError();
