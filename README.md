@@ -1,4 +1,4 @@
-![Image of RV](../assets/images/landing-image1.jpeg)
+![Image of RV](../assets/images/landing-image1.jpeg?raw=true)
 
 # RVLikeMe
 
