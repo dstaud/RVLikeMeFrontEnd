@@ -484,7 +484,14 @@
     "programming": "Programación de computadoras",
     "mobileInternet": "Conectividad a Internet",
     "offGridLiving": "Vivir fuera de la red",
-    "solarPower": "Energía solar"
+    "solarPower": "Energía solar",
+    "hiking": "Excursionismo",
+    "fishing": "Pescar",
+    "hunting": "Caza",
+    "kayaking": "Kayak",
+    "yoga": "Yoga",
+    "knitting": "Tejido de punto",
+    "crocheting": "Ganchillo"
   },
   "credentials.component": {
     "email": "Email",

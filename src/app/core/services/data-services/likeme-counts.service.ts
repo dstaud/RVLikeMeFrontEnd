@@ -57,6 +57,13 @@ export interface IlikeMeCounts {
   boondock: number;
   offGridLiving: number;
   solarPower: number;
+  hiking: number;
+  fishing: number;
+  hunting: number;
+  kayaking: number;
+  yoga: number;
+  knitting: number;
+  crocheting: number;
   allCounts: boolean;
 }
 
@@ -97,6 +104,13 @@ export class LikemeCountsService {
     boondock: 0,
     offGridLiving: 0,
     solarPower: 0,
+    hiking: 0,
+    fishing: 0,
+    hunting: 0,
+    kayaking: 0,
+    yoga: 0,
+    knitting: 0,
+    crocheting: 0,
     allCounts: false
   };
 
@@ -188,6 +202,13 @@ export class LikemeCountsService {
       this.dataStore.likeMeCounts.boondock = counts.boondock;
       this.dataStore.likeMeCounts.offGridLiving = counts.offGridLiving;
       this.dataStore.likeMeCounts.solarPower = counts.solarPower;
+      this.dataStore.likeMeCounts.hiking = counts.hiking;
+      this.dataStore.likeMeCounts.fishing = counts.fishing;
+      this.dataStore.likeMeCounts.hunting = counts.hunting;
+      this.dataStore.likeMeCounts.kayaking = counts.kayaking;
+      this.dataStore.likeMeCounts.yoga = counts.yoga;
+      this.dataStore.likeMeCounts.knitting = counts.knitting;
+      this.dataStore.likeMeCounts.crocheting = counts.crocheting;
       this.dataStore.likeMeCounts.allCounts = true;
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);

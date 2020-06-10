@@ -69,6 +69,13 @@ export interface IuserProfile {
   boondock: boolean;
   offGridLiving: boolean;
   solarPower: boolean;
+  hiking: boolean;
+  fishing: boolean;
+  hunting: boolean;
+  kayaking: boolean;
+  yoga: boolean;
+  knitting: boolean;
+  crocheting: boolean;
 }
 
 @Injectable({
@@ -126,7 +133,14 @@ export class ProfileService {
     hideInstall: false,
     boondock: false,
     offGridLiving: false,
-    solarPower: false
+    solarPower: false,
+    hiking: false,
+    fishing: false,
+    hunting: false,
+    kayaking: false,
+    yoga: false,
+    knitting: false,
+    crocheting: false
   };
 
   ngOnDestroy() {}
@@ -272,6 +286,13 @@ export class ProfileService {
       this.dataStore.profile.boondock = null;
       this.dataStore.profile.offGridLiving = null;
       this.dataStore.profile.solarPower = null;
+      this.dataStore.profile.hiking = null;
+      this.dataStore.profile.fishing = null;
+      this.dataStore.profile.hunting = null;
+      this.dataStore.profile.kayaking = null;
+      this.dataStore.profile.yoga = null;
+      this.dataStore.profile.knitting = null;
+      this.dataStore.profile.crocheting = null;
       this._profile.next(Object.assign({}, this.dataStore).profile);
     } else {
       this.profileSubscription = this.http.get<IuserProfile>(`/api/profile`)
