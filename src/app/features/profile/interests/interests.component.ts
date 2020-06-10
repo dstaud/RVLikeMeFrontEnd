@@ -54,6 +54,13 @@ export class InterestsComponent implements OnInit {
   musicalInstrument: boolean = false;
   programming: boolean = false;
   mobileInternet: boolean = false;
+  hiking: boolean = false;
+  fishing: boolean = false;
+  hunting: boolean = false;
+  kayaking: boolean = false;
+  yoga: boolean = false;
+  knitting: boolean = false;
+  crocheting: boolean = false;
   desktopUser: boolean = false;
   suggestInterestOpen: string = 'out';
   readyToSuggest: boolean = false;
@@ -95,6 +102,13 @@ export class InterestsComponent implements OnInit {
                 boondock: new FormControl(''),
                 offGridLiving: new FormControl(''),
                 solarPower: new FormControl(''),
+                hiking: new FormControl(''),
+                fishing: new FormControl(''),
+                hunting: new FormControl(''),
+                kayaking: new FormControl(''),
+                yoga: new FormControl(''),
+                knitting: new FormControl(''),
+                crocheting: new FormControl(''),
                 suggestInterest: new FormControl('', Validators.required)
               });
 }
@@ -244,7 +258,14 @@ ngOnInit() {
         mobileInternet: this.profile.mobileInternet,
         boondock: this.profile.boondock,
         offGridLiving: this.profile.offGridLiving,
-        solarPower: this.profile.solarPower
+        solarPower: this.profile.solarPower,
+        hiking: this.profile.hiking,
+        fishing: this.profile.fishing,
+        hunting: this.profile.hunting,
+        kayaking: this.profile.kayaking,
+        yoga: this.profile.yoga,
+        knitting: this.profile.knitting,
+        crocheting: this.profile.crocheting
       });
 
       this.showSpinner = false;

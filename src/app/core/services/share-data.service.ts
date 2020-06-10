@@ -38,6 +38,13 @@ export interface IforumsMain {
   boondock?: boolean;
   offGridLiving?: boolean;
   solarPower?: boolean;
+  hiking?: boolean;
+  fishing?: boolean;
+  hunting?: boolean;
+  kayaking?: boolean;
+  yoga?: boolean;
+  knitting?: boolean;
+  crocheting?: boolean;
 }
 
 export interface IuserQuery {
@@ -68,6 +75,16 @@ export interface IuserQuery {
     musicalInstrument?: boolean;
     programming?: boolean;
     mobileInternet?: boolean;
+    boondock?: boolean;
+    offGridLiving?: boolean;
+    solarPower?: boolean;
+    hiking?: boolean;
+    fishing?: boolean;
+    hunting?: boolean;
+    kayaking?: boolean;
+    yoga?: boolean;
+    knitting?: boolean;
+    crocheting?: boolean;
 }
 
 export interface ImessageShareData {
@@ -219,7 +236,14 @@ export class ShareDataService {
         mobileInternet: null,
         boondock: null,
         offGridLiving: null,
-        solarPower: null
+        solarPower: null,
+        hiking: null,
+        fishing: null,
+        hunting: null,
+        kayaking:null,
+        yoga: null,
+        knitting: null,
+        crocheting: null
 
       },
       myStory: {

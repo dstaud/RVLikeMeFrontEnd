@@ -107,11 +107,19 @@
     "livingFrugally": "interested in living frugally",
     "gaming": "interested in gaming",
     "musicalInstrument": "who play a musical instrument",
-    "programming": "interested in computer programming",
+    "": "interested in computer ",
     "mobileInternet": "interested in internet connectivity",
     "boondock": "interested in boondocking",
     "offGridLiving": "interested in off-grid living",
     "solarPower": "interested in solar power",
+    "programming": "interested in computer programming",
+    "hiking": "interested in hiking",
+    "fishing": "interested in fishing",
+    "hunting": "interested in hunting",
+    "kayaking": "interested in kayaking",
+    "yoga": "interested in yoga",
+    "knitting": "interested in knitting",
+    "crocheting": "interested in crocheting",
     "search": "search",
     "list": {
       "aboutme": {
@@ -493,8 +501,14 @@
     "mobileInternet": "Internet connectivity",
     "interested": "Interested in",
     "offGridLiving": "Off-grid living",
-    "solarPower": "Solar power"
-
+    "solarPower": "Solar power",
+    "hiking": "Hiking",
+    "fishing": "Fishing",
+    "hunting": "Hunting",
+    "kayaking": "Kayaking",
+    "yoga": "Yoga",
+    "knitting": "Knitting",
+    "crocheting": "Crocheting"
   },
   "account": {
     "changeProfileImage": "Change Profile Pic",

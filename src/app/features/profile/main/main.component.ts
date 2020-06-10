@@ -209,7 +209,8 @@ export class MainComponent implements OnInit {
     // Interests Data
     if (profile.atv || profile.motorcycle || profile.travel || profile.quilting || profile.cooking || profile.painting ||
         profile.blogging || profile.livingFrugally || profile.gaming || profile.musicalInstrument || profile.programming ||
-        profile.mobileInternet || profile.offGridLiving || profile.boondock || profile.solarPower) {
+        profile.mobileInternet || profile.offGridLiving || profile.boondock || profile.solarPower || profile.hiking ||
+        profile.fishing || profile.hunting || profile.kayaking || profile.yoga || profile.knitting || profile.crocheting) {
       this.interestsIndicator = 'sentiment_very_satisfied';
       this.interestsIndClass = 'has-interests';
     } else {
