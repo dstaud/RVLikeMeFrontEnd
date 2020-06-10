@@ -1,12 +1,16 @@
+# RV Like Me Front End
 ![Image of RV](src/assets/images/landing-image1.jpeg?raw=true)
-
-# RV Like Me
 
 This project together with https://dstaud/RVLikeMeBackEnd are made public so you can see my work. The two projects combined are the source code for RVLikeMe.com, a progressive web app that assists RVers in finding other RVers that do the RV lifestyle like they do and communicate through forums and messaging. "Newbie" RVers have a special section to help them with typical questions and connect them with experienced RVers. Users can view the stories of other users to create a connection and encourage socialization.
 
+<<<<<<< HEAD
 ## Architecture
 
 ![Image of RVLikeMe architecture](RVLikeMeArchitecture.png)
+=======
+## RV Like Me Arechitecture
+![Architecture](RVLikeMeArchitecture.png)
+>>>>>>> b9a3ce34bfa57a5c3931b3502ff31ea4b9f2ba93
 
 ## Angular CLI
 
