@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -35,6 +36,8 @@ export class ProfilePercentComponent implements OnInit {
               private translate: TranslateService,
               private router: Router,
               private sentry: SentryMonitorService,
+              private location: Location,
+              private shared: SharedComponent,
               private activateBackArrowSvc: ActivateBackArrowService) {
   }
 
@@ -85,6 +88,11 @@ export class ProfilePercentComponent implements OnInit {
       this.percentProfileComplete = Math.round((this.totalProfileFieldsWithData / this.totalPersonalNbrOfFields) * 100);
 
       this.determineProfileMessages();
+
+      if (this.location.path() === '/home/dashboard' && this.profile._id && this.progressBarColor === 'warn') {
+        this.shared.openSnackBar('Please fill out your profile. Without the profile, we cannot find others like you.','error',5000);
+      }
+
     }, error => {
       this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
