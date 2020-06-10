@@ -9,7 +9,10 @@ This project together with https://dstaud/RVLikeMeBackEnd are made public so you
 ## Front End Architecture
 ![Front End Architecture](FrontEndArchitecture.png)
 
-## Front End Components
+## Front End Component Map
+
+Break-out of feature and land-page components
+
 ![Front End Components](FrontEndComponents.png)
 
 ## Angular CLI
