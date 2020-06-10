@@ -6,6 +6,9 @@ This project together with https://dstaud/RVLikeMeBackEnd are made public so you
 ## RV Like Me Architecture
 ![Architecture](RVLikeMeArchitecture.png)
 
+## Front End Architecture
+![Front End Architecture](FrontEndArchitecture.png)
+
 ## Angular CLI
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.1.
