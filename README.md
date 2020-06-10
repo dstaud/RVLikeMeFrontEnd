@@ -2,6 +2,10 @@
 
 # RVLikeMe
 
+This project together with https://dstaud/RVLikeMeBackEnd are made public so you can see my work. The two projects combined are the source code for RVLikeMe.com, a progressive web app that assists RVers in finding other RVers that do the RV lifestyle like they do and communicate through forums and messaging. "Newbie" RVers have a special section to help them with typical questions and connect them with experienced RVers. Users can view the stories of other users to create a connection and encourage socialization.
+
+## Angular CLI
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.1.
 
 ## Development server
