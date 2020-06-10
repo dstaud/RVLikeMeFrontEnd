@@ -11,7 +11,7 @@ This project together with https://dstaud/RVLikeMeBackEnd are made public so you
 
 ## Front End Component Map
 
-Break-out of feature and land-page components to show how they work together and to help with understanding the source code.
+Break-out of feature and landing page components to show how they work together and to help with understanding the source code.
 
 ![Front End Components](FrontEndComponents.png)
 
