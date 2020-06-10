@@ -129,7 +129,7 @@ export class SigninComponent implements OnInit {
         this.router.navigateByUrl('');
       }
     }, error => {
-      this.sentry.logError('SigninComponent:onActivateEmail: error sending email: ' + error);
+      this.sentry.logError('SigninComponent:onActivateEmail: error sending email: ' + JSON.stringify(error));
     })
   }
 
@@ -354,12 +354,12 @@ export class SigninComponent implements OnInit {
           this.authSvc.updateInstallFlag(this.install, this.device)
           .subscribe(credentialsResult => {
           }, error => {
-            this.sentry.logError('SigninComponent:updateInstallFlag: error updating install flag' + error);
+            this.sentry.logError('SigninComponent:updateInstallFlag: error updating install flag' + JSON.stringify(error));
           });
         }
       }
     }, error => {
-      this.sentry.logError('SigninComponent:updateInstallFlag: error=' + error);
+      this.sentry.logError('SigninComponent:updateInstallFlag: error=' + JSON.stringify(error));
     })
 
   }

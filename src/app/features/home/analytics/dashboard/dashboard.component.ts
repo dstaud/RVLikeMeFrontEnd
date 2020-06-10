@@ -167,7 +167,7 @@ export class DashboardComponent implements OnInit {
       }
 
     }, (error) => {
-      this.sentry.logError('HomeDashboardComponent:listenForUserProfile: error getting profile ' + error);
+      this.sentry.logError('HomeDashboardComponent:listenForUserProfile: error getting profile ' + JSON.stringify(error));
     });
   }
 
@@ -178,7 +178,7 @@ export class DashboardComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 }

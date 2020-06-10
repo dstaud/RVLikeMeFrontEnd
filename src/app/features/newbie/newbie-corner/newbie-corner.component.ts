@@ -135,7 +135,7 @@ export class NewbieCornerComponent implements OnInit {
         this.shared.openSnackBar(this.translate.instant('newbie-topics.component.suggestionAdmin'), "message", 3000);
         this.readyToSuggest = false;
 
-        this.sentry.logError(error);
+        this.sentry.logError('NewbieCornerComponent:onSuggestTopic: error suggesting topic=' + JSON.stringify(error));
       });
     }
   }
@@ -156,7 +156,7 @@ export class NewbieCornerComponent implements OnInit {
       .subscribe(topicResult => {
       }, error => {
         if (error.status === 403) {
-          this.sentry.logError({"status":403,"message":"unable to listen for like me counts","error":error});
+          this.sentry.logError(JSON.stringify({"status":403,"message":"unable to listen for like me counts","error":error}));
         } else {
           this.shared.notifyUserMajorError();
           throw new Error(error);
@@ -232,7 +232,7 @@ export class NewbieCornerComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
     }, (error) => {
-      this.sentry.logError('NewbieTopicsComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('NewbieTopicsComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 
@@ -243,7 +243,7 @@ export class NewbieCornerComponent implements OnInit {
     .subscribe(type => {
       this.userType = type;
     }, (error) => {
-      this.sentry.logError('NewbieTopicsComponent:listenForUserType: error ' + error);
+      this.sentry.logError('NewbieTopicsComponent:listenForUserType: error ' + JSON.stringify(error));
     });
   }
 

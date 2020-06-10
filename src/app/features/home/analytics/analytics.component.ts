@@ -93,7 +93,7 @@ export class AnalyticsComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      this.sentry.logError('AnalyticsComponent:listenForGroupByCounts: error listening for Group By Counts=' + error);
+      this.sentry.logError('AnalyticsComponent:listenForGroupByCounts: error listening for Group By Counts=' + JSON.stringify(error));
       this.showSpinner = false;
     });
   }
@@ -110,7 +110,7 @@ export class AnalyticsComponent implements OnInit {
         this.showAllUsersCount = true;
       }
     }, error => {
-      this.sentry.logError({"message":"unable to listen for like me counts","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for like me counts","error":error}));
     });
   }
 

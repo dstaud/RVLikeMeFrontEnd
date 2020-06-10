@@ -216,7 +216,7 @@ ngOnInit() {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -251,7 +251,7 @@ ngOnInit() {
       this.form.enable();
     }, error => {
       this.showSpinner = false;
-      this.sentry.logError('InterestsComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('InterestsComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

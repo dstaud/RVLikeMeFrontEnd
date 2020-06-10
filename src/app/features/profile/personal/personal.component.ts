@@ -53,7 +53,7 @@ export class PersonalComponent implements OnInit {
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   profileImageLabel = 'personal.component.addProfilePic';
   tempProfileImage: string;
-  containerDialog: boolean = false;
+  desktopUser: boolean = false;
   theme: string;
 
   // Spinner is for initial load from the database only.
@@ -199,7 +199,7 @@ export class PersonalComponent implements OnInit {
     };
 
     if (window.innerWidth > 600) {
-      this.containerDialog = true;
+      this.desktopUser = true;
     }
 
     this.setReturnRoute();
@@ -278,7 +278,7 @@ export class PersonalComponent implements OnInit {
             }
             this.sharedDataSvc.setData('profileImage', imageData);
 
-            if (this.containerDialog) {
+            if (this.desktopUser) {
               this.openImageCropperDialog(uploadedFileUrl)
             } else {
               this.activateBackArrowSvc.setBackRoute('profile/personal', 'forward');
@@ -325,7 +325,7 @@ export class PersonalComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -359,7 +359,7 @@ export class PersonalComponent implements OnInit {
       this.form.enable();
     }, (error) => {
       this.showSpinner = false;
-      this.sentry.logError('PersonalComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('PersonalComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

@@ -502,7 +502,7 @@ export class LifestyleComponent implements OnInit {
           suggestLifestyle: ''
         });
         this.readyToSuggest = false;
-        this.sentry.logError('LifestyleComponent:onSuggestLifestyle: error saving suggestion=' + error);
+        this.sentry.logError('LifestyleComponent:onSuggestLifestyle: error saving suggestion=' + JSON.stringify(error));
         this.shared.openSnackBar('Your suggestion has been forwarded to the administrator.  Thank you!', "message", 3000);
       });
     }
@@ -549,7 +549,7 @@ export class LifestyleComponent implements OnInit {
     .subscribe(result => {
 
     }, error => {
-      this.sentry.logError({"message":"error closing dialog","error":error});
+      this.sentry.logError(JSON.stringify({"message":"error closing dialog","error":error}));
     });
   }
 
@@ -561,7 +561,7 @@ export class LifestyleComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -635,7 +635,7 @@ export class LifestyleComponent implements OnInit {
 
     }, (error) => {
       this.showSpinner = false;
-      this.sentry.logError('LifestyleComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('LifestyleComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

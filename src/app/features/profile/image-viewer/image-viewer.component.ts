@@ -145,7 +145,7 @@ export class ImageViewerComponent implements OnInit {
         }
       }
     }, error => {
-      this.sentry.logError({"message":"error deleting lifestyle image url from profile","error":error});
+      this.sentry.logError(JSON.stringify({"message":"error deleting lifestyle image url from profile","error":error}));
       this.showSpinner = false;
     })
   }
@@ -176,7 +176,7 @@ export class ImageViewerComponent implements OnInit {
         }
       }
     }, error => {
-      this.sentry.logError({"message":"error uploading rig image","error":error});
+      this.sentry.logError(JSON.stringify({"message":"error uploading rig image","error":error}));
       this.showSpinner = false;
     })
   }

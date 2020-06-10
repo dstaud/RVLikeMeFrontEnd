@@ -278,7 +278,7 @@ export class RegisterUserComponent implements OnInit {
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
     }, error => {
-      this.sentry.logError('RegisterComponent:sendWelcomeEmail: error sending email: ' + error);
+      this.sentry.logError('RegisterComponent:sendWelcomeEmail: error sending email: ' + JSON.stringify(error));
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
     });

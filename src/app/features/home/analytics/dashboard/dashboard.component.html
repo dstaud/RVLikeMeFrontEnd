@@ -7,19 +7,19 @@
 
   <!-- Switched from *ngIf to hidden because *ngIf causes page not to be able to scroll to bottom on iPhone -->
   <!-- [hidden]="(!experiencedHelp && newbie) || (!newbie)" -->
-  <div class="dashboard">
-    <div [hidden]="!newbie" class="newbie mat-elevation-z2" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+  <div *ngIf="newbie || experiencedHelp" class="dashboard">
+    <div *ngIf="newbie" class="newbie mat-elevation-z2" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
       <p  class="newbie-header">{{ 'home.component.newbieNeedsHelp' | translate }}</p>
       <p (click)="onNewbieTopics()">{{ 'home.component.newbieTopics1' | translate }} <span class="hyperlink">{{ 'home.component.newbieTopics2' | translate }}</span></p>
     </div>
-    <div [hidden]="!experiencedHelp" class="newbie mat-elevation-z2" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
+    <div *ngIf="experiencedHelp" class="newbie mat-elevation-z2" [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
       <p  class="newbie-header">{{ 'home.component.helpNewbies' | translate }}</p>
       <p>{{ 'home.component.expert1' | translate }}
         <span class="hyperlink bold-hyperlink" (click)="onHelpNewbieTopic()">{{ 'home.component.expert2' | translate }}</span> {{ 'home.component.expert3' | translate }}.</p>
     </div>
   </div>
 
-  <div [hidden]="!showInstallComponent || hideInstall" class="dashboard">
+  <div *ngIf="showInstallComponent && !hideInstall" class="dashboard">
     <app-rvlm-install
       [event]=event
       [hideInstall]=profile.hideInstall

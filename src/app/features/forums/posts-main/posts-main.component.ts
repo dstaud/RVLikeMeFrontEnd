@@ -423,7 +423,7 @@ export class PostsMainComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -439,7 +439,7 @@ export class PostsMainComponent implements OnInit {
         this.groupsListFromUserProfile = this.profile.forums;
       }
     }, error => {
-      this.sentry.logError('ForumsMainComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('ForumsMainComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

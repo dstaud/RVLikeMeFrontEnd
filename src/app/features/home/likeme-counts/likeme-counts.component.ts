@@ -161,7 +161,7 @@ export class LikemeCountsComponent implements OnInit {
       this.profile = profileResult;
 
     }, error => {
-      this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 }

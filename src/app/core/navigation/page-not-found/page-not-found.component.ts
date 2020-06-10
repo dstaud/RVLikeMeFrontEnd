@@ -40,7 +40,7 @@ export class PageNotFoundComponent implements OnInit {
       this.userMessage = 'Oops.  Sorry, but this page was not found.  You will be redirected to the sign in page in a few seconds.';
     }
 
-    this.sentry.logError({"message":errorMessage});
+    this.sentry.logError(JSON.stringify({"message":errorMessage}));
   }
 
   ngAfterViewInit() {

@@ -158,7 +158,7 @@ export class UserQueryComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -171,7 +171,7 @@ export class UserQueryComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
     }, error => {
-      this.sentry.logError('UserQueryComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('UserQueryComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

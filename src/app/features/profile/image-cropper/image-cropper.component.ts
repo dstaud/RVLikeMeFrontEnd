@@ -162,7 +162,7 @@ export class ImageCropperComponent implements OnInit {
         // this.Shared.openSnackBar("New profile image saved. Going back to profile in a few seconds","message", 3000);
         this.routeBackToProfile();
       }, error => {
-        this.sentry.logError({"message":"error deleting temp profile image","error":error});
+        this.sentry.logError(JSON.stringify({"message":"error deleting temp profile image","error":error}));
         this.showSpinner = false;
         // this.Shared.openSnackBar("New profile image saved. Going back to profile in a few seconds","message", 3000);
         this.routeBackToProfile();

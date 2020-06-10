@@ -236,7 +236,7 @@ export class MainComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -277,7 +277,7 @@ export class MainComponent implements OnInit {
       this.showSpinner = false;
     }, (error) => {
       this.showSpinner = false;
-      this.sentry.logError('ProfileComponent:listenForUserProfile: error saving new profile=' + error);
+      this.sentry.logError('ProfileComponent:listenForUserProfile: error saving new profile=' + JSON.stringify(error));
     });
   }
 

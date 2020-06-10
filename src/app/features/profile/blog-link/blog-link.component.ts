@@ -250,7 +250,7 @@ export class BlogLinkComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -265,7 +265,7 @@ export class BlogLinkComponent implements OnInit {
       this.blogLinks = profile.blogLinks;
       this.showSpinner = false;
     }, (error) => {
-      this.sentry.logError('BlogLinkComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('BlogLinkComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
       this.showSpinner = false;
     });
   }

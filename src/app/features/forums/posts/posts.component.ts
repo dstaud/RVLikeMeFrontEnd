@@ -526,7 +526,7 @@ export class PostsComponent implements OnInit {
       this.desktopMaxWidth = maxWidth;
       this.setDialogDimensions();
     }, (error) => {
-      this.sentry.logError({"message":"unable to listen for desktop max width","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for desktop max width","error":error}));
       this.desktopMaxWidth = 1140;
       this.setDialogDimensions();
     });
@@ -549,7 +549,7 @@ export class PostsComponent implements OnInit {
         this.userNewbie = true;
       }
     }, (error) => {
-      this.sentry.logError('PostsComponent:listenForUserProfile: error getting profile ' + error);
+      this.sentry.logError('PostsComponent:listenForUserProfile: error getting profile ' + JSON.stringify(error));
     });
   }
 

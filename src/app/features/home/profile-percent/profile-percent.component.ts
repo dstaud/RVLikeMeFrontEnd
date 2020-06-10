@@ -86,7 +86,7 @@ export class ProfilePercentComponent implements OnInit {
 
       this.determineProfileMessages();
     }, error => {
-      this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('ProfilePercentComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

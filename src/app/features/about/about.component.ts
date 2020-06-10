@@ -98,7 +98,7 @@ export class AboutComponent implements OnInit {
       this.daveProfileImageUrl = dave.profileImageUrl;
     }, error => {
       if (error.status === 404) {
-        this.sentry.logError({"status":404, "message":"Dave's credentials not found!"});
+        this.sentry.logError(JSON.stringify({"status":404, "message":"Dave's credentials not found!"}));
       }
     });
   }
@@ -113,7 +113,7 @@ export class AboutComponent implements OnInit {
       this.profile = profileResult;
       this.getDaveInfo();
     }, error => {
-      this.sentry.logError('AboutMainComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('AboutMainComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 

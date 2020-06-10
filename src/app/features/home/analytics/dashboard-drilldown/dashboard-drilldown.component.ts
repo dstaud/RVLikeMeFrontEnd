@@ -90,7 +90,7 @@ export class DashboardDrilldownComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      this.sentry.logError('DashboardDrilldownComponent:listenForGroupByCounts: error=' + error);
+      this.sentry.logError('DashboardDrilldownComponent:listenForGroupByCounts: error=' + JSON.stringify(error));
       this.showSpinner = false;
     });
   }

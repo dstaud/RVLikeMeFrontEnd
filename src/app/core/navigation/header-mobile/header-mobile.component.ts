@@ -147,7 +147,7 @@ export class HeaderMobileComponent implements OnInit {
         this.profileImage = true;
       }
     }, (error) => {
-      this.sentry.logError('HeaderMobileComponet:listenForUserProfile: error getting profile=' + error)
+      this.sentry.logError('HeaderMobileComponet:listenForUserProfile: error getting profile=' + JSON.stringify(error))
     });
   }
 
@@ -202,7 +202,7 @@ export class HeaderMobileComponent implements OnInit {
           this.autoRoute = false;
       }
     }, error => {
-      this.sentry.logError('HeaderMobileComponent:setReturnRoute: error setting return route ' + error);
+      this.sentry.logError('HeaderMobileComponent:setReturnRoute: error setting return route ' + JSON.stringify(error));
     });
   }
 

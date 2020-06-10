@@ -295,7 +295,7 @@ export class NewbieLinksComponent implements OnInit {
       }
 
     }, (error) => {
-      this.sentry.logError('NewbieLinksComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('NewbieLinksComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 
@@ -306,7 +306,7 @@ export class NewbieLinksComponent implements OnInit {
     .subscribe(type => {
       this.userType = type;
     }, (error) => {
-      this.sentry.logError('NewbieLinksComponent:listenForUserType: error=' + error);
+      this.sentry.logError('NewbieLinksComponent:listenForUserType: error=' + JSON.stringify(error));
     });
   }
 

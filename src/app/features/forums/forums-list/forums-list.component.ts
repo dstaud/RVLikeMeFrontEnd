@@ -188,7 +188,7 @@ export class ForumsListComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -205,7 +205,7 @@ export class ForumsListComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      this.sentry.logError('ForumsListComponent:listenForUserProfile: unable to get profile. error =' + error);
+      this.sentry.logError('ForumsListComponent:listenForUserProfile: unable to get profile. error =' + JSON.stringify(error));
       this.showSpinner = false;
     });
   }

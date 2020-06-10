@@ -117,7 +117,7 @@ export class TopicComponent implements OnInit {
     .subscribe(profile => {
       this.profile = profile;
     }, error => {
-      this.sentry.logError('TopicComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('TopicComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 
@@ -152,7 +152,7 @@ export class TopicComponent implements OnInit {
       }
 
     }, error => {
-      this.sentry.logError('TopicComponent:listenForUserType: error listening for user types=' + error);
+      this.sentry.logError('TopicComponent:listenForUserType: error listening for user types=' + JSON.stringify(error));
     });
   }
 

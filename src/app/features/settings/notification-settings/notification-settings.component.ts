@@ -136,10 +136,10 @@ export class NotificationSettingsComponent implements OnInit {
           this.showPushNotifications = true;
         }
       }, error => {
-        this.sentry.logError({"message":"Error getting Dave Info","error":error});
+        this.sentry.logError(JSON.stringify({"message":"Error getting Dave Info","error":error}));
       });
     }, error => {
-      this.sentry.logError({"message":"Error getting user Info","error":error});
+      this.sentry.logError(JSON.stringify({"message":"Error getting user Info","error":error}));
     });
   }
 
@@ -157,7 +157,7 @@ export class NotificationSettingsComponent implements OnInit {
         sendMessageNotificationEmails: this.sendMessageEmails
       })
     }, error => {
-      this.sentry.logError('SettingsComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('SettingsComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
     });
   }
 }

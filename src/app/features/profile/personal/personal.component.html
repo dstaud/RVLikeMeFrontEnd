@@ -1,5 +1,5 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
-  <button *ngIf="containerDialog"
+  <button *ngIf="desktopUser"
           type="button"
           mat-button
           class="hyperlink"
@@ -74,7 +74,7 @@
       </div>
 
       <div>
-        <mat-form-field appearance="outline" [ngClass]="containerDialog? 'desktop-input' : 'large-input'">
+        <mat-form-field appearance="outline">
           <mat-label>{{ "personal.component.myStory" | translate }}</mat-label>
           <textarea matInput
                     type="text"

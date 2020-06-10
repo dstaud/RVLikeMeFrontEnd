@@ -338,7 +338,7 @@ export class MainComponent implements OnInit {
     .subscribe(themeData => {
       this.theme = themeData.valueOf();
     }, error => {
-      this.sentry.logError({"message":"unable to listen for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
 
@@ -357,7 +357,7 @@ export class MainComponent implements OnInit {
         this.checkArray.push(new FormControl(this.param));
       }
     }, error => {
-      this.sentry.logError({"message":"unable to listen for parameters","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for parameters","error":error}));
     });
   }
 
@@ -372,7 +372,7 @@ export class MainComponent implements OnInit {
       this.displayMatches(counts);
     }, (error) => {
       this.showSpinner = false;
-      this.sentry.logError({"message":"unable to listen for like me counts","error":error});
+      this.sentry.logError(JSON.stringify({"message":"unable to listen for like me counts","error":error}));
     });
   }
 
@@ -385,7 +385,7 @@ export class MainComponent implements OnInit {
     .subscribe(data => {
       this.profile = data;
     }, error => {
-      this.sentry.logError('ConnectionsComponent:listenForUserProfile: error getting profile ' + error);
+      this.sentry.logError('ConnectionsComponent:listenForUserProfile: error getting profile ' + JSON.stringify(error));
     });
   }
 

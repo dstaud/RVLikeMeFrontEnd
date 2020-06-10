@@ -177,7 +177,7 @@ export class MainComponent implements OnInit {
     .subscribe ((responseData) => {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
-      this.sentry.logError({"message":"error listening for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"error listening for color theme","error":error}));
     });
   }
 
@@ -193,7 +193,7 @@ export class MainComponent implements OnInit {
       this.language.setLanguage(language);
     }, error => {
       this.showLanguageSaveIcon = false;
-      this.sentry.logError('ProfileMainComponent:setLanguage: throw error=' + error);
+      this.sentry.logError('ProfileMainComponent:setLanguage: throw error=' + JSON.stringify(error));
     });
   }
 
@@ -221,7 +221,7 @@ export class MainComponent implements OnInit {
     .subscribe(theme => {
       this.theme = theme;
     }, error => {
-      this.sentry.logError({"message":"error listening for color theme","error":error});
+      this.sentry.logError(JSON.stringify({"message":"error listening for color theme","error":error}));
       this.theme = 'light-theme';
     });
   }
@@ -237,7 +237,7 @@ export class MainComponent implements OnInit {
       this.form.patchValue({language:profile.language});
       this.showSpinner = false;
     }, error => {
-      this.sentry.logError('SettingsComponent:listenForUserProfile: error getting profile=' + error);
+      this.sentry.logError('SettingsComponent:listenForUserProfile: error getting profile=' + JSON.stringify(error));
       this.showSpinner = false;
     });
   }

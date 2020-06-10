@@ -65,7 +65,7 @@ export class HeaderComponent implements OnInit {
         this.profileImage = true;
       }
     }, (error) => {
-      this.sentry.logError('HeaderMobileComponent:listenForUserProfile: error listening for profile=' + error)
+      this.sentry.logError('HeaderMobileComponent:listenForUserProfile: error listening for profile=' + JSON.stringify(error))
     });
 
     // Listen for changes in user authorization state
@@ -132,7 +132,7 @@ export class HeaderComponent implements OnInit {
     .subscribe ((responseData) => {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
-      this.sentry.logError('HeaderComponent:selectTheme: cannot get theme '+ error);
+      this.sentry.logError('HeaderComponent:selectTheme: cannot get theme '+ JSON.stringify(error));
     });
   }
 

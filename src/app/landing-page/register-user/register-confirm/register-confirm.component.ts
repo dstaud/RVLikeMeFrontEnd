@@ -178,7 +178,7 @@ export class RegisterConfirmComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
     }, error => {
-      this.sentry.logError('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ' + error);
+      this.sentry.logError('RegisterConfirmComponent:sendWelcomeEmail: error sending email: ' + JSON.stringify(error));
     });
 }
 

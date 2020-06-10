@@ -151,7 +151,7 @@ export class MessageListComponent implements OnInit {
         this.displayName = this.profile.displayName;
       }
     }, error => {
-      this.sentry.logError('MessageListComponent:listenForUserProfile: error getting user profile. error=' + error);
+      this.sentry.logError('MessageListComponent:listenForUserProfile: error getting user profile. error=' + JSON.stringify(error));
     });
   }
 

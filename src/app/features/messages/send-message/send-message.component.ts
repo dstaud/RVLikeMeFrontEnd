@@ -380,7 +380,7 @@ export class SendMessageComponent implements OnInit {
           this.profile = data;
         }
       }, error => {
-        this.sentry.logError('SendMessageComponent:listenForUserProfile: error getting user profile. error=' + error);
+        this.sentry.logError('SendMessageComponent:listenForUserProfile: error getting user profile. error=' + JSON.stringify(error));
       });
     }
 
@@ -420,11 +420,11 @@ export class SendMessageComponent implements OnInit {
           this.emailSmtpSvc.sendMessageAlertEmail(userResult.email)
           .subscribe(emailResult => {
           }, error => {
-            this.sentry.logError(error);
+            this.sentry.logError('SendMessageComponent:sendNotificationToRecipient: error sending message alert=' + JSON.stringify(error));
           });
         }
       }, error => {
-        this.sentry.logError(error);
+        this.sentry.logError('SendMessageComponent:sendNotificationToRecipient: error sending message alert=' + JSON.stringify(error));
       });
     }
   }
