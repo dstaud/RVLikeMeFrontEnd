@@ -1,4 +1,4 @@
-![Image of RV](https://github.com/dstaud/rvlikemefrontend/src/assets/images/landing-image1.jpeg)
+![Image of RV](../assets/images/landing-image1.jpeg)
 
 # RVLikeMe
 
