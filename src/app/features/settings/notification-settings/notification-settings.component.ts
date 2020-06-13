@@ -16,7 +16,8 @@ import { SharedComponent } from '@shared/shared.component';
 @Component({
   selector: 'app-rvlm-notification-settings',
   templateUrl: './notification-settings.component.html',
-  styleUrls: ['./notification-settings.component.scss']
+  styleUrls: ['./notification-settings.component.scss'],
+  providers: [SubscribeNotificationsService]
 })
 export class NotificationSettingsComponent implements OnInit {
   form: FormGroup;
@@ -59,8 +60,8 @@ export class NotificationSettingsComponent implements OnInit {
     .subscribe(notifyResult => {
       this.showSpinner = false;
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     })
   }
 
@@ -78,8 +79,8 @@ export class NotificationSettingsComponent implements OnInit {
         .subscribe(subscribeResults => {
           this.showSpinner = false;
         }, error => {
-          this.shared.notifyUserMajorError();
-          throw new Error(error);
+          this.shared.notifyUserMajorError(error);
+          throw new Error(JSON.stringify(error));
         })
       })
       .catch(err => this.sentry.logError("Could not subscribe to notifications" + err));
@@ -100,8 +101,8 @@ export class NotificationSettingsComponent implements OnInit {
     .subscribe(unsubscribeResults => {
       this.showSpinner = false;
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -119,8 +120,8 @@ export class NotificationSettingsComponent implements OnInit {
       this.showsendMessageNotificationEmailsSaveIcon = false;
     }, error => {
       this.showsendMessageNotificationEmailsSaveIcon = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

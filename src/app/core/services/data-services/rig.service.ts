@@ -9,9 +9,7 @@ export interface IrigData {
   manufacturer: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class RigService {
 
   constructor(private http: HttpClient) { }

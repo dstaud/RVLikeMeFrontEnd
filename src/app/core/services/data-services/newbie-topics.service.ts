@@ -25,9 +25,7 @@ export interface InewbieLinks {
   createdAt: Date;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class NewbieTopicsService {
 
   constructor(private http: HttpClient) { }

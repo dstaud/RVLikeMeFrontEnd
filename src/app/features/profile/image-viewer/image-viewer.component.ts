@@ -195,8 +195,8 @@ export class ImageViewerComponent implements OnInit {
       this.imageSource = lifestyleImageUrl;
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -214,8 +214,8 @@ export class ImageViewerComponent implements OnInit {
       this.imageSource = rigImageUrl;
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 }

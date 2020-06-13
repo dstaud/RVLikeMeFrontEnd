@@ -90,7 +90,7 @@ export class AdminComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
+      this.shared.notifyUserMajorError(error);
       throw new Error(JSON.stringify(error));
     });
   }

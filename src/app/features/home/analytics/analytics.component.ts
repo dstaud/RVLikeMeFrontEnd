@@ -131,7 +131,7 @@ export class AnalyticsComponent implements OnInit {
                                     '.notdefined') + ': ' + counts[control][i].count + ' RVers' + '",' +
                       '"color":"' + this.chartColor[i] + '"}';
             this.controlLegends.push(JSON.parse(legend));
-          } else if (counts[control][i]._id.substring(0,1) === '@') {
+          } else if (counts[control][i]._id.startsWith('@')) {
             legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
                                     '.other') + ': ' + counts[control][i].count + ' RVers' + '",' +
                       '"color":"' + this.chartColor[i] + '"}';

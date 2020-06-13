@@ -55,8 +55,21 @@ export class SharedComponent implements OnInit {
     this.snackBar.open(message, '', config);
   }
 
-  public notifyUserMajorError(): void {
-    this.openSnackBar('Oops.  Sorry, but we seem to be having an issue.  The administrator has been notified, but please check your internet connection and try again.','error', 5000);
+  public notifyUserMajorError(error: any): void {
+    const chunkFailedMessage = /Loading chunk [\d]+ failed/;
+
+    // If this is a problem lazy-loading the module, then force a reload
+    if (chunkFailedMessage.test(error.message)) {
+      this.openSnackBar('Oops.  Sorry, but we seem to be having an issue and need to reload the page in 3 seconds','error', 3000);
+      this.sentry.logError('Got a chunk error and reloaded page');
+
+      setTimeout(function () {
+        window.location.reload();
+      }, 3000);
+
+    } else {
+      this.openSnackBar('Oops.  Sorry, but we seem to be having an issue.  The administrator has been notified, but please check your internet connection and try again.','error', 5000);
+    }
   }
 
   // Listen for changes in color theme;

@@ -103,7 +103,7 @@ export class LikemeCountsComponent implements OnInit {
         this.showSpinner = false;
       }
 
-      if (this.profile.aboutMe && this.aboutMeCount > 0  && this.profile.aboutMe.substring(0, 1) !== '@') {
+      if (this.profile.aboutMe && this.aboutMeCount > 0  && this.profile.aboutMe.startsWith('@')) {
         this.showAboutMe = true;
         if (this.aboutMeCount === 1) {
           this.likeMeDesc = this.translate.instant('connections.component.aboutMe1');
@@ -113,7 +113,7 @@ export class LikemeCountsComponent implements OnInit {
         this.likeMeAnswer = this.translate.instant('profile.component.list.aboutme.' + this.profile.aboutMe.toLowerCase());
         this.aboutMe = this.aboutMeCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
-      if (this.profile.rigType && this.rigTypeCount > 0  && this.profile.rigType.substring(0, 1) !== '@') {
+      if (this.profile.rigType && this.rigTypeCount > 0  && this.profile.rigType.startsWith('@')) {
         this.showRigType = true;
         if (this.rigTypeCount === 1) {
           this.likeMeDesc = this.translate.instant('connections.component.rigType1');
@@ -123,7 +123,7 @@ export class LikemeCountsComponent implements OnInit {
         this.likeMeAnswer = this.translate.instant('profile.component.list.rigtype.' + this.profile.rigType.toLowerCase());
         this.rigType = this.rigTypeCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
-      if (this.profile.rvUse && this.rvUseCount > 0  && this.profile.rvUse.substring(0, 1) !== '@') {
+      if (this.profile.rvUse && this.rvUseCount > 0  && this.profile.rvUse.startsWith('@')) {
         this.showRvUse = true;
         if (this.rvUseCount === 1) {
           this.likeMeDesc = this.translate.instant('connections.component.rvUse1');
@@ -133,7 +133,7 @@ export class LikemeCountsComponent implements OnInit {
         this.likeMeAnswer = this.translate.instant('profile.component.list.rvuse.' + this.profile.rvUse.toLowerCase());
         this.rvUse = this.rvUseCount + ' ' + this.likeMeDesc + ' ' + this.likeMeAnswer;
       }
-      if (this.profile.rigManufacturer && this.rigManufacturerCount > 0  && this.profile.rigManufacturer.substring(0, 1) !== '@') {
+      if (this.profile.rigManufacturer && this.rigManufacturerCount > 0  && this.profile.rigManufacturer.startsWith('@')) {
         this.showRigManufacturer = true;
         if (this.rigManufacturerCount === 1) {
           this.likeMeDesc = this.translate.instant('connections.component.rigManufacturer1');
@@ -146,8 +146,8 @@ export class LikemeCountsComponent implements OnInit {
 
     }, (error) => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

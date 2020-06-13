@@ -209,8 +209,8 @@ export class SendMessageComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
         this.showSpinner = false;
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
     });
   }
 
@@ -300,8 +300,8 @@ export class SendMessageComponent implements OnInit {
       this.sendMessageEmails = profileResult.sendMessageEmails;
 
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     })
   }
 
@@ -363,8 +363,8 @@ export class SendMessageComponent implements OnInit {
         this.form.disable();
       }
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -448,8 +448,8 @@ export class SendMessageComponent implements OnInit {
       this.messagesSvc.getConversations(); // Get updated conversation into behaviorSubject
       this.sendNotificationToRecipient();
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     })
   }
 

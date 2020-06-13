@@ -90,8 +90,8 @@ export class PasswordResetComponent implements OnInit {
         this.httpError = true;
         this.httpErrorText = 'Token is not valid';
       } else {
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       }
     })
   }

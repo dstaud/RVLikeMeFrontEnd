@@ -145,8 +145,8 @@ export class UserQueryComponent implements OnInit {
     .subscribe(matchResults => {
       this.matchQueryParams(matchResults);
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

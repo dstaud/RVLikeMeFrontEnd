@@ -17,6 +17,8 @@ import { ForumsListComponent } from './forums-list/forums-list.component';
 import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-post-dialog.component';
 import { PostsMainComponent } from './posts-main/posts-main.component';
 
+import { ForumService } from '@services/data-services/forum.service';
+
 
 @NgModule({
   declarations: [
@@ -41,6 +43,9 @@ import { PostsMainComponent } from './posts-main/posts-main.component';
   exports: [
     AddPostComponent,
     AddCommentComponent
+  ],
+  providers: [
+    ForumService
   ],
   entryComponents: [MainComponent],
 })

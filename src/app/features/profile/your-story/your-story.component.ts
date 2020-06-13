@@ -194,7 +194,7 @@ export class YourStoryComponent implements OnInit {
 
       this.userDisplayName = profileResult.displayName
       if (profileResult.aboutMe) {
-        if (profileResult.aboutMe.substring(0,1) === '@') {
+        if (profileResult.aboutMe.startsWith('@')) {
           this.userAboutMe = profileResult.aboutMe.substring(1,profileResult.aboutMe.length);
         } else {
           this.userAboutMe = 'profile.component.list.aboutme.' + profileResult.aboutMe.toLowerCase();
@@ -204,7 +204,7 @@ export class YourStoryComponent implements OnInit {
       }
 
       if (profileResult.rvUse) {
-        if (profileResult.rvUse.substring(0,1) === '@') {
+        if (profileResult.rvUse.startsWith('@')) {
           this.userRvUse =  profileResult.rvUse.substring(1,profileResult.rvUse.length);
         } else {
           this.userRvUse = 'profile.component.list.rvuse.' + profileResult.rvUse.toLowerCase();
@@ -214,7 +214,7 @@ export class YourStoryComponent implements OnInit {
       }
 
       if (profileResult.rigType) {
-        if (profileResult.rigType.substring(0,1) === '@') {
+        if (profileResult.rigType.startsWith('@')) {
           this.userRigType =  profileResult.rigType.substring(1,profileResult.rigType.length);
         } else {
           this.userRigType = 'profile.component.list.rigtype.' + profileResult.rigType.toLowerCase();
@@ -258,8 +258,8 @@ export class YourStoryComponent implements OnInit {
         this.showRigBrand = true;
       }
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

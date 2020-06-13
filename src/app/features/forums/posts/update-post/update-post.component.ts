@@ -183,8 +183,8 @@ export class UpdatePostComponent implements OnInit {
       });
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
  }
 
@@ -226,8 +226,8 @@ export class UpdatePostComponent implements OnInit {
       }
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -340,8 +340,8 @@ export class UpdatePostComponent implements OnInit {
       }
       this.addLinkOpen = this.addLinkOpen === 'out' ? 'in' : 'out';
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

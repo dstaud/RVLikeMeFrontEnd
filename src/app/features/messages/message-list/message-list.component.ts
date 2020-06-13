@@ -133,8 +133,8 @@ export class MessageListComponent implements OnInit {
         this.showSpinner = false;
       }
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

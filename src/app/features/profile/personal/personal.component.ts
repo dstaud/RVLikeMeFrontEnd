@@ -417,8 +417,8 @@ export class PersonalComponent implements OnInit {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this[SaveIcon] = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

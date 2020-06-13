@@ -158,8 +158,8 @@ export class NewbieCornerComponent implements OnInit {
         if (error.status === 403) {
           this.sentry.logError(JSON.stringify({"status":403,"message":"unable to listen for like me counts","error":error}));
         } else {
-          this.shared.notifyUserMajorError();
-          throw new Error(error);
+          this.shared.notifyUserMajorError(error);
+          throw new Error(JSON.stringify(error));
         }
       });
     }

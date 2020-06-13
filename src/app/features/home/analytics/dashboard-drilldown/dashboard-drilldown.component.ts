@@ -105,7 +105,7 @@ export class DashboardDrilldownComponent implements OnInit {
         group = this.translate.instant('analytics.component.list.' + control.toLowerCase() +
                                 '.notdefined') + ': ' + counts[control][i].count + ' RVers';
         this.groupData.push(group);
-      } else if (counts[control][i]._id.substring(0,1) === '@') {
+      } else if (counts[control][i]._id.startsWith('@')) {
         group = this.translate.instant('analytics.component.list.' + control.toLowerCase() +
                                 '.other') + ': ' + counts[control][i].count + ' RVers';
         this.groupData.push(group);

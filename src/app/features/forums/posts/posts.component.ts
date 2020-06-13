@@ -212,8 +212,8 @@ export class PostsComponent implements OnInit {
       this.posts.splice(row, 1);
 
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -230,8 +230,8 @@ export class PostsComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -512,8 +512,8 @@ export class PostsComponent implements OnInit {
         this.showFirstPost = true;
         this.showPosts = false;
       } else {
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       }
     });
   }

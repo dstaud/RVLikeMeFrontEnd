@@ -159,8 +159,8 @@ export class BlogLinkComponent implements OnInit {
       this.profile = profileResult;
       this.profileSvc.distributeProfileUpdate(profileResult);
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     })
   }
 

@@ -161,8 +161,8 @@ export class LikemeCountsService {
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
       this.getLikeMeCountsSecondary();
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -213,8 +213,8 @@ export class LikemeCountsService {
 
       this._likeMeCounts.next(Object.assign({}, this.dataStore).likeMeCounts);
     }, (error) => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -253,8 +253,8 @@ export class LikemeCountsService {
       this._groupByCounts.next(Object.assign({}, this.dataStoreGroupBy).groupByCounts);
 
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 }

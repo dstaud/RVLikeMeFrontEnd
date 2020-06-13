@@ -38,6 +38,7 @@ export interface RigBrandManufacturer {
   selector: 'app-rvlm-rv-rig',
   templateUrl: './rv-rig.component.html',
   styleUrls: ['./rv-rig.component.scss'],
+  providers: [RigService],
   animations: [
     trigger('rigTypeOtherSlideInOut', [
       state('in', style({
@@ -399,8 +400,8 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     })
   }
 
@@ -412,7 +413,7 @@ export class RvRigComponent implements OnInit {
     let formValue = control + 'FormValue';
 
     if (this.profile[control]) {
-      if (this.profile[control].substring(0, 1) === '@') {
+      if (this.profile[control].startsWith('@')) {
         this[formValue] = 'other';
         this[otherControl].patchValue(this.profile[control].substring(1, this.profile[control].length));
         this[otherOpen] = 'in';
@@ -515,8 +516,8 @@ export class RvRigComponent implements OnInit {
       this.showSpinner = false;
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -531,8 +532,8 @@ export class RvRigComponent implements OnInit {
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
       this[SaveIcon] = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

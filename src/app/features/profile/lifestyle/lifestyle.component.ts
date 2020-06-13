@@ -1,3 +1,4 @@
+import { startWith } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -647,7 +648,7 @@ export class LifestyleComponent implements OnInit {
     let formValue = control + 'FormValue';
     let result = false;
     if (this.profile[control]) {
-      if (this.profile[control].substring(0, 1) === '@') {
+      if (this.profile[control].startsWith('@')) {
         this[formValue] = 'other';
         this.form.patchValue({
           [otherControl]: this.profile[control].substring(1, this.profile[control].length)
@@ -711,8 +712,8 @@ export class LifestyleComponent implements OnInit {
       }
      }, error => {
       this[SaveIcon] = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -727,8 +728,8 @@ export class LifestyleComponent implements OnInit {
 
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 }

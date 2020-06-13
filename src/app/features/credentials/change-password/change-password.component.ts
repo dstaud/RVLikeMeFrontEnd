@@ -114,8 +114,8 @@ export class ChangePasswordComponent implements OnInit {
         this.form.enable();
       } else {
         this.showSpinner = false;
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       }
     })
   }
@@ -133,8 +133,8 @@ export class ChangePasswordComponent implements OnInit {
       this.form.enable();
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

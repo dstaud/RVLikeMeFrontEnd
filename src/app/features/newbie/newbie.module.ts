@@ -11,6 +11,7 @@ import { NewbieLinksComponent } from './newbie-topics/newbie-links/newbie-links.
 import { MainComponent } from './main/main.component';
 import { NewbieCornerComponent } from './newbie-corner/newbie-corner.component';
 
+import { NewbieTopicsService } from '@services/data-services/newbie-topics.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,9 @@ import { NewbieCornerComponent } from './newbie-corner/newbie-corner.component';
     NewbieRoutingModule,
     SharedModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    NewbieTopicsService
   ]
 })
 export class NewbieModule { }

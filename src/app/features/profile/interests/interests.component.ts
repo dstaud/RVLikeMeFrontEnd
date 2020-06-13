@@ -217,8 +217,8 @@ ngOnInit() {
       this.showSaveIcon = false;
     }, error => {
       this.showSaveIcon = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

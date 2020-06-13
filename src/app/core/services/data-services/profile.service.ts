@@ -301,8 +301,8 @@ export class ProfileService {
         this.dataStore.profile = data;
         this._profile.next(Object.assign({}, this.dataStore).profile);
       }, (error) => {
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       });
     }
   }

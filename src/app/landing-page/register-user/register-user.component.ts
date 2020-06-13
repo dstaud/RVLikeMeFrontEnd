@@ -210,8 +210,8 @@ export class RegisterUserComponent implements OnInit {
         this.authSvc.logout();
         this.sendRegisterEmail(tokenResult.token, stay);
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 

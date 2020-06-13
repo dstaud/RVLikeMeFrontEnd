@@ -82,8 +82,8 @@ export class ForgotPasswordComponent implements OnInit {
         this.httpErrorText = 'Email does not exist in database';
         this.form.enable();
       } else {
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       }
     });
   }
@@ -99,8 +99,8 @@ export class ForgotPasswordComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(sendEmailResult => {
     }, error => {
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 }

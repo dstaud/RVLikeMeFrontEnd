@@ -14,44 +14,46 @@ import { NgxImageCompressService } from 'ngx-image-compress';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from '@environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from '@environments/environment';
-import { SigninComponent } from './landing-page/signin/signin.component';
-import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
+
 import { HeaderComponent } from '@navigation/header/header.component';
 import { SidenavListComponent } from '@navigation/sidenav-list/sidenav-list.component';
 import { FooterComponent } from '@navigation/footer/footer.component';
 import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found.component';
-
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
+import { FooterDesktopComponent } from '@navigation/footer-desktop/footer-desktop.component';
+
+import { SigninComponent } from './landing-page/signin/signin.component';
+import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
-
-import { ThemeService } from '@services/theme.service';
-import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
-import { ProfileService } from '@services/data-services/profile.service';
-import { WindowService } from '@services/window.service';
-
-import { SharedModule } from '@shared/shared.module';
-import { AdminComponent } from './features/admin/admin.component';
-import { EmailComponent } from './features/admin/email/email.component';
 import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
-import { SystemDataComponent } from './features/admin/system-data/system-data.component';
 import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
 import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
-import { RegisterDesktopDialogComponent } from './dialogs/register-desktop-dialog/register-desktop-dialog.component';
-import { SigninDesktopDialogComponent } from './dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
-import { FooterDesktopComponent } from './core/navigation/footer-desktop/footer-desktop.component';
-import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-policy.component';
-import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
-import { PrivacyPolicyDialogComponent } from './dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
-import { TermsDialogComponent } from './dialogs/terms-dialog/terms-dialog.component';
 import { GraphicComponent } from './landing-page/cards/graphic/graphic.component';
 import { LikemeComponent } from './landing-page/cards/likeme/likeme.component';
 import { NewbieComponent } from './landing-page/cards/newbie/newbie.component';
 import { StoryComponent } from './landing-page/cards/story/story.component';
+
+
+import { AdminComponent } from './features/admin/admin.component';
+import { EmailComponent } from './features/admin/email/email.component';
+import { SystemDataComponent } from './features/admin/system-data/system-data.component';
+
+import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
+
+import { HttpInterceptorService } from '@services/data-services/http-interceptor.service';
+
+import { SharedModule } from '@shared/shared.module';
+
+import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
+import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
+import { PrivacyPolicyDialogComponent } from '@dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
+import { TermsDialogComponent } from '@dialogs/terms-dialog/terms-dialog.component';
 
 
 Sentry.init({
@@ -66,7 +68,7 @@ export class SentryErrorHandler implements ErrorHandler {
 
   handleError(error) {
     const eventId = Sentry.captureException(error.originalError || error);
-
+    // Instead, I show a snackbar error
     // Sentry.showReportDialog({ eventId });
   }
 }
@@ -128,10 +130,7 @@ export function getErrorHandler(): ErrorHandler {
     BrowserAnimationsModule
   ],
   providers: [
-    WindowService,
     HttpClient,
-    ProfileService,
-    ThemeService,
     {
       provide: ErrorHandler,
       useFactory: getErrorHandler },

@@ -192,8 +192,8 @@ export class PostsMainComponent implements OnInit {
       this.posts.getPosts(this.groupID, this.forumType, this.profile.profileImageUrl, this.profile.displayName, yearOfBirth, rigType);
     }, error => {
       this.showSpinner = false;
-      this.shared.notifyUserMajorError();
-      throw new Error(error);
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 
@@ -351,8 +351,8 @@ export class PostsMainComponent implements OnInit {
         this.createGroupForum(names, values, yearOfBirth, rigLength);
       } else {
         this.showSpinner = false;
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       }
     });
   }
@@ -470,8 +470,8 @@ export class PostsMainComponent implements OnInit {
         this.showSpinner = false;
       }, error => {
         this.showSpinner = false;
-        this.shared.notifyUserMajorError();
-        throw new Error(error);
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
       });
     }
   }
