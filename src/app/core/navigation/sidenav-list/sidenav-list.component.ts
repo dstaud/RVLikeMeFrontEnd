@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -9,8 +8,6 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
-import { TermsDialogComponent } from '@dialogs/terms-dialog/terms-dialog.component';
-import { PrivacyPolicyDialogComponent } from '@dialogs/privacy-policy-dialog/privacy-policy-dialog.component';
 
 @Component({
   selector: 'app-rvlm-sidenav-list',
@@ -25,7 +22,6 @@ export class SidenavListComponent implements OnInit {
   constructor(private location: Location,
               private focusMonitor: FocusMonitor,
               private router: Router,
-              private dialog: MatDialog,
               private authSvc: AuthenticationService,
               private activateBackArrowSvc: ActivateBackArrowService) { }
 
