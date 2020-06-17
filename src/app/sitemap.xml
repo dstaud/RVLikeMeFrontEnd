@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>http://rvlikeme.com</loc><priority>0.5</priority></url>
-<url><loc>http://rvlikeme.com/learn-more</loc><priority>0.5</priority></url>
-<url><loc>http://rvlikeme.com/register</loc><priority>0.5</priority></url>
-<url><loc>http://rvlikeme.com/signin</loc><priority>0.5</priority></url>
+<url><loc>https://rvlikeme.com</loc><priority>0.5</priority></url>
+<url><loc>https://rvlikeme.com/learn-more</loc><priority>0.5</priority></url>
+<url><loc>https://rvlikeme.com/register</loc><priority>0.5</priority></url>
+<url><loc>https://rvlikeme.com/signin</loc><priority>0.5</priority></url>
 </urlset>
