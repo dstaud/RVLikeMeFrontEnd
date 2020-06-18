@@ -62,15 +62,6 @@ export class RvRigComponent implements OnInit {
   @Output()
   optionSelected: EventEmitter<MatAutocompleteSelectedEvent>
 
-  // Could not use reactive forms for this form only because of the auto-complete of brand.  Couldn't get that to work with Reactive forms.
-  rigBrand = new FormControl('');
-  rigType = new FormControl('');
-  rigTypeOther = new FormControl('');
-  rigLength = new FormControl('', Validators.pattern('^[0-9]*$'));
-  rigModel = new FormControl('');
-  rigYear = new FormControl('', [Validators.minLength(4), Validators.maxLength(4)]);
-  rigTow = new FormControl('');
-
 
   rigImageUrls: Array<string> = [];
   rigData: Array<IrigData> = [];
@@ -116,6 +107,17 @@ export class RvRigComponent implements OnInit {
   private userProfile: Observable<IuserProfile>;
   private rigTypeFormValue: string = '';
   private returnRoute: string;
+  private regYear = /^\d{4}$/;
+  private regLength = /^[0-9]*$/;
+
+  // Could not use reactive forms for this form only because of the auto-complete of brand.  Couldn't get that to work with Reactive forms.
+  rigBrand = new FormControl('');
+  rigType = new FormControl('');
+  rigTypeOther = new FormControl('');
+  rigLength = new FormControl('', Validators.pattern(this.regLength));
+  rigModel = new FormControl('');
+  rigYear = new FormControl('', Validators.pattern(this.regYear));
+  rigTow = new FormControl('');
 
   // Since form is 'dirtied' pre-loading with data from server, can't be sure if they have
   // changed anything.  Activating a notification upon reload, just in case.
@@ -248,20 +250,22 @@ export class RvRigComponent implements OnInit {
 
   // Field auto-update processing
   onUpdateDataPoint(control: string) {
-    let controlValue: string;
+    if (this[control].valid) {
+      let controlValue: string;
 
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    controlValue = this[control].value;
-    // controlValue = controlValue.trim();
-    this[control].patchValue(controlValue);
-    if (this[control].value === '') {
-      this.profile[control] = null;
-      this[control].patchValue(null);
-    } else {
-      this.profile[control] = this[control].value;
+      let SaveIcon = 'show' + control + 'SaveIcon';
+      this[SaveIcon] = true;
+      controlValue = this[control].value;
+
+      if (this[control].value === '') {
+        this.profile[control] = null;
+        this[control].patchValue(null);
+      } else {
+        this.profile[control] = this[control].value;
+        this[control].patchValue(controlValue);
+      }
+      this.updateRig(control, this.profile[control]);
     }
-    this.updateRig(control, this.profile[control]);
   }
 
 
@@ -308,6 +312,7 @@ export class RvRigComponent implements OnInit {
   // Update brand / Manufacturer data
   updateBrand() {
     let brandInfo: RigBrandManufacturer;
+    let rigBrand: string = null;
 
     this.showrigBrandSaveIcon = true;
     this.profile.rigBrand = this.rigBrand.value;

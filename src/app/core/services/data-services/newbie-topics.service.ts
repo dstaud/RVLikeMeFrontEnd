@@ -37,7 +37,7 @@ export class NewbieTopicsService {
       displayName: displayName,
       profileImageUrl: profileImageUrl
     }
-    console.log('add newbie topic=', params)
+
     return this.http.post(`/api/newbie-topic`, params, {});
   }
 

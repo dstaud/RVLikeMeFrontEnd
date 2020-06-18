@@ -145,7 +145,7 @@ export class AuthenticationService {
       credentials: user,
       firstName: firstName
     }
-    console.log('register user = ', params)
+
     base = this.http.post(`/api/register`, params);
     const request = base.pipe(
       map((data: ItokenResponse) => { // Saving token here, but may be better to save on register confirm.  However, would have to make sure the email confirm is on

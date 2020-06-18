@@ -90,7 +90,7 @@ export class ProfilePercentComponent implements OnInit {
       this.determineProfileMessages();
 
       if (this.location.path() === '/home/dashboard' && this.profile._id && this.progressBarColor === 'warn') {
-        this.shared.openSnackBar('Please fill out your profile. Without the profile, we cannot find others like you.','error',5000);
+        this.shared.openSnackBar('Please fill out your profile. Without the profile, we cannot find others like you.','message',5000);
       }
 
     }, error => {

@@ -459,7 +459,6 @@ export class PostsComponent implements OnInit {
     this.forumSvc.getPosts(this.groupID, yearOfBirth, rigLength)
     .pipe(untilComponentDestroyed(this))
     .subscribe(postResult => {
-      console.log('post=', postResult)
       if (postResult.length === 0) {
         this.showPosts = false;
         this.showFirstPost = true;

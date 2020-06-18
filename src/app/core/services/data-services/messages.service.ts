@@ -111,7 +111,7 @@ export class MessagesService {
       userIdType: userIdType,
       action: action
     }
-    console.log('update conversation=', params);
+
     return this.http.put(`/api/conversation-update`, params,{});
   }
 

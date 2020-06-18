@@ -296,7 +296,6 @@ export class UpdatePostComponent implements OnInit {
 
   // As user to upload image, compress and orient the image and upload to server to store.  Save the URL to store with the post
   onPhoto(event: any) {
-    console.log('in onPhoto')
     let fileType: string = 'post';
     this.uploadImageSvc.compressImageFile(event, (compressedFile: File) => {
       this.showSpinner = true;

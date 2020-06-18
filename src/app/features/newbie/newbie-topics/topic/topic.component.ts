@@ -43,7 +43,9 @@ export class TopicComponent implements OnInit {
               private translate: TranslateService,
               private sentry: SentryMonitorService,
               private userTypeSvc: UserTypeService,
-              private shareDataSvc: ShareDataService) { }
+              private shareDataSvc: ShareDataService) {
+          this.listenForUserType();  // Needs to be here to avoid expression has changed issues
+  }
 
   ngOnInit(): void {
     if (window.innerWidth > 600) {
@@ -52,7 +54,6 @@ export class TopicComponent implements OnInit {
 
     this.listenForUserProfile();
 
-    this.listenForUserType();
   }
 
   ngOnDestroy() {}
@@ -146,10 +147,9 @@ export class TopicComponent implements OnInit {
         this.header = 'newbie-topics.component.' + this.topicID + 'HeaderNewbie';
       }
 
-      console.log('TopicComponent:listenForUserType: initialzing newbie links, usertype=', type)
-      if (!this.shareDataSvc.getData('newbieTopic').topicID) {
-        this.newbieLinks.initialize(paramData);
-      }
+      // if (!this.shareDataSvc.getData('newbieTopic').topicID) {
+      //   this.newbieLinks.initialize(paramData);
+      // }
 
     }, error => {
       this.sentry.logError('TopicComponent:listenForUserType: error listening for user types=' + JSON.stringify(error));

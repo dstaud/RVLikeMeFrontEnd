@@ -154,6 +154,8 @@ export class PersonalComponent implements OnInit {
   //   $event.returnValue = true;
   // }
 
+  private regYearOfBirth = /^\d{4}$/;
+
   constructor(private authSvc: AuthenticationService,
               private profileSvc: ProfileService,
               private router: Router,
@@ -171,10 +173,7 @@ export class PersonalComponent implements OnInit {
                 firstName: new FormControl('', Validators.required),
                 // lastName: new FormControl(''),
                 displayName: new FormControl('', Validators.required),
-                yearOfBirth: new FormControl('',
-                                              [Validators.minLength(4),
-                                               Validators.maxLength(4),
-                                               this.yearOfBirthValidator]),
+                yearOfBirth: new FormControl('', Validators.pattern(this.regYearOfBirth)),
                 gender: new FormControl(''),
                 homeCountry: new FormControl(''),
                 homeState: new FormControl(''),
@@ -293,15 +292,25 @@ export class PersonalComponent implements OnInit {
 
   /**** Field auto-update processing ****/
   onUpdateDataPoint(control: string) {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    if (this.form.controls[control].value === '') {
-      this.profile[control] = null;
+    if (this.form.controls[control].value !== null &&
+        this.form.controls[control].value.trim().length === 0) {
       this.form.patchValue({ [control]: null });
-    } else {
-      this.profile[control] = this.form.controls[control].value;
     }
-    this.updatePersonal(control, this.profile[control]);
+
+    if (this.form.controls[control].valid) {
+      let SaveIcon = 'show' + control + 'SaveIcon';
+      this[SaveIcon] = true;
+
+      if (this.form.controls[control].value === null ||
+          this.form.controls[control].value === '') {
+        this.profile[control] = null;
+        this.form.patchValue({ [control]: null });
+      } else {
+        this.profile[control] = this.form.controls[control].value;
+      }
+
+      this.updatePersonal(control, this.profile[control]);
+    }
   }
 
 
@@ -314,6 +323,7 @@ export class PersonalComponent implements OnInit {
     } else {
       this.profile[control] = event;
     }
+
     this.updatePersonal(control, this.profile[control]);
   }
 
@@ -416,18 +426,10 @@ export class PersonalComponent implements OnInit {
       this[SaveIcon] = false;
       this.profileSvc.distributeProfileUpdate(responseData);
     }, error => {
+
       this[SaveIcon] = false;
       this.shared.notifyUserMajorError(error);
       throw new Error(JSON.stringify(error));
     });
-  }
-
-
-  // Validate year of birth entered is a number
-  private yearOfBirthValidator(control: AbstractControl): {[key: string]: boolean} | null {
-    if (control.value !== undefined && (isNaN(control.value))) {
-      return { birthYear: true };
-    }
-    return null;
   }
 }
