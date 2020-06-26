@@ -35,7 +35,7 @@ import { SharedComponent } from '@shared/shared.component';
 
 export class AddPostComponent implements OnInit {
   @Input('groupID') groupID: string;
-  @Input('displayName') displayName: string;f
+  @Input('displayName') displayName: string;
   @Input('profileImageUrl') profileImageUrl: string;
   @Input('yearOfBirth') yearOfBirth: number;
   @Input('rigLength') rigLength: number;

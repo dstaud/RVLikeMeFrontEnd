@@ -37,6 +37,7 @@ export class MainComponent implements OnInit {
   matches = [];
   theme: string;
   desktopUser: boolean = false;
+  showFullExplanation: boolean = false;
 
   private likeMeItem: string;
   private likeMeDesc: string;

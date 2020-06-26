@@ -1,18 +1,10 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <div class="mat-title">{{ 'profile.component.title' | translate }}</div>
-  <!-- <p class="mat-body">{{ "profile.component.explanation" | translate }}</p> -->
-
-  <div *ngIf="!desktopUser" class="story" (click)="onYourStory()">
-    <div id="profileImage" class="profile-image">
-      <img class="image"
-            [src]="profileImageUrl"
-            style="width:80px;height:80px;">
-    </div>
-    <div>
-      <br>
-      <span class="hyperlink" >{{ 'profile.component.viewpic' | translate }}</span>
-    </div>
-  </div>
+  <p class="mat-body">
+    {{ "profile.component.explanation1" | translate }}
+    <span (click)="onLikeMe()" class="hyperlink">{{ "profile.component.likeme" | translate }}</span>
+    {{ "profile.component.explanation2" | translate }}
+  </p>
 
   <div class="background mat-elevation-z2"
         [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
@@ -76,8 +68,23 @@
     </mat-list>
   </div>
 
+  <ng-template [ngIf]="!desktopUser">
+    <div class="story" (click)="onYourStory()">
+      <div id="profileImage" class="profile-image">
+        <img class="image"
+              [src]="profileImageUrl"
+              style="width:80px;height:80px;">
+      </div>
+      <div>
+        <br>
+        <span class="hyperlink" >{{ 'profile.component.viewpic' | translate }}</span>
+      </div>
+    </div>
+  </ng-template>
 
-  <div *ngIf="desktopUser">
+
+  <ng-template [ngIf]="desktopUser">
+    <br>
     <mat-divider></mat-divider>
     <div>
       <p>{{ 'profile.component.howYourStory' | translate }}</p>
@@ -85,7 +92,7 @@
     <app-rvlm-your-story
       [comingFromProfile]=true>
     </app-rvlm-your-story>
-  </div>
+  </ng-template>
 
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="40"></mat-progress-spinner>
 </div>

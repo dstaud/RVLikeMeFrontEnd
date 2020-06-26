@@ -36,7 +36,14 @@
   },
   "connections.component": {
     "header": "Like Me",
-    "heading": "Select one or more to connect with others through groups",
+    "heading": "Connect with others like you",
+    "explanation": "Selecting one of the matches below, and clicking the button, will bring you to a group forum any of the others with that match can participate in as well.",
+    "example1": "Example: If you have a class A motorhome, click on 'x others with a Class A motorhome' to join a group just for those with class A motorhomes!",
+    "explanation2": "Selecting more then, one and clicking the button, will search for the combined profile items so you can join a group with others who matched.",
+    "example2": "Example: If you have a class A motorhome and you full-time travel with no home base, select both 'x others with a Class A motorhome' and 'x others that Full-time travel no home base' to see if there are others who match that, and if so, now you can have a forum just class A motorhomers who full-time travel with no home-base!",
+    "profile": "Fill out your profile well to find others like you!",
+    "more": "See more explanation",
+    "less": "See less explanation",
     "noResults1": "Sorry, no RVers Like you found yet.  Be sure to fill out your",
     "noResults2": "profile",
     "noResults3": "as completely as possible because this is what is used to locate others like you.  Also, check back and try again because as other users join, you will find others like you.",
@@ -286,7 +293,9 @@
   },
   "profile.component": {
     "title": "Profile",
-    "explanation": "Please enter information about you and how you RV to help us give you more relavant information and answers to your questions.",
+    "explanation1": "RVLikeMe uses your profile to match with other user profiles, allowing you to connect in group forums.  After you fill out your profile, go to the ",
+    "explanation2": "page.",
+    "likeme": "Like me",
     "preferred-language": "Preferred language",
     "english": "English",
     "spanish": "Spanish",
@@ -728,6 +737,8 @@
   },
   "settings.component": {
     "title": "Settings",
+    "messageEmails": "Send message notification emails",
+    "notify": "notify",
     "language": "Select a language for the RV Like Me App",
     "android": "Android devices allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it.",
     "apple": "Apple devices allow you to install web apps on your home screen, giving you an app-like experience.  Try it out!  You can always delete it like an app if you don't like it."

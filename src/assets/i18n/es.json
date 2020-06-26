@@ -36,7 +36,14 @@
   },
   "connections.component": {
     "header": "Como yo",
-    "heading": "Seleccione uno o más para conectarse con otros a través de foros",
+    "heading": "Conéctate con otros como tú",
+    "explanation": "Si selecciona una de las coincidencias a continuación y hace clic en el botón, lo llevará a un foro grupal en el que cualquiera de las otras personas con esa coincidencia también puede participar.",
+    "example1": "Ejemplo: si tiene una autocaravana de clase A, haga clic en 'x otros con una autocaravana de clase A' para unirse a un grupo solo para aquellos con autocaravanas de clase A.",
+    "explanation2": "Al seleccionar más, uno y hacer clic en el botón, buscará los elementos de perfil combinados para que pueda unirse a un grupo con otros que coincidan.",
+    "example2": "Ejemplo: si tiene una autocaravana de clase A y viaja a tiempo completo sin base de operaciones, seleccione 'x otros con una autocaravana de clase A' y 'x otros que viajan a tiempo completo sin base de operaciones' para ver si hay otros que coinciden con eso, y si es así, ¡ahora puede tener un foro solo para autocaravanas de clase A que viajan a tiempo completo sin base de operaciones!",
+    "profile": "¡Complete bien su perfil para encontrar a otros como usted!",
+    "more": "Ver más explicaciones",
+    "less": "Ver menos explicaciones",
     "noResults1": "Lo sentimos, no hay RVers como los que has encontrado todavía. Asegúrese de completar su",
     "noResults2": "perfil",
     "noResults3": "lo más completamente posible porque esto es lo que se usa para localizar a otros como tú. Además, vuelva a intentarlo e intente nuevamente porque a medida que otros usuarios se unen, encontrará a otros como usted.",
@@ -270,7 +277,9 @@
   },
   "profile.component": {
     "title": "Perfil",
-    "explanation": "Ingrese información sobre usted y cómo su RV para ayudarnos a brindarle más información relevante y respuestas a sus preguntas.",
+    "explanation1": "RVLikeMe utiliza su perfil para que coincida con el perfil de otro usuario, lo que le permite conectarse en foros grupales. Después de completar su perfil, vaya a la página ",
+    "explanation2": ".",
+    "likeme": "Como yo",
     "preferred-language": "Idioma preferido",
     "english": "Inglés",
     "spanish": "Español",
@@ -697,6 +706,8 @@
   },
   "settings.component": {
     "title": "Configuraciones",
+    "messageEmails": "Enviar mensajes de correo electrónico de notificación",
+    "notify": "notificar",
     "language": "Seleccione un idioma para la aplicación RV Like Me",
     "android": "Los dispositivos Android le permiten instalar aplicaciones web en su pantalla de inicio, brindándole una experiencia similar a la aplicación. ¡Pruébalo! Siempre puedes eliminarlo como una aplicación si no te gusta.",
     "apple": "Los dispositivos Apple le permiten instalar aplicaciones web en su pantalla de inicio, brindándole una experiencia similar a la aplicación. ¡Pruébalo! Siempre puedes eliminarlo como una aplicación si no te gusta."

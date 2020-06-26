@@ -118,6 +118,11 @@ export class MainComponent implements OnInit {
     this.router.navigateByUrl('/profile/lifestyle');
   }
 
+  onLikeMe() {
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
+    this.router.navigateByUrl('/connections/main');
+  }
+
   onPersonal() {
     this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
     this.router.navigateByUrl('/profile/personal');

@@ -2,7 +2,7 @@
   <form [formGroup]="form">
     <mat-checkbox formControlName="sendMessageNotificationEmails"
                   (change)="onUpdateSendMessageEmails($event)">
-                  Send message notification emails
+                  {{ 'settings.component.messageEmails' | translate }}
     </mat-checkbox>
     <mat-icon class="icon" *ngIf="showsendMessageNotificationEmailsSaveIcon">save</mat-icon>
   </form>
@@ -28,7 +28,7 @@
     <a mat-menu-item
       (click)="onNotify()">
       <mat-icon fontSet="material-icons-outlined" >add_alert</mat-icon>
-      <span class="nav-caption">notify</span>
+      <span class="nav-caption">{{ 'settings.component.notify' | translate }}</span>
     </a>
   </p>
 </div>

@@ -1,7 +1,21 @@
 <div class="mat-app-background mat-body-1" [ngClass]="getClass()">
   <div>
-    <p class="mat-title">{{ "connections.component.heading" | translate }}
-    </p>
+    <p class="mat-title">{{ "connections.component.heading" | translate }}</p>
+
+    <ng-template [ngIf]="!showFullExplanation">
+      <p class="mat-body">{{ "connections.component.explanation" | translate | slice:0:75 }}...</p>
+      <p class="hyperlink" (click)="showFullExplanation = !showFullExplanation">{{ "connections.component.more" | translate }}...</p>
+    </ng-template>
+
+    <ng-template [ngIf]="showFullExplanation">
+      <p class="mat-body">{{ "connections.component.explanation" | translate }}</p>
+      <p class="mat-body">{{ "connections.component.example1" | translate }}</p>
+      <p class="mat-body">{{ "connections.component.explanation2" | translate }}</p>
+      <p class="mat-body">{{ "connections.component.example2" | translate }}</p>
+      <p class="mat-body">{{ "connections.component.profile" | translate }}</p>
+      <p class="hyperlink" (click)="showFullExplanation = !showFullExplanation">{{ "connections.component.less" | translate }}...</p>
+    </ng-template>
+    <br>
     <button *ngIf="showSingleMatchForumOffer"
             [disabled]="disableSingleMatchForumOffer"
             class="mat-raised-button button mat-primary"
