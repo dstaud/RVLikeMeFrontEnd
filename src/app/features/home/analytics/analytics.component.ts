@@ -1,3 +1,4 @@
+import { startWith } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -78,6 +79,18 @@ export class AnalyticsComponent implements OnInit {
     this.router.navigateByUrl('/home/dashboard-drilldown');
   }
 
+
+  private countsTotal(counts: IgroupByCounts, control): number {
+    let total = 0;
+
+    for (let i = 0; i < counts[control].length; i++) {
+      total = total + counts[control][i].count;
+    }
+
+    return total;
+  }
+
+
   private listenForGroupByCounts(control: string) {
     this.showSpinner = true;
 
@@ -107,7 +120,7 @@ export class AnalyticsComponent implements OnInit {
       this.allUsersCount = data.allUsersCount;
 
       if (this.allUsersCount > 0) {
-        this.showAllUsersCount = true;
+        // this.showAllUsersCount = true;
       }
     }, error => {
       this.sentry.logError(JSON.stringify({"message":"unable to listen for like me counts","error":error}));
@@ -117,41 +130,47 @@ export class AnalyticsComponent implements OnInit {
   private processCounts(control: string, counts: IgroupByCounts) {
     let legend: string = '';
     let otherCount: number = 0;
+    let percentOfTotal: number = 0;
+    let totalCount: number = 0;
+    let otherPercent: number = 100;
+
+    totalCount = this.countsTotal(counts, control);
 
     if (control === 'rigType') {
       this.processRigTypeCounts(control, counts);
     } else {
       for (let i=0; i < counts[control].length; i++) {
-        if (counts[control][i]._id === null || counts[control][i]._id === 'null' || counts[control][i]._id === 'other') {
+        if (counts[control][i]._id === null || counts[control][i]._id === 'null' || counts[control][i]._id.startsWith('@')) {
           otherCount = otherCount + counts[control][i].count;
         } else {
-          this.controlData.push(counts[control][i].count);
+          percentOfTotal = Math.round(counts[control][i].count / totalCount * 100);
+          this.controlData.push(percentOfTotal);
+          otherPercent = otherPercent - percentOfTotal;
           if (counts[control][i]._id === null) {
             legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
-                                    '.notdefined') + ': ' + counts[control][i].count + ' RVers' + '",' +
+                                    '.notdefined') + ': ' + percentOfTotal + '%' + '",' +
                       '"color":"' + this.chartColor[i] + '"}';
             this.controlLegends.push(JSON.parse(legend));
           } else if (counts[control][i]._id.startsWith('@')) {
             legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() +
-                                    '.other') + ': ' + counts[control][i].count + ' RVers' + '",' +
+                                    '.other') + ': ' + percentOfTotal + '%' + '",' +
                       '"color":"' + this.chartColor[i] + '"}';
             this.controlLegends.push(JSON.parse(legend));
           } else {
             legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() + '.' +
-                                    counts[control][i]._id.toLowerCase()) + ': ' + counts[control][i].count + ' RVers' + '",' +
+                                    counts[control][i]._id.toLowerCase()) + ': ' + percentOfTotal + '%' + '",' +
                       '"color":"' + this.chartColor[i] + '"}';
             this.controlLegends.push(JSON.parse(legend));
           }
         }
       }
-    }
-
-    if (otherCount > 0) {
-      legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() + '.other') +
-                ': ' + otherCount + ' RVers' + '",' +
-                '"color":"' + this.chartColor[counts[control].length - 1] + '"}';
-      this.controlLegends.push(JSON.parse(legend));
-      this.controlData.push(counts[control][counts[control].length - 1].count);
+      if (otherPercent > 0) {
+        legend = '{"label":"' + this.translate.instant('analytics.component.list.' + control.toLowerCase() + '.other') +
+                  ': ' + otherPercent + '%' + '",' +
+                  '"color":"' + this.chartColor[counts[control].length - 1] + '"}';
+        this.controlLegends.push(JSON.parse(legend));
+        this.controlData.push(otherPercent);
+      }
     }
   }
 
@@ -162,10 +181,14 @@ export class AnalyticsComponent implements OnInit {
     let motorhomeCount: number = 0;
     let trailerCount: number = 0;
     let otherCount: number = 0;
+    let percentOfTotal: number = 0;
+    let totalCount: number = 0;
+    let otherPercent: number = 100;
+
+    totalCount = this.countsTotal(counts, control);
 
     for (let i=0; i < counts[control].length; i++) {
-
-      if (counts[control][i]._id === null || counts[control][i]._id === 'null') {
+      if (counts[control][i]._id === null || counts[control][i]._id === 'null' || counts[control][i]._id.startsWith('@')) {
         otherCount = otherCount + counts[control][i].count;
       } else if (counts[control][i]._id.toLowerCase() === 'a' ||
           counts[control][i]._id.toLowerCase() === 'b' ||
@@ -184,18 +207,24 @@ export class AnalyticsComponent implements OnInit {
       }
     }
 
-    this.controlData.push(motorhomeCount);
-    this.controlData.push(trailerCount);
-    this.controlData.push(otherCount);
+    percentOfTotal = Math.round(motorhomeCount / totalCount * 100);
+    this.controlData.push(percentOfTotal);
+    otherPercent = otherPercent - percentOfTotal;
+
+    percentOfTotal = Math.round(trailerCount / totalCount * 100);
+    this.controlData.push(percentOfTotal);
+    otherPercent = otherPercent - percentOfTotal;
+
+    this.controlData.push(otherPercent);
 
     legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.motorhome') + ': ' +
-              this.controlData[0] + ' RVers'+ '","color":"' + this.chartColor[0] + '"}';
+              this.controlData[0] + '%'+ '","color":"' + this.chartColor[0] + '"}';
     this.controlLegends.push(JSON.parse(legend));
     legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.trailer') + ': ' +
-              this.controlData[1] + ' RVers'+ '","color":"' + this.chartColor[1] + '"}';
+              this.controlData[1] + '%'+ '","color":"' + this.chartColor[1] + '"}';
     this.controlLegends.push(JSON.parse(legend));
     legend = '{"label":"' + this.translate.instant('analytics.component.list.rigtypeagg.other') + ': ' +
-              this.controlData[2] + ' RVers'+ '","color":"' + this.chartColor[2] + '"}';
+              this.controlData[2] + '%' + '","color":"' + this.chartColor[2] + '"}';
     this.controlLegends.push(JSON.parse(legend));
   }
 }

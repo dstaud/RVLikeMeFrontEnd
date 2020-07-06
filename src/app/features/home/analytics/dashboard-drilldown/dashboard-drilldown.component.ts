@@ -33,31 +33,32 @@ export class DashboardDrilldownComponent implements OnInit {
               private router: Router,
               private sentry: SentryMonitorService,
               private device: DeviceService,
-              private translate: TranslateService) { }
+              private translate: TranslateService) {
+                let backPath;
+                let params: any;
+                if (!this.authSvc.isLoggedIn()) {
+                  backPath = this.location.path().substring(1, this.location.path().length);
+                  this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
+                  this.router.navigateByUrl('/?e=signin');
+                } else {
+                  params = this.shareDataSvc.getData('dashboardDrilldown');
+                  if (params.control) {
+                    this.control = params.control;
+
+                    this.listenForGroupByCounts(this.control);
+                  } else {
+                    this.router.navigateByUrl('/home/dashboard');
+                  }
+                }
+               }
 
   ngOnInit(): void {
-    let backPath;
     let self = this;
-    let params: any;
 
     window.onpopstate = function(event) {
       self.activateBackArrowSvc.setBackRoute('', 'backward');
     };
 
-    if (!this.authSvc.isLoggedIn()) {
-      backPath = this.location.path().substring(1, this.location.path().length);
-      this.activateBackArrowSvc.setBackRoute('*' + backPath, 'forward');
-      this.router.navigateByUrl('/?e=signin');
-    } else {
-      params = this.shareDataSvc.getData('dashboardDrilldown');
-      if (params.control) {
-        this.control = params.control;
-
-        this.listenForGroupByCounts(this.control);
-      } else {
-        this.router.navigateByUrl('/home/dashboard');
-      }
-    }
   }
 
   ngOnDestroy() {}
@@ -75,6 +76,17 @@ export class DashboardDrilldownComponent implements OnInit {
     containerClass = 'container ' + bottomSpacing;
 
     return containerClass;
+  }
+
+
+  private countsTotal(counts: IgroupByCounts, control): number {
+    let total = 0;
+
+    for (let i = 0; i < counts[control].length; i++) {
+      total = total + counts[control][i].count;
+    }
+
+    return total;
   }
 
 
@@ -98,20 +110,21 @@ export class DashboardDrilldownComponent implements OnInit {
 
   private processCounts(control: string, counts: IgroupByCounts) {
     let group: string = '';
+    let totalCount = this.countsTotal(counts, control);
+    let percentOfTotal: number = 0;
 
     for (let i=0; i < counts[control].length; i++) {
-
+      percentOfTotal = Math.round(counts[control][i].count / totalCount * 100);
       if (counts[control][i]._id === null) {
         group = this.translate.instant('analytics.component.list.' + control.toLowerCase() +
-                                '.notdefined') + ': ' + counts[control][i].count + ' RVers';
+                                '.notdefined') + ': ' + percentOfTotal + '%';
         this.groupData.push(group);
       } else if (counts[control][i]._id.startsWith('@')) {
-        group = this.translate.instant('analytics.component.list.' + control.toLowerCase() +
-                                '.other') + ': ' + counts[control][i].count + ' RVers';
+        group = counts[control][i]._id.substring(1, counts[control][i]._id.length) + ': ' + percentOfTotal + '%';
         this.groupData.push(group);
       } else {
         group = this.translate.instant('analytics.component.list.' + control.toLowerCase() + '.' +
-                                counts[control][i]._id.toLowerCase()) + ': ' + counts[control][i].count + ' RVers';
+                                counts[control][i]._id.toLowerCase()) + ': ' + percentOfTotal + '%';
         this.groupData.push(group);
       }
     }
