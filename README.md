@@ -16,7 +16,7 @@ Break-out of feature and landing page components to show how they work together 
 ![Front End Components](FrontEndComponents.png)
 
 ## Back End Architecture
-![Back End Architecture](BackEndArchitecture.png)
+![Back End Architecture](BackendArchitecture.png)
 
 ## Angular CLI
 
