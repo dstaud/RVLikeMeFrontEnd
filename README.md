@@ -1,7 +1,7 @@
 # RV Like Me Front End
 ![Image of RV](src/assets/images/landing-image1.jpeg?raw=true)
 
-This project together with [https://github.com/dstaud/RVLikeMeBackEnd](https://github.com/dstaud/RVLikeMeBackEnd) are made public so you can see my work. The two projects combined are the source code for RVLikeMe.com, a progressive web app that assists RVers in finding other RVers that do the RV lifestyle like they do and communicate through forums and messaging. "Newbie" RVers have a special section to help them with typical questions and connect them with experienced RVers. Users can view the stories of other users to create a connection and encourage socialization.
+This project is public so you can see my work. The back-end is not public for security reasons.  The two projects combined are the source code for RVLikeMe.com, a progressive web app that assists RVers in finding other RVers that do the RV lifestyle like they do and communicate through forums and messaging. "Newbie" RVers have a special section to help them with typical questions and connect them with experienced RVers. Users can view the stories of other users to create a connection and encourage socialization.
 
 ## RV Like Me Architecture
 ![Architecture](RVLikeMeArchitecture.png)
