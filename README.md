@@ -15,6 +15,9 @@ Break-out of feature and landing page components to show how they work together 
 
 ![Front End Components](FrontEndComponents.png)
 
+## Back End Architecture
+![Back End Architecture](BackendArchitecture.png)
+
 ## Angular CLI
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.1.
@@ -25,7 +28,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 2: Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-3: Requires node.js backend running on `localhost:3000`.  See https://github.com/dstaud/RVLikeMeBackend.
+3: Will not run without the back end but that is private for security reasons. 
 
 ## Code scaffolding
 
