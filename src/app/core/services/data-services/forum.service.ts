@@ -28,7 +28,10 @@ export interface Icomments {
   createdBy: string
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
+
 export class ForumService {
 
   constructor(private http: HttpClient) { }

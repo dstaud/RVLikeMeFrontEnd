@@ -1,5 +1,64 @@
  @import './../../styles/_variables';
 
+ .container-desktop {
+  height: 100vh;
+  background-size: 100%;
+  background-image: url('./../../assets/images/landing-page.jpeg');
+  background-repeat: no-repeat;
+  background-color: #734E46;
+}
+
+.container-device {
+  height: 100vh;
+  background-size: 100%;
+  background-image: url('./../../assets/images/landing-page.jpg');
+  background-repeat: no-repeat;
+  background-color: #734E46;
+}
+
+.content-desktop1 {
+  padding-top: 10%;
+  padding-left: 5%;
+  width: 350px;
+}
+
+.content-device1 {
+  padding-top: 5px;
+  padding-left: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.group-desktop {
+  padding-top: 5%;
+  display: flex;
+  justify-content: center;
+}
+
+.group-device {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.content-desktop {
+  display: flex;
+  justify-content: center;
+  color: white;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.content-device {
+  display: flex;
+  justify-content: center;
+  color: white;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
  .logoCombined {
   position: absolute;
   top: 0px;
@@ -18,32 +77,73 @@
   color: white;
 }
 
-.button {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 200px;
-  margin-top: 20px;
+.login {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: rgb(246,166,77, 0.80);
+  color: white;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.fabs {
+ padding-top: 60px;
+ display: flex;
+ flex-direction: row;
+}
+
+.fab {
+  line-height: 1.2;
+  font-size: 80%;
+  margin-left: 10px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  color: white;
+  background: rgb(246,166,77, 0.80);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .buttons {
-  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.construction {
+.button {
+  background: rgb(246,166,77, 0.80);
+  color: white;
+  margin-top: 16px;
+  width: 225px;
+}
+
+.text {
+  margin-top: 5px;
+}
+
+.heading {
+  font-size: 200%;
+  font-weight: bold;
+}
+
+.describes {
   text-align: center;
 }
 
-.marketing {
-  text-align: center;
-  padding: 10px;
+.content-text {
+  font-size: 120%;
 }
 
-.marketing-container {
-  background-color: $light-background-color;
- }
+.hiker {
+  font-size: 150%;
+  font-style: italic;
+  font-weight: bold;
+}
 
-.card {
-  margin-left: 5px;
-  margin-right: 5px;
+.hiker2 {
+  font-style: italic
 }

@@ -148,6 +148,25 @@ export class LikemeCountsService {
               private profileSvc: ProfileService,
               private shared: SharedComponent) { }
 
+
+  getAboutMeCounts(aboutMe: string) {
+    let params = new HttpParams().set('aboutMe', aboutMe);
+
+    return this.http.get<number>(`/api/aboutMe`, { params: params });
+  }
+
+  getRvUseCounts(rvUse: string) {
+    let params = new HttpParams().set('rvUse', rvUse);
+
+    return this.http.get<number>(`/api/rvuse`, { params: params });
+  }
+
+  getRigCounts(rvUse: string) {
+    let params = new HttpParams().set('rigType', rvUse);
+
+    return this.http.get<number>(`/api/rigtype`, { params: params });
+  }
+
   getLikeMeCountsPriority() {
     this.likeMeCountsSubscription = this.http.get<IlikeMeCounts>(`/api/user-counts-priority`)
     .pipe(untilComponentDestroyed(this))

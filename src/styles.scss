@@ -20,10 +20,11 @@ body {
 @import './styles/theme-color-schemes.scss';
 
 // Default to custom theme cyan.  If changing the custom theme, must also change the defaults in styles/_variables
-@include angular-material-theme($cyan-theme);
+// @include angular-material-theme($cyan-theme);
+@include angular-material-theme($yellow-theme);
 
 .light-theme {
-  @include angular-material-theme($cyan-theme);
+  @include angular-material-theme($yellow-theme);
 }
 
 .dark-theme {

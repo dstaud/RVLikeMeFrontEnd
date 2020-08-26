@@ -2,16 +2,22 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
+import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { take } from 'rxjs/operators';
 
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
-import { ShareDataService, Isignin } from '@services/share-data.service';
+import { ShareDataService, Isignin, Iregister } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { LikemeCountsService } from '@services/data-services/likeme-counts.service';
+import { ForumService } from '@services/data-services/forum.service';
 
 import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
+
+import { inOutAnimation } from '@shared/animations';
 
 export declare class FacebookParams {
   u: string;
@@ -20,9 +26,12 @@ export declare class FacebookParams {
 @Component({
   selector: 'app-rvlm-landing-page',
   templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.scss']
+  styleUrls: ['./landing-page.component.scss'],
+  animations: [inOutAnimation]
 })
 export class LandingPageComponent implements OnInit {
+  form: FormGroup;
+
   landingImage: string;
   cardNbr: number;
   logoClass: string;
@@ -31,12 +40,28 @@ export class LandingPageComponent implements OnInit {
   maxRvImageHeight = 'auto';
   maxRvImageWidth = '100%';
   desktopUser: boolean = false;
+  heading: string;
+  badgeExperience: string;
+  badgeLifestyle: string;
+  badgeRig: string;
+  nbrExperience = 0;
+  nbrLifestyle = 0;
+  nbrRig = 0;
+  currentQuestion = 0;
 
   private windowWidth: number;
   private landingImageNbr: number;
   private routeSubscription: any;
   private install: boolean;
   private installDevice: string;
+  private register: Iregister = {
+    aboutMe: null,
+    aboutMeGroup: null,
+    rvUse: null,
+    rvUseGroup: null,
+    rigType: null,
+    rigTypeGroup: null
+  }
 
   // Get window size to determine how to present register, signon and learn more
   @HostListener('window:resize', ['$event'])
@@ -50,11 +75,20 @@ export class LandingPageComponent implements OnInit {
               private route: ActivatedRoute,
               private sentry: SentryMonitorService,
               private location: Location,
+              private forumSvc: ForumService,
+              private likeCountsSvc: LikemeCountsService,
               private shareDataSvc: ShareDataService,
-              private router: Router) {
+              private router: Router,
+              private fb: FormBuilder) {
         if (window.innerWidth > 600) {
           this.desktopUser = true;
         }
+
+        this.form = fb.group({
+          howRV: new FormControl('dreaming'),
+          travel: new FormControl(''),
+          rig: new FormControl('')
+        });
   }
 
   ngOnInit() {
@@ -133,6 +167,178 @@ export class LandingPageComponent implements OnInit {
     }
   }
 
+  onRegister() {
+    console.log('register presets=', this.register)
+    this.shareDataSvc.setData('register', this.register);
+    this.router.navigateByUrl('/register');
+  }
+
+  onExperience(answer: string) {
+    this.likeCountsSvc.getAboutMeCounts(answer)
+    .pipe(take(1))
+    .subscribe(count => {
+      this.nbrExperience = count + 100;
+    }, error => {
+      console.error(error);
+    });
+
+    this.currentQuestion++;
+    switch (answer) {
+      case 'dreamer': {
+        this.heading = 'RV Like Me can connect you with experienced RVers who can help you!';
+        this.badgeExperience = 'Other Dreamers';
+        break;
+      }
+      case 'newbie': {
+        this.heading = 'RV Like Me can connect you with experienced RVers who can help you!';
+        this.badgeExperience = 'Other Newbies';
+        break;
+      }
+      case 'experienced': {
+        this.heading = 'RV Like Me can connect you to other RVers. Just a couple more questions';
+        this.badgeExperience = 'Other RVers';
+        break;
+      }
+    }
+
+    this.register.aboutMe = answer;
+    this.getGroup('aboutMe', this.register.aboutMe, 'aboutMeGroup');
+  }
+
+  onLifestyle(answer: string) {
+    this.likeCountsSvc.getRvUseCounts(answer)
+    .pipe(take(1))
+    .subscribe(count => {
+      this.nbrLifestyle = count + 100;
+    }, error => {
+      console.error(error);
+    });
+
+    this.currentQuestion++;
+    switch (answer) {
+      case 'fttravel': {
+        this.heading = 'There are a lot of full-time travelers to connect with';
+        this.badgeLifestyle = 'Other FT Travelers';
+        this.register.rvUse = 'FTN';
+        break;
+      }
+      case 'pttravel': {
+        this.heading = 'There are a lot of part-time travelers to connect with';
+        this.badgeLifestyle = 'Other PT Travelers';
+        this.register.rvUse = 'PS';
+        break;
+      }
+      case 'fs': {
+        this.heading = 'There are a lot of stationary RVers to connect with';
+        this.badgeLifestyle = 'Other Stationaries';
+        this.register.rvUse = 'FS';
+        break;
+      }
+    }
+    this.getGroup('rvUse', this.register.rvUse, 'rvUseGroup');
+  }
+
+  onRig(answer: string) {
+    this.likeCountsSvc.getRigCounts(answer)
+    .pipe(take(1))
+    .subscribe(count => {
+      this.nbrRig = count + 100;
+    }, error => {
+      console.error(error);
+    });
+
+    this.currentQuestion++;
+    switch (answer) {
+      case 'A': {
+        this.heading = 'RV Like Me connect you with other RVers in a class A!';
+        this.badgeRig = 'Other Class As';
+        this.register.rigType = 'A';
+        break;
+      }
+      case 'B': {
+        this.heading = 'RV Like Me connect you with other RVers in a class B!';
+        this.badgeRig = 'Other Class Bs';
+        this.register.rigType = 'B';
+        break;
+      }
+      case 'C': {
+        this.heading = 'RV Like Me connect you with other RVers in a class C!';
+        this.badgeRig = 'Other Class Cs';
+        this.register.rigType = 'C';
+        break;
+      }
+      case 'FW': {
+        this.heading = 'RV Like Me connect you with other RVers in a fifth wheel!';
+        this.badgeRig = 'Other Fifth Wheels';
+        this.register.rigType = 'FW';
+        break;
+      }
+      case 'TT': {
+        this.heading = 'RV Like Me connect you with other RVers in a trailer!';
+        this.badgeRig = 'Other Travel Trailers';
+        this.register.rigType = 'TT';
+        break;
+      }
+      case 'cool': {
+        this.heading = 'RV Like Me connect you with other RVers in something cooler!';
+        this.badgeRig = 'Other Cool Rigs';
+        this.register.rigType = 'V';
+        break;
+      }
+    }
+    this.getGroup('rigType', this.register.rigType, 'rigTypeGroup');
+  }
+
+  private getGroup(name: string, value: string, group: string) {
+    let docNotAMatch = false;
+    let groupDocKeys: any;
+
+    console.log('getting group', name, value)
+    this.forumSvc.getGroup(name, value)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe(forums => {
+      console.log('got forums=', forums)
+      // Query may return multiple group forums that include the specific name/value pairs user is looking for.
+      // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
+      // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
+      for (let i = 0; i < forums.length; i++) {
+        groupDocKeys = Object.keys(forums[i]);
+        docNotAMatch = false;
+
+        // This parts confusing because have to look at each group forum from the server, which we know included our target profile attributes
+        // selected by the user, and make sure that it does not have other attributes.
+        for (let j = 0; j < groupDocKeys.length; j++) {
+
+          // If the key, that we know is not our target attribute, is not one of the non-attributes (i.e. createdBy, _id, etc.), then we can ignore
+          // this group because it is not an exact match.
+          if (groupDocKeys[j] !== name) {
+            if (!this.reservedField(groupDocKeys[j])) {
+              docNotAMatch = true;
+            }
+          }
+        }
+
+        // If no group forum documents found with additional keys the user did not target, then the group already exists
+        // and all we have to do is make sure that the group is already in the user's profile group forum list.
+        console.log('docnotamatch=', docNotAMatch)
+        if (!docNotAMatch) {
+          this.register[group] = forums[i]._id;
+          console.log('register=', this.register)
+          break;
+        }
+      }
+    }, error => {
+      this.sentry.logError('LandingPageComponent:getAboutMeGroup: error getting group for name="' + name + '", value="' + value + '"' + JSON.stringify(error));
+    });
+  }
+
+  private reservedField(name: string): boolean {
+    if (name === 'createdBy' || name === 'createdAt' || name === 'updatedAt' || name === '_id' ||
+        name === '__v' || name === 'theme' || name === 'forumType' || name === 'topicID' || name === 'topicDesc') {
+
+      return true;
+    } else { return false }
+  }
 
   private listenForParameters() {
     this.routeSubscription = this.route

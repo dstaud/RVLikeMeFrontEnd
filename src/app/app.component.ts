@@ -280,6 +280,7 @@ export class AppComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this)) // had this commented out for some reason
     .subscribe(profile => {
+      console.log('appComponent:listenForUserProfile: got profile=', profile)
       if (profile._id) {
         this.language.setLanguage(profile.language);
 

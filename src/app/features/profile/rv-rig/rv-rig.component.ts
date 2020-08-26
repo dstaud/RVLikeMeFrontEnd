@@ -73,6 +73,7 @@ export class RvRigComponent implements OnInit {
   brandSelected: string = null;
   newbie: boolean = false;
   theme: string;
+  attributeLevelUpdates = false;
 
   rigTypeOtherOpen: string = 'out';
 
@@ -247,25 +248,55 @@ export class RvRigComponent implements OnInit {
 
   }
 
+  onSubmit() {
+    this.showSpinner = true;
+
+    if (this.rigType.value === 'other') {
+      this.profile.rigType = '@' + this.rigTypeOther.value;
+    } else {
+      this.profile.rigType = this.rigType.value;
+    }
+
+    this.profile.rigBrand = this.rigBrand.value;
+    this.profile.rigLength = this.rigLength.value;
+    this.profile.rigModel = this.rigModel.value;
+    this.profile.rigYear = this.rigYear.value;
+    this.profile.rigTow = this.rigTow.value;
+
+    this.profileSvc.updateProfile(this.profile)
+    .subscribe(profile => {
+      this.showSpinner = false;
+      this.activateBackArrowSvc.setBackRoute('', 'backward');
+      this.router.navigateByUrl('/profile/main');
+
+    }, error => {
+      this.showSpinner = false;
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
+    });
+  }
 
   // Field auto-update processing
   onUpdateDataPoint(control: string) {
-    if (this[control].valid) {
-      let controlValue: string;
+    if (this.attributeLevelUpdates) {
+      if (this[control].valid) {
+        let controlValue: string;
 
-      let SaveIcon = 'show' + control + 'SaveIcon';
-      this[SaveIcon] = true;
-      controlValue = this[control].value;
+        let SaveIcon = 'show' + control + 'SaveIcon';
+        this[SaveIcon] = true;
+        controlValue = this[control].value;
 
-      if (this[control].value === '') {
-        this.profile[control] = null;
-        this[control].patchValue(null);
-      } else {
-        this.profile[control] = this[control].value;
-        this[control].patchValue(controlValue);
+        if (this[control].value === '') {
+          this.profile[control] = null;
+          this[control].patchValue(null);
+        } else {
+          this.profile[control] = this[control].value;
+          this[control].patchValue(controlValue);
+        }
+        this.updateRig(control, this.profile[control]);
       }
-      this.updateRig(control, this.profile[control]);
     }
+
   }
 
 
@@ -314,7 +345,9 @@ export class RvRigComponent implements OnInit {
     let brandInfo: RigBrandManufacturer;
     let rigBrand: string = null;
 
-    this.showrigBrandSaveIcon = true;
+    if (this.attributeLevelUpdates) {
+      this.showrigBrandSaveIcon = true;
+    }
     this.profile.rigBrand = this.rigBrand.value;
 
     if (this.brandSelected) {
@@ -330,9 +363,11 @@ export class RvRigComponent implements OnInit {
       this.profile.rigBrandID = null;
       this.profile.rigManufacturer = null;
     }
-    this.updateRig('rigBrand', this.profile.rigBrand);
-    this.updateRig('rigBrandID', this.profile.rigBrandID);
-    this.updateRig('rigManufacturer', this.profile.rigManufacturer);
+    if (this.attributeLevelUpdates) {
+      this.updateRig('rigBrand', this.profile.rigBrand);
+      this.updateRig('rigBrandID', this.profile.rigBrandID);
+      this.updateRig('rigManufacturer', this.profile.rigManufacturer);
+    }
   }
 
 
@@ -461,15 +496,17 @@ export class RvRigComponent implements OnInit {
 
         this.rigImageUrls = this.profile.rigImageUrls;
 
-
-        // Put this hack in.  Getting strange behavior where it is coming back into this subscription without any place
+       // Put this hack in.  Getting strange behavior where it is coming back into this subscription without any place
         // nexting a new one and it has the placeholder in the profile...somehow.  This makes sure we ignore that.
         this.nbrRigImagePics = this.rigImageUrls.length;
+
         for (let i=0; i < this.rigImageUrls.length; i++) {
           if (this.rigImageUrls[i] === this.placeholderPhotoUrl) {
             this.nbrRigImagePics = i;
+            break;
           }
         }
+
 
         for (let i=this.rigImageUrls.length; i < 3; i++) {
           this.rigImageUrls[i] = this.placeholderPhotoUrl;
@@ -545,14 +582,17 @@ export class RvRigComponent implements OnInit {
 
   // Pre-process form data and call update on server
   private updateSelectItem(control: string, value: string) {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    if (!value) {
-      this.profile[control] = null;
-      this[control].patchValue(null);
-    } else {
-      this.profile[control] = value;
+    if (this.attributeLevelUpdates) {
+      let SaveIcon = 'show' + control + 'SaveIcon';
+      this[SaveIcon] = true;
+      if (!value) {
+        this.profile[control] = null;
+        this[control].patchValue(null);
+      } else {
+        this.profile[control] = value;
+      }
+      this.updateRig(control, this.profile[control]);
     }
-    this.updateRig(control, this.profile[control]);
   }
+
 }

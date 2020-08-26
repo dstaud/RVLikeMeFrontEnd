@@ -6,8 +6,8 @@ import { map } from 'rxjs/operators';
 
 import { ProfileService } from '@services/data-services/profile.service';
 
-import { SentryMonitorService } from './../sentry-monitor.service';
-import { ShareDataService } from '@services/share-data.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { ShareDataService, Iregister } from '@services/share-data.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 
 export interface ItokenPayload {
@@ -139,11 +139,12 @@ export class AuthenticationService {
     this.shareDataSvc.clearAllData();
   }
 
-  registerUser(user: ItokenPayload, firstName: string): Observable<any> {
+  registerUser(user: ItokenPayload, firstName: string, registerPresets: Iregister): Observable<any> {
     let base;
     let params = {
       credentials: user,
-      firstName: firstName
+      firstName: firstName,
+      registerPresets: registerPresets
     }
 
     base = this.http.post(`/api/register`, params);

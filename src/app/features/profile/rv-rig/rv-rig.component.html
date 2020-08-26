@@ -41,7 +41,7 @@
 
   <div class="background mat-elevation-z2"
         [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
-    <form>
+    <form (ngSubmit)="onSubmit()">
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "rig.component.rigTypeDesc" | translate }}</mat-label>
@@ -133,9 +133,9 @@
         </mat-form-field>
         <mat-icon class="icon" *ngIf="showrigTowSaveIcon">save</mat-icon>
       </div>
-
+      <button type="submit" *ngIf="!attributeLevelUpdates" class="mat-raised-button mat-primary">Submit</button>
     </form>
-    <button mat-button (click)='onBottomBack()'><span class="hyperlink">Back to main Profile Page</span></button>
+    <button *ngIf="attributeLevelUpdates" mat-button (click)='onBottomBack()'><span class="hyperlink">Back to main Profile Page</span></button>
   </div>
 
   <br>

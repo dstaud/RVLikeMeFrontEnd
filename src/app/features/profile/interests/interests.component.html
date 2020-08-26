@@ -21,7 +21,7 @@
         In other languages, will not be sorted.  Something to consider.-->
   <div class="background mat-elevation-z2"
         [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
-    <form [formGroup]="form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-checkbox formControlName="atv"
                     class="checkbox"
                     (change)="onUpdateInterest('atv', $event)">
@@ -132,9 +132,15 @@
                     (change)="onUpdateInterest('yoga', $event)">
                     {{ "interests.component.yoga" | translate }}
       </mat-checkbox>
+      <br><br>
+      <button type="submit" *ngIf="!attributeLevelUpdates" class="mat-raised-button mat-primary">Submit</button>
+      <br><br>
       <mat-divider></mat-divider>
       <br>
-      <button mat-button type="button" class="hyperlink" (click)="onSuggestInterestOpen()">Suggest a new interest</button>
+      <div>
+        <button mat-button type="button" class="hyperlink" (click)="onSuggestInterestOpen()">Suggest a new interest</button>
+      </div>
+
       <div [@suggestInterestSlideInOut]="suggestInterestOpen" class="other">
         <div>
           <mat-form-field appearance="outline">

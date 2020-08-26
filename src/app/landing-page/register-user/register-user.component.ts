@@ -13,7 +13,9 @@ import { BeforeInstallEventService } from '@services/before-install-event.servic
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { UsingEmailService } from '@services/using-email.service';
-import { SentryMonitorService } from './../../core/services/sentry-monitor.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { ShareDataService, Iregister } from '@services/share-data.service';
+import { ForumService } from '@services/data-services/forum.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -38,6 +40,7 @@ export class RegisterUserComponent implements OnInit {
   hidePassword = true;
   httpError = false;
   httpErrorText = '';
+  registerPresets: Iregister;
 
   showSpinner = false;
 
@@ -45,6 +48,7 @@ export class RegisterUserComponent implements OnInit {
   private event: any;
   private useEmail: boolean;
   private overrideRegisterEmail: boolean = false;
+  private profileID: string;
 
   private credentials: ItokenPayload = {
     _id: '',
@@ -65,9 +69,11 @@ export class RegisterUserComponent implements OnInit {
               private beforeInstallEventSvc: BeforeInstallEventService,
               private dialog: MatDialog,
               private router: Router,
+              private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
               private UsingEmailSvc: UsingEmailService,
               private emailSmtpSvc: EmailSmtpService,
+              private forumSvc: ForumService,
               private headerVisibleSvc: HeaderVisibleService,
               private activateBackArrowSvc: ActivateBackArrowService,
               fb: FormBuilder) {
@@ -84,6 +90,8 @@ export class RegisterUserComponent implements OnInit {
 
   ngOnInit() {
     this.listenForSystemConfiguration();
+
+    this.registerPresets = this.shareDataSvc.getData('register');
   }
 
   ngOnDestroy() {};
@@ -106,7 +114,6 @@ export class RegisterUserComponent implements OnInit {
   onSubmit() {
     this.registerUser();
   }
-
 
   // Determine if using email for registration or overriding
   private listenForSystemConfiguration() {
@@ -137,13 +144,13 @@ export class RegisterUserComponent implements OnInit {
     this.showSpinner = true;
     this.form.disable();
 
-    this.authSvc.registerUser(this.credentials, this.form.controls.firstName.value)
+    this.authSvc.registerUser(this.credentials, this.form.controls.firstName.value, this.registerPresets)
     .pipe(untilComponentDestroyed(this))
     .subscribe((responseData) => {
       if (responseData.status === 201) {
         this.shared.openSnackBar('Email "' + this.form.controls.email.value + '" already exists', 'error');
       } else {
-
+        this.profileID = responseData.profile._id;
         if (this.useEmail) {
           this.getActivationTokenWithEmail();
         } else {
@@ -188,17 +195,7 @@ export class RegisterUserComponent implements OnInit {
 
   // Log user out to clear token and go to the landing page
   private registrationComplete() {
-    let self = this;
-
-    setTimeout(function () {
-      if (self.containerDialog) {
-        self.formCompleted = 'complete';
-        self.formComplete.emit(self.formCompleted);
-      } else {
-        self.headerVisibleSvc.toggleHeaderVisible(false);
-        self.router.navigateByUrl('/signin');
-      }
-    }, 2000);
+    this.addGroupsToProfile();
   }
 
   private getActivationTokenWithEmail(stay?: boolean) {
@@ -207,7 +204,7 @@ export class RegisterUserComponent implements OnInit {
     this.authSvc.getPasswordResetToken(this.credentials.email, noExpire, 'activation')
     .pipe(untilComponentDestroyed(this))
     .subscribe(tokenResult => {
-        this.authSvc.logout();
+        // this.authSvc.logout();
         this.sendRegisterEmail(tokenResult.token, stay);
     }, error => {
       this.shared.notifyUserMajorError(error);
@@ -220,7 +217,7 @@ export class RegisterUserComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(activateResult => {
       this.showSpinner = false;
-      this.authSvc.logout();
+      // this.authSvc.logout();
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
 
@@ -274,13 +271,37 @@ export class RegisterUserComponent implements OnInit {
     .pipe(untilComponentDestroyed(this))
     .subscribe(emailResult => {
       this.showSpinner = false;
-      this.authSvc.logout();
+      // this.authSvc.logout();
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
     }, error => {
       this.sentry.logError('RegisterComponent:sendWelcomeEmail: error sending email: ' + JSON.stringify(error));
       this.shared.openSnackBar('You have successfully registered.  Please login.', 'message', 3000);
       this.registrationComplete();
+    });
+  }
+
+  private addGroupsToProfile() {
+    let self = this;
+
+    this.profileSvc.addGroupsToProfile(this.profileID, this.registerPresets)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+
+      setTimeout(function () {
+        self.authSvc.logout();
+
+        if (self.containerDialog) {
+          self.formCompleted = 'complete';
+          self.formComplete.emit(self.formCompleted);
+        } else {
+          self.headerVisibleSvc.toggleHeaderVisible(false);
+          self.router.navigateByUrl('/signin');
+        }
+      }, 2000);
+    }, error => {
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
     });
   }
 }

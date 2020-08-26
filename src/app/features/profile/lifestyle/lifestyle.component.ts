@@ -217,6 +217,7 @@ export class LifestyleComponent implements OnInit {
   iPhoneModelxPlus: boolean = false;
   theme: string;
   placeholderPhotos: boolean = false;
+  attributeLevelUpdates = false;
 
   aboutMeOtherOpen: string = 'out';
   rvUseOtherOpen: string = 'out';
@@ -412,11 +413,14 @@ export class LifestyleComponent implements OnInit {
 
   // Offer chance for experienced RVer to help out newbies
   onHelpNewbies() {
-    let callHelpNewbiesUpdateWhenDone: boolean = false;
+    if (this.attributeLevelUpdates) {
+      let callHelpNewbiesUpdateWhenDone: boolean = false;
 
-    this.showhelpNewbiesSaveIcon = true;
-    this.profile.helpNewbies = this.form.controls.helpNewbies.value
-    this.updateLifestyle('helpNewbies', this.profile.helpNewbies, callHelpNewbiesUpdateWhenDone);
+      this.showhelpNewbiesSaveIcon = true;
+      this.profile.helpNewbies = this.form.controls.helpNewbies.value
+      this.updateLifestyle('helpNewbies', this.profile.helpNewbies, callHelpNewbiesUpdateWhenDone);
+    }
+
   }
 
 
@@ -445,7 +449,9 @@ export class LifestyleComponent implements OnInit {
     let callHelpNewbiesUpdateWhenDone = false;
     let otherControl = control + 'Other';
     let value = '@' + this.form.controls[otherControl].value;
-    this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
+    if (this.attributeLevelUpdates) {
+      this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
+    }
   }
 
 
@@ -474,10 +480,59 @@ export class LifestyleComponent implements OnInit {
       this[otherControl] = 'in';
     } else {
       this[otherControl] = 'out';
-      this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
+      if (this.attributeLevelUpdates) {
+        this.updateDataPoint(value, control, callHelpNewbiesUpdateWhenDone);
+      }
     }
   }
 
+  onSubmit() {
+    this.showSpinner = true;
+
+    if (this.form.controls.aboutMe.value === 'other') {
+      this.profile.aboutMe = '@' + this.form.controls.aboutMeOther.value;
+    } else {
+      this.profile.aboutMe = this.form.controls.aboutMe.value;
+    }
+
+    if (this.form.controls.aboutMe.value === 'experienced') {
+      this.profile.helpNewbies = this.form.controls.helpNewbies.value;
+    } else {
+      this.profile.helpNewbies = false;
+    }
+
+    if (this.form.controls.rvUse.value === 'other') {
+      this.profile.rvUse = '@' + this.form.controls.rvUseOther.value;
+    } else {
+      this.profile.rvUse = this.form.controls.rvUse.value;
+    }
+
+    if (this.form.controls.worklife.value === 'other') {
+      this.profile.worklife = '@' + this.form.controls.worklifeOther.value;
+    } else {
+      this.profile.worklife = this.form.controls.worklife.value;
+    }
+
+    if (this.form.controls.campsWithMe.value === 'other') {
+      this.profile.campsWithMe = '@' + this.form.controls.campsWithMeOther.value;
+    } else {
+      this.profile.campsWithMe = this.form.controls.campsWithMe.value;
+    }
+
+    this.profile.boondocking = this.form.controls.boondocking.value;
+
+    this.profileSvc.updateProfile(this.profile)
+    .subscribe(profile => {
+      this.showSpinner = false;
+      this.activateBackArrowSvc.setBackRoute('', 'backward');
+      this.router.navigateByUrl('/profile/main');
+
+    }, error => {
+      this.showSpinner = false;
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
+    });
+  }
 
   onSuggestLifestyle() {
     let suggestionType = 'lifestyle';
@@ -610,6 +665,7 @@ export class LifestyleComponent implements OnInit {
         for (let i=0; i < this.lifestyleImageUrls.length; i++) {
           if (this.lifestyleImageUrls[i] === this.placeholderPhotoUrl) {
             this.nbrLifestyleImagePics = i;
+            break;
           }
         }
 

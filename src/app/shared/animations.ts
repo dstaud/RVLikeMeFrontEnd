@@ -34,3 +34,30 @@ export const fadeAnimation = trigger('fadeAnimation', [
     )
   ])
 ]);
+
+export const inOutAnimation = trigger('inOutAnimation', [
+  transition('* => *', [
+    query(
+      ':enter',
+      [style({
+        opacity: 0
+      })],
+      { optional: true }
+    ),
+    query(
+      ':leave',
+      [style({
+        opacity: 1
+      }), animate('3.3s', style({ opacity: 0 }))],
+      { optional: true }
+    ),
+    query(
+      ':enter',
+      [style({
+        opacity: 0
+      }), animate('3.3s', style({ opacity: 1 }))],
+      { optional: true }
+    )
+  ])
+]);
+

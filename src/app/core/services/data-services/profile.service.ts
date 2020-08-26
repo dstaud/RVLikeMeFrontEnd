@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 
 import { SharedComponent } from '@shared/shared.component';
+import { Iregister } from '@services/share-data.service';
 
 export interface Iblog {
   _id: string,
@@ -177,6 +178,15 @@ export class ProfileService {
     return this.http.put(`/api/profile-forums`, params, {});
   }
 
+  addGroupsToProfile(profileID: string, groups: Iregister): Observable<any> {
+    let params = {
+      profileID: profileID,
+      groups: groups
+    }
+
+    return this.http.put(`/api/profile-forums-initial`, params, {});
+  }
+
   addLifestyleImageUrlToProfile(profileID: string, lifestyleImageUrl: string): Observable<any> {
     let params = {
       profileID: profileID,
@@ -315,6 +325,14 @@ export class ProfileService {
     let params = new HttpParams().set('userID', userID);
 
     return this.http.get(`/api/profile-user`, { params: params });
+  }
+
+  updateProfile(profile: IuserProfile): Observable<any> {
+    let params = {
+      profile: profile
+    }
+
+    return this.http.put('/api/profile-update', params, {});
   }
 
   updateProfileAttribute(profileID: string, attribute: string, value: any): Observable<any> {

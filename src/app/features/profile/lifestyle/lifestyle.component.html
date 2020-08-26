@@ -38,7 +38,7 @@
 
   <div class="background mat-elevation-z2"
         [ngClass]="theme === 'dark-theme'? 'box-background-dark' : 'box-background-light'">
-    <form [formGroup]="form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ "lifestyle.component.aboutMeDesc" | translate }}</mat-label>
@@ -213,6 +213,8 @@
         </mat-form-field>
       </div> -->
 
+      <button type="submit" *ngIf="!attributeLevelUpdates" class="mat-raised-button mat-primary">Submit</button>
+      <br><br>
       <mat-divider></mat-divider>
       <div class="suggest">
         <br>
@@ -236,7 +238,7 @@
       </div>
     </form>
 
-    <button mat-button (click)='onBottomBack()'><span class="hyperlink">Back to main Profile Page</span></button>
+    <button *ngIf="attributeLevelUpdates" mat-button (click)='onBottomBack()'><span class="hyperlink">Back to main Profile Page</span></button>
 
   </div>
   <br>
