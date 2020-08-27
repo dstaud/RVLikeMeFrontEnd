@@ -16,29 +16,43 @@
   background-color: #734E46;
 }
 
-.content-desktop1 {
-  padding-top: 10%;
-  padding-left: 5%;
-  width: 350px;
-}
+// .content-desktop1 {
+//   padding-top: 10%;
+//   padding-left: 5%;
+//   width: 350px;
+// }
 
-.content-device1 {
-  padding-top: 5px;
-  padding-left: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
+// .content-device1 {
+//   padding-top: 5px;
+//   padding-left: 10px;
+//   width: 100%;
+//   box-sizing: border-box;
+// }
+
+// .content-desktop {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+// }
+
+// .content-device {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+// }
 
 .group-desktop {
-  padding-top: 5%;
   display: flex;
+  flex-direction: row;
   justify-content: center;
+  color: white;
 }
 
 .group-device {
-  padding-top: 20px;
   display: flex;
+  flex-direction: row;
   justify-content: center;
+  color: white;
 }
 
 .content-desktop {
@@ -59,10 +73,12 @@
   box-sizing: border-box;
 }
 
- .logoCombined {
-  position: absolute;
-  top: 0px;
-  left: 0px;
+.header {
+  width: 100%;
+}
+
+.logoCombined {
+  float: left;
 }
 
 .logo {
@@ -77,24 +93,30 @@
   color: white;
 }
 
+.logins {
+  float: right;
+}
+
 .login {
-  position: fixed;
-  top: 0;
-  right: 0;
   background: rgb(246,166,77, 0.80);
   color: white;
   margin-top: 5px;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 
 .fabs {
- padding-top: 60px;
+ width: 100%;
+//  padding-top: 60px;
  display: flex;
  flex-direction: row;
+ justify-content: center;
+ height: 80px;
+ padding-bottom: 10px;
 }
 
 .fab {
   line-height: 1.2;
+  overflow-wrap: normal;
   font-size: 80%;
   margin-left: 10px;
   width: 80px;

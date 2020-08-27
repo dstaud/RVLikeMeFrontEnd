@@ -89,7 +89,7 @@ export class AppComponent implements OnInit {
         // No need to login again.  However, if auth but coming to the root page, route to home.
         if (this.authSvc.isLoggedIn()) {
           if (event.url === '/') {
-            this.router.navigateByUrl('/home/dashboard');
+            this.router.navigateByUrl('/home/main');
           } else {
           }
         }
@@ -280,7 +280,6 @@ export class AppComponent implements OnInit {
     this.userProfile
     .pipe(untilComponentDestroyed(this)) // had this commented out for some reason
     .subscribe(profile => {
-      console.log('appComponent:listenForUserProfile: got profile=', profile)
       if (profile._id) {
         this.language.setLanguage(profile.language);
 

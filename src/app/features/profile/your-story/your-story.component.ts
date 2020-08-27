@@ -173,7 +173,7 @@ export class YourStoryComponent implements OnInit {
       this.paramsForMessaging = paramData.params;
       this.listenForUserProfile();
     } else {
-      this.router.navigateByUrl('/home/dashboard');
+      this.router.navigateByUrl('/home/main');
     }
   }
 

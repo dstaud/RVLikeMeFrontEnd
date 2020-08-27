@@ -1,9 +1,7 @@
 @import './../../../../styles/_variables';
 
 .container {
-  border-radius: 25px;
-  padding: 10px;
-  background-color: $light-mode-group;
+  // padding: 10px;
 }
 
 .welcome {
@@ -18,12 +16,26 @@
   color: $primary-color;
 }
 
+.progress {
+  width: 90%;
+}
+
+.progress-text {
+  font-size: 80%;
+}
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .box-background-light {
-  background-color: white;
+  // background-color: white;
 }
 
 .box-background-dark {
-  background-color: $dark-mode-posts;
+  // background-color: $dark-mode-posts;
 }
 
 .spinner {

@@ -1,29 +1,100 @@
-<!-- <div class="container" [ngClass]="desktopUser ? 'container-desktop' : 'container-device'"> -->
-<div class="container-desktop" fxHide fxShow.gt-sm>
-  <div class="logoCombined">
-    <div class="rvlikeme">
-      <h2 class="mat-h2">
-        <img src="../../../assets/images/trailer.png"
-          class="logo"
-          alt="travel trailer logo"
-          style="width:60px;height:37.2px;">
-          RV Like Me
-      </h2>
-    </div>
-    <button mat-raised-button class="login" (click)="onSignIn()">Login</button>
-  </div>
-  <div>
+<!-- Why not switching desktop / device with ngClass?  Because I wanted a smooth effect with background change
+     as you change a browser window size.   For this, for now, I'm willing to have duplicate code in this template !-->
 
+<div class="container-desktop" fxHide fxShow.gt-sm>
+  <div class="header">
+    <div class="logoCombined">
+      <div class="rvlikeme">
+        <h2 class="mat-h2">
+          <img src="../../../assets/images/trailer.png"
+            class="logo"
+            alt="travel trailer logo"
+            style="width:60px;height:37.2px;">
+            RV Like Me
+        </h2>
+      </div>
+    </div>
+    <div class="logins">
+      <button mat-raised-button class="login" (click)="onSignIn()">Login</button>
+    </div>
   </div>
-  <div class="group-desktop">
+
+  <div *ngIf="includeCounts" class="fabs">
+    <div [hidden]="nbrExperience === 0">
+      <span class="fab">Found {{ nbrExperience }} {{ badgeExperience }}</span>
+    </div>
+    <div [hidden]="nbrLifestyle === 0">
+      <span *ngIf="nbrLifestyle > 0" class="fab">Found {{ nbrLifestyle }} {{ badgeLifestyle }}</span>
+    </div>
+    <div [hidden]="nbrRig === 0">
+      <span *ngIf="nbrRig > 0" class="fab">Found {{ nbrRig }} {{ badgeRig }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="!includeCounts" class="fabs">
+    <div [hidden]="nbrExperience === 0">
+      <span class="fab">Found {{ badgeExperience }}</span>
+    </div>
+    <div [hidden]="nbrLifestyle === 0">
+      <span *ngIf="nbrLifestyle > 0" class="fab">Found {{ badgeLifestyle }}</span>
+    </div>
+    <div [hidden]="nbrRig === 0">
+      <span *ngIf="nbrRig > 0" class="fab">Found {{ badgeRig }}</span>
+    </div>
+  </div>
+
+  <div [@inOutAnimation] *ngIf="currentQuestion === 0" class="group-desktop">
     <div class="content-desktop">
       <div>
-        <p class="mat-h1">Connect with RVers that do the RV lifestyle like you do</p>
+        <p class="mat-h1 describes">Connect with RVers that do the RV lifestyle like you do</p>
         <p class="mat-h2 describes">Which best describes you?</p>
         <div class="buttons">
-          <button mat-raised-button class="button" (click)="onExperience('dreaming')">Dreaming of RVing</button>
-          <button mat-raised-button class="button" (click)="onExperience('new')">New to RVing</button>
-          <button mat-raised-button class="button" (click)="onExperience('living')">Living the RV life!</button>
+          <button mat-raised-button class="button" (click)="onExperience('dreamer')">Dreaming of RVing</button>
+          <button mat-raised-button class="button" (click)="onExperience('newbie')">New to RVing</button>
+          <button mat-raised-button class="button" (click)="onExperience('experienced')">Living the RV life!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [@inOutAnimation] *ngIf="currentQuestion === 1" class="group-desktop">
+    <div class="content-desktop">
+      <div>
+        <p class="mat-h1 describes">{{ heading }}</p>
+        <p class="mat-h2 describes">{{ subHeading }}</p>
+        <div class="buttons">
+          <button mat-raised-button class="button" (click)="onLifestyle('fttravel')">Full-time travel</button>
+          <button mat-raised-button class="button" (click)="onLifestyle('pttravel')">Part-time travel</button>
+          <button mat-raised-button class="button" (click)="onLifestyle('fs')">Stationary</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [@inOutAnimation]  *ngIf="currentQuestion === 2" class="group-desktop">
+    <div class="content-desktop">
+      <div>
+        <p class="mat-h1 describes">{{ heading }}</p>
+        <p class="mat-h2 describes">Last question.  What type of rig are you thinking of?</p>
+        <div class="buttons">
+          <button mat-raised-button class="button" (click)="onRig('A')">Class A motorhome</button>
+          <button mat-raised-button class="button" (click)="onRig('B')">Class B motorhome</button>
+          <button mat-raised-button class="button" (click)="onRig('C')">Class C motorhome</button>
+          <button mat-raised-button class="button" (click)="onRig('FW')">Fifth wheel</button>
+          <button mat-raised-button class="button" (click)="onRig('TT')">Travel Trailer</button>
+          <button mat-raised-button class="button" (click)="onRig('cool')">Something even cooler!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [@inOutAnimation]  *ngIf="currentQuestion === 3" class="group-desktop">
+    <div class="content-desktop">
+      <div>
+        <p class="mat-h1 describes">{{ heading }}</p>
+        <p class="mat-h3 describes">Now, create an account with your first name, email and password to join these groups and more!</p>
+        <div class="buttons">
+          <button mat-raised-button class="button" (click)="onRegister()">Register for free</button>
         </div>
       </div>
     </div>
@@ -31,28 +102,44 @@
 </div>
 
 <div class="container-device" fxHide fxShow.sm fxShow.lt-sm>
-  <div class="logoCombined">
-    <div class="rvlikeme">
-      <h2 class="mat-h2">
-        <img src="../../../assets/images/trailer.png"
-          class="logo"
-          alt="travel trailer logo"
-          style="width:60px;height:37.2px;">
-          RV Like Me
-      </h2>
+  <div class="header">
+    <div class="logoCombined">
+      <div class="rvlikeme">
+        <h2 class="mat-h2">
+          <img src="../../../assets/images/trailer.png"
+            class="logo"
+            alt="travel trailer logo"
+            style="width:60px;height:37.2px;">
+            RV Like Me
+        </h2>
+      </div>
     </div>
-    <button mat-raised-button class="login" (click)="onSignIn()">Login</button>
+    <div class="logins">
+      <button mat-raised-button class="login" (click)="onSignIn()">Login</button>
+    </div>
   </div>
 
-  <div class="fabs">
+  <div *ngIf="includeCounts" class="fabs">
     <div [hidden]="nbrExperience === 0">
-      <span class="fab">{{ nbrExperience }}<br>{{ badgeExperience }}</span>
+      <span class="fab">Found {{ nbrExperience }} {{ badgeExperience }}</span>
     </div>
     <div [hidden]="nbrLifestyle === 0">
-      <span *ngIf="nbrLifestyle > 0" class="fab">{{ nbrLifestyle }}<br>{{ badgeLifestyle }}</span>
+      <span *ngIf="nbrLifestyle > 0" class="fab">Found {{ nbrLifestyle }} {{ badgeLifestyle }}</span>
     </div>
     <div [hidden]="nbrRig === 0">
-      <span *ngIf="nbrRig > 0" class="fab">{{ nbrRig }}<br>{{ badgeRig }}</span>
+      <span *ngIf="nbrRig > 0" class="fab">Found {{ nbrRig }} {{ badgeRig }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="!includeCounts" class="fabs">
+    <div [hidden]="nbrExperience === 0">
+      <span class="fab">Found {{ badgeExperience }}</span>
+    </div>
+    <div [hidden]="nbrLifestyle === 0">
+      <span *ngIf="nbrLifestyle > 0" class="fab">Found {{ badgeLifestyle }}</span>
+    </div>
+    <div [hidden]="nbrRig === 0">
+      <span *ngIf="nbrRig > 0" class="fab">Found {{ badgeRig }}</span>
     </div>
   </div>
 
@@ -73,7 +160,8 @@
   <div [@inOutAnimation] *ngIf="currentQuestion === 1" class="group-device">
     <div class="content-device">
       <div>
-        <p class="mat-h2 describes">Which of these best describes your plans?</p>
+        <!-- <p class="mat-h1">{{ heading }}</p> -->
+        <p class="mat-h1 describes">Which of these best describes your plans?</p>
         <div class="buttons">
           <button mat-raised-button class="button" (click)="onLifestyle('fttravel')">Full-time travel</button>
           <button mat-raised-button class="button" (click)="onLifestyle('pttravel')">Part-time travel</button>
@@ -86,7 +174,8 @@
   <div [@inOutAnimation]  *ngIf="currentQuestion === 2" class="group-device">
     <div class="content-device">
       <div>
-        <p class="mat-h2 describes">Last question.  What type of rig are you thinking of?</p>
+        <!-- <p class="mat-h1">{{ heading }}</p> -->
+        <p class="mat-h1 describes">Last question.  What type of rig are you thinking of?</p>
         <div class="buttons">
           <button mat-raised-button class="button" (click)="onRig('A')">Class A motorhome</button>
           <button mat-raised-button class="button" (click)="onRig('B')">Class B motorhome</button>
@@ -102,7 +191,8 @@
   <div [@inOutAnimation]  *ngIf="currentQuestion === 3" class="group-device">
     <div class="content-device">
       <div>
-        <p class="mat-h3 describes">Perfect!  Now, just create an account with first name, email and password to join these groups and more!</p>
+        <!-- <p class="mat-h1">{{ heading }}</p> -->
+        <p class="mat-h1 describes">Now, create an account with your first name, email and password to join these groups and more!</p>
         <div class="buttons">
           <button mat-raised-button class="button" (click)="onRegister()">Register for free</button>
         </div>

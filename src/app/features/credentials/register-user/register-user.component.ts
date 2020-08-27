@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { take } from 'rxjs/operators';
+
+import { PasswordVerifyComponent } from './../password-verify/password-verify.component';
 
 import { AuthenticationService, ItokenPayload, ItokenResponse } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -36,11 +37,15 @@ export class RegisterUserComponent implements OnInit {
   @Output() formComplete = new EventEmitter()
   formCompleted: string;
 
+  @ViewChild(PasswordVerifyComponent)
+  public passwordVerify: PasswordVerifyComponent;
+
   form: FormGroup;
   hidePassword = true;
   httpError = false;
   httpErrorText = '';
   registerPresets: Iregister;
+  passwordTouched = false;
 
   showSpinner = false;
 
@@ -109,6 +114,10 @@ export class RegisterUserComponent implements OnInit {
     this.formComplete.emit(this.formCompleted);
   }
 
+  onPassword() {
+    this.passwordTouched = true;
+    this.httpError = false;
+  }
 
   // Register user on form submit
   onSubmit() {

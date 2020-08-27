@@ -1,4 +1,3 @@
-import { Isignin } from './../../core/services/share-data.service';
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router} from '@angular/router';
@@ -11,7 +10,7 @@ import { AuthenticationService, ItokenPayload } from '@services/data-services/au
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { HeaderVisibleService } from '@services/header-visibility.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
-import { ShareDataService, Idashboard } from '@services/share-data.service';
+import { ShareDataService, Idashboard, Isignin } from '@services/share-data.service';
 import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 
@@ -257,7 +256,7 @@ export class SigninComponent implements OnInit {
       } else {
         // After user authorizied go to home page
         this.ShareDataSvc.setData('dashboard', params);
-        this.router.navigateByUrl('/home/dashboard');
+        this.router.navigateByUrl('/home/main');
         this.activateBackArrowSvc.setBackRoute('', 'nostack');
       }
     }

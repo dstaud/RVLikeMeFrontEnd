@@ -1,0 +1,45 @@
+@import './../../../../styles/_variables';
+
+.container {
+  padding: 10px;
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.bottom-bar-spacing {
+  margin-bottom: 80px;
+}
+
+.bottom-bar-spacing-xplus {
+  margin-bottom: 110px;
+}
+
+.images {
+  display: flex;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+}
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hyperlink-image {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 10px;
+}

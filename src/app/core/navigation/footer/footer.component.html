@@ -2,7 +2,9 @@
   <mat-toolbar color="primary" class="toolbar" [ngClass]="iPhoneXPlus ? 'footer-height-plus' : 'footer-height'" role="toolbar">
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
 
-      <button mat-button (click)="onRoute()" routerLink="/home/dashboard" routerLinkActive="active-menu-item">
+      <button mat-button (click)="onRoute()"
+              routerLink="/home/main"
+              [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
         <div class="menu-icon">
           <mat-icon fontSet="material-icons-outlined">home</mat-icon>
         </div>
@@ -11,7 +13,9 @@
         </div>
       </button>
 
-      <button mat-button (click)="onRoute()" routerLink="/connections/main" routerLinkActive="active-menu-item">
+      <button mat-button (click)="onRoute()"
+              routerLink="/connections/main"
+              [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
         <div class="menu-icon">
           <mat-icon fontSet="material-icons-outlined">people</mat-icon>
         </div>
@@ -20,7 +24,9 @@
         </div>
       </button>
 
-      <button mat-button (click)="onRoute()" routerLink="/forums/forums-list" routerLinkActive="active-menu-item">
+      <button mat-button (click)="onRoute()"
+              routerLink="/forums/forums-list"
+              [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
         <div class="menu-icon">
           <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
         </div>

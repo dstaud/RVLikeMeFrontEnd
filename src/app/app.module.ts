@@ -6,7 +6,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { LOCATION_INITIALIZED } from '@angular/common';
+import { LOCATION_INITIALIZED, CommonModule } from '@angular/common';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import * as Sentry from '@sentry/browser';
@@ -26,18 +26,19 @@ import { PageNotFoundComponent } from '@navigation/page-not-found/page-not-found
 import { HeaderMobileComponent } from '@navigation/header-mobile/header-mobile.component';
 import { FooterDesktopComponent } from '@navigation/footer-desktop/footer-desktop.component';
 
-import { SigninComponent } from './landing-page/signin/signin.component';
-import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
+import { SigninComponent } from './features/credentials/signin/signin.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
-import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
-import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
-import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
+import { RegisterUserComponent } from './features/credentials/register-user/register-user.component';
+import { RegisterConfirmComponent } from './features/credentials/register-user/register-confirm/register-confirm.component';
+import { ForgotPasswordComponent } from './features/credentials/forgot-password/forgot-password.component';
+import { PasswordResetComponent } from './features/credentials/password-reset/password-reset.component';
 import { GraphicComponent } from './landing-page/cards/graphic/graphic.component';
 import { LikemeComponent } from './landing-page/cards/likeme/likeme.component';
 import { NewbieComponent } from './landing-page/cards/newbie/newbie.component';
 import { StoryComponent } from './landing-page/cards/story/story.component';
-
+import { ChangeUsernameComponent } from './features/credentials/change-username/change-username.component';
+import { ChangePasswordComponent } from './features/credentials/change-password/change-password.component';
+import { PasswordVerifyComponent } from './features/credentials/password-verify/password-verify.component';
 
 import { AdminComponent } from './features/admin/admin.component';
 import { EmailComponent } from './features/admin/email/email.component';
@@ -91,7 +92,6 @@ export function getErrorHandler(): ErrorHandler {
     HeaderMobileComponent,
     SigninComponent,
     RegisterUserComponent,
-    LearnMoreComponent,
     AdminComponent,
     EmailComponent,
     RegisterConfirmComponent,
@@ -108,11 +108,15 @@ export function getErrorHandler(): ErrorHandler {
     GraphicComponent,
     LikemeComponent,
     NewbieComponent,
-    StoryComponent
+    StoryComponent,
+    PasswordVerifyComponent,
+    ChangeUsernameComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,
+    CommonModule,
     DeviceDetectorModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

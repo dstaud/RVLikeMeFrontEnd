@@ -41,6 +41,7 @@ export class LandingPageComponent implements OnInit {
   maxRvImageWidth = '100%';
   desktopUser: boolean = false;
   heading: string;
+  subHeading: string;
   badgeExperience: string;
   badgeLifestyle: string;
   badgeRig: string;
@@ -48,6 +49,7 @@ export class LandingPageComponent implements OnInit {
   nbrLifestyle = 0;
   nbrRig = 0;
   currentQuestion = 0;
+  includeCounts = true;
 
   private windowWidth: number;
   private landingImageNbr: number;
@@ -115,14 +117,6 @@ export class LandingPageComponent implements OnInit {
   }
 
 
-  onLearnMore() {
-    this.headerVisibleSvc.toggleHeaderVisible(true);
-    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.activateBackArrowSvc.setBackRoute('', 'forward');
-    this.router.navigateByUrl('/learn-more');
-  }
-
-
   // When user selects register, if mobile, go to register component.
   // If desktop, present register component in dialog and take action when registration complete.
   onRegisterUser() {
@@ -156,7 +150,7 @@ export class LandingPageComponent implements OnInit {
         if (result === 'complete') {
           this.activateBackArrowSvc.setBackRoute('', 'forward');
           this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
-          this.router.navigateByUrl('/home/dashboard');
+          this.router.navigateByUrl('/home/main');
         }
       });
     } else {
@@ -168,34 +162,43 @@ export class LandingPageComponent implements OnInit {
   }
 
   onRegister() {
-    console.log('register presets=', this.register)
     this.shareDataSvc.setData('register', this.register);
     this.router.navigateByUrl('/register');
   }
 
   onExperience(answer: string) {
-    this.likeCountsSvc.getAboutMeCounts(answer)
-    .pipe(take(1))
-    .subscribe(count => {
-      this.nbrExperience = count + 100;
-    }, error => {
-      console.error(error);
-    });
+    if (this.includeCounts) {
+      this.likeCountsSvc.getAboutMeCounts(answer)
+      .pipe(take(1))
+      .subscribe(count => {
+        this.nbrExperience = count;
+      }, error => {
+        console.error(error);
+      });
+    } else {
+      let self = this;
+      setTimeout(function () {
+        self.nbrExperience = 1;
+      }, 1000);
+    }
 
     this.currentQuestion++;
     switch (answer) {
       case 'dreamer': {
-        this.heading = 'RV Like Me can connect you with experienced RVers who can help you!';
+        this.heading = 'Our Newbie Corner connects you with experienced RVers who can help you!';
+        this.subHeading = 'Which of these best describes your plans?'
         this.badgeExperience = 'Other Dreamers';
         break;
       }
       case 'newbie': {
-        this.heading = 'RV Like Me can connect you with experienced RVers who can help you!';
+        this.heading = 'Our Newbie Corner connects you with experienced RVers who can help you!';
+        this.subHeading = 'Which of these best describes your plans?'
         this.badgeExperience = 'Other Newbies';
         break;
       }
       case 'experienced': {
-        this.heading = 'RV Like Me can connect you to other RVers. Just a couple more questions';
+        this.heading = 'We create targeted groups to connect you with other RVers';
+        this.subHeading = 'Which of these best describes how you do RV Life?'
         this.badgeExperience = 'Other RVers';
         break;
       }
@@ -203,89 +206,155 @@ export class LandingPageComponent implements OnInit {
 
     this.register.aboutMe = answer;
     this.getGroup('aboutMe', this.register.aboutMe, 'aboutMeGroup');
+
   }
 
   onLifestyle(answer: string) {
-    this.likeCountsSvc.getRvUseCounts(answer)
-    .pipe(take(1))
-    .subscribe(count => {
-      this.nbrLifestyle = count + 100;
-    }, error => {
-      console.error(error);
-    });
+    if (this.includeCounts) {
+      this.likeCountsSvc.getRvUseCounts(answer)
+      .pipe(take(1))
+      .subscribe(count => {
+        this.nbrLifestyle = count;
+      }, error => {
+        console.error(error);
+      });
+    } else {
+      let self = this;
+      setTimeout(function () {
+        self.nbrLifestyle = 1;
+      }, 1000);
+    }
 
     this.currentQuestion++;
     switch (answer) {
       case 'fttravel': {
-        this.heading = 'There are a lot of full-time travelers to connect with';
+        if (this.register.aboutMe === 'experienced') {
+          this.heading = 'We have a group for experienced full-time travelers';
+        } else {
+          this.heading = 'We have a group for newbie / wanna-be full-time travelers';
+        }
         this.badgeLifestyle = 'Other FT Travelers';
         this.register.rvUse = 'FTN';
         break;
       }
       case 'pttravel': {
-        this.heading = 'There are a lot of part-time travelers to connect with';
+        if (this.register.aboutMe === 'experienced') {
+          this.heading = 'We have a group for experienced part-time travelers';
+        } else {
+          this.heading = 'We have a group for newbie / wanna-be part-time travelers';
+        }
         this.badgeLifestyle = 'Other PT Travelers';
         this.register.rvUse = 'PS';
         break;
       }
       case 'fs': {
-        this.heading = 'There are a lot of stationary RVers to connect with';
+        if (this.register.aboutMe === 'experienced') {
+          this.heading = 'We have a group for experienced stationary RVers';
+        } else {
+          this.heading = 'We have a group for those starting out stationary';
+        }
         this.badgeLifestyle = 'Other Stationaries';
         this.register.rvUse = 'FS';
         break;
       }
     }
+
     this.getGroup('rvUse', this.register.rvUse, 'rvUseGroup');
+
   }
 
   onRig(answer: string) {
-    this.likeCountsSvc.getRigCounts(answer)
-    .pipe(take(1))
-    .subscribe(count => {
-      this.nbrRig = count + 100;
-    }, error => {
-      console.error(error);
-    });
+    if (this.includeCounts) {
+      this.likeCountsSvc.getRigCounts(answer)
+      .pipe(take(1))
+      .subscribe(count => {
+        this.nbrRig = count;
+      }, error => {
+        console.error(error);
+      });
+    } else {
+      let self = this;
+      setTimeout(function () {
+        self.nbrRig = 1;
+      }, 1000);
+    }
 
     this.currentQuestion++;
     switch (answer) {
       case 'A': {
-        this.heading = 'RV Like Me connect you with other RVers in a class A!';
+        if (this.register.rvUse === 'FTN') {
+          this.heading = 'We have a group for RVers full-time traveling in a Class A!';
+        } else if (this.register.rvUse === 'PS') {
+          this.heading = 'We have a group for RVers part-time traveling in a Class A!';
+        } else {
+          this.heading = 'We have a group for RVers stationary in a Class A!';
+        }
         this.badgeRig = 'Other Class As';
         this.register.rigType = 'A';
         break;
       }
       case 'B': {
-        this.heading = 'RV Like Me connect you with other RVers in a class B!';
+        if (this.register.rvUse === 'FTN') {
+          this.heading = 'We have a group for RVers full-time traveling in a Class B!';
+        } else if (this.register.rvUse === 'PS') {
+          this.heading = 'We have a group for RVers part-time traveling in a Class B!';
+        } else {
+          this.heading = 'We have a group for RVers stationary in a Class B!';
+        }
         this.badgeRig = 'Other Class Bs';
         this.register.rigType = 'B';
         break;
       }
       case 'C': {
-        this.heading = 'RV Like Me connect you with other RVers in a class C!';
+        if (this.register.rvUse === 'FTN') {
+          this.heading = 'We have a group for RVers full-time traveling in a Class C!';
+        } else if (this.register.rvUse === 'PS') {
+          this.heading = 'We have a group for RVers part-time traveling in a Class C!';
+        } else {
+          this.heading = 'We have a group for RVers stationary in a Class C!';
+        }
         this.badgeRig = 'Other Class Cs';
         this.register.rigType = 'C';
         break;
       }
       case 'FW': {
-        this.heading = 'RV Like Me connect you with other RVers in a fifth wheel!';
+        if (this.register.rvUse === 'FTN') {
+          this.heading = 'We have a group for RVers full-time traveling with a Fifth Wheel!';
+        } else if (this.register.rvUse === 'PS') {
+          this.heading = 'We have a group for RVers part-time traveling with a Fifth Wheel!';
+        } else {
+          this.heading = 'We have a group for RVers stationary with a Fifth Wheel!';
+        }
         this.badgeRig = 'Other Fifth Wheels';
         this.register.rigType = 'FW';
         break;
       }
       case 'TT': {
-        this.heading = 'RV Like Me connect you with other RVers in a trailer!';
+        if (this.register.rvUse === 'FTN') {
+          this.heading = 'We have a group for RVers full-time traveling with a Travel Trailer!';
+        } else if (this.register.rvUse === 'PS') {
+          this.heading = 'We have a group for RVers part-time traveling with a Travel Trailer!';
+        } else {
+          this.heading = 'We have a group for RVers stationary with a Travel Trailer!';
+        }
         this.badgeRig = 'Other Travel Trailers';
         this.register.rigType = 'TT';
         break;
       }
       case 'cool': {
-        this.heading = 'RV Like Me connect you with other RVers in something cooler!';
+        if (this.register.rvUse === 'FTN') {
+          this.heading = 'We have a group for RVers full-time traveling in all kinds of RVs!';
+        } else if (this.register.rvUse === 'PS') {
+          this.heading = 'We have a group for RVers part-time traveling in all kinds of RVs!';
+        } else {
+          this.heading = 'We have a group for RVers stationary in all kinds of RVs!';
+        }
         this.badgeRig = 'Other Cool Rigs';
         this.register.rigType = 'V';
         break;
       }
     }
+
     this.getGroup('rigType', this.register.rigType, 'rigTypeGroup');
   }
 
@@ -293,11 +362,9 @@ export class LandingPageComponent implements OnInit {
     let docNotAMatch = false;
     let groupDocKeys: any;
 
-    console.log('getting group', name, value)
     this.forumSvc.getGroup(name, value)
     .pipe(untilComponentDestroyed(this))
     .subscribe(forums => {
-      console.log('got forums=', forums)
       // Query may return multiple group forums that include the specific name/value pairs user is looking for.
       // In Addition, any given group JSON returned may have multiple profile attributes (i.e. "aboutMe":"experienced", "yearOfBirth":"1960").
       // Look for exact match of combination of attributes, (i.e. same number of attributes and they are the same).
@@ -320,10 +387,8 @@ export class LandingPageComponent implements OnInit {
 
         // If no group forum documents found with additional keys the user did not target, then the group already exists
         // and all we have to do is make sure that the group is already in the user's profile group forum list.
-        console.log('docnotamatch=', docNotAMatch)
         if (!docNotAMatch) {
           this.register[group] = forums[i]._id;
-          console.log('register=', this.register)
           break;
         }
       }
@@ -353,7 +418,7 @@ export class LandingPageComponent implements OnInit {
               this.headerVisibleSvc.toggleHeaderDesktopVisible(true);
 
               if (!this.location.path()) {
-                this.router.navigateByUrl('/home/dashboard');
+                this.router.navigateByUrl('/home/main');
               }
             }
           });

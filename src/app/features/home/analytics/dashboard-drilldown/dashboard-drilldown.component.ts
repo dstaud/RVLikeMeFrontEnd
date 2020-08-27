@@ -47,7 +47,7 @@ export class DashboardDrilldownComponent implements OnInit {
 
                     this.listenForGroupByCounts(this.control);
                   } else {
-                    this.router.navigateByUrl('/home/dashboard');
+                    this.router.navigateByUrl('/home/main');
                   }
                 }
                }

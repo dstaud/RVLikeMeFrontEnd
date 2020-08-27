@@ -13,6 +13,7 @@ import { AnalyticsComponent } from './analytics/analytics.component';
 import { DashboardDrilldownComponent } from './analytics/dashboard-drilldown/dashboard-drilldown.component';
 import { DashboardComponent } from './analytics/dashboard/dashboard.component';
 import { InstallComponent } from './install/install.component';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { InstallComponent } from './install/install.component';
     AnalyticsComponent,
     DashboardDrilldownComponent,
     DashboardComponent,
-    InstallComponent
+    InstallComponent,
+    MainComponent
   ],
   imports: [
     CommonModule,

@@ -20,8 +20,8 @@
           mat-button
           class="toolbar-icon"
           matTooltip="Home page"
-          routerLink="/home/dashboard"
-          routerLinkActive="active-menu-item">
+          routerLink="/home/main"
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon">
       <mat-icon fontSet="material-icons-outlined">home</mat-icon>
     </div>
@@ -35,7 +35,7 @@
           class="toolbar-icon"
           matTooltip="Find others like me"
           routerLink="/connections/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon">
       <mat-icon fontSet="material-icons-outlined">people</mat-icon>
     </div>
@@ -49,7 +49,7 @@
           class="toolbar-icon"
           matTooltip="Connect in Group Forums"
           routerLink="/forums/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
     </div>
@@ -63,7 +63,7 @@
           class="toolbar-icon"
           matTooltip="Messages"
           routerLink="/messages/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon
         matBadge="{{newMessageCount}}"
@@ -83,7 +83,8 @@
           mat-button
           class="toolbar-icon"
           matTooltip="Learn about RV lifestyle"
-          routerLink="/newbie/main">
+          routerLink="/newbie/main"
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">accessibility_new</mat-icon>
     </div>
@@ -97,7 +98,8 @@
           class="toolbar-icon"
           matTooltip="Profile"
           routerLink="/profile/main"
-          routerLinkActive="active-menu-item">
+          routerLinkActive="active-menu-item"
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">person</mat-icon>
     </div>
@@ -111,7 +113,7 @@
           class="toolbar-icon"
           matTooltip="About RVLikeMe"
           routerLink="/about"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">rv_hookup</mat-icon>
     </div>

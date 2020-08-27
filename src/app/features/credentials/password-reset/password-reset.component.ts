@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+
+import { PasswordVerifyComponent } from './../password-verify/password-verify.component';
 
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { SharedComponent } from '@shared/shared.component';
@@ -15,6 +17,9 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
   styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent implements OnInit {
+  @ViewChild(PasswordVerifyComponent)
+  public passwordVerify: PasswordVerifyComponent;
+
   form: FormGroup;
   landingImage: string;
   maxRvImageHeight = 'auto';
@@ -23,6 +28,7 @@ export class PasswordResetComponent implements OnInit {
   httpErrorText: string = 'No Error';
   hidePassword: boolean = true;
   showSpinner: boolean = false;
+  passwordTouched = false;
 
   private windowWidth: number;
   private routeSubscription: any;

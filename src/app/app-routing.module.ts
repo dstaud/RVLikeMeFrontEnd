@@ -4,15 +4,16 @@ import { CommonModule } from '@angular/common';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { PageNotFoundComponent } from './core/navigation/page-not-found/page-not-found.component';
-import { SigninComponent } from './landing-page/signin/signin.component';
-import { RegisterUserComponent } from './landing-page/register-user/register-user.component';
-import { LearnMoreComponent } from './landing-page/learn-more/learn-more.component';
+import { SigninComponent } from './features/credentials/signin/signin.component';
+import { RegisterUserComponent } from './features/credentials/register-user/register-user.component';
 import { AdminComponent } from './features/admin/admin.component';
-import { RegisterConfirmComponent } from './landing-page/register-user/register-confirm/register-confirm.component';
-import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-password.component';
-import { PasswordResetComponent } from './landing-page/password-reset/password-reset.component';
+import { RegisterConfirmComponent } from './features/credentials/register-user/register-confirm/register-confirm.component';
+import { ForgotPasswordComponent } from './features/credentials/forgot-password/forgot-password.component';
+import { PasswordResetComponent } from './features/credentials/password-reset/password-reset.component';
 import { TermsOfServiceComponent } from './documents/terms-of-service/terms-of-service.component';
 import { PrivacyPolicyComponent } from './documents/privacy-policy/privacy-policy.component';
+import { ChangeUsernameComponent } from './features/credentials/change-username/change-username.component';
+import { ChangePasswordComponent } from './features/credentials/change-password/change-password.component';
 
 const routerOptions: ExtraOptions = {
   scrollPositionRestoration: 'enabled',
@@ -51,11 +52,11 @@ const routes: Routes = [
     import('./features/home/home.module')
     .then(m => m.HomeModule)
   },
-  { path: 'credentials',
-    loadChildren: () =>
-    import('./features/credentials/credentials.module')
-    .then(m => m.CredentialsModule)
-  },
+  // { path: 'credentials',
+  //   loadChildren: () =>
+  //   import('./features/credentials/credentials.module')
+  //   .then(m => m.CredentialsModule)
+  // },
   { path: 'settings',
     loadChildren: () =>
     import('./features/settings/settings.module')
@@ -66,12 +67,13 @@ const routes: Routes = [
     import('./features/newbie/newbie.module')
     .then(m => m.NewbieModule)
   },
+  { path: 'change-username', component: ChangeUsernameComponent },
+  { path: 'change-password', component: ChangePasswordComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'register', component: RegisterUserComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'password-reset', component: PasswordResetComponent },
-  { path: 'learn-more', component: LearnMoreComponent },
   { path: 'register-confirm', component: RegisterConfirmComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
