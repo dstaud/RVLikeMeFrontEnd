@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Location } from '@angular/common';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { trigger, animate, transition, style, state } from '@angular/animations';
 
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { take } from 'rxjs/operators';
@@ -17,7 +18,7 @@ import { ForumService } from '@services/data-services/forum.service';
 import { SigninDesktopDialogComponent } from '@dialogs/signin-desktop-dialog/signin-desktop-dialog.component';
 import { RegisterDesktopDialogComponent } from '@dialogs/register-desktop-dialog/register-desktop-dialog.component';
 
-import { inOutAnimation } from '@shared/animations';
+import { inOutAnimation, outAnimation } from '@shared/animations';
 
 export declare class FacebookParams {
   u: string;
@@ -27,7 +28,33 @@ export declare class FacebookParams {
   selector: 'app-rvlm-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss'],
-  animations: [inOutAnimation]
+  animations: [
+    inOutAnimation,
+    trigger('aboutMeAnimation', [
+      state('in', style({ opacity: 1 })),
+      state('out', style({ opacity: 0 })),
+      transition('in => out', animate('0.3s')),
+      transition('out => in', animate('0.3s'))
+    ]),
+    trigger('rvUseAnimation', [
+      state('in', style({ opacity: 1 })),
+      state('out', style({ opacity: 0 })),
+      transition('in => out', animate('0.3s')),
+      transition('out => in', animate('0.3s'))
+    ]),
+    trigger('rigTypeAnimation', [
+      state('in', style({ opacity: 1 })),
+      state('out', style({ opacity: 0 })),
+      transition('in => out', animate('0.3s')),
+      transition('out => in', animate('0.3s'))
+    ]),
+    trigger('registerAnimation', [
+      state('in', style({ opacity: 1 })),
+      state('out', style({ opacity: 0 })),
+      transition('in => out', animate('0.3s')),
+      transition('out => in', animate('0.3s'))
+    ]),
+  ]
 })
 export class LandingPageComponent implements OnInit {
   form: FormGroup;
@@ -50,6 +77,14 @@ export class LandingPageComponent implements OnInit {
   nbrRig = 0;
   currentQuestion = 0;
   includeCounts = true;
+  inOut = 'in';
+  aboutMeInOut = 'out';
+  rvUseInOut = 'out';
+  rigTypeInOut = 'out'
+  aboutMeContentInOut = 'in';
+  rvUseContentInOut = 'out';
+  rigTypeContentInOut = 'out';
+  registerContentInOut = 'out';
 
   private windowWidth: number;
   private landingImageNbr: number;
@@ -161,28 +196,20 @@ export class LandingPageComponent implements OnInit {
     }
   }
 
-  onRegister() {
-    this.shareDataSvc.setData('register', this.register);
-    this.router.navigateByUrl('/register');
-  }
-
   onExperience(answer: string) {
     if (this.includeCounts) {
       this.likeCountsSvc.getAboutMeCounts(answer)
       .pipe(take(1))
       .subscribe(count => {
         this.nbrExperience = count;
+        this.aboutMeInOut = 'in';
       }, error => {
         console.error(error);
       });
     } else {
-      let self = this;
-      setTimeout(function () {
-        self.nbrExperience = 1;
-      }, 1000);
+      this.aboutMeInOut = 'in';
     }
 
-    this.currentQuestion++;
     switch (answer) {
       case 'dreamer': {
         this.heading = 'Our Newbie Corner connects you with experienced RVers who can help you!';
@@ -204,8 +231,15 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
-    this.register.aboutMe = answer;
-    this.getGroup('aboutMe', this.register.aboutMe, 'aboutMeGroup');
+    let self = this;
+    this.aboutMeContentInOut = 'out';
+    setTimeout(function () {
+      self.currentQuestion++;
+      self.register.aboutMe = answer;
+      self.getGroup('aboutMe', self.register.aboutMe, 'aboutMeGroup');
+      self.rvUseContentInOut = 'in';
+    }, 350);
+
 
   }
 
@@ -215,17 +249,14 @@ export class LandingPageComponent implements OnInit {
       .pipe(take(1))
       .subscribe(count => {
         this.nbrLifestyle = count;
+        this.rvUseInOut = 'in';
       }, error => {
         console.error(error);
       });
     } else {
-      let self = this;
-      setTimeout(function () {
-        self.nbrLifestyle = 1;
-      }, 1000);
+      this.rvUseInOut = 'in';
     }
 
-    this.currentQuestion++;
     switch (answer) {
       case 'fttravel': {
         if (this.register.aboutMe === 'experienced') {
@@ -259,8 +290,13 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
-    this.getGroup('rvUse', this.register.rvUse, 'rvUseGroup');
-
+    let self = this;
+    this.rvUseContentInOut = 'out';
+    setTimeout(function () {
+      self.currentQuestion++;
+      self.getGroup('rvUse', self.register.rvUse, 'rvUseGroup');
+      self.rigTypeContentInOut = 'in';
+    }, 350);
   }
 
   onRig(answer: string) {
@@ -269,17 +305,14 @@ export class LandingPageComponent implements OnInit {
       .pipe(take(1))
       .subscribe(count => {
         this.nbrRig = count;
+        this.rigTypeInOut = 'in';
       }, error => {
         console.error(error);
       });
     } else {
-      let self = this;
-      setTimeout(function () {
-        self.nbrRig = 1;
-      }, 1000);
+      this.rigTypeInOut = 'in';
     }
 
-    this.currentQuestion++;
     switch (answer) {
       case 'A': {
         if (this.register.rvUse === 'FTN') {
@@ -355,7 +388,14 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
-    this.getGroup('rigType', this.register.rigType, 'rigTypeGroup');
+    let self = this;
+    this.rigTypeContentInOut = 'out';
+    setTimeout(function () {
+      self.currentQuestion++;
+      self.getGroup('rigType', self.register.rigType, 'rigTypeGroup');
+      self.registerContentInOut = 'in';
+    }, 350);
+
   }
 
   private getGroup(name: string, value: string, group: string) {
@@ -448,7 +488,7 @@ export class LandingPageComponent implements OnInit {
   private openRegisterDialog(cb: CallableFunction): void {
     const dialogRef = this.dialog.open(RegisterDesktopDialogComponent, {
       width: '400px',
-      height: '550px',
+      height: '680px',
       disableClose: true,
       hasBackdrop: true
     });
@@ -463,7 +503,7 @@ export class LandingPageComponent implements OnInit {
   private openSigninDialog(cb: CallableFunction): void {
     const dialogRef = this.dialog.open(SigninDesktopDialogComponent, {
       width: '400px',
-      height: '550px',
+      height: '575px',
       disableClose: true,
       hasBackdrop: true
     });
