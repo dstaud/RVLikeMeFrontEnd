@@ -1,7 +1,8 @@
 <!-- TODO: For some reason, without this, [className]="'toolbar'", the feature windows start
   after the toolbar, but that doesn't seem to do well for scrolling it??
   Just using class="toolbar" doesn't work??? -->
-<mat-toolbar color="primary" [ngClass]="'toolbar'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
+<!-- <mat-toolbar color="primary" [ngClass]="'toolbar'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start"> -->
+<div class="toolbar mat-elevation-z4" [ngClass]="lightTheme? 'toolbar-background-color-light' : 'toolbar-background-color-dark'">
   <div class="toolbar-icon" (click)="onToolbarIcon()">
     <div class="rvlikeme">
       <h2 class="mat-h2">
@@ -20,8 +21,8 @@
           mat-button
           class="toolbar-icon"
           matTooltip="Home page"
-          routerLink="/home/dashboard"
-          routerLinkActive="active-menu-item">
+          routerLink="/home/main"
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon">
       <mat-icon fontSet="material-icons-outlined">home</mat-icon>
     </div>
@@ -35,7 +36,7 @@
           class="toolbar-icon"
           matTooltip="Find others like me"
           routerLink="/connections/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon">
       <mat-icon fontSet="material-icons-outlined">people</mat-icon>
     </div>
@@ -49,7 +50,7 @@
           class="toolbar-icon"
           matTooltip="Connect in Group Forums"
           routerLink="/forums/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">forums</mat-icon>
     </div>
@@ -63,7 +64,7 @@
           class="toolbar-icon"
           matTooltip="Messages"
           routerLink="/messages/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon
         matBadge="{{newMessageCount}}"
@@ -83,7 +84,8 @@
           mat-button
           class="toolbar-icon"
           matTooltip="Learn about RV lifestyle"
-          routerLink="/newbie/main">
+          routerLink="/newbie/main"
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">accessibility_new</mat-icon>
     </div>
@@ -97,7 +99,8 @@
           class="toolbar-icon"
           matTooltip="Profile"
           routerLink="/profile/main"
-          routerLinkActive="active-menu-item">
+          routerLinkActive="active-menu-item"
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">person</mat-icon>
     </div>
@@ -111,7 +114,7 @@
           class="toolbar-icon"
           matTooltip="About RVLikeMe"
           routerLink="/about"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">rv_hookup</mat-icon>
     </div>
@@ -155,4 +158,5 @@
       {{ "account.logout" | translate }}
     </button>
   </mat-menu>
-</mat-toolbar>
+</div>
+<!-- </mat-toolbar> -->

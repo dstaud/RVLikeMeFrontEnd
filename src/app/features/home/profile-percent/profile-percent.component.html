@@ -1,16 +1,23 @@
-<div class="container mat-body-1 mat-elevation-z2"
+<div class="container mat-body-1"
       (click)="onPercentProfile()"
       [ngClass]="theme === 'dark-theme' ? 'box-background-dark' : 'box-background-light'">
-  <div class="welcome">
+  <!-- <div class="welcome">
     <p><span class="hi">{{ 'home.component.hi' | translate }} {{ profile.firstName }}</span>, {{ 'home.component.welcome' | translate}}</p>
-  </div>
-  <button mat-button>
+  </div> -->
+  <p class="mat-h2">{{ 'home.component.profilePct1' | translate }}
+    <span class="hyperlink" (click)="onProfile()">{{ 'home.component.profilePct2' | translate }}</span>
+    {{ 'home.component.profilePct3' | translate }}
+  </p>
+
+  <div class="progress hyperlink">
     <mat-progress-bar
       mode="determinate"
       color="{{ progressBarColor }}"
-      value="{{  percentProfileComplete }}">
+      value="{{  percentProfileComplete }}"
+      (click)="onProfile()">
     </mat-progress-bar>
-    <p class="pctCompleteMsg">{{ this.percentCompleteMsg }}</p>
-  </button>
+    <span class="progress-text">{{ 'home.component.profilePct4' | translate }}</span>
+  </div>
+
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>
 </div>

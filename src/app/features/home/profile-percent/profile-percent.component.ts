@@ -52,10 +52,14 @@ export class ProfilePercentComponent implements OnInit {
 
 
   onPercentProfile() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
     this.router.navigateByUrl('/profile/main');
   }
 
+  onProfile() {
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
+    this.router.navigateByUrl('/profile/main');
+  }
 
   // Listen for user profile and take action
   private listenForUserProfile() {
@@ -89,7 +93,7 @@ export class ProfilePercentComponent implements OnInit {
 
       this.determineProfileMessages();
 
-      if (this.location.path() === '/home/dashboard' && this.profile._id && this.progressBarColor === 'warn') {
+      if (this.location.path() === '/home/main' && this.profile._id && this.progressBarColor === 'warn') {
         this.shared.openSnackBar('Please fill out your profile. Without the profile, we cannot find others like you.','message',5000);
       }
 

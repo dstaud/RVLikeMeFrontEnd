@@ -53,3 +53,10 @@
   font-size: 120%;
 }
 
+.active-menu-item {
+  color: $light-mode-accent-color;
+}
+
+.active-menu-item-dark {
+  color: $dark-mode-accent-color;
+}

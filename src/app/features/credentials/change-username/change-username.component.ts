@@ -23,6 +23,7 @@ export class ChangeUsernameComponent implements OnInit {
   hidePassword: boolean = true;
   httpError = false;
   httpErrorText = '';
+  desktopUser: boolean = false;
 
   showSpinner = false;
   showPassword = false;
@@ -45,7 +46,10 @@ export class ChangeUsernameComponent implements OnInit {
               this.form = fb.group({
                 username: new FormControl('', [Validators.required, Validators.email]),
                 password: new FormControl('', Validators.required)
-              })
+              });
+              if (window.innerWidth >=600) {
+                this.desktopUser = true;
+              }
 }
 
   ngOnInit() {
@@ -80,13 +84,21 @@ export class ChangeUsernameComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }

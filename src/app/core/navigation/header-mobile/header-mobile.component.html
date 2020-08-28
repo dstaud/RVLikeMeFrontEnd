@@ -17,7 +17,7 @@
           class="toolbar-icon"
           matTooltip="Messages"
           routerLink="/messages/message-list"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon matBadge="{{newMessageCount}}"
             matBadgeColor="warn"
@@ -36,7 +36,7 @@
           class="toolbar-icon"
           matTooltip="Profile"
           routerLink="/profile/main"
-          routerLinkActive="active-menu-item">
+          [routerLinkActive]="lightTheme? 'active-menu-item': 'active-menu-item-dark'">
     <div class="menu-icon-text">
       <mat-icon fontSet="material-icons-outlined">person</mat-icon>
     </div>

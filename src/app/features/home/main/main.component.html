@@ -1,0 +1,51 @@
+<div class="mat-app-background mat-body-1" [ngClass]="getClass()">
+
+  <div class="sub-container">
+    <div class="dashboard">
+      <p class="mat-h2">{{ 'home.component.groups1' | translate }}
+        <span class="hyperlink" (click)="onGroups()">{{ 'home.component.groups2' | translate }}</span>
+        {{ 'home.component.groups3' | translate }}</p>
+      <div class="images">
+        <img class="image hyperlink-image" src="./../../../../assets/images/groups.jpg" (click)="onGroups()">
+      </div>
+    </div>
+
+    <div class="dashboard">
+      <app-rvlm-profile-percent></app-rvlm-profile-percent>
+      <div *ngIf="desktopUser">
+        <br>
+        <p class="mat-h2">{{ 'home.component.profile1' | translate }}</p>
+        <p class="mat-h2">{{ 'home.component.profile2' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="dashboard">
+      <p class="mat-h2">{{ 'home.component.likeme1' | translate }}
+        <span class="hyperlink" (click)="onLikeMe()">{{ 'home.component.likeme2' | translate }}</span>
+        {{ 'home.component.likeme3' | translate }}</p>
+      <div class="images">
+        <img class="image hyperlink-image" src="./../../../../assets/images/likeme.jpg" (click)="onLikeMe()">
+      </div>
+    </div>
+
+    <div *ngIf="userType === 'newbie'" class="dashboard">
+      <p class="mat-h2">{{ 'home.component.newbie1' | translate }}
+        <span class="hyperlink" (click)="onNewbie()">{{ 'home.component.newbie2' | translate }}</span>
+      </p>
+      <div class="images">
+        <img class="image hyperlink-image" src="./../../../../assets/images/newbie.jpg" (click)="onNewbie()">
+      </div>
+    </div>
+
+    <div *ngIf="userType === 'expert'" class="dashboard">
+      <p class="mat-h2">{{ 'home.component.newbie3' | translate }}
+        <span class="hyperlink" (click)="onNewbie()">{{ 'home.component.newbie2' | translate }}</span>
+      </p>
+      <div class="images">
+        <img class="image hyperlink-image" src="./../../../../assets/images/expert.jpg" (click)="onNewbie()">
+      </div>
+    </div>
+  </div>
+
+  <br><br><br><br>
+</div>

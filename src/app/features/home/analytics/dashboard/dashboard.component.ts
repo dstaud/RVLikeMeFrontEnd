@@ -94,7 +94,7 @@ export class DashboardComponent implements OnInit {
 
 
   onHelpNewbieTopic() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
     if (this.desktopUser) {
       this.router.navigateByUrl('/newbie/main');
     } else {
@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit {
     // }
 
     // this.shareDataSvc.setData('newbieHelp', params);
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
     if (this.desktopUser) {
       this.router.navigateByUrl('/newbie/main');
     } else {

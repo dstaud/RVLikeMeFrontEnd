@@ -12,6 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 @Component({
   selector: 'app-rvlm-about',
@@ -22,6 +23,8 @@ export class AboutComponent implements OnInit {
   daveID: string;
   daveDisplayName: string;
   daveProfileImageUrl: string;
+  standalone = false;
+  desktopUser = false;
 
   // Interface for profile data
   private profile: IuserProfile;
@@ -33,8 +36,12 @@ export class AboutComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
+              private standaloneSvc: StandaloneService,
               private router: Router,
               private device: DeviceService) {
+                if (window.innerWidth >=600) {
+                  this.desktopUser = true;
+                }
               }
 
   ngOnInit() {
@@ -58,13 +65,21 @@ export class AboutComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -102,7 +117,6 @@ export class AboutComponent implements OnInit {
       }
     });
   }
-
 
   // Listen for Profile changes
   private listenForUserProfile() {

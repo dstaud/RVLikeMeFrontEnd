@@ -31,5 +31,9 @@ footer {
 }
 
 .active-menu-item {
-  color: $accent-color;
+  color: $light-mode-accent-color;
+}
+
+.active-menu-item-dark {
+  color: $dark-mode-accent-color;
 }

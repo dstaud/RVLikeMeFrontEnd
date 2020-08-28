@@ -1,3 +1,4 @@
+import { AboutMe } from './../main/main.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -55,6 +56,7 @@ export class PersonalComponent implements OnInit {
   tempProfileImage: string;
   desktopUser: boolean = false;
   theme: string;
+  attributeLevelUpdates = false;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -231,13 +233,21 @@ export class PersonalComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -289,42 +299,69 @@ export class PersonalComponent implements OnInit {
     }
   }
 
+  onSubmit() {
+    this.showSpinner = true;
+
+    this.profile.firstName = this.form.controls.firstName.value;
+    this.profile.displayName = this.form.controls.displayName.value;
+    this.profile.myStory = this.form.controls.myStory.value;
+    this.profile.yearOfBirth = this.form.controls.yearOfBirth.value;
+    this.profile.homeCountry = this.form.controls.homeCountry.value;
+    this.profile.homeState = this.form.controls.homeState.value;
+
+    this.profileSvc.updateProfile(this.profile)
+    .subscribe(profile => {
+      this.showSpinner = false;
+      this.activateBackArrowSvc.setBackRoute('', 'backward');
+      this.router.navigateByUrl('/profile/main');
+
+    }, error => {
+      this.showSpinner = false;
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
+    });
+  }
 
   /**** Field auto-update processing ****/
   onUpdateDataPoint(control: string) {
-    if (this.form.controls[control].value !== null &&
+    // Switching to submit updates but want to keep this code around.  Turned off now
+    if (this.attributeLevelUpdates) {
+      if (this.form.controls[control].value !== null &&
         this.form.controls[control].value.trim().length === 0) {
       this.form.patchValue({ [control]: null });
-    }
-
-    if (this.form.controls[control].valid) {
-      let SaveIcon = 'show' + control + 'SaveIcon';
-      this[SaveIcon] = true;
-
-      if (this.form.controls[control].value === null ||
-          this.form.controls[control].value === '') {
-        this.profile[control] = null;
-        this.form.patchValue({ [control]: null });
-      } else {
-        this.profile[control] = this.form.controls[control].value;
       }
 
-      this.updatePersonal(control, this.profile[control]);
+      if (this.form.controls[control].valid) {
+        let SaveIcon = 'show' + control + 'SaveIcon';
+        this[SaveIcon] = true;
+
+        if (this.form.controls[control].value === null ||
+            this.form.controls[control].value === '') {
+          this.profile[control] = null;
+          this.form.patchValue({ [control]: null });
+        } else {
+          this.profile[control] = this.form.controls[control].value;
+        }
+
+        this.updatePersonal(control, this.profile[control]);
+      }
     }
   }
 
 
   onUpdateSelectItem(control: string, event) {
-    let SaveIcon = 'show' + control + 'SaveIcon';
-    this[SaveIcon] = true;
-    if (event === '') {
-      this.profile[control] = null;
-      this.form.patchValue({ [control]: null });
-    } else {
-      this.profile[control] = event;
-    }
+    if (this.attributeLevelUpdates) {
+      let SaveIcon = 'show' + control + 'SaveIcon';
+      this[SaveIcon] = true;
+      if (event === '') {
+        this.profile[control] = null;
+        this.form.patchValue({ [control]: null });
+      } else {
+        this.profile[control] = event;
+      }
 
-    this.updatePersonal(control, this.profile[control]);
+      this.updatePersonal(control, this.profile[control]);
+    }
   }
 
 

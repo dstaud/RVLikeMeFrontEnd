@@ -15,6 +15,7 @@ import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 @Component({
   selector: 'app-rvlm-connections-main',
@@ -64,6 +65,7 @@ export class MainComponent implements OnInit {
               private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
+              private standaloneSvc: StandaloneService,
               private device: DeviceService,
               private fb: FormBuilder) {
                 this.form = this.fb.group({
@@ -114,13 +116,21 @@ export class MainComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -376,7 +386,6 @@ export class MainComponent implements OnInit {
       this.sentry.logError(JSON.stringify({"message":"unable to listen for like me counts","error":error}));
     });
   }
-
 
   // Get user's profile and save
   private listenForUserProfile() {

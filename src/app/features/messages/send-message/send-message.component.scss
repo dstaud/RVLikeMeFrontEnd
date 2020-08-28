@@ -1,10 +1,16 @@
 @import './../../../../styles/_variables';
 
 .container {
-  // padding: 10px;
-  margin-top: 60px;
   padding-right: 10px;
   padding-left: 10px;
+}
+
+.desktop-spacing {
+  margin-top: 90px;
+}
+
+.device-spacing {
+  margin-top: 60px;
 }
 
 .bottom-bar-spacing {

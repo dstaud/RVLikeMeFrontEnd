@@ -15,14 +15,31 @@ $cyan-background: map-get($cyan-theme, background);
 $cyan-background: map_merge($cyan-background, (background: $cyan-background-color));
 $cyan-theme: map_merge($cyan-theme, (background: $cyan-background));
 
+// Color pallet for 'light-theme'
+$yellow-primary: mat-palette($mat-yellow, 800, 300, 900);
+$yellow-accent: mat-palette($mat-blue, A400);
+$yellow-warn: mat-palette($mat-red, 700);
+// $cyan-background-color: map_get($mat-gray, 200);
+// $cyan-foreground-color: map_get($mat-red, 300);
+
+$yellow-theme: mat-light-theme(
+  $yellow-primary,
+  $yellow-accent,
+  $yellow-warn
+);
+
+// $cyan-background: map-get($cyan-theme, background);
+// $cyan-background: map_merge($cyan-background, (background: $cyan-background-color));
+// $cyan-theme: map_merge($cyan-theme, (background: $cyan-background));
+
 // $cyan-foreground: map-get($cyan-theme, foreground);
 // $cyan-foreground: map_merge($cyan-foreground, (foreground: $cyan-foreground-color));
 // $cyan-theme: map_merge($cyan-theme, ((foreground): $cyan-foreground));
 
 // Color pallet for 'dark-theme'
 $dark-primary: mat-palette($mat-blue-grey, 600, 300, 900);
-$dark-accent: mat-palette($mat-green, 600);
-$dark-warn: mat-palette($mat-red, 500);
+$dark-accent: mat-palette($mat-blue, A400);
+$dark-warn: mat-palette($mat-red, 800);
 $dark-background-color: map_get($mat-gray, 700);
 
 $dark-theme: mat-dark-theme(

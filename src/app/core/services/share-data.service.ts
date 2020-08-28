@@ -158,6 +158,15 @@ export interface IviewImage {
   newImageUrl?: string
 }
 
+export interface Iregister {
+  aboutMe: string,
+  aboutMeGroup: string,
+  rvUse: string,
+  rvUseGroup: string,
+  rigType: string,
+  rigTypeGroup: string
+}
+
 
 export interface IshareData {
   forumsMain: IforumsMain,
@@ -171,7 +180,8 @@ export interface IshareData {
   dashboard: Idashboard,
   post: Ipost,
   profileImage: IprofileImage,
-  viewImage: IviewImage
+  viewImage: IviewImage,
+  register: Iregister
 }
 
 
@@ -244,7 +254,6 @@ export class ShareDataService {
         yoga: null,
         knitting: null,
         crocheting: null
-
       },
       myStory: {
         userID: null,
@@ -315,6 +324,14 @@ export class ShareDataService {
         imageSource: null,
         imageOwner: false,
         newImageUrl: null
+      },
+      register: {
+        aboutMe: null,
+        aboutMeGroup: null,
+        rvUse: null,
+        rvUseGroup: null,
+        rigType: null,
+        rigTypeGroup: null
       }
     }
   }

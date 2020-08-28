@@ -1,0 +1,62 @@
+@import './../../../../styles/_variables';
+
+.container {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.desktop-spacing {
+  margin-top: 80px;
+}
+
+.device-spacing {
+  margin-top: 50px;
+}
+
+.sub-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.bottom-bar-spacing {
+  margin-bottom: 80px;
+}
+
+.bottom-bar-spacing-xplus {
+  margin-bottom: 110px;
+}
+
+.images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 100%;
+}
+
+.hyperlink {
+  color: $primary-color;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hyperlink-image {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 10px;
+  // margin-left: 30px;
+  // margin-right: 30px;
+}

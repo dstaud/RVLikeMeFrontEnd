@@ -23,12 +23,12 @@
 
       <app-rvlm-footer *ngIf="userAuthorized"
                         (sidenavToggle)="sidenav.toggle()"
-                        fxHide fxShow.lt-sm>
+                        fxHide fxShow.sm fxShow.lt-sm>
       </app-rvlm-footer>
 
-      <app-rvlm-footer-desktop *ngIf="headerDesktopVisible || userAuthorized"
+      <!-- <app-rvlm-footer-desktop *ngIf="headerDesktopVisible || userAuthorized"
                                 fxHide fxShow.gt-sm>
-      </app-rvlm-footer-desktop>
+      </app-rvlm-footer-desktop> -->
 
     </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -6,6 +6,8 @@ import { Location } from '@angular/common';
 import { take } from 'rxjs/operators';
 import { untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { TranslateService } from '@ngx-translate/core';
+
+import { PasswordVerifyComponent } from './../password-verify/password-verify.component';
 
 import { AuthenticationService, ItokenPayload } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
@@ -19,11 +21,16 @@ import { SharedComponent } from '@shared/shared.component';
   styleUrls: ['./change-password.component.scss']
 })
 export class ChangePasswordComponent implements OnInit {
+  @ViewChild(PasswordVerifyComponent)
+  public passwordVerify: PasswordVerifyComponent;
+
   form: FormGroup;
   hidePassword: boolean = true;
   httpError: boolean = false;
   httpErrorText: string = 'No Error';
+  passwordTouched = false;
   showSpinner: boolean = false;
+  desktopUser: boolean = false;
 
   private credentials: ItokenPayload;
   private newCredentials = {
@@ -46,6 +53,9 @@ export class ChangePasswordComponent implements OnInit {
                 currentPassword: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)]),
                 newPassword: new FormControl('', [Validators.required, Validators.pattern(this.regPassword)])
               });
+              if (window.innerWidth >=600) {
+                this.desktopUser = true;
+              }
 }
 
   ngOnInit(): void {
@@ -74,13 +84,21 @@ export class ChangePasswordComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -103,7 +121,7 @@ export class ChangePasswordComponent implements OnInit {
       this.shared.openSnackBar(this.translate.instant('changePassword.component.success'), 'message', 5000);
 
       setTimeout(function () {
-        self.router.navigateByUrl('/home/dashboard');
+        self.router.navigateByUrl('/home/main');
       }, 2000);
 
     }, error => {

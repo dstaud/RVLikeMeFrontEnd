@@ -239,6 +239,21 @@
   },
   "home.component": {
     "header": "Casa",
+    "groups1": "Mira tu",
+    "groups2": "grupos",
+    "groups3": "para conectarse con otros que hacen el estilo de vida de RV como usted",
+    "profile1": "Puede describir su estilo de vida, su plataforma, sus intereses y más para ayudarlo a encontrar otros RVers como usted.",
+    "profile2": "También puede configurar su historia con fotos de su plataforma y cómo hace la vida de RV",
+    "profilePct1": "Completa tu",
+    "profilePct2": "perfil",
+    "profilePct3": "para mejores resultados",
+    "profilePct4": "progreso del perfil",
+    "likeme1": "Después de tu perfil, echa un vistazo",
+    "likeme2": "Como yo",
+    "likeme3": "para encontrar grupos más específicos",
+    "newbie1": "Hola, RVers novatos, encontrará recursos útiles en el",
+    "newbie2": "Rincón de novatos",
+    "newbie3": "Como RVer experimentado, es posible que desee ayudar a los principiantes en el",
     "marketingMsg1": "Gracias por registrarte. Soy un compañero RV-er desarrollando esta aplicación web como una manera de conectar a las personas que hacen el estilo de vida de RV como tú. Su correo electrónico se ha agregado a una lista de correo electrónico para que pueda mantenerlo informado sobre el progreso.",
     "marketingMsg2": "Para comenzar, complete su ",
     "marketingMsg3": "perfil",
@@ -279,6 +294,7 @@
     "title": "Perfil",
     "explanation1": "RVLikeMe utiliza su perfil para que coincida con el perfil de otro usuario, lo que le permite conectarse en foros grupales. Después de completar su perfil, vaya a la página ",
     "explanation2": ".",
+    "bloglinks": "Enlaces de blogs",
     "likeme": "Como yo",
     "preferred-language": "Idioma preferido",
     "english": "Inglés",
@@ -427,6 +443,7 @@
     }
   },
   "personal.component": {
+    "heading": "Perfil - Acerca de mí",
     "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
     "help": "Haga clic en cualquier icono de ayuda para obtener información sobre cómo se utilizará el punto de datos.",
     "addProfilePic": "Añadir foto de perfil",
@@ -451,6 +468,7 @@
     "helpMyStory": "Se muestra a otras personas interesadas en su historia."
   },
   "lifestyle.component": {
+    "heading": "Perfil - Mi estilo de vida en RV",
     "explanation": "Esta información se usará para encontrar información que sea relevante para la forma en que usted usa su RV. ¡Cuanto más completo, mejores serán sus resultados!",
     "helpRvUse": "Se usa para hacer que las interacciones sean más relevantes",
     "helpWorklife": "Se usa para hacer que las interacciones sean más relevantes",
@@ -468,6 +486,7 @@
     "experienced": "Como RVer experimentado, ¿estás interesado en ayudar a los novatos?"
   },
   "rig.component": {
+    "heading": "Perfil - My Rig",
     "explanation": "Esta información se usará para otras personas con RV similares para obtener respuestas más relevantes. ¡Cuanto más completo, mejores serán sus resultados!",
     "rigTypeDesc": "Tipo de RV",
     "rigYearDesc": "RV año",
@@ -478,6 +497,7 @@
     "uploadpics": "Sube hasta 3 fotos de tu plataforma"
   },
   "interests.component": {
+    "heading": "Perfil - Mis intereses",
     "explanation": "Esta información se utilizará para ayudar a encontrar otras personas que compartan sus intereses. Por favor marque todo lo que le interesa.",
     "atv": "ATV todoterreno",
     "motorcycle": "Motociclismo",
@@ -555,6 +575,7 @@
     "rigpics": "Fotos del aparejo",
     "lifestylepics": "Fotos de estilo de vida",
     "story": "historia",
+    "messagesHeading": "mensajes",
     "message": "Mensaje",
     "nopics": "no hay fotos subidas yet",
     "blogLinks": "Enlaces de blog"
@@ -573,6 +594,10 @@
     "groupForum": "foro grupal",
     "internet": "Conectividad a Internet",
     "internet2": "conectividad a Internet",
+    "boondocking": "Boondocking",
+    "boondocking2": "boondocking",
+    "fulltimeTravel": "Viajar a tiempo completo",
+    "fulltimeTravel2": "viajar a tiempo completo",
     "internetHeaderNewbie": "Vea lo que dicen los RVers experimentados sobre la conectividad a Internet en este",
     "internetHeaderExpert": "Como un RVer experimentado, ofrezca sus consejos sobre conectividad a Internet en este foro.",
     "insurance": "Asegurando un RV",
@@ -597,6 +622,10 @@
     "sellingHouse2": "deshacerse de todas tus cosas para ir a tiempo completo",
     "sellingHouseHeaderNewbie": "Vea qué experiencia dicen los RVers sobre la venta de todas sus cosas para ir a tiempo completo en este",
     "sellingHouseHeaderExpert": "Como un RVer experimentado, ofrezca sus consejos para vender todas sus cosas a tiempo completo en este",
+    "towingCapacity": "Capacidad de remolque",
+    "towingCapacity2": "capacidad de remolque",
+    "towingCapacityHeaderNewbie": "Vea lo que dicen los RVers experimentados sobre la capacidad de remolque",
+    "towingCapacityHeaderExpert": "Como RVer experimentado, ofrezca sus consejos sobre la capacidad de remolque",
     "thingsYouNeedFullTimeTravel": "Viaje a tiempo completo: cosas que necesita",
     "thingsYouNeedFullTimeTravel2": "cosas que necesitas cuando viajas a tiempo completo",
     "thingsYouNeedFullTimeTravelHeaderNewbie": "Vea qué experiencia dicen los RVers sobre las cosas que necesita cuando viaja en RV a tiempo completo en este",
@@ -616,6 +645,7 @@
     "suggestionAdmin": "Su sugerencia ha sido enviada al administrador. ¡Gracias!"
   },
   "newbie-links.component": {
+    "helpfulResources0": "Recursos útiles",
     "helpfulResources1": "Si ha encontrado algunos buenos recursos sobre",
     "helpfulResources2": "puedes agregar un enlace que se mostrará a continuación",
     "addLink": "Agregar enlace como",

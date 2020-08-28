@@ -1,8 +1,15 @@
 @import './../../../../styles/_variables';
 
 .container {
-  margin-top: 50px;
   padding: 10px;
+}
+
+.desktop-spacing {
+  margin-top: 80px;
+}
+
+.device-spacing {
+  margin-top: 50px;
 }
 
 .container-desktop {

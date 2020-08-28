@@ -1,9 +1,16 @@
 @import './../../../../styles/_variables';
 
 .container {
-  margin-top: 60px;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.desktop-spacing {
+  margin-top: 90px;
+}
+
+.device-spacing {
+  margin-top: 60px;
 }
 
 .bottom-bar-spacing {

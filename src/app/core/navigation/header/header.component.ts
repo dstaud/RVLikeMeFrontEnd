@@ -49,6 +49,69 @@ export class HeaderComponent implements OnInit {
       }
     });
 
+    this.listenForUserProfile();
+
+    this.listenForUserAuth();
+  }
+
+  ngOnDestroy() {}
+
+  changeProfileImage() {
+    this.router.navigateByUrl('/profile/personal');
+    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
+  }
+
+  changePassword() {
+    this.router.navigateByUrl('/change-password');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
+  }
+
+  changeUsername() {
+    this.router.navigateByUrl('/change-username');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
+  }
+
+  logout() {
+    this.authSvc.logout();
+    this.profileSvc.dispose();
+    this.authSvc.setUserToAuthorized(false);
+    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
+    this.router.navigateByUrl('/');
+  }
+
+  onSettings() {
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
+    this.router.navigateByUrl('/settings');
+  }
+
+  onToolbarIcon() {
+    this.router.navigateByUrl('/about');
+  }
+
+  selectTheme(theme: string) {
+    this.lightTheme = !this.lightTheme;
+
+    this.themeSvc.setGlobalColorTheme(theme);
+    this.profile.colorThemePreference = theme;
+    this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
+    .pipe(untilComponentDestroyed(this))
+    .subscribe ((responseData) => {
+      this.profileSvc.distributeProfileUpdate(responseData);
+    }, error => {
+      this.sentry.logError('HeaderComponent:selectTheme: cannot get theme '+ JSON.stringify(error));
+    });
+  }
+
+  onToggleSidenav = () => {
+    this.sidenavToggle.emit();
+  }
+
+  updateProfile() {
+    this.router.navigateByUrl('/profile/main');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
+  }
+
+  listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;
 
     this.userProfile
@@ -67,7 +130,9 @@ export class HeaderComponent implements OnInit {
     }, (error) => {
       this.sentry.logError('HeaderMobileComponent:listenForUserProfile: error listening for profile=' + JSON.stringify(error))
     });
+  }
 
+  listenForUserAuth() {
     // Listen for changes in user authorization state
     this.authSvc.userAuth$
       .pipe(untilComponentDestroyed(this))
@@ -80,69 +145,5 @@ export class HeaderComponent implements OnInit {
     if (this.authSvc.isLoggedIn()) {
       this.authSvc.setUserToAuthorized(true);
     }
-  }
-
-  ngOnDestroy() {}
-
-  changeProfileImage() {
-    this.router.navigateByUrl('/profile/personal');
-    this.activateBackArrowSvc.setBackRoute('profile/main', 'forward');
-  }
-
-
-  changePassword() {
-    this.router.navigateByUrl('/credentials/change-password');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-  }
-
-
-  changeUsername() {
-    this.router.navigateByUrl('/credentials/change-username');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-  }
-
-
-  logout() {
-    this.authSvc.logout();
-    this.profileSvc.dispose();
-    this.authSvc.setUserToAuthorized(false);
-    this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
-    this.router.navigateByUrl('/');
-  }
-
-
-  onSettings() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
-    this.router.navigateByUrl('/settings');
-  }
-
-
-  onToolbarIcon() {
-    this.router.navigateByUrl('/about');
-  }
-
-
-  selectTheme(theme: string) {
-    this.lightTheme = !this.lightTheme;
-
-    this.themeSvc.setGlobalColorTheme(theme);
-    this.profile.colorThemePreference = theme;
-    this.profileSvc.updateProfileAttribute(this.profile._id, 'colorThemePreference', this.profile.colorThemePreference)
-    .pipe(untilComponentDestroyed(this))
-    .subscribe ((responseData) => {
-      this.profileSvc.distributeProfileUpdate(responseData);
-    }, error => {
-      this.sentry.logError('HeaderComponent:selectTheme: cannot get theme '+ JSON.stringify(error));
-    });
-  }
-
-  public onToggleSidenav = () => {
-    this.sidenavToggle.emit();
-  }
-
-
-  updateProfile() {
-    this.router.navigateByUrl('/profile/main');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
   }
 }

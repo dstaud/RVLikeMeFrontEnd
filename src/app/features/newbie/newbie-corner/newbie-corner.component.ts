@@ -102,6 +102,7 @@ export class NewbieCornerComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
@@ -109,7 +110,13 @@ export class NewbieCornerComponent implements OnInit {
       bottomSpacing = 'bottom-bar-spacing';
     }
 
-    containerClass = 'container ' + bottomSpacing;
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }

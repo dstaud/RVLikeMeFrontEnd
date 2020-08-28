@@ -65,6 +65,7 @@ export class InterestsComponent implements OnInit {
   suggestInterestOpen: string = 'out';
   readyToSuggest: boolean = false;
   theme: string;
+  attributeLevelUpdates = false;
 
   // Spinner is for initial load from the database only.
   // The SaveIcon us shown whenever the user clicks on an interest.
@@ -144,13 +145,21 @@ ngOnInit() {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -168,6 +177,44 @@ ngOnInit() {
     this.router.navigateByUrl('/profile/main');
   }
 
+  onSubmit() {
+    this.showSpinner = true;
+
+    this.profile.atv = this.form.controls.atv.value;
+    this.profile.motorcycle = this.form.controls.motorcycle.value;
+    this.profile.travel = this.form.controls.travel.value;
+    this.profile.quilting = this.form.controls.quilting.value;
+    this.profile.cooking = this.form.controls.cooking.value;
+    this.profile.painting = this.form.controls.painting.value;
+    this.profile.blogging = this.form.controls.blogging.value;
+    this.profile.livingFrugally = this.form.controls.livingFrugally.value;
+    this.profile.gaming = this.form.controls.gaming.value;
+    this.profile.musicalInstrument = this.form.controls.musicalInstrument.value;
+    this.profile.programming = this.form.controls.programming.value;
+    this.profile.mobileInternet = this.form.controls.mobileInternet.value;
+    this.profile.boondock = this.form.controls.boondock.value;
+    this.profile.offGridLiving = this.form.controls.offGridLiving.value;
+    this.profile.solarPower = this.form.controls.solarPower.value;
+    this.profile.hiking = this.form.controls.hiking.value;
+    this.profile.fishing = this.form.controls.fishing.value;
+    this.profile.hunting = this.form.controls.hunting.value;
+    this.profile.kayaking = this.form.controls.kayaking.value;
+    this.profile.yoga = this.form.controls.yoga.value;
+    this.profile.knitting = this.form.controls.knitting.value;
+    this.profile.crocheting = this.form.controls.crocheting.value;
+
+    this.profileSvc.updateProfile(this.profile)
+    .subscribe(profile => {
+      this.showSpinner = false;
+      this.activateBackArrowSvc.setBackRoute('', 'backward');
+      this.router.navigateByUrl('/profile/main');
+
+    }, error => {
+      this.showSpinner = false;
+      this.shared.notifyUserMajorError(error);
+      throw new Error(JSON.stringify(error));
+    });
+  }
 
   onSuggestInterest() {
     let suggestionType = 'interest';
@@ -208,18 +255,20 @@ ngOnInit() {
 
   // Update profile on server when user checks an interest
   onUpdateInterest(control: string, event: any) {
-    this.showSaveIcon = true;
-    this.profile[control] = event.checked;
-    this.profileSvc.updateProfileAttribute(this.profile._id, control, this.profile[control])
-    .pipe(untilComponentDestroyed(this))
-    .subscribe ((responseData) => {
-      this.profileSvc.distributeProfileUpdate(responseData);
-      this.showSaveIcon = false;
-    }, error => {
-      this.showSaveIcon = false;
-      this.shared.notifyUserMajorError(error);
-      throw new Error(JSON.stringify(error));
-    });
+    if (this.attributeLevelUpdates) {
+      this.showSaveIcon = true;
+      this.profile[control] = event.checked;
+      this.profileSvc.updateProfileAttribute(this.profile._id, control, this.profile[control])
+      .pipe(untilComponentDestroyed(this))
+      .subscribe ((responseData) => {
+        this.profileSvc.distributeProfileUpdate(responseData);
+        this.showSaveIcon = false;
+      }, error => {
+        this.showSaveIcon = false;
+        this.shared.notifyUserMajorError(error);
+        throw new Error(JSON.stringify(error));
+      });
+    }
   }
 
 

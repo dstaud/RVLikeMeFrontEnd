@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     if (this.location.path() === '/home') {
-      this.router.navigateByUrl('/home/dashboard');
+      this.router.navigateByUrl('/home/main');
     }
   }
 }

@@ -46,7 +46,7 @@ export class ImageViewerComponent implements OnInit {
       if (this.containerDialog) {
         this.formComplete.emit('ok');
       } else {
-        this.router.navigateByUrl('/home/dashboard');
+        this.router.navigateByUrl('/home/main');
       }
     } else {
       this.imageData = this.shareDataSvc.getData('viewImage');

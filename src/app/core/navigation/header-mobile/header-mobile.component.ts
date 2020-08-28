@@ -77,20 +77,20 @@ export class HeaderMobileComponent implements OnInit {
 
 
   onChangePassword() {
-    this.router.navigateByUrl('/credentials/change-password');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.router.navigateByUrl('/change-password');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
   }
 
 
   onChangeUsername() {
-    this.router.navigateByUrl('/credentials/change-username');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.router.navigateByUrl('/change-username');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
   }
 
 
   onUpdateProfile() {
     this.router.navigateByUrl('/profile/main');
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
   }
 
 
@@ -105,7 +105,7 @@ export class HeaderMobileComponent implements OnInit {
 
 
   onSettings() {
-    this.activateBackArrowSvc.setBackRoute('home/dashboard', 'forward');
+    this.activateBackArrowSvc.setBackRoute('home/main', 'forward');
     this.router.navigateByUrl('/settings');
   }
 

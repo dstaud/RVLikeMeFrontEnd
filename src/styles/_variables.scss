@@ -1,7 +1,8 @@
 // If changing the default colors, must also change the custom theme in main styles
-$primary-color : #0097a7;
+$primary-color : #f9a825;
 $warn-color : red;
-$accent-color : Black;
+$light-mode-accent-color : #2576F9;
+$dark-mode-accent-color : black;
 $seperator-color:  rgb(197, 196, 196);
 $light-mode-group: #e0e0e0;
 $dark-mode-group: #616161;
@@ -14,4 +15,4 @@ $dark-background-color: #636160;
 $dark-mode-posts: #9e9e9e;
 
 // If changing the default max desktop width, also need to change in desktop-max-width service
-$max-width: 900px;
+$max-width: 1440px;

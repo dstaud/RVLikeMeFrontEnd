@@ -2,11 +2,11 @@
   "name": "RV Like Me",
   "short_name": "RV Like Me",
   "description": "Connect with other people that RV the way you do",
-  "theme_color": "#0097a7",
+  "theme_color": "#f9a825",
   "background_color": "#FFFFFF",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/?mode=standalone",
   "orientation": "portrait",
   "prefer_related_applications": false,
   "icons": [

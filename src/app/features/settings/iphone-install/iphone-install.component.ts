@@ -13,12 +13,17 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 })
 export class IphoneInstallComponent implements OnInit {
   showSpinner: boolean = true;
+  desktopUser: boolean = false;
 
   constructor(private device: DeviceService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService,
               private router: Router,
-              private location: Location) { }
+              private location: Location) {
+                if (window.innerWidth >=600) {
+                  this.desktopUser = true;
+                }
+               }
 
   ngOnInit(): void {
     let backPath;
@@ -37,13 +42,21 @@ export class IphoneInstallComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
