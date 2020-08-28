@@ -1,4 +1,3 @@
-import { startWith } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +16,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
 import { AdminService } from '@services/data-services/admin.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
@@ -218,6 +218,7 @@ export class LifestyleComponent implements OnInit {
   theme: string;
   placeholderPhotos: boolean = false;
   attributeLevelUpdates = false;
+  standalone: boolean = false;
 
   aboutMeOtherOpen: string = 'out';
   rvUseOtherOpen: string = 'out';
@@ -330,6 +331,7 @@ export class LifestyleComponent implements OnInit {
               private adminSvc: AdminService,
               private themeSvc: ThemeService,
               private shared: SharedComponent,
+              private standaloneSvc: StandaloneService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private shareDataSvc: ShareDataService,
               private device: DeviceService,
@@ -351,6 +353,7 @@ export class LifestyleComponent implements OnInit {
                 suggestLifestyle: new FormControl('')
                 });
               this.iPhoneModelxPlus = this.device.iPhoneModelXPlus;
+              this.listenForStandalone();
 }
 
   ngOnInit() {
@@ -388,7 +391,7 @@ export class LifestyleComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -629,6 +632,16 @@ export class LifestyleComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileLifestyleComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   private listenForUserProfile() {
     let helpNewbies: string;

@@ -8,6 +8,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { ProfileService } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -26,6 +27,7 @@ export class ImageViewerComponent implements OnInit {
   imageSource: string;
   imageOwner: boolean = false;
   deactivateButtons: boolean = false;
+  standalone: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -35,7 +37,10 @@ export class ImageViewerComponent implements OnInit {
               private shared: SharedComponent,
               private sentry: SentryMonitorService,
               private device: DeviceService,
-              private profileSvc: ProfileService) { }
+              private standaloneSvc: StandaloneService,
+              private profileSvc: ProfileService) {
+                this.listenForStandalone();
+               }
 
   ngOnInit(): void {
     if (window.innerWidth > 600) {
@@ -66,7 +71,7 @@ export class ImageViewerComponent implements OnInit {
     if (this.containerDialog) {
       containerClass = 'container-desktop';
     } else {
-      if (this.device.iPhoneModelXPlus) {
+      if (this.device.iPhoneModelXPlus && this.standalone) {
         bottomSpacing = 'bottom-bar-spacing-xplus';
       } else {
         bottomSpacing = 'bottom-bar-spacing';
@@ -181,6 +186,16 @@ export class ImageViewerComponent implements OnInit {
     })
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileImageViewerComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Update lifestyle image url array in user's profile with new uploaded lifestyle image.
   private updateProfileLifestyleImageUrls(lifestyleImageUrl: string) {

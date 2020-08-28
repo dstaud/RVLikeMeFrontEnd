@@ -11,6 +11,7 @@ import { ShareDataService, IforumsMain, InewbieTopic } from '@services/share-dat
 import { DeviceService } from '@services/device.service';
 import { UserTypeService } from '@services/user-type.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { Itopics } from './../../newbie-corner/newbie-corner.component';
 import { NewbieLinksComponent } from './../newbie-links/newbie-links.component';
@@ -30,6 +31,7 @@ export class TopicComponent implements OnInit {
   title: string;
   header: string;
   userType: string;
+  standalone: boolean = false;
 
   private desktopUser: boolean = false;
   private authorizedTopics: Array<Itopics> = [];
@@ -43,7 +45,9 @@ export class TopicComponent implements OnInit {
               private translate: TranslateService,
               private sentry: SentryMonitorService,
               private userTypeSvc: UserTypeService,
+              private standaloneSvc: StandaloneService,
               private shareDataSvc: ShareDataService) {
+          this.listenForStandalone();
           this.listenForUserType();  // Needs to be here to avoid expression has changed issues
   }
 
@@ -63,7 +67,7 @@ export class TopicComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -187,5 +191,16 @@ export class TopicComponent implements OnInit {
 
     this.topicID = this.authorizedTopics[index].topicID;
     this.topicDesc = this.authorizedTopics[index].topicDesc;
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('NewbieTopicComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 }

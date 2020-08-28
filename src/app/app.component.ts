@@ -74,6 +74,7 @@ export class AppComponent implements OnInit {
               private route: ActivatedRoute,
               private swUpdate: SwUpdate,
               private router: Router) {
+    this.listenForParameters();
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
     this.deviceSvc.getDeviceInfo();
 

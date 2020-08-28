@@ -9,6 +9,7 @@ import { UploadImageService } from '@services/data-services/upload-image.service
 import { ProfileService } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -31,6 +32,7 @@ export class ImageCropperComponent implements OnInit {
   imageSource: string;
   containerDialog: boolean = false;
   iPhoneModelXPlus: boolean = false;
+  standalone: boolean = false;
 
   private cropper: Cropper;
   private profileID: string;
@@ -46,8 +48,10 @@ export class ImageCropperComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private shared: SharedComponent,
               private device: DeviceService,
+              private standaloneSvc: StandaloneService,
               private profileSvc: ProfileService) {
           this.showSpinner = true;
+          this.listenForStandalone();
           this.iPhoneModelXPlus = this.device.iPhoneModelXPlus}
 
   ngOnInit() {
@@ -86,7 +90,7 @@ export class ImageCropperComponent implements OnInit {
     if (this.containerDialog) {
       containerClass = 'container-desktop';
     } else {
-      if (this.device.iPhoneModelXPlus) {
+      if (this.device.iPhoneModelXPlus && this.standalone) {
         bottomSpacing = 'bottom-bar-spacing-xplus';
       } else {
         bottomSpacing = 'bottom-bar-spacing';
@@ -149,6 +153,16 @@ export class ImageCropperComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileImageCropperComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Update data in profile document on database
   private updateImageUrlInProfile(profileImageUrl: string) {

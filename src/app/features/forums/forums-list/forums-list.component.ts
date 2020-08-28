@@ -31,7 +31,7 @@ export class ForumsListComponent implements OnInit {
   theme: string;
   gotProfile: boolean = false;
   desktopUser: boolean = false;
-
+  standalone: boolean = false;
   showSpinner: boolean = false;
 
   private profile: IuserProfile;
@@ -51,6 +51,7 @@ export class ForumsListComponent implements OnInit {
               private device: DeviceService,
               private standaloneSvc: StandaloneService,
               private shareDataSvc: ShareDataService) {
+          this.listenForStandalone();
           if (window.innerWidth > 600) {
             this.desktopUser = true;
           }
@@ -90,7 +91,7 @@ export class ForumsListComponent implements OnInit {
       forumList = true;
     }
 
-    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -199,6 +200,17 @@ export class ForumsListComponent implements OnInit {
     }, error => {
       this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ForumsListComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 
   // Listen for changes in Profile and take action

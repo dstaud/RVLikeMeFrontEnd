@@ -17,6 +17,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { AdminService } from '@services/data-services/admin.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 import { TopicComponent } from './../newbie-topics/topic/topic.component';
@@ -44,6 +45,7 @@ export class NewbieCornerComponent implements OnInit {
   suggestTopicOpen: string = 'out';
   readyToSuggest: boolean = false;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   showSpinner: boolean= false;
 
@@ -62,12 +64,14 @@ export class NewbieCornerComponent implements OnInit {
               private device: DeviceService,
               private authSvc: AuthenticationService,
               private location: Location,
+              private standaloneSvc: StandaloneService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private router: Router,
               fb: FormBuilder) {
                 this.form = fb.group({
                   suggestTopic: new FormControl('', Validators.required)
                 });
+                this.listenForStandalone();
   }
 
   ngOnInit(): void {
@@ -104,7 +108,7 @@ export class NewbieCornerComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -230,6 +234,16 @@ export class NewbieCornerComponent implements OnInit {
     })
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('NewbieCornerComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Get user profile
   private listenForUserProfile() {

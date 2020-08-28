@@ -1,4 +1,3 @@
-import { AboutMe } from './../main/main.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,6 +15,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IprofileImage } from '@services/share-data.service';
 import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { ImageDialogComponent } from '@dialogs/image-dialog/image-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
@@ -57,6 +57,7 @@ export class PersonalComponent implements OnInit {
   desktopUser: boolean = false;
   theme: string;
   attributeLevelUpdates = false;
+  standalone: boolean = false;
 
   // Spinner is for initial load from the database only.
   // SaveIcons are shown next to each field as users leave the field, while doing the update
@@ -168,6 +169,7 @@ export class PersonalComponent implements OnInit {
               private sharedDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
               private shared: SharedComponent,
+              private standaloneSvc: StandaloneService,
               private uploadImageSvc: UploadImageService,
               private device: DeviceService,
               fb: FormBuilder) {
@@ -190,6 +192,7 @@ export class PersonalComponent implements OnInit {
               },
                 { updateOn: 'blur' }
               );
+              this.listenForStandalone();
     }
 
   ngOnInit() {
@@ -235,7 +238,7 @@ export class PersonalComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -376,7 +379,16 @@ export class PersonalComponent implements OnInit {
     });
   }
 
-
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfilePersonalComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for user profile and then take action
   private listenForUserProfile() {

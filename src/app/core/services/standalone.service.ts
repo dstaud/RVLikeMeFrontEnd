@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class StandaloneService {
-  standalone: boolean = false;
+  private standalone = new BehaviorSubject<boolean>(false);
+  standalone$ = this.standalone.asObservable();
 
   constructor() { }
 
   setStandalone(standalone: boolean): void {
-    this.standalone = standalone;
+    this.standalone.next(standalone);
   }
 }

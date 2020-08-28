@@ -12,6 +12,7 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { DeviceService } from '@services/device.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -28,6 +29,7 @@ export class MessageListComponent implements OnInit {
   userID: string;
   noConversations: boolean = false;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -45,8 +47,11 @@ export class MessageListComponent implements OnInit {
               private sentry: SentryMonitorService,
               private shared: SharedComponent,
               private authSvc: AuthenticationService,
+              private standaloneSvc: StandaloneService,
               private activateBackArrowSvc: ActivateBackArrowService,
-              private router: Router) { }
+              private router: Router) {
+                this.listenForStandalone();
+              }
 
   ngOnInit(): void {
     let backPath;
@@ -81,7 +86,7 @@ export class MessageListComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -146,6 +151,16 @@ export class MessageListComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('MessageListComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for Profile changes
   private listenForUserProfile() {

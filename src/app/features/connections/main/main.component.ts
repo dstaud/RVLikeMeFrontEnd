@@ -39,6 +39,7 @@ export class MainComponent implements OnInit {
   theme: string;
   desktopUser: boolean = false;
   showFullExplanation: boolean = false;
+  standalone: boolean = false;
 
   private likeMeItem: string;
   private likeMeDesc: string;
@@ -68,6 +69,7 @@ export class MainComponent implements OnInit {
               private standaloneSvc: StandaloneService,
               private device: DeviceService,
               private fb: FormBuilder) {
+                this.listenForStandalone();
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
                 });
@@ -118,7 +120,7 @@ export class MainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -372,6 +374,16 @@ export class MainComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ConnectionsMainComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Get object containing counts of all other users that match this user's profile items
   // and then takes action

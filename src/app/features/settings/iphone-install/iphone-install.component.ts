@@ -5,6 +5,8 @@ import { Location } from '@angular/common';
 import { DeviceService } from '@services/device.service';
 import { AuthenticationService } from '@services/data-services/authentication.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
+import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 @Component({
   selector: 'app-rvlm-iphone-install',
@@ -14,12 +16,16 @@ import { ActivateBackArrowService } from '@services/activate-back-arrow.service'
 export class IphoneInstallComponent implements OnInit {
   showSpinner: boolean = true;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   constructor(private device: DeviceService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private authSvc: AuthenticationService,
               private router: Router,
+              private standaloneSvc: StandaloneService,
+              private sentry: SentryMonitorService,
               private location: Location) {
+                this.listenForStandalone();
                 if (window.innerWidth >=600) {
                   this.desktopUser = true;
                 }
@@ -44,7 +50,7 @@ export class IphoneInstallComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -59,6 +65,17 @@ export class IphoneInstallComponent implements OnInit {
     containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('IphoneInstallComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 
 }

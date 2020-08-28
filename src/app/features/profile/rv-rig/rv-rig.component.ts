@@ -20,6 +20,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { ShareDataService, IviewImage } from '@services/share-data.service';
 import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { ImageViewDialogComponent } from '@dialogs/image-view-dialog/image-view-dialog.component';
 import { SharedComponent } from '@shared/shared.component';
@@ -74,6 +75,7 @@ export class RvRigComponent implements OnInit {
   newbie: boolean = false;
   theme: string;
   attributeLevelUpdates = false;
+  standalone: boolean = false;
 
   rigTypeOtherOpen: string = 'out';
 
@@ -140,7 +142,10 @@ export class RvRigComponent implements OnInit {
               private themeSvc: ThemeService,
               private shareDataSvc: ShareDataService,
               private device: DeviceService,
-              private activateBackArrowSvc: ActivateBackArrowService) {}
+              private standaloneSvc: StandaloneService,
+              private activateBackArrowSvc: ActivateBackArrowService) {
+                this.listenForStandalone();
+              }
 
   ngOnInit() {
     let backPath;
@@ -179,7 +184,7 @@ export class RvRigComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -483,6 +488,16 @@ export class RvRigComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileRigComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for user profile and when received, take action
   private listenForUserProfile() {

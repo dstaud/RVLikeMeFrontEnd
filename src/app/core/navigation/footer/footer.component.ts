@@ -28,9 +28,7 @@ export class FooterComponent implements OnInit {
               private sentry: SentryMonitorService,
               private standaloneSvc: StandaloneService,
               private router: Router) {
-                if (this.standaloneSvc.standalone) {
-                  this.iPhoneXPlus = this.deviceSvc.iPhoneModelXPlus;
-                }
+                this.listenForStandalone();
                }
 
   ngOnInit() {
@@ -61,5 +59,16 @@ export class FooterComponent implements OnInit {
     }, (error) => {
       this.sentry.logError('FooterComponent:listenForUserProfile: error listening for profile=' + JSON.stringify(error))
     });
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.iPhoneXPlus = this.deviceSvc.iPhoneModelXPlus;
+      }
+    }, error => {
+      this.sentry.logError('FooterComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 }

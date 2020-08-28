@@ -22,6 +22,7 @@ import { UpdatePostDialogComponent } from '@dialogs/update-post-dialog/update-po
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -108,6 +109,7 @@ export class PostsComponent implements OnInit {
   showUpdatePost: Array<boolean> = [];
   showPreview: boolean = false;
   startCommentsIndex: Array<number> = [];
+  standalone: boolean = false;
   fragmentLink="lk3";
   preview: IlinkPreview = {
     title: '',
@@ -134,9 +136,12 @@ export class PostsComponent implements OnInit {
               private linkPreviewSvc: LinkPreviewService,
               private sentry: SentryMonitorService,
               private shared: SharedComponent,
+              private standaloneSvc: StandaloneService,
               private viewportScroller: ViewportScroller,
               private device: DeviceService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog) {
+                this.listenForStandalone();
+               }
 
   ngOnInit() {
     if (window.innerWidth > 600) {
@@ -155,7 +160,7 @@ export class PostsComponent implements OnInit {
     let bottomSpacing: string;
     let theme: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -531,6 +536,16 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('PostsComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Get user profile
   // Get user's ID and store for use in determining what posts or comments can edit

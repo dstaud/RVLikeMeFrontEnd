@@ -16,6 +16,7 @@ import { EmailSmtpService } from '@services/data-services/email-smtp.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -47,6 +48,7 @@ export class SendMessageComponent implements OnInit {
   conversation: Iconversation;
   theme: string;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -75,11 +77,13 @@ export class SendMessageComponent implements OnInit {
               private shared: SharedComponent,
               private device: DeviceService,
               private sentry: SentryMonitorService,
+              private standaloneSvc: StandaloneService,
               private iterableDiffers: IterableDiffers,
               fb: FormBuilder) {
                 this.form = fb.group({
                   message: new FormControl('', Validators.required)
                 });
+              this.listenForStandalone();
               this.iterableDiffer = this.iterableDiffers.find([]).create(null);
      }
 
@@ -135,7 +139,7 @@ export class SendMessageComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -322,6 +326,16 @@ export class SendMessageComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('SendMessageComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for conversations for this user.
   private listenForUserConversations() {

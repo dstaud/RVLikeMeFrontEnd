@@ -37,6 +37,7 @@ export class UserQueryComponent implements OnInit {
   queryResultMessagePrefix: string;
   matchResults = [];
   theme: string;
+  standalone: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -54,7 +55,9 @@ export class UserQueryComponent implements OnInit {
               private shared: SharedComponent,
               private standaloneSvc: StandaloneService,
               private device: DeviceService,
-              private themeSvc: ThemeService) {   }
+              private themeSvc: ThemeService) {
+                this.listenForStandalone();
+                 }
 
   ngOnInit() {
     let sharedData: any;
@@ -98,7 +101,7 @@ export class UserQueryComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -170,6 +173,17 @@ export class UserQueryComponent implements OnInit {
     }, error => {
       this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('UserQueryComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 
   // Get user's profile and save

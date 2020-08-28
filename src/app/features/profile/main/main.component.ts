@@ -13,7 +13,8 @@ import { ProfileService, IuserProfile } from '@services/data-services/profile.se
 import { ShareDataService, ImessageShareData, ImyStory } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
-import { ThemeService } from './../../../core/services/theme.service';
+import { ThemeService } from '@services/theme.service';
+import { StandaloneService } from '@services/standalone.service';
 
 export interface AboutMe {
   value: string;
@@ -38,6 +39,7 @@ export class MainComponent implements OnInit {
   interestsIndicator: string;
   interestsIndClass: string;
   desktopUser: boolean = false;
+  standalone: boolean = false;
   profileImageUrl = './../../../../assets/images/no-profile-pic.jpg';
   theme: string;
   linkOnOff: string = 'link_off';
@@ -57,7 +59,9 @@ export class MainComponent implements OnInit {
               private sentry: SentryMonitorService,
               private shareDataSvc: ShareDataService,
               private device: DeviceService,
+              private standaloneSvc: StandaloneService,
               private router: Router) {
+                this.listenForStandalone();
             }
 
   ngOnInit() {
@@ -92,7 +96,7 @@ export class MainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -254,6 +258,16 @@ export class MainComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileMainComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for profile data and then take actions based on that data
   private listenForUserProfile() {

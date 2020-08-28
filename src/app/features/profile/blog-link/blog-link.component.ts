@@ -15,6 +15,7 @@ import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service
 import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -51,6 +52,7 @@ export class BlogLinkComponent implements OnInit {
   showPreview: boolean = false;
   desktopUser: boolean = false;
   readyToSave: boolean = false;
+  standalone: boolean = false;
   preview: IlinkPreview = {
     title: '',
     description: '',
@@ -70,6 +72,7 @@ export class BlogLinkComponent implements OnInit {
               private sentry: SentryMonitorService,
               private shared: SharedComponent,
               private linkPreviewSvc: LinkPreviewService,
+              private standaloneSvc: StandaloneService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
              fb: FormBuilder) {
@@ -79,6 +82,7 @@ export class BlogLinkComponent implements OnInit {
                 //                 Validators.maxLength(40)]),
                 link: new FormControl('', [Validators.required, Validators.pattern(this.regHyperlink)])
               });
+              this.listenForStandalone();
 }
 
   ngOnInit(): void {
@@ -114,7 +118,7 @@ export class BlogLinkComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -262,6 +266,16 @@ export class BlogLinkComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileBlogLinkComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Get user profile
   private listenForUserProfile() {

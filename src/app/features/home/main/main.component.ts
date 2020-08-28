@@ -17,6 +17,7 @@ import { StandaloneService } from '@services/standalone.service';
 export class MainComponent implements OnInit {
   userType: string;
   desktopUser = false;
+  standalone: boolean = false;
 
   constructor(private device: DeviceService,
               private router: Router,
@@ -39,7 +40,7 @@ export class MainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -78,6 +79,17 @@ export class MainComponent implements OnInit {
       this.router.navigateByUrl('/newbie/newbie-corner');
     }
 
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('FooterComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 
   private listenForUserType() {

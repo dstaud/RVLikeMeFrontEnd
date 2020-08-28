@@ -14,6 +14,7 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { AdminService } from '@services/data-services/admin.service';
 import { DeviceService } from '@services/device.service';
 import { ThemeService } from '@services/theme.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -66,6 +67,7 @@ export class InterestsComponent implements OnInit {
   readyToSuggest: boolean = false;
   theme: string;
   attributeLevelUpdates = false;
+  standalone: boolean = false;
 
   // Spinner is for initial load from the database only.
   // The SaveIcon us shown whenever the user clicks on an interest.
@@ -84,6 +86,7 @@ export class InterestsComponent implements OnInit {
               private themeSvc: ThemeService,
               private shared: SharedComponent,
               private sentry: SentryMonitorService,
+              private standaloneSvc: StandaloneService,
               private activateBackArrowSvc: ActivateBackArrowService,
               private device: DeviceService,
               fb: FormBuilder) {
@@ -112,6 +115,7 @@ export class InterestsComponent implements OnInit {
                 crocheting: new FormControl(''),
                 suggestInterest: new FormControl('', Validators.required)
               });
+              this.listenForStandalone();
 }
 
 ngOnInit() {
@@ -147,7 +151,7 @@ ngOnInit() {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -283,6 +287,16 @@ ngOnInit() {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('ProfileInterestsComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for user profile and take action when get results
   private listenForUserProfile() {

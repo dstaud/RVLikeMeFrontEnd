@@ -15,6 +15,7 @@ import { AuthenticationService } from '@services/data-services/authentication.se
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LanguageService } from '@services/language.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 @Component({
   selector: 'app-rvlm-settings',
@@ -65,6 +66,7 @@ export class MainComponent implements OnInit {
   helpInstallAppleOpen: string = 'out';
   installAppleDevice: boolean = false;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -79,6 +81,7 @@ export class MainComponent implements OnInit {
               private sentry: SentryMonitorService,
               private beforeInstallEventSvc: BeforeInstallEventService,
               private themeSvc: ThemeService,
+              private standaloneSvc: StandaloneService,
               private device: DeviceService,
               fb: FormBuilder) {
                 this.form = fb.group({
@@ -86,6 +89,7 @@ export class MainComponent implements OnInit {
                   aboutMe: [''],
                   helpNewbies: ['false']
                 });
+              this.listenForStandalone();
               if (window.innerWidth >=600) {
                 this.desktopUser = true;
               }
@@ -125,7 +129,7 @@ export class MainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -238,6 +242,16 @@ export class MainComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('SettingsMainComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   private listenForUserProfile() {
     this.userProfile = this.profileSvc.profile;

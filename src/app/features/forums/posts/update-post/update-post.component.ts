@@ -15,6 +15,7 @@ import { ForumService } from '@services/data-services/forum.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { LinkPreviewService, IlinkPreview } from '@services/link-preview.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -53,6 +54,7 @@ export class UpdatePostComponent implements OnInit {
   addLinkInputEnabled: boolean = false;
   showLinkPreview: boolean = false;
   addLinkOpen: string = 'out';
+  standalone: boolean = false;
   linkPreview: IlinkPreview = {
     title: '',
     description: '',
@@ -75,12 +77,14 @@ export class UpdatePostComponent implements OnInit {
               private uploadImageSvc: UploadImageService,
               private shared: SharedComponent,
               private forumSvc: ForumService,
+              private standaloneSvc: StandaloneService,
               private device: DeviceService,
               fb: FormBuilder) {
-                this.form = fb.group({
-                  post: new FormControl(''),
-                  link: new FormControl('', Validators.pattern(this.regHyperlink))
-                });
+              this.form = fb.group({
+                post: new FormControl(''),
+                link: new FormControl('', Validators.pattern(this.regHyperlink))
+              });
+              this.listenForStandalone();
               if (this.containerDialog) {
                 this.headerVisibleSvc.toggleHeaderVisible(false);
                 this.headerVisibleSvc.toggleHeaderDesktopVisible(false);
@@ -134,7 +138,7 @@ export class UpdatePostComponent implements OnInit {
     if (this.containerDialog) {
       containerClass = 'container-desktop';
     } else {
-      if (this.device.iPhoneModelXPlus) {
+      if (this.device.iPhoneModelXPlus && this.standalone) {
         bottomSpacing = 'bottom-bar-spacing-xplus';
       } else {
         bottomSpacing = 'bottom-bar-spacing';
@@ -358,5 +362,16 @@ export class UpdatePostComponent implements OnInit {
         this.readyForPost = false;
       }
     }
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('UpdatePostComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
   }
 }

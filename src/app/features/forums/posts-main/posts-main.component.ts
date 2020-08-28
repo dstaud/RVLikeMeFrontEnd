@@ -16,6 +16,7 @@ import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -36,6 +37,7 @@ export class PostsMainComponent implements OnInit {
   topicID: string;
   topicDesc: string;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   showSpinner = false;
   showLessMatches = true;
@@ -60,8 +62,11 @@ export class PostsMainComponent implements OnInit {
               private forumSvc: ForumService,
               private sentry: SentryMonitorService,
               private shared: SharedComponent,
+              private standaloneSvc: StandaloneService,
               private device: DeviceService,
-              private themeSvc: ThemeService) { }
+              private themeSvc: ThemeService) {
+                this.listenForStandalone();
+               }
 
   ngOnInit(): void {
     let backPath;
@@ -95,7 +100,7 @@ export class PostsMainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -433,6 +438,16 @@ export class PostsMainComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone) {
+        this.standalone = standalone;
+      }
+    }, error => {
+      this.sentry.logError('PostsMainComponent.listenForStandalone: error=' + JSON.stringify(error));
+    })
+  }
 
   // Listen for Profile changes
   private listenForUserProfile() {
