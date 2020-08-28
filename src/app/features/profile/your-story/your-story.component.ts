@@ -86,6 +86,7 @@ export class YourStoryComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.desktopUser && this.comingFromProfile) {
       containerClass = 'container-desktop';
@@ -95,7 +96,14 @@ export class YourStoryComponent implements OnInit {
       } else {
         bottomSpacing = 'bottom-bar-spacing';
       }
-      containerClass = 'container ' + bottomSpacing;
+
+      if (this.desktopUser) {
+        topSpacing = 'desktop-spacing';
+      } else {
+        topSpacing = 'device-spacing';
+      }
+
+      containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
     }
 
     return containerClass;

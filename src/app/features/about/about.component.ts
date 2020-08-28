@@ -39,7 +39,6 @@ export class AboutComponent implements OnInit {
               private standaloneSvc: StandaloneService,
               private router: Router,
               private device: DeviceService) {
-                this.listenForStandalone();
                 if (window.innerWidth >=600) {
                   this.desktopUser = true;
                 }
@@ -68,7 +67,7 @@ export class AboutComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus && this.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -116,17 +115,6 @@ export class AboutComponent implements OnInit {
       if (error.status === 404) {
         this.sentry.logError(JSON.stringify({"status":404, "message":"Dave's credentials not found!"}));
       }
-    });
-  }
-
-  private listenForStandalone() {
-    this.standaloneSvc.standalone$
-    .subscribe(standalone => {
-      if (standalone === 'standalone') {
-        this.standalone = true;
-      }
-    }, error => {
-      this.sentry.logError('AboutComponent:listenForStandalone: errored=' + JSON.stringify(error));
     });
   }
 

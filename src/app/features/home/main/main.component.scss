@@ -19,7 +19,7 @@
 .sub-container {
   display: flex;
   flex-wrap: wrap;
-  // justify-content: space-evenly;
+  justify-content: space-evenly;
   flex-direction: row;
   align-items: flex-start;
 }
@@ -57,6 +57,6 @@
   width: 100%;
   max-width: 500px;
   margin-bottom: 10px;
-  margin-left: 30px;
-  margin-right: 30px;
+  // margin-left: 30px;
+  // margin-right: 30px;
 }

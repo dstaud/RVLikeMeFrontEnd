@@ -14,6 +14,7 @@ import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain, IuserQuery } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { SharedComponent } from '@shared/shared.component';
 
@@ -51,8 +52,9 @@ export class UserQueryComponent implements OnInit {
               private shareDataSvc: ShareDataService,
               private sentry: SentryMonitorService,
               private shared: SharedComponent,
+              private standaloneSvc: StandaloneService,
               private device: DeviceService,
-              private themeSvc: ThemeService) { }
+              private themeSvc: ThemeService) {   }
 
   ngOnInit() {
     let sharedData: any;
@@ -96,7 +98,7 @@ export class UserQueryComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -169,7 +171,6 @@ export class UserQueryComponent implements OnInit {
       this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
     });
   }
-
 
   // Get user's profile and save
   private listenForUserProfile() {

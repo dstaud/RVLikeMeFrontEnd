@@ -39,7 +39,6 @@ export class MainComponent implements OnInit {
   theme: string;
   desktopUser: boolean = false;
   showFullExplanation: boolean = false;
-  standalone: boolean = false;
 
   private likeMeItem: string;
   private likeMeDesc: string;
@@ -69,7 +68,6 @@ export class MainComponent implements OnInit {
               private standaloneSvc: StandaloneService,
               private device: DeviceService,
               private fb: FormBuilder) {
-                this.listenForStandalone();
                 this.form = this.fb.group({
                   likeMe: this.fb.array([])
                 });
@@ -120,7 +118,7 @@ export class MainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus && this.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -386,17 +384,6 @@ export class MainComponent implements OnInit {
     }, (error) => {
       this.showSpinner = false;
       this.sentry.logError(JSON.stringify({"message":"unable to listen for like me counts","error":error}));
-    });
-  }
-
-  private listenForStandalone() {
-    this.standaloneSvc.standalone$
-    .subscribe(standalone => {
-      if (standalone === 'standalone') {
-        this.standalone = true;
-      }
-    }, error => {
-      this.sentry.logError('AboutComponent:listenForStandalone: errored=' + JSON.stringify(error));
     });
   }
 

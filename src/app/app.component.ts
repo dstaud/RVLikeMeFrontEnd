@@ -49,7 +49,6 @@ export class AppComponent implements OnInit {
   headerDesktopVisible: boolean = false;
   iphoneModelxPlus: boolean;
   newMessageCount: number;
-  standalone = false;
 
   private windowWidth: number;
   private userID: string;
@@ -119,8 +118,6 @@ export class AppComponent implements OnInit {
     this.listenForUserConversationsForMessageCount();
 
     this.listenForInstallPrompts();
-
-    this.listenForStandalone();
 
     this.getSystemConfiguration();
 
@@ -250,22 +247,11 @@ export class AppComponent implements OnInit {
     .subscribe(params => {
       if (params.mode) {
         if (params.mode === 'standalone') {
-          this.standaloneSvc.setStandalone('standalone');
+          this.standaloneSvc.setStandalone(true);
         }
       }
     }, error => {
       this.sentry.logError('AppComponent:listenForParameters: could not read parameters.  error=' + JSON.stringify(error));
-    });
-  }
-
-  listenForStandalone() {
-    this.standaloneSvc.standalone$
-    .subscribe(standalone => {
-      if (standalone === 'standalone') {
-        this.standalone = true;
-      }
-    }, error => {
-      this.sentry.logError('AppComponent:listenForStandalone: errored=' + JSON.stringify(error));
     });
   }
 

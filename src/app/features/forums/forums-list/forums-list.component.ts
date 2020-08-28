@@ -31,7 +31,6 @@ export class ForumsListComponent implements OnInit {
   theme: string;
   gotProfile: boolean = false;
   desktopUser: boolean = false;
-  standalone: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -55,7 +54,6 @@ export class ForumsListComponent implements OnInit {
           if (window.innerWidth > 600) {
             this.desktopUser = true;
           }
-          this.listenForStandalone();
 }
 
   ngOnInit(): void {
@@ -92,7 +90,7 @@ export class ForumsListComponent implements OnInit {
       forumList = true;
     }
 
-    if (this.device.iPhoneModelXPlus && this.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -200,17 +198,6 @@ export class ForumsListComponent implements OnInit {
       this.theme = themeData.valueOf();
     }, error => {
       this.sentry.logError(JSON.stringify({"message":"unable to listen for color theme","error":error}));
-    });
-  }
-
-  private listenForStandalone() {
-    this.standaloneSvc.standalone$
-    .subscribe(standalone => {
-      if (standalone === 'standalone') {
-        this.standalone = true;
-      }
-    }, error => {
-      this.sentry.logError('AboutComponent:listenForStandalone: errored=' + JSON.stringify(error));
     });
   }
 

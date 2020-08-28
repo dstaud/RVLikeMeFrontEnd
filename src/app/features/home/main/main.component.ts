@@ -17,16 +17,13 @@ import { StandaloneService } from '@services/standalone.service';
 export class MainComponent implements OnInit {
   userType: string;
   desktopUser = false;
-  standalone = false;
 
   constructor(private device: DeviceService,
               private router: Router,
               private sentry: SentryMonitorService,
               private userTypeSvc: UserTypeService,
               private standaloneSvc: StandaloneService,
-              private activateBackArrowSvc: ActivateBackArrowService) {
-                this.listenForStandalone();
-               }
+              private activateBackArrowSvc: ActivateBackArrowService) {   }
 
   ngOnInit(): void {
     if (window.innerWidth >= 600) {
@@ -42,7 +39,7 @@ export class MainComponent implements OnInit {
     let bottomSpacing: string;
     let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus && this.standalone) {
+    if (this.device.iPhoneModelXPlus && this.standaloneSvc.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
@@ -81,17 +78,6 @@ export class MainComponent implements OnInit {
       this.router.navigateByUrl('/newbie/newbie-corner');
     }
 
-  }
-
-  private listenForStandalone() {
-    this.standaloneSvc.standalone$
-    .subscribe(standalone => {
-      if (standalone === 'standalone') {
-        this.standalone = true;
-      }
-    }, error => {
-      this.sentry.logError('AboutComponent:listenForStandalone: errored=' + JSON.stringify(error));
-    });
   }
 
   private listenForUserType() {

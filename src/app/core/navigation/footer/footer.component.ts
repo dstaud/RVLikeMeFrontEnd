@@ -8,6 +8,7 @@ import { DeviceService } from '@services/device.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { ProfileService, IuserProfile } from '@services/data-services/profile.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 @Component({
   selector: 'app-rvlm-footer',
@@ -25,13 +26,15 @@ export class FooterComponent implements OnInit {
               private activateBackArrowSvc: ActivateBackArrowService,
               private profileSvc: ProfileService,
               private sentry: SentryMonitorService,
-              private router: Router) { }
+              private standaloneSvc: StandaloneService,
+              private router: Router) {
+                if (this.standaloneSvc.standalone) {
+                  this.iPhoneXPlus = this.deviceSvc.iPhoneModelXPlus;
+                }
+               }
 
   ngOnInit() {
     this.listenForUserProfile();
-
-    // Make adjustment for extra space needed for iPhonePlus models
-    this.iPhoneXPlus = this.deviceSvc.iPhoneModelXPlus;
   }
 
   ngOnDestroy() {}
