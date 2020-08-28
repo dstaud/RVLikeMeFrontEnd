@@ -7,6 +7,7 @@ import { DeviceService } from '@services/device.service';
 import { ActivateBackArrowService } from '@services/activate-back-arrow.service';
 import { UserTypeService } from '@services/user-type.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 @Component({
   selector: 'app-main',
@@ -16,12 +17,16 @@ import { SentryMonitorService } from '@services/sentry-monitor.service';
 export class MainComponent implements OnInit {
   userType: string;
   desktopUser = false;
+  standalone = false;
 
   constructor(private device: DeviceService,
               private router: Router,
               private sentry: SentryMonitorService,
               private userTypeSvc: UserTypeService,
-              private activateBackArrowSvc: ActivateBackArrowService) { }
+              private standaloneSvc: StandaloneService,
+              private activateBackArrowSvc: ActivateBackArrowService) {
+                this.listenForStandalone();
+               }
 
   ngOnInit(): void {
     if (window.innerWidth >= 600) {
@@ -35,14 +40,21 @@ export class MainComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
 
-    containerClass = 'container ' + bottomSpacing;
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -69,6 +81,17 @@ export class MainComponent implements OnInit {
       this.router.navigateByUrl('/newbie/newbie-corner');
     }
 
+  }
+
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone === 'standalone') {
+        this.standalone = true;
+      }
+    }, error => {
+      this.sentry.logError('AboutComponent:listenForStandalone: errored=' + JSON.stringify(error));
+    });
   }
 
   private listenForUserType() {

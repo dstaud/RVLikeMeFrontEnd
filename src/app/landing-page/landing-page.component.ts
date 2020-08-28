@@ -155,6 +155,8 @@ export class LandingPageComponent implements OnInit {
   // When user selects register, if mobile, go to register component.
   // If desktop, present register component in dialog and take action when registration complete.
   onRegisterUser() {
+    this.shareDataSvc.setData('register', this.register);
+
     if (this.windowWidth > 600) {
       this.openRegisterDialog((result: string) => {
         if (result === 'complete') {
@@ -231,12 +233,13 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
+    this.register.aboutMe = answer;
+    this.getGroup('aboutMe', this.register.aboutMe, 'aboutMeGroup');
+
     let self = this;
     this.aboutMeContentInOut = 'out';
     setTimeout(function () {
       self.currentQuestion++;
-      self.register.aboutMe = answer;
-      self.getGroup('aboutMe', self.register.aboutMe, 'aboutMeGroup');
       self.rvUseContentInOut = 'in';
     }, 350);
 
@@ -290,11 +293,12 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
+    this.getGroup('rvUse', this.register.rvUse, 'rvUseGroup');
+
     let self = this;
     this.rvUseContentInOut = 'out';
     setTimeout(function () {
       self.currentQuestion++;
-      self.getGroup('rvUse', self.register.rvUse, 'rvUseGroup');
       self.rigTypeContentInOut = 'in';
     }, 350);
   }
@@ -388,11 +392,12 @@ export class LandingPageComponent implements OnInit {
       }
     }
 
+    this.getGroup('rigType', this.register.rigType, 'rigTypeGroup');
+
     let self = this;
     this.rigTypeContentInOut = 'out';
     setTimeout(function () {
       self.currentQuestion++;
-      self.getGroup('rigType', self.register.rigType, 'rigTypeGroup');
       self.registerContentInOut = 'in';
     }, 350);
 

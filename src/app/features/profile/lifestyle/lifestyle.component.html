@@ -6,7 +6,7 @@
           (click)="onBack()">
           << Go Back
   </button>
-  <p class="mat-title">Profile - My RV Lifestyle</p>
+  <p class="mat-title">{{ "lifestyle.component.heading" | translate }}</p>
   <div class="lifestyle-images">
     <div class="row">
       <div *ngFor="let lifeStyleImageUrl of lifestyleImageUrls; let i=index">

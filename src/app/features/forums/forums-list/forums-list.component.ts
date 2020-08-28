@@ -15,6 +15,7 @@ import { ThemeService } from '@services/theme.service';
 import { ShareDataService, IforumsMain } from '@services/share-data.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
 import { DeviceService } from '@services/device.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { MainComponent } from './../main/main.component';
 
@@ -30,6 +31,7 @@ export class ForumsListComponent implements OnInit {
   theme: string;
   gotProfile: boolean = false;
   desktopUser: boolean = false;
+  standalone: boolean = false;
 
   showSpinner: boolean = false;
 
@@ -48,10 +50,12 @@ export class ForumsListComponent implements OnInit {
               private themeSvc: ThemeService,
               private sentry: SentryMonitorService,
               private device: DeviceService,
+              private standaloneSvc: StandaloneService,
               private shareDataSvc: ShareDataService) {
           if (window.innerWidth > 600) {
             this.desktopUser = true;
           }
+          this.listenForStandalone();
 }
 
   ngOnInit(): void {
@@ -82,18 +86,25 @@ export class ForumsListComponent implements OnInit {
     let containerClass: string;
     let bottomSpacing: string;
     let forumList: boolean = false;
+    let topSpacing: string;
 
     if (this.location.path() === '/forums/forums-list') {
       forumList = true;
     }
 
-    if (this.device.iPhoneModelXPlus) {
+    if (this.device.iPhoneModelXPlus && this.standalone) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
 
-    containerClass = 'container ' + bottomSpacing;
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }
@@ -192,6 +203,16 @@ export class ForumsListComponent implements OnInit {
     });
   }
 
+  private listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone === 'standalone') {
+        this.standalone = true;
+      }
+    }, error => {
+      this.sentry.logError('AboutComponent:listenForStandalone: errored=' + JSON.stringify(error));
+    });
+  }
 
   // Listen for changes in Profile and take action
   private listenForUserProfile() {

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { NavigationStart } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -23,8 +23,9 @@ import { MessagesService, Iconversation, Imessage } from '@services/data-service
 import { NewMessageCountService } from '@services/new-msg-count.service';
 import { UserTypeService } from './core/services/user-type.service';
 import { AdminService } from '@services/data-services/admin.service';
-import { UsingEmailService } from './core/services/using-email.service';
+import { UsingEmailService } from '@services/using-email.service';
 import { SentryMonitorService } from '@services/sentry-monitor.service';
+import { StandaloneService } from '@services/standalone.service';
 
 import { fadeAnimation } from './shared/animations';
 
@@ -48,6 +49,7 @@ export class AppComponent implements OnInit {
   headerDesktopVisible: boolean = false;
   iphoneModelxPlus: boolean;
   newMessageCount: number;
+  standalone = false;
 
   private windowWidth: number;
   private userID: string;
@@ -69,6 +71,8 @@ export class AppComponent implements OnInit {
               private UsingEmailSvc: UsingEmailService,
               private adminSvc: AdminService,
               private sentry: SentryMonitorService,
+              private standaloneSvc: StandaloneService,
+              private route: ActivatedRoute,
               private swUpdate: SwUpdate,
               private router: Router) {
     this.deviceSvc.determineGlobalFontTheme(); // Determine font based on device type for more natural app-like experience'
@@ -115,6 +119,8 @@ export class AppComponent implements OnInit {
     this.listenForUserConversationsForMessageCount();
 
     this.listenForInstallPrompts();
+
+    this.listenForStandalone();
 
     this.getSystemConfiguration();
 
@@ -237,6 +243,31 @@ export class AppComponent implements OnInit {
     this.iphoneModelxPlus = this.deviceSvc.iPhoneModelXPlus;
   }
 
+  // Manifest identifes route to launch and passes a parameter mode of 'standalone'.  Therefore, if get this param, we know we are in standalone mode.
+  private listenForParameters() {
+    this.route
+    .queryParams
+    .subscribe(params => {
+      if (params.mode) {
+        if (params.mode === 'standalone') {
+          this.standaloneSvc.setStandalone('standalone');
+        }
+      }
+    }, error => {
+      this.sentry.logError('AppComponent:listenForParameters: could not read parameters.  error=' + JSON.stringify(error));
+    });
+  }
+
+  listenForStandalone() {
+    this.standaloneSvc.standalone$
+    .subscribe(standalone => {
+      if (standalone === 'standalone') {
+        this.standalone = true;
+      }
+    }, error => {
+      this.sentry.logError('AppComponent:listenForStandalone: errored=' + JSON.stringify(error));
+    });
+  }
 
   // Listen for updated version of web app
   private listenForUpdatedVersionOfApp() {

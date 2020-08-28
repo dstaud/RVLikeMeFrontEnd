@@ -253,6 +253,21 @@
   },
   "home.component": {
     "header": "Home",
+    "groups1": "Check out your",
+    "groups2": "groups",
+    "groups3": "to connect with others doing the RV Lifestyle like you",
+    "profile1": "You can describe your lifestyle, your rig, your interests and more to help you find other RVers like you",
+    "profile2": "You can also set up your story with pics of your rig and how you do the RV life",
+    "profilePct1": "Complete your",
+    "profilePct2": "profile",
+    "profilePct3": "for best results",
+    "profilePct4": "profile progress",
+    "likeme1": "After your profile, check out",
+    "likeme2": "Like me",
+    "likeme3": "to find more targeted groups",
+    "newbie1": "Hey Newbie RVers, you will find helpful resources in the",
+    "newbie2": "Newbie Corner",
+    "newbie3": "As an experienced RVer, you may want to help Newbies in the",
     "marketingMsg1": "Thank you for registering. I am a fellow RV-er developing this web app as a way to connect people that do the RV lifestyle like you do. Your email has been added to an email list so I can keep you informed of progress.",
     "marketingMsg2": "To get started, please fill out your ",
     "marketingMsg3": "profile",
@@ -295,6 +310,7 @@
     "title": "Profile",
     "explanation1": "RVLikeMe uses your profile to match with other user profiles, allowing you to connect in group forums.  After you fill out your profile, go to the ",
     "explanation2": "page.",
+    "bloglinks": "Blog links",
     "likeme": "Like me",
     "preferred-language": "Preferred language",
     "english": "English",
@@ -443,6 +459,7 @@
     }
   },
   "personal.component": {
+    "heading": "Profile - About Me",
     "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
     "help": "Click on any help icon for information on how the data point will be used for you.",
     "addProfilePic": "Add profile pic",
@@ -467,6 +484,7 @@
     "helpMyStory": "Shown to others who are interested in your story"
   },
   "lifestyle.component": {
+    "heading": "Profile - My RV Lifestyle",
     "explanation": "This information will be used to find information that is relavant to the way you RV.  The more complete, the better your results!",
     "helpRvUse": "Used to make interactions more relavant",
     "helpWorklife": "Used to make interactions more relavant",
@@ -484,6 +502,7 @@
     "experienced": "As an experienced RVer, are you interested in helping newbies?"
  },
   "rig.component": {
+    "heading": "Profile - My Rig",
     "explanation": "This information will be used to others with similar rigs for more relavant answers.  The more complete, the better your results!",
     "rigTypeDesc": "Type of rig",
     "rigYearDesc": "Rig year",
@@ -494,6 +513,7 @@
     "uploadpics": "Upload up to 3 pics of your rig"
   },
   "interests.component": {
+    "heading": "Profile - My Interests",
     "explanation": "This information will be used to help find others that share your interests.  Please check all that you are interested in.",
     "atv": "ATV off-roading",
     "motorcycle": "Motorcycling",
@@ -568,6 +588,7 @@
     "rigpics": "Rig pics",
     "lifestylepics": "Lifestyle Pics",
     "story": "story",
+    "messagesHeading": "messages",
     "message": "Message",
     "nopics": "no pics uploaded yet",
     "blogLinks": "Blog links"

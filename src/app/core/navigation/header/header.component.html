@@ -1,7 +1,8 @@
 <!-- TODO: For some reason, without this, [className]="'toolbar'", the feature windows start
   after the toolbar, but that doesn't seem to do well for scrolling it??
   Just using class="toolbar" doesn't work??? -->
-<mat-toolbar color="primary" [ngClass]="'toolbar'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start">
+<!-- <mat-toolbar color="primary" [ngClass]="'toolbar'" role="toolbar" class="mat-h3" fxFlex fxLayout fxLayoutAlign="start"> -->
+<div class="toolbar mat-elevation-z4" [ngClass]="lightTheme? 'toolbar-background-color-light' : 'toolbar-background-color-dark'">
   <div class="toolbar-icon" (click)="onToolbarIcon()">
     <div class="rvlikeme">
       <h2 class="mat-h2">
@@ -157,4 +158,5 @@
       {{ "account.logout" | translate }}
     </button>
   </mat-menu>
-</mat-toolbar>
+</div>
+<!-- </mat-toolbar> -->

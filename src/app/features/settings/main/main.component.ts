@@ -64,6 +64,7 @@ export class MainComponent implements OnInit {
   helpInstallOpen: string = 'out';
   helpInstallAppleOpen: string = 'out';
   installAppleDevice: boolean = false;
+  desktopUser: boolean = false;
 
   private profile: IuserProfile;
   private userProfile: Observable<IuserProfile>;
@@ -85,6 +86,9 @@ export class MainComponent implements OnInit {
                   aboutMe: [''],
                   helpNewbies: ['false']
                 });
+              if (window.innerWidth >=600) {
+                this.desktopUser = true;
+              }
     }
 
   ngOnInit(): void {
@@ -119,13 +123,21 @@ export class MainComponent implements OnInit {
   getClass() {
     let containerClass: string;
     let bottomSpacing: string;
+    let topSpacing: string;
 
     if (this.device.iPhoneModelXPlus) {
       bottomSpacing = 'bottom-bar-spacing-xplus';
     } else {
       bottomSpacing = 'bottom-bar-spacing';
     }
-    containerClass = 'container ' + bottomSpacing;
+
+    if (this.desktopUser) {
+      topSpacing = 'desktop-spacing';
+    } else {
+      topSpacing = 'device-spacing';
+    }
+
+    containerClass = 'container ' + bottomSpacing + ' ' + topSpacing;
 
     return containerClass;
   }

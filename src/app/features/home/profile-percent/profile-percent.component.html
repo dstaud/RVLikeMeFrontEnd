@@ -4,7 +4,10 @@
   <!-- <div class="welcome">
     <p><span class="hi">{{ 'home.component.hi' | translate }} {{ profile.firstName }}</span>, {{ 'home.component.welcome' | translate}}</p>
   </div> -->
-  <p class="mat-h2">Complete your <span class="hyperlink" (click)="onProfile()">profile</span> for best results</p>
+  <p class="mat-h2">{{ 'home.component.profilePct1' | translate }}
+    <span class="hyperlink" (click)="onProfile()">{{ 'home.component.profilePct2' | translate }}</span>
+    {{ 'home.component.profilePct3' | translate }}
+  </p>
 
   <div class="progress hyperlink">
     <mat-progress-bar
@@ -13,7 +16,7 @@
       value="{{  percentProfileComplete }}"
       (click)="onProfile()">
     </mat-progress-bar>
-    <span class="progress-text">profile progress</span>
+    <span class="progress-text">{{ 'home.component.profilePct4' | translate }}</span>
   </div>
 
   <mat-progress-spinner class="spinner" mode="indeterminate" *ngIf="showSpinner" diameter="20"></mat-progress-spinner>

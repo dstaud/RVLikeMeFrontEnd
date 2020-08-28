@@ -6,7 +6,7 @@
           (click)="onBack()">
           << Go Back
   </button>
-  <p class="mat-title">Profile - My Rig</p>
+  <p class="mat-title">{{ "rig.component.heading" | translate }}</p>
   <div class="rig-images">
     <div class="row">
       <div *ngFor="let rigImageUrl of rigImageUrls; let i=index">
