@@ -240,7 +240,9 @@ export class LandingPageComponent implements OnInit {
     this.aboutMeContentInOut = 'out';
     setTimeout(function () {
       self.currentQuestion++;
-      self.rvUseContentInOut = 'in';
+      setTimeout(() => {
+        self.rvUseContentInOut = 'in';
+      }, 30);
     }, 350);
 
 
@@ -299,7 +301,9 @@ export class LandingPageComponent implements OnInit {
     this.rvUseContentInOut = 'out';
     setTimeout(function () {
       self.currentQuestion++;
-      self.rigTypeContentInOut = 'in';
+      setTimeout(() => {
+        self.rigTypeContentInOut = 'in';
+      }, 30);
     }, 350);
   }
 
@@ -398,7 +402,9 @@ export class LandingPageComponent implements OnInit {
     this.rigTypeContentInOut = 'out';
     setTimeout(function () {
       self.currentQuestion++;
-      self.registerContentInOut = 'in';
+      setTimeout(() => {
+        self.registerContentInOut = 'in';
+      }, 30);
     }, 350);
 
   }
